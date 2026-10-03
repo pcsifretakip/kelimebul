@@ -365,7 +365,13 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .smenu button.srow:active{background:rgba(255,255,255,.16);transform:none;box-shadow:none}
 .smenu .srow b{box-shadow:none;background:rgba(0,0,0,.28)}
 .smenu #s-help{color:#fbbf24}
-.smenu #s-delete.arm{background:#be123c;color:#fff;border-color:transparent}
+.smenu #s-delete{color:#ff5a5a}
+#delbox .hcard{text-align:center;border-color:rgba(255,90,90,.45);box-shadow:0 24px 60px rgba(0,0,0,.65),0 0 34px rgba(255,60,60,.22)}
+#delbox .del-ic{width:62px;height:62px;margin:-4px auto 8px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;background:rgba(255,90,90,.16);border:1.5px solid rgba(255,90,90,.5)}
+#delbox h3{color:#ff6b6b}
+#delbox p{margin:0;font-size:14.5px;font-weight:700;line-height:1.5;color:#e9e5ff}
+#delbox .inv-btns .del-yes{border-radius:16px;font-weight:1000;letter-spacing:.06em;color:#fff;background:linear-gradient(180deg,#ff7a7a,#e11d48 55%,#be123c);box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 4px 0 #7f1230}
+#delbox .inv-btns .del-yes:active{transform:translateY(3px);box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 1px 0 #7f1230}
 .smenu #s-report{color:#e0dcff}
 .smenu #s-rate{color:#fde68a}
 .smenu .srow b#s-acc{min-width:0;max-width:112px;flex:1}
@@ -661,6 +667,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .pfr-row button.arm{background:#be123c;color:#fff;border-color:transparent}
 .pfr-empty{margin:2px 0 4px;text-align:center;font-size:13px;font-weight:700;color:#b9b3f0}
 .pfr-bl{width:100%;margin:14px 0 8px;padding:10px;border-radius:12px;font-size:13px;font-weight:900;letter-spacing:.06em;color:#b9b3f0;background:rgba(255,255,255,.06);border:1px solid rgba(196,181,253,.2)}
+.level-box{display:none!important}
 </style>
 </head>
 <body>
@@ -860,6 +867,14 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
       <div class="ol-list" id="ol-inv"></div>
       <div class="ol-list" id="ol-fr"></div>
       <button class="nm-cancel" id="ol-close">KAPAT</button>
+    </div>
+  </div>
+  <div class="help" id="delbox">
+    <div class="hcard">
+      <div class="del-ic">⚠️</div>
+      <h3>HESABI SİL</h3>
+      <p>Hesabın, ilerlemen ve altınların silinecek.<br><b>Her şey sıfırlanacak</b> ve geri alınamaz. Emin misin?</p>
+      <div class="inv-btns"><button class="inv-no" id="del-no">İPTAL</button><button class="del-yes" id="del-yes">EVET</button></div>
     </div>
   </div>
   <div class="help" id="frbox">
@@ -1894,21 +1909,19 @@ $('s-rate').addEventListener('click', () => {
   if (!window.open(url, '_blank')) location.href = url;
 });
 $('help-ok').addEventListener('click', () => helpEl.classList.remove('show'));
-/* misafir hesabını bu telefondan sil (2 dokunuş): sonra yeni misafir hesabı açılabilir */
-let delTimer = null;
-$('s-delete').addEventListener('click', () => {
-  const b = $('s-delete');
-  if (!b.classList.contains('arm')){
-    b.classList.add('arm'); b.textContent = 'EMİN MİSİN? TEKRAR DOKUN';
-    clearTimeout(delTimer); delTimer = setTimeout(() => { b.classList.remove('arm'); b.textContent = 'HESABI SİL'; }, 3500);
-    return;
-  }
-  clearTimeout(delTimer); b.classList.remove('arm'); b.textContent = 'HESABI SİL';
-  closeMenu(); leaveGame(); USER = null;
-  store.set('kb_user', 'null'); ckSet('kb_user', 'null'); store.set('kb_guest', 'null'); ckSet('kb_guest', 'null');
-  lbOwnId = null; myScore = null; lbRender();
-  try { if (fbAuth) fbAuth.signOut(); } catch(e){}
-  refreshSettings(); setView('login'); toast('Hesap bu telefondan silindi');
+/* misafir hesabını sil: ortada onay penceresi, EVET'te her şey sıfırlanır ve başa dönülür */
+$('s-delete').addEventListener('click', () => { closeMenu(); $('delbox').classList.add('show'); });
+$('del-no').addEventListener('click', () => $('delbox').classList.remove('show'));
+$('delbox').addEventListener('click', e => { if (e.target === $('delbox')) $('delbox').classList.remove('show'); });
+$('del-yes').addEventListener('click', async () => {
+  $('delbox').classList.remove('show'); leaveGame();
+  const keep = { kb_sound: store.get('kb_sound'), kb_vib: store.get('kb_vib') };      // ses/titreşim tercihi kalsın
+  try { localStorage.clear(); } catch(e){}
+  ['kb_user', 'kb_guest'].forEach(k => { try { document.cookie = k + '=;max-age=0;path=/'; } catch(e){} });
+  Object.keys(keep).forEach(k => { if (keep[k] != null) store.set(k, keep[k]); });
+  USER = null;
+  try { if (fbAuth) await Promise.race([fbAuth.signOut(), new Promise(r => setTimeout(r, 800))]); } catch(e){}
+  location.reload();                                                                    // bellekteki her şey de sıfırlansın
 });
 $('s-logout').addEventListener('click', () => {
   closeMenu(); leaveGame(); USER = null; store.set('kb_user', 'null'); ckSet('kb_user', 'null'); lbOwnId = null; myScore = null; lbRender();
@@ -2349,10 +2362,12 @@ async function addFriend(){
   const v = $('pf-name').value.trim(); if (!v) return;
   pfMsg('Aranıyor…', 1);
   try {
+    // geçersiz karakter / geçersiz belge adı: sistemde böyle biri olamaz
+    if (!/^\d{8}$/.test(v) && (!/^[A-Za-zÇĞİÖŞÜçğıöşü0-9_.]{3,16}$/.test(v) || /^\.+$/.test(v) || /^__.*__$/.test(v))) return pfMsg('Böyle bir kullanıcı yok');
     const db = await getDb(); let f = null;
     if (/^\d{8}$/.test(v)){ const d = await db.collection('users').doc(v).get(); if (d.exists) f = { id: v, name: d.data().name || v }; }
     else { const d = await db.collection('usernames').doc(encodeURIComponent(nameKey(v))).get(); if (d.exists) f = d.data(); }
-    if (!f) return pfMsg('Böyle bir kullanıcı bulunamadı');
+    if (!f) return pfMsg('Böyle bir kullanıcı yok');
     if (f.id === USER.id) return pfMsg('Kendini ekleyemezsin');
     if (blocked.has(f.id)) return pfMsg('Bu kullanıcıyı engelledin, önce engeli kaldır');
     const bl = await db.collection('users').doc(f.id).collection('blocked').doc(USER.id).get();
@@ -2371,7 +2386,10 @@ async function addFriend(){
       ref.delete().catch(() => {});
     });
     setTimeout(() => { if (frOutUn[ref.id]) { try { frOutUn[ref.id](); } catch(e){} delete frOutUn[ref.id]; } }, 600000);
-  } catch(e){ pfMsg('Bağlantı hatası, tekrar dene'); }
+  } catch(e){
+    try { console.warn('Arkadaş ekleme hatası:', e && e.code, e && e.message); } catch(_){}
+    pfMsg(e && e.code === 'permission-denied' ? 'İzin hatası: Firestore kurallarını kontrol et' : 'Bağlantı hatası, tekrar dene');
+  }
 }
 const frOutUn = {};
 async function friendRemove(id){
