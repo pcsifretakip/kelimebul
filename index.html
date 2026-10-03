@@ -559,6 +559,19 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .inv-btns .inv-no{border-radius:16px;font-weight:900;letter-spacing:.06em;color:#fca5a5;background:rgba(255,255,255,.08);border:1px solid rgba(196,181,253,.25)}
 #invbox{z-index:120}
 #invbox .inv-t{margin:4px 0 0;text-align:center;font-size:17px;font-weight:800;color:#e9e5ff}
+.pcard{max-height:92%;overflow-y:auto}
+.pfr{padding:0 14px 18px}
+.pfr-h{display:flex;justify-content:space-between;align-items:center;margin:2px 2px 8px;font-size:14px;font-weight:900;letter-spacing:.08em;color:#fbbf24}
+.pfr-h i{font-style:normal;color:#e0dcff}
+.pfr-list{display:flex;flex-direction:column;gap:8px}
+.pfr-list[hidden]{display:none}
+.pfr-row{display:flex;align-items:center;gap:6px;padding:8px 8px 8px 14px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid var(--stroke)}
+.pfr-row span{flex:1;min-width:0;font-weight:800;color:#e0dcff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pfr-row button{padding:8px 10px;border-radius:10px;font-size:12px;font-weight:900;letter-spacing:.04em;color:#e0dcff;background:rgba(255,255,255,.1);border:1px solid rgba(196,181,253,.25)}
+.pfr-row button.warn{color:#fca5a5}
+.pfr-row button.arm{background:#be123c;color:#fff;border-color:transparent}
+.pfr-empty{margin:2px 0 4px;text-align:center;font-size:13px;font-weight:700;color:#b9b3f0}
+.pfr-bl{width:100%;margin:14px 0 8px;padding:10px;border-radius:12px;font-size:13px;font-weight:900;letter-spacing:.06em;color:#b9b3f0;background:rgba(255,255,255,.06);border:1px solid rgba(196,181,253,.2)}
 </style>
 </head>
 <body>
@@ -746,6 +759,12 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
         <div class="prow"><span>KAZANMA ORANI</span><b id="p-rate">%0</b></div>
         <div class="prow"><span>KAZANILAN OYUN</span><b id="p-wins">0</b></div>
         <div class="prow"><span>TOPLAM OYUN</span><b id="p-games">0</b></div>
+      </div>
+      <div class="pfr">
+        <div class="pfr-h"><span>ARKADAŞLARIM</span><i id="pfr-n">0</i></div>
+        <div class="pfr-list" id="pfr-list"></div>
+        <button class="pfr-bl" id="pfr-blbtn">ENGELLENENLER (<span id="pfr-bn">0</span>)</button>
+        <div class="pfr-list" id="pfr-bllist" hidden></div>
       </div>
     </div>
   </div>
@@ -1666,6 +1685,7 @@ function openProfile(){
   $('p-rate').textContent = '%' + (S.games ? Math.round(S.wins / S.games * 100) : 0);
   avpick.classList.remove('show'); renderAvatar();
   profEl.classList.add('show');
+  pfStart();
 }
 $('btn-avatar').addEventListener('click', () => { audio(); openProfile(); });
 $('prof-close').addEventListener('click', () => profEl.classList.remove('show'));
@@ -1675,8 +1695,8 @@ renderAvatar();
 
 /* ===== ONLİNE MOD: arkadaş ekle, davet et, önce bitiren kazanır (Firestore) ===== */
 const olEl = $('olbox'), resEl = $('raceres'), olErr = $('ol-err');
-let R = null, unsubs = [], olSize = 10;
-const SIZES = { 8:6, 10:8, 12:9, 14:10, 16:11 };          // boyut : kelime sayısı
+let R = null, unsubs = [], olSize = 6;
+const SIZES = { 5:3, 6:4, 7:5, 8:6, 10:7 };          // boyut : kelime sayısı
 function customDef(size, seed){
   const rnd = mulberry32(seed);
   const pool = [...new Set(LEVELS.flatMap(l => l.words))].filter(w => w.length <= size);
@@ -1731,6 +1751,9 @@ async function addFriend(){
     else { const d = await db.collection('usernames').doc(encodeURIComponent(nameKey(v))).get(); if (d.exists) f = d.data(); }
     if (!f) return olMsg('Böyle bir kullanıcı bulunamadı');
     if (f.id === USER.id) return olMsg('Kendini ekleyemezsin');
+    if (blocked.has(f.id)) return olMsg('Bu kullanıcıyı engelledin, önce engeli kaldır');
+    const bl = await db.collection('users').doc(f.id).collection('blocked').doc(USER.id).get();
+    if (bl.exists) return olMsg('Bu kullanıcı eklenemiyor');
     const b = db.batch();
     b.set(db.collection('users').doc(USER.id).collection('friends').doc(f.id), { name: f.name });
     b.set(db.collection('users').doc(f.id).collection('friends').doc(USER.id), { name: USER.name });
@@ -1780,10 +1803,11 @@ $('rr-ok').addEventListener('click', () => { resEl.classList.remove('show'); sho
 
 /* ===== DAVET BİLDİRİMİ: ekranın ortasında Kabul / Reddet ===== */
 const invBox = $('invbox');
+let blUn = null, blocked = new Map();
 let invWatchId = null, invUn = null, invQueue = [], invCur = null, invSeen = new Set(), invTimer = null;
 function invShow(){
   if (invCur || R) return;
-  while (invQueue.length && Date.now() - invQueue[0].t > 120000) invQueue.shift();
+  while (invQueue.length && (Date.now() - invQueue[0].t > 120000 || blocked.has(invQueue[0].v.from))) invQueue.shift();
   if (!invQueue.length) return;
   invCur = invQueue.shift();
   $('inv-t').textContent = invCur.v.fromName + ' sizi davet etti!';
@@ -1813,13 +1837,19 @@ $('inv-no').addEventListener('click', async () => {
 async function invWatch(){
   if (!USER || !USER.id){
     if (invUn){ try { invUn(); } catch(e){} invUn = null; }
-    invWatchId = null; return;
+    if (blUn){ try { blUn(); } catch(e){} blUn = null; }
+    blocked = new Map(); invWatchId = null; return;
   }
   if (!FIREBASE_CONFIG.apiKey || invWatchId === USER.id) return;
   invWatchId = USER.id;
   try {
     const db = await getDb();
     if (invUn){ try { invUn(); } catch(e){} }
+    if (blUn){ try { blUn(); } catch(e){} }
+    blUn = db.collection('users').doc(USER.id).collection('blocked').onSnapshot(q => {
+      blocked = new Map(); q.forEach(d => blocked.set(d.id, (d.data() && d.data().name) || d.id));
+      if (profEl.classList.contains('show')) pfRender();
+    });
     invUn = db.collection('invites').where('to', '==', USER.id).where('status', '==', 'pending').onSnapshot(q => {
       q.docChanges().forEach(ch => {
         if (ch.type !== 'added') return;
@@ -1832,6 +1862,78 @@ async function invWatch(){
   } catch(e){ invWatchId = null; }
 }
 setInterval(invWatch, 2000); invWatch();
+
+/* ===== PROFİL > ARKADAŞLARIM: çıkar / engelle / engeli kaldır ===== */
+let pfUn = [], pfFriends = [];
+function pfClean(){ pfUn.forEach(u => { try { u(); } catch(e){} }); pfUn = []; }
+function pfBtn(label, cls, fn){
+  const b = document.createElement('button'); b.textContent = label; if (cls) b.className = cls; b.dataset.l = label;
+  b.addEventListener('click', () => {
+    if (b.classList.contains('arm')){ fn(); return; }
+    document.querySelectorAll('#prof .pfr-row button.arm').forEach(x => { x.classList.remove('arm'); x.textContent = x.dataset.l; });
+    b.classList.add('arm'); b.textContent = 'EMİN MİSİN?';
+    setTimeout(() => { if (b.isConnected && b.classList.contains('arm')){ b.classList.remove('arm'); b.textContent = label; } }, 3000);
+  });
+  return b;
+}
+function pfRow(name, btns){
+  const r = document.createElement('div'); r.className = 'pfr-row';
+  const sp = document.createElement('span'); sp.textContent = name; r.appendChild(sp);
+  btns.forEach(b => r.appendChild(b)); return r;
+}
+function pfRender(){
+  const box = $('pfr-list'), bbox = $('pfr-bllist');
+  box.innerHTML = ''; bbox.innerHTML = '';
+  $('pfr-n').textContent = pfFriends.length; $('pfr-bn').textContent = blocked.size;
+  if (!pfFriends.length) box.innerHTML = '<p class="pfr-empty">Henüz arkadaşın yok.</p>';
+  pfFriends.forEach(f => box.appendChild(pfRow(f.name, [
+    pfBtn('ÇIKAR', '', () => friendRemove(f.id)),
+    pfBtn('ENGELLE', 'warn', () => friendBlock(f.id, f.name))
+  ])));
+  if (!blocked.size) bbox.innerHTML = '<p class="pfr-empty">Engellediğin kimse yok.</p>';
+  blocked.forEach((name, id) => bbox.appendChild(pfRow(name, [ pfBtn('ENGELİ KALDIR', '', () => friendUnblock(id)) ])));
+}
+async function pfStart(){
+  pfClean(); pfFriends = [];
+  $('pfr-bllist').hidden = true;
+  const box = $('pfr-list');
+  if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id){ box.innerHTML = '<p class="pfr-empty">Arkadaşlar için ID hazırlanıyor, sonra tekrar aç.</p>'; return; }
+  box.innerHTML = '<p class="pfr-empty">Yükleniyor…</p>';
+  try {
+    const db = await getDb();
+    pfUn.push(db.collection('users').doc(USER.id).collection('friends').onSnapshot(q => {
+      pfFriends = []; q.forEach(d => pfFriends.push({ id: d.id, name: (d.data() && d.data().name) || d.id }));
+      pfRender();
+    }));
+  } catch(e){ box.innerHTML = '<p class="pfr-empty">Bağlantı hatası</p>'; }
+}
+async function friendRemove(id){
+  try {
+    const db = await getDb(), b = db.batch();
+    b.delete(db.collection('users').doc(USER.id).collection('friends').doc(id));
+    b.delete(db.collection('users').doc(id).collection('friends').doc(USER.id));
+    await b.commit(); toast('Arkadaşlıktan çıkarıldı');
+  } catch(e){ toast('İşlem başarısız, tekrar dene'); }
+}
+async function friendBlock(id, name){
+  try {
+    const db = await getDb(), b = db.batch();
+    b.set(db.collection('users').doc(USER.id).collection('blocked').doc(id), { name });
+    b.delete(db.collection('users').doc(USER.id).collection('friends').doc(id));
+    b.delete(db.collection('users').doc(id).collection('friends').doc(USER.id));
+    await b.commit(); toast(name + ' engellendi');
+  } catch(e){ toast('Engellenemedi, tekrar dene'); }
+}
+async function friendUnblock(id){
+  try {
+    const db = await getDb();
+    await db.collection('users').doc(USER.id).collection('blocked').doc(id).delete();
+    toast('Engel kaldırıldı');
+  } catch(e){ toast('İşlem başarısız, tekrar dene'); }
+}
+$('pfr-blbtn').addEventListener('click', () => { const l = $('pfr-bllist'); l.hidden = !l.hidden; });
+$('prof-close').addEventListener('click', pfClean);
+profEl.addEventListener('click', e => { if (e.target === profEl) pfClean(); });
 
 /* tüm butonlara tıklama sesi (Ayarlar > SES kapalıysa çalmaz) */
 document.addEventListener('pointerdown', e => { if (e.target.closest && e.target.closest('button')){ audio(); SND.click(); } }, true);
