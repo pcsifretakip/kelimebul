@@ -836,7 +836,6 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   <div class="help" id="namebox">
     <div class="hcard">
       <h3>KULLANICI ADI</h3>
-      <p class="nm-sub">Kimsenin kullanmadığı bir ad seç.</p>
       <input class="nm-input" id="nm-input" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="kullanıcı adı">
       <p class="nm-err" id="nm-err"></p>
       <button class="btn-main" id="nm-ok">BAŞLA</button>
@@ -1701,7 +1700,14 @@ const FIREBASE_CONFIG = {
 S.sound = store.get('kb_sound') !== '0';
 S.vib = store.get('kb_vib') !== '0';
 let USER = null;
+/* giriş bilgisi localStorage + çerezde (yedek) tutulur; sadece ÇIKIŞ YAP silebilir */
+const ckGet = k => { try { const m = document.cookie.match(new RegExp('(?:^|; )' + k + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : null; } catch(e){ return null; } };
+const ckSet = (k, v) => { try { document.cookie = k + '=' + encodeURIComponent(v) + ';max-age=315360000;path=/;SameSite=Lax'; } catch(e){} };
+function saveUser(u){ const j = JSON.stringify(u); store.set('kb_user', j); ckSet('kb_user', j); }
 try { USER = JSON.parse(store.get('kb_user') || 'null'); } catch(e) { USER = null; }
+if (!USER) { try { USER = JSON.parse(ckGet('kb_user') || 'null'); if (USER) saveUser(USER); } catch(e) { USER = null; } }
+else saveUser(USER);
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch(e){}
 
 const menuEl = $('smenu'), helpEl = $('help');
 function closeMenu(){ menuEl.classList.remove('show'); }
@@ -1718,7 +1724,7 @@ function toggleSound(){
   if (S.sound){ audio(); SND.hint(); }
 }
 function setUser(u){
-  USER = u; store.set('kb_user', JSON.stringify(u)); refreshSettings(); showHome();
+  USER = u; saveUser(u); refreshSettings(); showHome();
 }
 
 function loadScript(src){
@@ -1749,7 +1755,8 @@ async function socialLogin(kind){
 /* ----- kullanıcı adı + benzersiz ID -----
    Firebase ayarlıysa adlar ve ID'ler Firestore'da herkes için tekil tutulur.
    Ayarlı değilse yalnızca bu cihazda kontrol edilir. */
-const NAME_RE = /^[A-Za-zÇĞİÖŞÜçğıöşü0-9][A-Za-zÇĞİÖŞÜçğıöşü0-9_.]{2,15}$/;
+const NAME_RE = /^[A-Za-zÇĞİÖŞÜçğıöşü0-9]{3,16}$/;           // sadece harf ve rakam
+const NAME_BAD = /[^A-Za-zÇĞİÖŞÜçğıöşü0-9]/g;
 const nameKey = n => n.toLocaleLowerCase('tr');
 const rndId = () => String(10000000 + Math.floor(Math.random() * 90000000));
 let fbDb = null;
@@ -1764,13 +1771,17 @@ async function registerUser(type, name){          // name yoksa sadece ID üreti
   const key = name ? nameKey(name) : null;
   if (!FIREBASE_CONFIG.apiKey){
     if (key){
-      let taken = []; try { taken = JSON.parse(store.get('kb_taken') || '[]'); } catch(e){}
-      if (taken.includes(key)) throw new Error('taken');
-      taken.push(key); store.set('kb_taken', JSON.stringify(taken));
+      let m = {}; try { m = JSON.parse(store.get('kb_names') || '{}') || {}; } catch(e){}
+      const ev = m[key]; if (ev){ registerUser.canon = ev.name || name; return ev.id || ev; }   // bu ad zaten var: aynı hesaba tekrar gir
+      const id = rndId(); m[key] = { id, name }; store.set('kb_names', JSON.stringify(m)); return id;
     }
     return rndId();
   }
   const db = await getDb();
+  if (key){                                            // ad daha önce alınmışsa yeni hesap açma, o hesaba geri gir
+    const ex = await db.collection('usernames').doc(encodeURIComponent(key)).get();
+    if (ex.exists && ex.data().id){ registerUser.canon = ex.data().name || name; return ex.data().id; }
+  }
   for (let i = 0; i < 6; i++){
     const id = rndId();
     try {
@@ -1790,7 +1801,7 @@ async function registerUser(type, name){          // name yoksa sadece ID üreti
   throw new Error('idfail');
 }
 if (USER && !USER.id){
-  registerUser(USER.type, null).then(id => { USER.id = id; store.set('kb_user', JSON.stringify(USER)); }).catch(() => {});
+  registerUser(USER.type, null).then(id => { USER.id = id; saveUser(USER); }).catch(() => {});
 }
 
 const nameBox = $('namebox'), nmInput = $('nm-input'), nmErr = $('nm-err'), nmOk = $('nm-ok');
@@ -1802,12 +1813,13 @@ function openNameBox(){
 async function submitName(){
   if (nmOk.disabled) return;
   const name = nmInput.value.trim();
-  if (!NAME_RE.test(name)){ nmErr.textContent = '3-16 karakter; harf, rakam, _ veya . kullanabilirsin'; return; }
+  if (!NAME_RE.test(name)){ nmErr.style.color = ''; nmErr.textContent = 'Sadece harf ve rakam kullanabilirsin (3-16 karakter)'; return; }
   nmOk.disabled = true; nmErr.style.color = '#b9b3f0'; nmErr.textContent = 'Kontrol ediliyor…';
   try {
+    registerUser.canon = null;
     const id = await registerUser('guest', name);
     nameBox.classList.remove('show');
-    setUser({ type: 'guest', name, id });
+    setUser({ type: 'guest', name: registerUser.canon || name, id });
   } catch(e){
     nmErr.style.color = '';
     nmErr.textContent = e && e.message === 'taken' ? 'Bu kullanıcı adı alınmış, başka bir tane dene' : 'Bağlantı hatası, tekrar dene';
@@ -1816,6 +1828,7 @@ async function submitName(){
 }
 nmOk.addEventListener('click', submitName);
 nmInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitName(); });
+nmInput.addEventListener('input', () => { const v = nmInput.value.replace(NAME_BAD, ''); if (v !== nmInput.value) nmInput.value = v; });
 $('nm-cancel').addEventListener('click', () => nameBox.classList.remove('show'));
 $('lg-guest').addEventListener('click', () => { audio(); openNameBox(); });
 $('lg-google').addEventListener('click', () => socialLogin('google'));
@@ -1859,7 +1872,7 @@ $('s-rate').addEventListener('click', () => {
 });
 $('help-ok').addEventListener('click', () => helpEl.classList.remove('show'));
 $('s-logout').addEventListener('click', () => {
-  closeMenu(); leaveGame(); USER = null; store.set('kb_user', 'null'); lbOwnId = null; myScore = null; lbRender();
+  closeMenu(); leaveGame(); USER = null; store.set('kb_user', 'null'); ckSet('kb_user', 'null'); lbOwnId = null; myScore = null; lbRender();
   try { if (fbAuth) fbAuth.signOut(); } catch(e){}
   refreshSettings(); setView('login');
 });
