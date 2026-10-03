@@ -337,7 +337,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .srow.c{justify-content:center;padding:0 16px;color:#fbbf24}
 .srow.danger{justify-content:center;padding:0 16px;color:#fca5a5}
 .srow[hidden]{display:none}
-.help{position:absolute;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(5,3,20,.78);opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s}
+.help{position:absolute;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(5,3,20,.5);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s}
 .help.show{opacity:1;visibility:visible}
 .help .hcard{width:100%;max-width:340px;padding:20px;border-radius:24px;background:linear-gradient(180deg,#2a1a74,#170f48);border:1px solid var(--stroke);box-shadow:0 24px 60px rgba(0,0,0,.6)}
 .help h3{margin:0 0 10px;font-size:20px;font-weight:1000;color:#fbbf24;text-align:center;letter-spacing:.08em}
@@ -494,7 +494,9 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 @keyframes ltFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 @keyframes ltTwinkle{0%,100%{opacity:1}50%{opacity:.35}}
 /* ana sayfa: logo + tahta + butonlar sığsın */
-#view-home .home-top{transform:none;margin-top:0}
+#view-home .home-top{transform:none;margin:auto 0}
+#view-home{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+#view-home .logo{--w:min(250px,70vw)}
 #view-home .logo{--w:min(220px,62vw)}
 #view-home .demo-board{width:min(176px,45vw)}
 @media (max-height:760px){#view-home .logo{--w:min(190px,54vw)}#view-home .demo-board{width:min(136px,36vw)}}
@@ -736,20 +738,6 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
         </div>
       </div>
 
-      <div class="home-mid">
-        <div class="demo-board">
-          <div class="demo-inner">
-            <div class="demo-cap"></div>
-            <div class="demo-grid" aria-hidden="true">
-              <span>Ş</span><span>A</span><span>R</span><span>Ö</span><span>T</span>
-              <span>B</span><span>İ</span><span>L</span><span>Ç</span><span>U</span>
-              <span>G</span><span>Ü</span><span>N</span><span>E</span><span>Ş</span>
-              <span>Ğ</span><span>K</span><span>Y</span><span>M</span><span>O</span>
-              <span>Z</span><span>I</span><span>P</span><span>Ç</span><span>D</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div class="home-actions">
         <button id="btn-levels" class="btn-sq" aria-label="Bölümler"><svg class="i"><use href="#i-grid"/></svg><span>BÖLÜMLER</span></button>
@@ -1513,7 +1501,7 @@ function onFound(word, path){
   S.found.add(word);
   S.caps.push({ word, path, el: makeCap(path, 'new', color) });
   updateProgress();
-  SND.found(); buzz([18, 30, 40]);
+  SND.found(); buzz([70, 45, 110]);   // her bulunan kelimede belirgin titreşim (Ayarlar > TİTREŞİM kapalıysa çalışmaz)
 
   // harfler sırayla zıplar + kıvılcım
   path.forEach((p, i) => {
@@ -2015,8 +2003,11 @@ function raceEnd(won){
 }
 function raceStop(){
   if (!R) return; const r = R; R = null; clearInterval(r.timer); try { r.un(); } catch(e){}
-  if (r.bot) return;
-  if (!r.over && r.rated) applyScore(r, false);
+  if (r.bot){
+    if (!r.over) applyScore({ myRating: ELO_START, oppRating: ELO_START }, false).then(d => { if (d != null) toast('Maçı yarıda bıraktın: ' + d + ' puan'); });
+    return;
+  }
+  if (!r.over && r.rated) applyScore(r, false).then(d => { if (d != null) toast('Maçı yarıda bıraktın: ' + d + ' puan'); });
   if (!r.over) getDb().then(db => db.runTransaction(async tx => { const d = await tx.get(r.ref); if (!d.data().winner) tx.update(r.ref, { winner: r.oppId }); })).catch(() => {});
 }
 /* ----- RASTGELE EŞLEŞME + BOT ----- */
@@ -2077,7 +2068,7 @@ const LV_FIRST = 5, LV_STAR = 5;                     // bölüm puanı: ilk biti
 const eloOf = o => (o && o.elo != null) ? o.elo : (o && o.score != null ? o.score : ELO_START);
 const ratingOf = async id => { try { const x = await (await getDb()).collection('leaderboard').doc(id).get(); return x.exists ? eloOf(x.data()) : ELO_START; } catch(e){ return ELO_START; } };
 const levelPoints = () => Object.values(S.done).reduce((t, d) => t + (d ? LV_FIRST + LV_STAR * (d.stars || 0) : 0), 0);
-let lastRace = { size: 6, random: true }, myScore = null, lbUn = null, lbBusy = false, lbRows = [];
+let lastRace = { size: 6, random: true }, myScore = null, lbUn = null, lbBusy = false, lbRows = [], lbErr = false, lbRetry = null;
 async function applyScore(r, won){
   if (!r || r.scored || !USER || !USER.id) return null; r.scored = true;
   try {
@@ -2129,22 +2120,24 @@ function lbRowHTML(r, i){
 function lbRender(){
   const mine = USER && lbRows.find(r => r.id === USER.id), sc = mine ? mine.score : myScore;
   $('lb-me').textContent = sc != null ? 'Puanın: ' + sc : '';
-  $('lb-list').innerHTML = lbRows.length ? lbRows.slice(0, 3).map(lbRowHTML).join('') : '<p class="lb-empty">Henüz kimse yok, ilk sen ol!</p>';
-  $('lb-full').innerHTML = lbRows.length ? lbRows.map(lbRowHTML).join('') : '<p class="lb-empty">Henüz kimse yok, ilk sen ol!</p>';
+  const empty = '<p class="lb-empty">' + (lbErr ? 'Tablo yüklenemedi, tekrar deneniyor…' : 'Henüz kimse yok, ilk sen ol!') + '</p>';
+  $('lb-list').innerHTML = lbRows.length ? lbRows.slice(0, 3).map(lbRowHTML).join('') : empty;
+  $('lb-full').innerHTML = lbRows.length ? lbRows.map(lbRowHTML).join('') : empty;
 }
 async function lbStart(){
   if (lbUn || lbBusy) return;
   if (!FIREBASE_CONFIG.apiKey){ $('lb').hidden = true; return; }
   lbBusy = true;
+  const fail = () => { lbUn = null; lbErr = true; lbRender(); clearTimeout(lbRetry); lbRetry = setTimeout(lbStart, 15000); };
   try {
     const db = await getDb();
     lbUn = db.collection('leaderboard').orderBy('score', 'desc').limit(10).onSnapshot(q => {
-      lbRows = []; q.forEach(d => lbRows.push(Object.assign({ id: d.id }, d.data()))); lbRender();
-    }, () => { $('lb').hidden = true; });
-  } catch(e){}
+      lbErr = false; lbRows = []; q.forEach(d => lbRows.push(Object.assign({ id: d.id }, d.data()))); lbRender();
+    }, e => { try { console.warn('Liderlik tablosu okunamadı:', e && e.code, e && e.message); } catch(_){} fail(); });
+  } catch(e){ fail(); }
   lbBusy = false;
 }
-$('lb').addEventListener('click', () => { lbRender(); $('lbbox').classList.add('show'); });
+$('lb').addEventListener('click', () => { if (lbErr) lbStart(); lbRender(); $('lbbox').classList.add('show'); });
 $('lb-close').addEventListener('click', () => $('lbbox').classList.remove('show'));
 lbRender();
 $('btn-online').addEventListener('click', () => { audio(); openOnline(); });
