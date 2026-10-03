@@ -311,6 +311,9 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 .lg-btn .lg-ic{width:auto;height:auto;border-radius:0;background:none!important;box-shadow:none;font-size:44px;line-height:1;text-shadow:0 2px 0 rgba(0,0,0,.3)}
 .lg-btn .lg-ic svg.i{font-size:42px}
 .lg-gg .lg-ic{text-shadow:none}
+.lg-saved{max-width:300px;margin:6px 0 4px;padding:12px 22px;border-radius:999px;font-size:16px;font-weight:900;letter-spacing:.04em;color:#3b1d00;background:linear-gradient(180deg,#fde68a,#fbbf24);box-shadow:0 4px 0 #92400e,0 8px 18px rgba(245,158,11,.35);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lg-saved[hidden]{display:none}
+.lg-saved:active{transform:translateY(3px);box-shadow:0 1px 0 #92400e}
 .lg-note{max-width:300px;margin-top:6px;text-align:center;font-size:12.5px;font-weight:700;line-height:1.5;color:#b9b3f0}
 .lg-note em{font-style:normal;color:#fbbf24}
 
@@ -361,6 +364,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .smenu button.srow:active{background:rgba(255,255,255,.16);transform:none;box-shadow:none}
 .smenu .srow b{box-shadow:none;background:rgba(0,0,0,.28)}
 .smenu #s-help{color:#fbbf24}
+.smenu #s-delete.arm{background:#be123c;color:#fff;border-color:transparent}
 .smenu #s-report{color:#e0dcff}
 .smenu #s-rate{color:#fde68a}
 .smenu .srow b#s-acc{min-width:0;max-width:112px;flex:1}
@@ -642,7 +646,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .inv-btns button{flex:1;margin:0!important;font-size:16px!important;padding:13px 10px!important}
 .inv-btns .inv-no{border-radius:16px;font-weight:900;letter-spacing:.06em;color:#fca5a5;background:rgba(255,255,255,.08);border:1px solid rgba(196,181,253,.25)}
 #invbox{z-index:120}
-#invbox .inv-t{margin:4px 0 0;text-align:center;font-size:17px;font-weight:800;color:#e9e5ff}
+#invbox .inv-t,#frbox .inv-t{margin:4px 0 0;text-align:center;font-size:17px;font-weight:800;color:#e9e5ff}
 .pcard{max-height:92%;overflow-y:auto}
 .pfr{padding:0 14px 18px}
 .pfr-h{display:flex;justify-content:space-between;align-items:center;margin:2px 2px 8px;font-size:14px;font-weight:900;letter-spacing:.08em;color:#fbbf24}
@@ -670,7 +674,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   <symbol id="i-mute" viewBox="0 0 24 24"><path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.8 8.8 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 0 0 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></symbol>
   <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></symbol>
   <symbol id="i-clock" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></symbol>
-  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M9 6.2v11.6l9.2-5.8z" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></symbol>
   <symbol id="i-grid" viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></symbol>
@@ -804,6 +808,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
         <button class="lg-btn lg-gg" id="lg-google" aria-label="Google ile bağlan"><span class="lg-ic">G</span></button>
         <button class="lg-btn lg-gs" id="lg-guest" aria-label="Misafir olarak bağlan"><span class="lg-ic"><svg class="i"><use href="#i-user"/></svg></span></button>
       </div>
+      <button class="lg-saved" id="lg-saved" hidden></button>
       <p class="lg-note"><em>Misafir girişi</em> ile oynanan oyunların ilerlemesi telefon ayarlarınız sıfırlandığında kaybolabilir. Lütfen Facebook veya Google ile bağlanın.</p>
     </section>
 
@@ -821,6 +826,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
     <button class="srow c" id="s-report">SORUN BİLDİR</button>
     <button class="srow c" id="s-rate">★ BİZİ PUANLA</button>
     <button class="srow c" id="s-help">YARDIM</button>
+    <button class="srow danger" id="s-delete" hidden>HESABI SİL</button>
   </div>
   <div class="sback"></div>
   <div class="help" id="help">
@@ -856,6 +862,13 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
       <div class="ol-list" id="ol-inv"></div>
       <div class="ol-list" id="ol-fr"></div>
       <button class="nm-cancel" id="ol-close">KAPAT</button>
+    </div>
+  </div>
+  <div class="help" id="frbox">
+    <div class="hcard">
+      <h3>ARKADAŞLIK İSTEĞİ</h3>
+      <p class="inv-t" id="fr-t"></p>
+      <div class="inv-btns"><button class="btn-main" id="fr-ok">KABUL ET</button><button class="inv-no" id="fr-no">REDDET</button></div>
     </div>
   </div>
   <div class="help" id="invbox">
@@ -1703,7 +1716,10 @@ let USER = null;
 /* giriş bilgisi localStorage + çerezde (yedek) tutulur; sadece ÇIKIŞ YAP silebilir */
 const ckGet = k => { try { const m = document.cookie.match(new RegExp('(?:^|; )' + k + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : null; } catch(e){ return null; } };
 const ckSet = (k, v) => { try { document.cookie = k + '=' + encodeURIComponent(v) + ';max-age=315360000;path=/;SameSite=Lax'; } catch(e){} };
-function saveUser(u){ const j = JSON.stringify(u); store.set('kb_user', j); ckSet('kb_user', j); }
+/* cihazdaki misafir hesabı: çıkış yapılsa da kalır, tek hesap */
+function getGuest(){ try { const g = JSON.parse(store.get('kb_guest') || ckGet('kb_guest') || 'null'); return g && g.id && g.name ? g : null; } catch(e){ return null; } }
+function saveGuest(u){ const j = JSON.stringify({ type: 'guest', name: u.name, id: u.id }); store.set('kb_guest', j); ckSet('kb_guest', j); }
+function saveUser(u){ if (u && u.type === 'guest' && u.id) saveGuest(u); const j = JSON.stringify(u); store.set('kb_user', j); ckSet('kb_user', j); }
 try { USER = JSON.parse(store.get('kb_user') || 'null'); } catch(e) { USER = null; }
 if (!USER) { try { USER = JSON.parse(ckGet('kb_user') || 'null'); if (USER) saveUser(USER); } catch(e) { USER = null; } }
 else saveUser(USER);
@@ -1711,7 +1727,13 @@ try { if (navigator.storage && navigator.storage.persist) navigator.storage.pers
 
 const menuEl = $('smenu'), helpEl = $('help');
 function closeMenu(){ menuEl.classList.remove('show'); }
+function renderSavedGuest(){
+  const g = getGuest(), b = $('lg-saved');
+  b.hidden = !g; if (g) b.textContent = '👤 ' + g.name + ' olarak devam et';
+}
 function refreshSettings(){
+  renderSavedGuest();
+  $('s-delete').hidden = !(USER && USER.type === 'guest');
   $('s-sound-v').textContent = S.sound ? 'AÇIK' : 'KAPALI';
   $('s-vib-v').textContent = S.vib ? 'AÇIK' : 'KAPALI';
   $('s-acc').textContent = USER ? USER.name : '-';
@@ -1830,7 +1852,9 @@ nmOk.addEventListener('click', submitName);
 nmInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitName(); });
 nmInput.addEventListener('input', () => { const v = nmInput.value.replace(NAME_BAD, ''); if (v !== nmInput.value) nmInput.value = v; });
 $('nm-cancel').addEventListener('click', () => nameBox.classList.remove('show'));
-$('lg-guest').addEventListener('click', () => { audio(); openNameBox(); });
+const guestLogin = () => { audio(); const g = getGuest(); if (g) setUser(g); else openNameBox(); };   // kayıtlı hesap varsa yenisi açılamaz
+$('lg-guest').addEventListener('click', guestLogin);
+$('lg-saved').addEventListener('click', guestLogin);
 $('lg-google').addEventListener('click', () => socialLogin('google'));
 $('lg-facebook').addEventListener('click', () => socialLogin('facebook'));
 
@@ -1871,6 +1895,22 @@ $('s-rate').addEventListener('click', () => {
   if (!window.open(url, '_blank')) location.href = url;
 });
 $('help-ok').addEventListener('click', () => helpEl.classList.remove('show'));
+/* misafir hesabını bu telefondan sil (2 dokunuş): sonra yeni misafir hesabı açılabilir */
+let delTimer = null;
+$('s-delete').addEventListener('click', () => {
+  const b = $('s-delete');
+  if (!b.classList.contains('arm')){
+    b.classList.add('arm'); b.textContent = 'EMİN MİSİN? TEKRAR DOKUN';
+    clearTimeout(delTimer); delTimer = setTimeout(() => { b.classList.remove('arm'); b.textContent = 'HESABI SİL'; }, 3500);
+    return;
+  }
+  clearTimeout(delTimer); b.classList.remove('arm'); b.textContent = 'HESABI SİL';
+  closeMenu(); leaveGame(); USER = null;
+  store.set('kb_user', 'null'); ckSet('kb_user', 'null'); store.set('kb_guest', 'null'); ckSet('kb_guest', 'null');
+  lbOwnId = null; myScore = null; lbRender();
+  try { if (fbAuth) fbAuth.signOut(); } catch(e){}
+  refreshSettings(); setView('login'); toast('Hesap bu telefondan silindi');
+});
 $('s-logout').addEventListener('click', () => {
   closeMenu(); leaveGame(); USER = null; store.set('kb_user', 'null'); ckSet('kb_user', 'null'); lbOwnId = null; myScore = null; lbRender();
   try { if (fbAuth) fbAuth.signOut(); } catch(e){}
@@ -2026,10 +2066,10 @@ function raceStop(){
 /* ----- RASTGELE EŞLEŞME + BOT ----- */
 const BOT_NAMES = ['Elif','Mert','Zeynep','Can','Deniz','Ece','Burak','Selin','Kaan','Defne','Emre','Ayşe'];
 const MM_WAIT = 10000;                                   // sistemde kimse yoksa bu kadar bekle, sonra bot
-let mmBusy = false, mmUn = null, mmTimer = null, mmRef = null;
+let mmBusy = false, mmUn = null, mmTimer = null, mmRef = null, mmCount = null, mmEnd = 0;
 function mmUI(on){ $('ol-play').hidden = on; $('ol-stop').hidden = !on; olErr.classList.toggle('ol-search', on); }
 function mmCancel(){
-  clearTimeout(mmTimer); mmTimer = null;
+  clearTimeout(mmTimer); mmTimer = null; clearInterval(mmCount); mmCount = null;
   if (mmUn){ try { mmUn(); } catch(e){} mmUn = null; }
   if (mmRef){ const r = mmRef; mmRef = null; getDb().then(db => db.runTransaction(async tx => { const d = await tx.get(r); if (d.exists && d.data().status === 'waiting') tx.update(r, { status:'cancelled' }); })).catch(() => {}); }
   mmBusy = false; mmUI(false);
@@ -2043,9 +2083,12 @@ function startBot(size){
   showGame(0, def, seed);
 }
 async function findMatch(){
-  if (mmBusy) return; mmBusy = true; mmUI(true); olMsg('Rakip aranıyor…', 1);
+  if (mmBusy) return; mmBusy = true; mmUI(true);
+  mmEnd = Date.now() + MM_WAIT;                          // 10 sn geri sayım; bitince rakip yoksa bot ile eşleşir
+  const tick = () => { const left = Math.max(0, Math.ceil((mmEnd - Date.now()) / 1000)); olMsg(left > 0 ? 'Rakip aranıyor… ' + left : 'Eşleşiliyor…', 1); };
+  tick(); clearInterval(mmCount); mmCount = setInterval(tick, 250);
   const size = olSize, toBot = () => { if (mmBusy) startBot(size); };
-  if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id){ mmTimer = setTimeout(toBot, 1500); return; }
+  if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id){ mmTimer = setTimeout(toBot, MM_WAIT); return; }
   try {
     const db = await getDb(); if (!mmBusy) return;
     const snap = await db.collection('invites').where('status', '==', 'waiting').where('size', '==', size).get();
@@ -2070,7 +2113,7 @@ async function findMatch(){
         await db.runTransaction(async tx => { const x = await tx.get(ref); if (x.data().status === 'waiting'){ tx.update(ref, { status:'cancelled' }); gone = true; } });
         if (gone){ mmRef = null; toBot(); }                 // sistemde kimse yok -> bot
       } catch(e){ toBot(); }
-    }, MM_WAIT);
+    }, Math.max(0, mmEnd - Date.now()));
   } catch(e){ toBot(); }
 }
 $('ol-rand').addEventListener('click', findMatch);
@@ -2196,8 +2239,34 @@ $('inv-no').addEventListener('click', async () => {
   try { await it.ref.update({ status:'declined' }); } catch(e){}
   invHide();
 });
+/* ----- gelen arkadaşlık istekleri ----- */
+let frUn = null, frQueue = [], frCur = null, frSeen = new Set();
+function frShow(){
+  if (frCur || invCur || R) { if (frQueue.length) setTimeout(frShow, 1500); return; }
+  while (frQueue.length && blocked.has(frQueue[0].v.from)) frQueue.shift();
+  if (!frQueue.length) return;
+  frCur = frQueue.shift();
+  $('fr-t').textContent = frCur.v.fromName + ' seni arkadaş olarak eklemek istiyor!';
+  $('frbox').classList.add('show'); SND.invite(); buzz([30, 40, 30]);
+}
+function frHide(){ $('frbox').classList.remove('show'); frCur = null; setTimeout(frShow, 300); }
+$('fr-ok').addEventListener('click', async () => {
+  const it = frCur; if (!it) return; frHide();
+  try {
+    const db = await getDb(), b = db.batch();
+    b.set(db.collection('users').doc(USER.id).collection('friends').doc(it.v.from), { name: it.v.fromName });
+    b.set(db.collection('users').doc(it.v.from).collection('friends').doc(USER.id), { name: USER.name });
+    b.update(it.ref, { status: 'accepted' });
+    await b.commit(); toast(it.v.fromName + ' arkadaş olarak eklendi');
+  } catch(e){ toast('İşlem başarısız, tekrar dene'); }
+});
+$('fr-no').addEventListener('click', async () => {
+  const it = frCur; if (!it) return; frHide();
+  try { await it.ref.update({ status: 'declined' }); } catch(e){}
+});
 async function invWatch(){
   if (!USER || !USER.id){
+    if (frUn){ try { frUn(); } catch(e){} frUn = null; } frQueue = []; frSeen = new Set();
     if (invUn){ try { invUn(); } catch(e){} invUn = null; }
     if (blUn){ try { blUn(); } catch(e){} blUn = null; }
     blocked = new Map(); invWatchId = null; return;
@@ -2212,6 +2281,14 @@ async function invWatch(){
       blocked = new Map(); q.forEach(d => blocked.set(d.id, (d.data() && d.data().name) || d.id));
       if (profEl.classList.contains('show')) pfRender();
     });
+    if (frUn){ try { frUn(); } catch(e){} }
+    frUn = db.collection('friendRequests').where('to', '==', USER.id).where('status', '==', 'pending').onSnapshot(q => {
+      q.docChanges().forEach(ch => {
+        if (ch.type !== 'added' || frSeen.has(ch.doc.id)) return;
+        frSeen.add(ch.doc.id); frQueue.push({ ref: ch.doc.ref, v: ch.doc.data() });
+      });
+      frShow();
+    }, () => {});
     invUn = db.collection('invites').where('to', '==', USER.id).where('status', '==', 'pending').onSnapshot(q => {
       q.docChanges().forEach(ch => {
         if (ch.type !== 'added') return;
@@ -2282,13 +2359,23 @@ async function addFriend(){
     if (blocked.has(f.id)) return pfMsg('Bu kullanıcıyı engelledin, önce engeli kaldır');
     const bl = await db.collection('users').doc(f.id).collection('blocked').doc(USER.id).get();
     if (bl.exists) return pfMsg('Bu kullanıcı eklenemiyor');
-    const b = db.batch();
-    b.set(db.collection('users').doc(USER.id).collection('friends').doc(f.id), { name: f.name });
-    b.set(db.collection('users').doc(f.id).collection('friends').doc(USER.id), { name: USER.name });
-    await b.commit();
-    $('pf-name').value = ''; pfMsg(f.name + ' eklendi', 1);
+    if (pfFriends.some(x => x.id === f.id)) return pfMsg(f.name + ' zaten arkadaşın');
+    // doğrudan ekleme yok: istek gönderilir, karşı taraf KABUL ederse arkadaş olunur
+    const ref = db.collection('friendRequests').doc(USER.id + '_' + f.id);
+    await ref.set({ from: USER.id, fromName: USER.name, to: f.id, toName: f.name, status: 'pending', created: firebase.firestore.FieldValue.serverTimestamp() });
+    $('pf-name').value = ''; pfMsg('İstek gönderildi, ' + f.name + ' kabul edince eklenir', 1);
+    if (frOutUn[ref.id]) { try { frOutUn[ref.id](); } catch(e){} }
+    const un = frOutUn[ref.id] = ref.onSnapshot(d => {
+      const v = d.data(); if (!v || v.status === 'pending') return;
+      un(); delete frOutUn[ref.id];
+      if (v.status === 'accepted'){ toast(f.name + ' isteği kabul etti, arkadaş oldunuz!'); pfMsg(f.name + ' kabul etti', 1); }
+      else { toast(f.name + ' arkadaşlık isteğini reddetti'); pfMsg(f.name + ' isteği reddetti'); }
+      ref.delete().catch(() => {});
+    });
+    setTimeout(() => { if (frOutUn[ref.id]) { try { frOutUn[ref.id](); } catch(e){} delete frOutUn[ref.id]; } }, 600000);
   } catch(e){ pfMsg('Bağlantı hatası, tekrar dene'); }
 }
+const frOutUn = {};
 async function friendRemove(id){
   try {
     const db = await getDb(), b = db.batch();
