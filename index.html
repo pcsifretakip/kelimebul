@@ -751,8 +751,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
         <button id="lb" class="btn-sq gold" aria-label="Liderlik tablosu"><span>🏆</span><span>LİDERLİK TABLOSU</span></button>
         <button id="btn-levels" class="btn-sq" aria-label="Bölümler"><svg class="i"><use href="#i-grid"/></svg><span>BÖLÜMLER</span></button>
         <button id="btn-online" class="btn-sq pink"><svg class="i"><use href="#i-user"/></svg><span>ONLİNE MOD</span></button>
-        <button id="btn-start-game" class="btn-main"><svg class="i"><use href="#i-play"/></svg><span>OYUNA BAŞLA</span></button>
-      </div>
+              </div>
     </section>
 
     <!-- GAME -->
@@ -1131,7 +1130,7 @@ const store = {
 };
 
 const S = {
-  levelIndex: 0, maxOpen: 0, done: {}, coins: 150, sound: true,
+  levelIndex: 0, maxOpen: 0, done: {}, partial: {}, coins: 150, sound: true,
   level: null, found: new Set(), colorOf: {}, caps: [],
   cells: [], chips: {}, token: 0, playing: false,
   selecting: false, sel: null, dragCap: null,
@@ -1146,6 +1145,7 @@ const S = {
   S.maxOpen = Math.min(last, Math.max(isNaN(l) ? 0 : l, isNaN(m) ? 0 : m));
   S.levelIndex = S.maxOpen;
   try { S.done = JSON.parse(store.get('wow_search_done') || '{}') || {}; } catch(e) { S.done = {}; }
+  try { S.partial = JSON.parse(store.get('wow_search_partial') || '{}') || {}; } catch(e) { S.partial = {}; }
   // eski kayıttan geçiş: daha önce açılmış bölümleri tamamlanmış say
   for (let i = 0; i < S.maxOpen; i++) if (!S.done[i]) S.done[i] = { stars: 1, time: 0 };
 }
@@ -1153,6 +1153,13 @@ function saveProgress(){
   store.set('wow_search_max', S.maxOpen);
   store.set('wow_search_level', S.maxOpen);
   store.set('wow_search_done', JSON.stringify(S.done));
+  store.set('wow_search_partial', JSON.stringify(S.partial));
+}
+function savePartialProgress(){
+  if (!S.level || S.levelIndex == null) return;
+  if (S.found.size) S.partial[S.levelIndex] = Array.from(S.found);
+  else delete S.partial[S.levelIndex];
+  store.set('wow_search_partial', JSON.stringify(S.partial));
 }
 
 /* =====================================================
@@ -1296,31 +1303,40 @@ function startLevel(index, def, seed){
   const tok = S.token;
   S.levelIndex = index;
   S.level = def ? buildLevel(def, seed) : buildLevel(LEVELS[index], index);
-  S.found = new Set(); S.colorOf = {}; S.caps = []; S.sel = null; S.selecting = false; S.dragCap = null;
+  const savedFound = (!def && !review && Array.isArray(S.partial[index])) ? S.partial[index] : [];
+  S.found = new Set(savedFound.filter(w => S.level.words.includes(w)));
+  S.colorOf = {}; S.caps = []; S.sel = null; S.selecting = false; S.dragCap = null;
   S.level.words.forEach((w, i) => S.colorOf[w] = PALETTE[i % PALETTE.length]);
   $('header-level-num').textContent = def ? def.size + '×' + def.size : S.level.id;
   $('category-title').textContent = S.level.category;
   $('time-val').textContent = '00:00';
   renderWords(); renderGrid(); updateProgress();
   S.playing = false;
+  function restoreFoundWords(){
+    const n = S.level.size;
+    S.found.forEach(w => {
+      const chip = S.chips[w];
+      if (chip) chip.classList.add('found');
+      const pl = S.level.placements[w];
+      if (!pl) return;
+      const path = Array.from({ length: pl.len }, (_, k) => ({ r: pl.r + pl.dr * k, c: pl.c + pl.dc * k }));
+      path.forEach(q => S.cells[q.r * n + q.c].classList.add('found'));
+      S.caps.push({ word: w, path, el: makeCap(path, '', S.colorOf[w]) });
+    });
+    updateProgress();
+    measure();
+  }
   if (review){
-    const done = S.done[index], n = S.level.size;
+    const done = S.done[index];
     S.found = new Set(S.level.words); updateProgress();
     $('time-val').textContent = done.time ? fmt(done.time) : '00:00';
-    S.level.words.forEach(w => S.chips[w].classList.add('found'));
     requestAnimationFrame(() => requestAnimationFrame(() => {
       if (tok !== S.token) return;
-      measure();
-      S.level.words.forEach(w => {
-        const pl = S.level.placements[w];
-        const path = Array.from({ length: pl.len }, (_, k) => ({ r: pl.r + pl.dr * k, c: pl.c + pl.dc * k }));
-        path.forEach(q => S.cells[q.r * n + q.c].classList.add('found'));
-        S.caps.push({ word: w, path, el: makeCap(path, '', S.colorOf[w]) });
-      });
+      restoreFoundWords();
     }));
     return;                                           // tanıtım ekranı, sayaç ve oyun yok
   }
-  requestAnimationFrame(() => requestAnimationFrame(() => { measure(); }));
+  requestAnimationFrame(() => requestAnimationFrame(() => { restoreFoundWords(); }));
   // önce kategori tanıtım ekranı, sonra oyun ve süre başlar
   showIntro(index, def, () => {
     if (tok !== S.token) return;
@@ -1525,6 +1541,7 @@ gridEl.addEventListener('pointercancel', endSel);
 function onFound(word, path){
   const tok = S.token, color = S.colorOf[word], n = S.level.size;
   S.found.add(word);
+  if (!R) savePartialProgress();
   S.caps.push({ word, path, el: makeCap(path, 'new', color) });
   updateProgress();
   SND.found(); buzz([70, 45, 110]);   // her bulunan kelimede belirgin titreşim (Ayarlar > TİTREŞİM kapalıysa çalışmaz)
@@ -1626,6 +1643,7 @@ function victory(){
     stars: Math.max(stars, prev ? prev.stars : 0),
     time: prev && prev.time ? Math.min(prev.time, S.seconds) : S.seconds
   };
+  delete S.partial[idx];
   S.maxOpen = Math.max(S.maxOpen, Math.min(idx + 1, LEVELS.length - 1));
   saveProgress(); syncLevelPoints();
   document.querySelectorAll('.vstar').forEach((s, i) => s.classList.toggle('on', i < stars));
@@ -1692,7 +1710,6 @@ $('btn-review-next').addEventListener('click', () => {
   audio(); const nx = S.levelIndex + 1;
   if (nx >= LEVELS.length || nx > S.maxOpen){ showLevels(); } else { startLevel(nx); }
 });
-$('btn-start-game').addEventListener('click', () => { audio(); showGame(S.maxOpen); });
 $('btn-levels').addEventListener('click', () => { audio(); showLevels(); });
 $('btn-home').addEventListener('click', showHome);
 $('btn-sound').addEventListener('click', () => toggleSound());
