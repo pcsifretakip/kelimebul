@@ -2468,7 +2468,15 @@ async function searchFriend(){
     const bl = await db.collection('users').doc(f.id).collection('blocked').doc(USER.id).get();
     if (bl.exists) return pfMsg('Bu kullanıcı eklenemiyor');
     pfResultUser = f; pfMsg('Kullanıcı bulundu', 1); pfResultRender();
-  } catch(e){ pfMsg(e && e.code === 'permission-denied' ? 'İzin hatası: Firestore kurallarını kontrol et' : 'Bağlantı hatası, tekrar dene'); }
+  } catch(e){
+    console.error('ARKADAŞ ARAMA HATASI:', e);
+    pfMsg(
+      'HATA: ' +
+      (e && e.code ? e.code : 'bilinmiyor') +
+      ' | ' +
+      (e && e.message ? e.message : 'mesaj yok')
+    );
+  }
 }
 async function sendFriendRequest(f){
   if (!f || !USER || !USER.id) return;
