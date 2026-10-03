@@ -63,7 +63,8 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 .topbar .grp.r{justify-content:flex-end}
 .app.on-home #btn-sound,.app.on-home #btn-hint,.app.on-home #btn-home,.app.on-levels #btn-sound,.app.on-levels #btn-hint{display:none}
 .app:not(.on-home) #btn-avatar{display:none}
-.app:not(.on-home) #btn-settings{display:none}
+.app.on-levels #btn-settings{display:none}
+.app:not(.on-home):not(.on-levels) #btn-sound{display:none}
 .app.on-login .topbar{display:none}
 .icon-btn{
   position:relative;width:40px;height:40px;border-radius:14px;font-size:21px;
@@ -432,6 +433,16 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .pfr{padding:6px 14px 18px}
 #pt-friends .pfr-h{margin-top:8px}
 
+/* ===== ONLİNE MOD: rastgele / bot ===== */
+.ol-play{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.ol-play[hidden],#ol-stop[hidden]{display:none}
+.ol-play .btn-main{margin:0 auto;max-width:none;font-size:18px;padding:14px 16px}
+.btn-main.alt{background:linear-gradient(180deg,#5eead4 0%,#14b8a6 48%,#0f766e 100%);box-shadow:inset 0 2px 0 rgba(255,255,255,.4),inset 0 0 0 1.5px rgba(153,246,228,.4),0 7px 0 #0b4f4a,0 12px 30px rgba(20,184,166,.45)}
+.btn-main.alt:active{box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 2px 0 #0b4f4a,0 6px 16px rgba(20,184,166,.45)}
+.ol-sec{margin:16px 0 0;text-align:center;font-size:12px;font-weight:900;letter-spacing:.12em;color:#b9b3f0}
+.ol-search{display:flex;align-items:center;justify-content:center;gap:10px}
+.ol-search::before{content:"";width:16px;height:16px;border-radius:50%;border:3px solid rgba(251,191,36,.3);border-top-color:#fbbf24;animation:olspin .8s linear infinite}
+@keyframes olspin{to{transform:rotate(360deg)}}
 #fx{position:absolute;inset:0;width:100%;height:100%;z-index:80;pointer-events:none}
 
 /* ================= VICTORY ================= */
@@ -734,10 +745,15 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   <div class="help" id="olbox">
     <div class="hcard">
       <h3>ONLİNE MOD</h3>
-      <p class="nm-sub">Arkadaşını davet et. Kelimeleri önce bitiren kazanır!<br>Arkadaş eklemek için Profil &gt; Arkadaşlarım.</p>
-      <p class="nm-err" id="ol-err"></p>
-      <p class="nm-sub" style="margin:12px 0 0">TAHTA BOYUTU</p>
+      <p class="nm-sub">Tahta boyutunu seç, rakip bul. Kelimeleri önce bitiren kazanır!</p>
+      <p class="ol-sec" style="margin-top:0">TAHTA BOYUTU</p>
       <div class="ol-sz" id="ol-sz"></div>
+      <div class="ol-play" id="ol-play">
+        <button class="btn-main" id="ol-rand">RASTGELE EŞLEŞ</button>
+        <button class="btn-main alt" id="ol-bot">BOTLA OYNA</button>
+      </div>
+      <p class="nm-err" id="ol-err"></p>
+      <button class="nm-cancel" id="ol-stop" hidden>ARAMAYI İPTAL ET</button>
       <div class="ol-list" id="ol-inv"></div>
       <div class="ol-list" id="ol-fr"></div>
       <button class="nm-cancel" id="ol-close">KAPAT</button>
@@ -1668,7 +1684,7 @@ $('s-vib').addEventListener('click', () => { S.vib = !S.vib; store.set('kb_vib',
 $('s-help').addEventListener('click', () => { closeMenu(); helpEl.classList.add('show'); });
 $('help-ok').addEventListener('click', () => helpEl.classList.remove('show'));
 $('s-logout').addEventListener('click', () => {
-  closeMenu(); USER = null; store.set('kb_user', 'null');
+  closeMenu(); leaveGame(); USER = null; store.set('kb_user', 'null');
   try { if (fbAuth) fbAuth.signOut(); } catch(e){}
   refreshSettings(); setView('login');
 });
@@ -1741,13 +1757,12 @@ const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '
 function olClean(){ unsubs.forEach(u => { try { u(); } catch(e){} }); unsubs = []; }
 function olMsg(m, ok){ olErr.style.color = ok ? '#86efac' : ''; olErr.textContent = m; }
 async function openOnline(){
-  if (!FIREBASE_CONFIG.apiKey){ toast('Online için Firebase ayarı gerekli'); return; }
-  if (!USER || !USER.id){ toast('ID hazırlanıyor, tekrar dene'); return; }
-  olMsg(''); olEl.classList.add('show');
+  mmCancel(); olMsg(''); $('ol-fr').innerHTML = ''; $('ol-inv').innerHTML = ''; olEl.classList.add('show');
+  if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id) return;      // arkadaş listesi yok, rastgele/bot yine çalışır
   try {
     const db = await getDb(); olClean();
     unsubs.push(db.collection('users').doc(USER.id).collection('friends').onSnapshot(q => {
-      const box = $('ol-fr'); box.innerHTML = q.empty ? '<p class="nm-sub">Henüz arkadaşın yok. Profil &gt; Arkadaşlarım bölümünden ekleyebilirsin.</p>' : '';
+      const box = $('ol-fr'); box.innerHTML = q.empty ? '<p class="nm-sub">Henüz arkadaşın yok. Profil &gt; Arkadaşlarım bölümünden ekleyebilirsin.</p>' : '<p class="ol-sec" style="margin:6px 0 0">ARKADAŞINI DAVET ET</p>';
       q.forEach(d => {
         const b = document.createElement('button'); b.className = 'srow';
         b.innerHTML = '<span>' + esc(d.data().name) + '</span><b>DAVET ET</b>';
@@ -1769,6 +1784,7 @@ async function openOnline(){
   } catch(e){ olMsg('Bağlantı hatası'); }
 }
 async function invite(fid, fname){
+  mmCancel();
   try {
     const db = await getDb(), size = olSize, seed = Math.floor(Math.random() * 1e9);
     const ref = await db.collection('invites').add({ from: USER.id, fromName: USER.name, to: fid, size, seed, status:'pending', winner:null, created: firebase.firestore.FieldValue.serverTimestamp() });
@@ -1778,13 +1794,14 @@ async function invite(fid, fname){
   } catch(e){ olMsg('Davet gönderilemedi'); }
 }
 function beginRace(ref, v, opp, oppId){
-  olClean(); olEl.classList.remove('show');
+  mmCancel(); olClean(); olEl.classList.remove('show');
   R = { ref, opp, oppId, over:false };
   R.un = ref.onSnapshot(d => { const v = d.data(); if (v && v.winner && R && !R.over) raceEnd(v.winner === USER.id); });
   showGame(0, customDef(v.size, v.seed), v.seed);
 }
 async function raceFinish(){
   S.playing = false; stopTimer();
+  if (R && R.bot){ raceEnd(true); return; }
   try {
     const db = await getDb(); let won = false; const r = R;
     await db.runTransaction(async tx => { const d = await tx.get(r.ref); if (!d.data().winner){ tx.update(r.ref, { winner: USER.id, time: S.seconds }); won = true; } });
@@ -1792,18 +1809,72 @@ async function raceFinish(){
   } catch(e){ toast('Bağlantı hatası'); }
 }
 function raceEnd(won){
-  if (!R || R.over) return; R.over = true; S.playing = false; stopTimer();
+  if (!R || R.over) return; R.over = true; S.playing = false; stopTimer(); clearInterval(R.timer);
   if (won){ SND.win(); buzz([40, 60, 40]); } else { SND.miss(); buzz(80); }
   $('rr-t').textContent = won ? 'KAZANDIN! 🏆' : 'KAYBETTİN';
   $('rr-p').textContent = won ? 'Rakibini geçtin!' : R.opp + ' önce bitirdi.';
   resEl.classList.add('show');
 }
 function raceStop(){
-  if (!R) return; const r = R; R = null; try { r.un(); } catch(e){}
+  if (!R) return; const r = R; R = null; clearInterval(r.timer); try { r.un(); } catch(e){}
+  if (r.bot) return;
   if (!r.over) getDb().then(db => db.runTransaction(async tx => { const d = await tx.get(r.ref); if (!d.data().winner) tx.update(r.ref, { winner: r.oppId }); })).catch(() => {});
 }
+/* ----- RASTGELE EŞLEŞME + BOT ----- */
+const BOT_NAMES = ['Elif','Mert','Zeynep','Can','Deniz','Ece','Burak','Selin','Kaan','Defne','Emre','Ayşe'];
+const MM_WAIT = 10000;                                   // sistemde kimse yoksa bu kadar bekle, sonra bot
+let mmBusy = false, mmUn = null, mmTimer = null, mmRef = null;
+function mmUI(on){ $('ol-play').hidden = on; $('ol-stop').hidden = !on; olErr.classList.toggle('ol-search', on); }
+function mmCancel(){
+  clearTimeout(mmTimer); mmTimer = null;
+  if (mmUn){ try { mmUn(); } catch(e){} mmUn = null; }
+  if (mmRef){ const r = mmRef; mmRef = null; getDb().then(db => db.runTransaction(async tx => { const d = await tx.get(r); if (d.exists && d.data().status === 'waiting') tx.update(r, { status:'cancelled' }); })).catch(() => {}); }
+  mmBusy = false; mmUI(false);
+}
+function startBot(size){
+  mmCancel(); olClean(); olEl.classList.remove('show');
+  const seed = Math.floor(Math.random() * 1e9), def = customDef(size, seed);
+  const target = Math.round(def.words.length * (8 + Math.random() * 7));   // bot, kelime başına ~8-15 sn
+  R = { bot:true, opp: BOT_NAMES[Math.floor(Math.random() * BOT_NAMES.length)] + ' 🤖', over:false };
+  R.timer = setInterval(() => { if (R && R.bot && !R.over && S.playing && S.timer && S.seconds >= target) raceEnd(false); }, 500);
+  showGame(0, def, seed);
+}
+async function findMatch(){
+  if (mmBusy) return; mmBusy = true; mmUI(true); olMsg('Rakip aranıyor…', 1);
+  const size = olSize, toBot = () => { if (mmBusy) startBot(size); };
+  if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id){ mmTimer = setTimeout(toBot, 1500); return; }
+  try {
+    const db = await getDb(); if (!mmBusy) return;
+    const snap = await db.collection('invites').where('status', '==', 'waiting').where('size', '==', size).get();
+    if (!mmBusy) return;
+    const now = Date.now(), cands = [];
+    snap.forEach(d => { const v = d.data(), t = v.created ? v.created.toMillis() : now; if (v.from !== USER.id && !blocked.has(v.from) && now - t < MM_WAIT + 5000) cands.push(d); });
+    for (let i = cands.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [cands[i], cands[j]] = [cands[j], cands[i]]; }
+    for (const d of cands){
+      let v = null;
+      try { await db.runTransaction(async tx => { const x = await tx.get(d.ref); if (!x.exists || x.data().status !== 'waiting') throw new Error('gone'); v = x.data(); tx.update(d.ref, { status:'accepted', to: USER.id, toName: USER.name }); }); } catch(e){ v = null; }
+      if (v){ if (!mmBusy) return; beginRace(d.ref, v, v.fromName, v.from); return; }
+    }
+    if (!mmBusy) return;
+    const seed = Math.floor(Math.random() * 1e9);
+    const ref = await db.collection('invites').add({ from: USER.id, fromName: USER.name, to: null, size, seed, status:'waiting', winner:null, created: firebase.firestore.FieldValue.serverTimestamp() });
+    if (!mmBusy){ ref.update({ status:'cancelled' }).catch(() => {}); return; }
+    mmRef = ref;
+    mmUn = ref.onSnapshot(d => { const v = d.data(); if (v && v.status === 'accepted' && mmBusy){ mmRef = null; beginRace(ref, v, v.toName || 'Rakip', v.to); } });
+    mmTimer = setTimeout(async () => {
+      try {
+        let gone = false;
+        await db.runTransaction(async tx => { const x = await tx.get(ref); if (x.data().status === 'waiting'){ tx.update(ref, { status:'cancelled' }); gone = true; } });
+        if (gone){ mmRef = null; toBot(); }                 // sistemde kimse yok -> bot
+      } catch(e){ toBot(); }
+    }, MM_WAIT);
+  } catch(e){ toBot(); }
+}
+$('ol-rand').addEventListener('click', findMatch);
+$('ol-bot').addEventListener('click', () => startBot(olSize));
+$('ol-stop').addEventListener('click', () => { mmCancel(); olMsg(''); });
 $('btn-online').addEventListener('click', () => { audio(); openOnline(); });
-$('ol-close').addEventListener('click', () => { olClean(); olEl.classList.remove('show'); });
+$('ol-close').addEventListener('click', () => { mmCancel(); olMsg(''); olClean(); olEl.classList.remove('show'); });
 $('rr-ok').addEventListener('click', () => { resEl.classList.remove('show'); showHome(); });
 
 /* ===== DAVET BİLDİRİMİ: ekranın ortasında Kabul / Reddet ===== */
