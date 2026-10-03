@@ -352,6 +352,20 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .help .nm-err{min-height:20px;margin:8px 0 0;text-align:center;font-size:12.5px;font-weight:800;color:#fca5a5}
 #olbox .hcard{max-height:92%;overflow:auto}
 .ol-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.ol-stop-btn{width:100%;margin:10px auto 0;padding:13px 16px;border:1px solid rgba(254,113,113,.75);border-radius:14px;color:#fff;font-size:15px;font-weight:1000;letter-spacing:.06em;background:linear-gradient(180deg,#fb7185 0%,#e11d48 52%,#9f1239 100%);box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 5px 0 #6b102d,0 8px 18px rgba(225,29,72,.38)}
+.ol-stop-btn:active{transform:translateY(4px);box-shadow:inset 0 2px 0 rgba(255,255,255,.25),0 1px 0 #6b102d,0 4px 10px rgba(225,29,72,.3)}
+.ol-duel-btn{width:100%;margin:0 auto;padding:13px 16px;border-radius:14px;color:#fff;font-size:15px;font-weight:1000;letter-spacing:.05em;background:linear-gradient(180deg,#60a5fa 0%,#2563eb 50%,#1d4ed8 100%);border:1px solid rgba(147,197,253,.55);box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 5px 0 #173b93,0 8px 18px rgba(37,99,235,.35)}
+.ol-duel-btn:active{transform:translateY(3px);box-shadow:inset 0 2px 0 rgba(255,255,255,.25),0 1px 0 #173b93}
+.ol-duel-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.ol-duel-list[hidden]{display:none}
+.ol-friend-row{display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(196,181,253,.18)}
+.ol-friend-row .ofr-name{flex:1;min-width:0;color:#f5f1ff;font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ol-friend-row .ofr-status{font-size:10px;font-weight:1000;letter-spacing:.05em;color:#86efac}
+.ol-friend-row.offline .ofr-status{color:#aaa4d7}
+.ol-friend-row button{padding:8px 10px;border:0;border-radius:10px;color:#fff;font-size:11px;font-weight:1000;background:linear-gradient(180deg,#34d399,#059669);box-shadow:0 3px 0 #065f46}
+.ol-friend-row button:active{transform:translateY(2px);box-shadow:0 1px 0 #065f46}
+.ol-friend-row button[disabled]{opacity:.4;filter:grayscale(1);box-shadow:none}
+
 .ol-sz{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px}
 .ol-sz button{padding:8px 12px;border-radius:12px;font-size:13px;font-weight:900;color:#e0dcff;background:rgba(255,255,255,.1);border:1.5px solid transparent}
 .ol-sz button.on{color:#3b1d00;background:linear-gradient(180deg,#fde68a,#fbbf24);box-shadow:0 2px 0 #92400e}
@@ -398,6 +412,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .nm-text{width:100%;height:120px;padding:12px 14px;border-radius:14px;border:1.5px solid rgba(196,181,253,.4);background:rgba(0,0,0,.35);color:#fff;font:inherit;font-size:15px;font-weight:700;line-height:1.4;text-align:left;resize:none;outline:none;user-select:text;-webkit-user-select:text}
 .nm-text:focus{border-color:#fbbf24;box-shadow:0 0 0 3px rgba(251,191,36,.2)}
 .smenu.show .srow{animation:none}
+.pav .av img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
 /* ===== PROFİL: sade, tek tonlu (mor + altın) ===== */
 .pcard{border-radius:28px;border:1px solid rgba(196,181,253,.35);background:linear-gradient(180deg,#2a1a74,#150c42);box-shadow:0 24px 60px rgba(0,0,0,.65),0 0 28px rgba(124,92,255,.3)}
 .prof.show .pcard{animation:pcPop .45s cubic-bezier(.2,.9,.3,1.2)}
@@ -907,9 +922,11 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
       <div class="ol-sz" id="ol-sz"></div>
       <div class="ol-play" id="ol-play">
         <button class="btn-main" id="ol-rand">RASTGELE EŞLEŞ</button>
+        <button class="ol-duel-btn" id="ol-duel">⚔️ ARKADAŞINLA DÜELLO YAP</button>
       </div>
       <p class="nm-err" id="ol-err"></p>
-      <button class="nm-cancel" id="ol-stop" hidden>ARAMAYI İPTAL ET</button>
+      <button class="ol-stop-btn" id="ol-stop" hidden>✕ ARAMAYI İPTAL ET</button>
+      <div class="ol-duel-list" id="ol-duel-list" hidden></div>
       <div class="ol-list" id="ol-inv"></div>
       <div class="ol-list" id="ol-fr"></div>
       <button class="nm-cancel" id="ol-close">KAPAT</button>
@@ -972,7 +989,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
       <div class="pname"><b id="p-name">-</b><span><svg class="i"><use href="#i-star"/></svg><i id="p-level" style="font-style:normal">1</i></span><span><i style="font-style:normal">🏆</i><i id="p-done" style="font-style:normal">0</i></span></div>
       <div class="pid">ID: <b id="p-id">-</b></div>
       <div class="pmid">
-        <div class="pav"><div class="av" id="p-av"></div><button class="pedit" id="p-edit" aria-label="Avatarı değiştir">✎</button></div>
+        <div class="pav"><div class="av" id="p-av"></div><button class="pedit" id="p-edit" aria-label="Profil fotoğrafı ekle veya değiştir">✎</button><input id="p-photo" type="file" accept="image/*" hidden></div>
         <div class="pboxes">
           <div class="pbox"><svg class="i"><use href="#i-coin"/></svg><b id="p-coins">0</b></div>
           <div class="pbox"><svg class="i"><use href="#i-star"/></svg><b id="p-stars">0</b></div>
@@ -1829,7 +1846,7 @@ function toggleSound(){
   if (S.sound){ audio(); SND.hint(); }
 }
 function setUser(u){
-  USER = u; saveUser(u); refreshSettings(); showHome();
+  USER = u; saveUser(u); refreshSettings(); startPresence(); showHome();
 }
 
 function loadScript(src){
@@ -1988,12 +2005,12 @@ $('del-yes').addEventListener('click', async () => {
   try { localStorage.clear(); } catch(e){}
   ['kb_user', 'kb_guest'].forEach(k => { try { document.cookie = k + '=;max-age=0;path=/'; } catch(e){} });
   Object.keys(keep).forEach(k => { if (keep[k] != null) store.set(k, keep[k]); });
-  USER = null;
+  stopPresence(); USER = null;
   try { if (fbAuth) await Promise.race([fbAuth.signOut(), new Promise(r => setTimeout(r, 800))]); } catch(e){}
   location.reload();                                                                    // bellekteki her şey de sıfırlansın
 });
 $('s-logout').addEventListener('click', () => {
-  closeMenu(); leaveGame(); USER = null; store.set('kb_user', 'null'); ckSet('kb_user', 'null'); lbOwnId = null; myScore = null; lbRender();
+  closeMenu(); leaveGame(); stopPresence(); USER = null; store.set('kb_user', 'null'); ckSet('kb_user', 'null'); lbOwnId = null; myScore = null; lbRender();
   try { if (fbAuth) fbAuth.signOut(); } catch(e){}
   refreshSettings(); setView('login');
 });
@@ -2010,8 +2027,9 @@ $('s-logout').addEventListener('click', () => {
 }
 const AVATARS = ['🦊','🐼','🦁','🐯','🐸','🐵','🦉','🐙','🦄','🐧','🐶','🐱'];
 let avatar = store.get('kb_avatar') || '';
+let avatarPhoto = store.get('kb_avatar_photo') || '';
 const profEl = $('prof'), avpick = $('avpick');
-function avatarHTML(){ return avatar ? avatar : '<svg class="i"><use href="#i-user"/></svg>'; }
+function avatarHTML(){ return avatarPhoto ? '<img src="' + avatarPhoto + '" alt="Profil fotoğrafı">' : (avatar ? avatar : '<svg class="i"><use href="#i-user"/></svg>'); }
 function renderAvatar(){
   $('btn-avatar').innerHTML = avatarHTML();
   $('p-av').innerHTML = avatarHTML();
@@ -2041,12 +2059,49 @@ function openProfile(){
 $('btn-avatar').addEventListener('click', () => { audio(); openProfile(); });
 $('prof-close').addEventListener('click', () => profEl.classList.remove('show'));
 profEl.addEventListener('click', e => { if (e.target === profEl) profEl.classList.remove('show'); });
-$('p-edit').addEventListener('click', () => avpick.classList.toggle('show'));
+const photoInput = $('p-photo');
+$('p-edit').addEventListener('click', () => {
+  if (photoInput) photoInput.click();
+});
+if (photoInput) photoInput.addEventListener('change', e => {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) return toast('Lütfen bir fotoğraf seç');
+  const rd = new FileReader();
+  rd.onload = () => {
+    const im = new Image();
+    im.onload = () => {
+      const max = 320, scale = Math.min(1, max / Math.max(im.width, im.height));
+      const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(im.width * scale)); c.height = Math.max(1, Math.round(im.height * scale));
+      const cx = c.getContext('2d'); cx.drawImage(im, 0, 0, c.width, c.height);
+      avatarPhoto = c.toDataURL('image/jpeg', .78);
+      avatar = ''; store.set('kb_avatar_photo', avatarPhoto); store.set('kb_avatar', ''); renderAvatar();
+      toast('Profil fotoğrafın güncellendi');
+    };
+    im.src = rd.result;
+  };
+  rd.readAsDataURL(file);
+  photoInput.value = '';
+});
 renderAvatar();
 
 /* ===== ONLİNE MOD: arkadaş ekle, davet et, önce bitiren kazanır (Firestore) ===== */
 const olEl = $('olbox'), resEl = $('raceres'), olErr = $('ol-err');
-let R = null, unsubs = [], olSize = 6;
+let R = null, unsubs = [], olSize = 5;
+let presenceTimer = null, duelTimer = null;
+async function setPresence(online){
+  if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id) return;
+  try { const db = await getDb(); await db.collection('users').doc(USER.id).set({ name: USER.name, online: !!online, lastSeen: firebase.firestore.FieldValue.serverTimestamp() }, {merge:true}); } catch(e) {}
+}
+function startPresence(){
+  clearInterval(presenceTimer);
+  if (!USER || !USER.id || !FIREBASE_CONFIG.apiKey) return;
+  setPresence(true);
+  presenceTimer = setInterval(() => { if (document.visibilityState === 'visible') setPresence(true); }, 15000);
+}
+function stopPresence(){ clearInterval(presenceTimer); presenceTimer = null; setPresence(false); }
+if (USER && USER.id) setTimeout(startPresence, 0);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') setPresence(true); else setPresence(false); });
 const SIZES = { 5:3, 6:4, 7:5, 8:6, 10:7 };          // boyut : kelime sayısı
 function customDef(size, seed){
   const rnd = mulberry32(seed);
@@ -2066,19 +2121,13 @@ const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '
 function olClean(){ unsubs.forEach(u => { try { u(); } catch(e){} }); unsubs = []; }
 function olMsg(m, ok){ olErr.style.color = ok ? '#86efac' : ''; olErr.textContent = m; }
 async function openOnline(){
-  mmCancel(); olMsg(''); $('ol-fr').innerHTML = ''; $('ol-inv').innerHTML = ''; olEl.classList.add('show');
-  if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id) return;      // arkadaş listesi yok, rastgele/bot yine çalışır
+  mmCancel(); olSize = 5; document.querySelectorAll('#ol-sz button').forEach(x => x.classList.toggle('on', +x.dataset.n === 5));
+  olMsg(''); $('ol-fr').innerHTML = ''; $('ol-inv').innerHTML = ''; $('ol-duel-list').hidden = true; $('ol-duel-list').innerHTML = '';
+  clearInterval(duelTimer); duelTimer = null;
+  olEl.classList.add('show');
+  if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id) return;
   try {
     const db = await getDb(); olClean();
-    unsubs.push(db.collection('users').doc(USER.id).collection('friends').onSnapshot(q => {
-      const box = $('ol-fr'); box.innerHTML = q.empty ? '<p class="nm-sub">Henüz arkadaşın yok. Profil &gt; Arkadaşlarım bölümünden ekleyebilirsin.</p>' : '<p class="ol-sec" style="margin:6px 0 0">ARKADAŞINI DAVET ET</p>';
-      q.forEach(d => {
-        const b = document.createElement('button'); b.className = 'srow';
-        b.innerHTML = '<span>' + esc(d.data().name) + '</span><b>DAVET ET</b>';
-        b.onclick = () => invite(d.id, d.data().name);
-        box.appendChild(b);
-      });
-    }));
     unsubs.push(db.collection('invites').where('to', '==', USER.id).where('status', '==', 'pending').onSnapshot(q => {
       const box = $('ol-inv'); box.innerHTML = '';
       q.forEach(d => {
@@ -2092,6 +2141,29 @@ async function openOnline(){
     }));
   } catch(e){ olMsg('Bağlantı hatası'); }
 }
+async function refreshDuelFriends(){
+  const box = $('ol-duel-list');
+  if (!box || box.hidden || !USER || !USER.id) return;
+  try {
+    const db = await getDb();
+    const snap = await db.collection('users').doc(USER.id).collection('friends').get();
+    if (snap.empty){ box.innerHTML = '<p class="nm-sub">Henüz arkadaşın yok.</p>'; return; }
+    const rows = await Promise.all(snap.docs.map(async d => {
+      const f = d.data() || {}; let online = false;
+      try { const u = await db.collection('users').doc(d.id).get(); const v = u.data() || {}; const seen = v.lastSeen && v.lastSeen.toMillis ? v.lastSeen.toMillis() : 0; online = v.online === true && Date.now() - seen < 40000; } catch(e) {}
+      return { id:d.id, name:f.name || d.id, online };
+    }));
+    rows.sort((a,b) => Number(b.online)-Number(a.online) || a.name.localeCompare(b.name,'tr'));
+    box.innerHTML = '<div class="ol-sec" style="margin:4px 0 2px">ÇEVRİMİÇİ ARKADAŞLAR</div>' + rows.map(f => '<div class="ol-friend-row ' + (f.online ? '' : 'offline') + '"><span class="ofr-name">' + esc(f.name) + '</span><span class="ofr-status">' + (f.online ? '● ÇEVRİMİÇİ' : 'ÇEVRİMDIŞI') + '</span><button ' + (f.online ? '' : 'disabled') + ' data-fid="' + esc(f.id) + '" data-fname="' + esc(f.name) + '">DAVET</button></div>').join('');
+    box.querySelectorAll('button[data-fid]').forEach(b => b.addEventListener('click', () => invite(b.dataset.fid, b.dataset.fname)));
+  } catch(e){ box.innerHTML = '<p class="nm-sub">Arkadaşlar yüklenemedi.</p>'; }
+}
+$('ol-duel').addEventListener('click', () => {
+  const box = $('ol-duel-list');
+  box.hidden = !box.hidden;
+  if (!box.hidden){ refreshDuelFriends(); clearInterval(duelTimer); duelTimer = setInterval(refreshDuelFriends, 5000); }
+  else { clearInterval(duelTimer); duelTimer = null; }
+});
 async function invite(fid, fname){
   mmCancel();
   try {
@@ -2148,7 +2220,7 @@ function raceStop(){
 const BOT_NAMES = ['Elif','Mert','Zeynep','Can','Deniz','Ece','Burak','Selin','Kaan','Defne','Emre','Ayşe'];
 const MM_WAIT = 10000;                                   // sistemde kimse yoksa bu kadar bekle, sonra bot
 let mmBusy = false, mmUn = null, mmTimer = null, mmRef = null, mmCount = null, mmEnd = 0;
-function mmUI(on){ $('ol-play').hidden = on; $('ol-stop').hidden = !on; olErr.classList.toggle('ol-search', on); }
+function mmUI(on){ $('ol-play').hidden = on; $('ol-stop').hidden = !on; $('ol-duel-list').hidden = on ? true : $('ol-duel-list').hidden; olErr.classList.toggle('ol-search', on); }
 function mmCancel(){
   clearTimeout(mmTimer); mmTimer = null; clearInterval(mmCount); mmCount = null;
   if (mmUn){ try { mmUn(); } catch(e){} mmUn = null; }
@@ -2382,6 +2454,34 @@ async function invWatch(){
 }
 setInterval(invWatch, 2000); invWatch();
 
+async function friendRemove(id){
+  if (!USER || !USER.id || !id) return;
+  try {
+    const db = await getDb(), b = db.batch();
+    b.delete(db.collection('users').doc(USER.id).collection('friends').doc(id));
+    b.delete(db.collection('users').doc(id).collection('friends').doc(USER.id));
+    await b.commit();
+    if (pfResultUser && pfResultUser.id === id) pfResultHide();
+    toast('Arkadaş kaldırıldı');
+  } catch(e){ toast('Arkadaş kaldırılamadı'); }
+}
+async function friendBlock(id, name){
+  if (!USER || !USER.id || !id) return;
+  try {
+    const db = await getDb(), b = db.batch();
+    b.delete(db.collection('users').doc(USER.id).collection('friends').doc(id));
+    b.delete(db.collection('users').doc(id).collection('friends').doc(USER.id));
+    b.set(db.collection('users').doc(USER.id).collection('blocked').doc(id), { name:name || id });
+    await b.commit();
+    if (pfResultUser && pfResultUser.id === id) pfResultHide();
+    toast('Kullanıcı engellendi');
+  } catch(e){ toast('Engellenemedi'); }
+}
+async function friendUnblock(id){
+  if (!USER || !USER.id || !id) return;
+  try { await (await getDb()).collection('users').doc(USER.id).collection('blocked').doc(id).delete(); toast('Engel kaldırıldı'); }
+  catch(e){ toast('Engel kaldırılamadı'); }
+}
 /* ===== PROFİL > ARKADAŞLARIM: çıkar / engelle / engeli kaldır ===== */
 let pfUn = [], pfFriends = [];
 function pfClean(){ pfUn.forEach(u => { try { u(); } catch(e){} }); pfUn = []; }
@@ -2487,7 +2587,8 @@ async function sendFriendRequest(f){
     const ref = db.collection('friendRequests').doc(USER.id + '_' + f.id);
     await ref.set({ from: USER.id, fromName: USER.name, to: f.id, toName: f.name, status: 'pending', created: firebase.firestore.FieldValue.serverTimestamp() });
     pfMsg(f.name + ' için arkadaşlık isteği gönderildi', 1);
-    pfResultRender();
+    pfResultHide();
+    $('pf-name').value = '';
     toast(f.name + ' isteği gönderildi');
   } catch(e){ pfMsg(e && e.code === 'permission-denied' ? 'İzin hatası: Firestore kurallarını kontrol et' : 'İstek gönderilemedi, tekrar dene'); }
 }
