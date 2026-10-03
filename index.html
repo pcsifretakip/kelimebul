@@ -525,13 +525,6 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .rr-pts{min-height:26px;margin:0;text-align:center;font-size:22px;font-weight:1000;letter-spacing:.04em;color:#fde68a}
 .rr-pts.lose{color:#fca5a5}
 .rr-pts.small{font-size:13px;font-weight:800;color:#b9b3f0}
-.rr-results{display:flex;flex-direction:column;gap:7px;margin:12px 0 14px;max-height:190px;overflow:auto}
-.rr-result-row{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(196,181,253,.18);font-size:13px;font-weight:900;color:#eeeaff}
-.rr-result-row.me{border-color:rgba(251,191,36,.55);background:rgba(251,191,36,.12)}
-.rr-result-row .rr-rank{width:24px;text-align:center;color:#fbbf24}
-.rr-result-row .rr-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rr-result-row .rr-found{color:#86efac;white-space:nowrap}
-.rr-result-row .rr-time{color:#fde68a;white-space:nowrap;font-variant-numeric:tabular-nums}
 @media (max-height:720px){.demo-board{width:min(150px,40vw)}}
 /* ===== TAMAMLANMIŞ BÖLÜM (salt okunur) ===== */
 .review-next{display:none;flex:none;margin:0 auto;max-width:320px;font-size:17px;padding:12px 20px;box-shadow:inset 0 2px 0 rgba(255,255,255,.4),inset 0 0 0 1.5px rgba(196,181,253,.45),0 5px 0 #34148f,0 8px 20px rgba(124,77,255,.45)}
@@ -984,7 +977,6 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
       <h3 id="rr-t"></h3>
       <p class="nm-sub" id="rr-p"></p>
       <p class="rr-pts" id="rr-pts"></p>
-      <div id="rr-results" class="rr-results"></div>
       <button class="btn-main" id="rr-again">YENİDEN OYNA</button>
       <button class="btn-main alt" id="rr-home">ANA SAYFAYA DÖN</button>
     </div>
@@ -1415,10 +1407,7 @@ function startLevel(index, def, seed){
   // önce kategori tanıtım ekranı, sonra oyun ve süre başlar
   showIntro(index, def, () => {
     if (tok !== S.token) return;
-    S.playing = true;
-    if (R && R.fixedTime) startOnlineTimer();
-    else startTimer();
-    measure();
+    S.playing = true; startTimer(); measure();
   });
 }
 
@@ -1645,17 +1634,7 @@ function onFound(word, path){
   // etiket ortada belirir, sonra listedeki kelimeye uçar
   flyLabel(word, color, mid, tok);
 
-  if (S.found.size === S.level.words.length){
-    if (R && R.fixedTime){
-      const elapsed = Math.max(0, performance.now() - S.startedAt);
-      R.completedAt = elapsed / 1000;
-      publishRaceProgress(true);
-    } else {
-      setTimeout(() => { if (tok === S.token) victory(); }, 1500 + path.length * 20);
-    }
-  } else if (R && R.fixedTime){
-    publishRaceProgress(false);
-  }
+  if (S.found.size === S.level.words.length) setTimeout(() => { if (tok === S.token) victory(); }, 1500 + path.length * 20);
 }
 
 function flyLabel(word, color, from, tok){
@@ -1706,52 +1685,15 @@ $('btn-hint').addEventListener('click', () => {
    ZAMANLAYICI + ZAFER
    ===================================================== */
 function startTimer(){
-  stopTimer();
-  S.elapsedMs = 0; S.seconds = 0; S.startedAt = performance.now();
-  $('time-val').textContent = '00:00';
-  S.timer = setInterval(() => {
-    S.elapsedMs = Math.max(0, performance.now() - S.startedAt);
-    S.seconds = Math.floor(S.elapsedMs / 1000);
-    $('time-val').textContent = fmt(S.seconds);
-  }, 100);
+  stopTimer(); S.seconds = 0; $('time-val').textContent = '00:00';
+  S.timer = setInterval(() => { S.seconds++; $('time-val').textContent = fmt(S.seconds); }, 1000);
 }
-function stopTimer(){
-  if (S.timer){ clearInterval(S.timer); S.timer = null; }
-  if (S.startedAt) S.elapsedMs = Math.max(S.elapsedMs || 0, performance.now() - S.startedAt);
-}
-function startOnlineTimer(){
-  stopTimer();
-  const r = R, duration = r.duration || onlineDuration(r.size);
-  S.elapsedMs = 0; S.seconds = 0; S.startedAt = performance.now();
-  $('time-val').textContent = fmt(Math.ceil(duration));
-  r.duration = duration;
-  r.fixedTime = true;
-  r.timeUp = false;
-  clearTimeout(r.timeoutTimer);
-  clearInterval(r.countdownTimer);
-  r.countdownTimer = setInterval(() => {
-    if (!R || R !== r || r.over) return;
-    const left = Math.max(0, duration - (performance.now() - S.startedAt) / 1000);
-    $('time-val').textContent = fmt(Math.ceil(left));
-  }, 100);
-  r.timeoutTimer = setTimeout(() => onlineTimeUp(), duration * 1000);
-}
-function stopOnlineTimer(){
-  if (!R) return;
-  clearInterval(R.countdownTimer); R.countdownTimer = null;
-  clearTimeout(R.timeoutTimer); R.timeoutTimer = null;
-}
+function stopTimer(){ if (S.timer){ clearInterval(S.timer); S.timer = null; } }
 document.addEventListener('visibilitychange', () => {
-  // Online yarışın süresi arka plana geçince durmaz; gerçek yarış süresi akmaya devam eder.
   if (document.hidden){ if (S.timer){ stopTimer(); S.resumeTimer = true; } }
-  else if (S.resumeTimer && S.playing && !(R && R.fixedTime)){
+  else if (S.resumeTimer && S.playing){
     S.resumeTimer = false;
-    S.startedAt = performance.now() - (S.elapsedMs || 0);
-    S.timer = setInterval(() => {
-      S.elapsedMs = Math.max(0, performance.now() - S.startedAt);
-      S.seconds = Math.floor(S.elapsedMs / 1000);
-      $('time-val').textContent = fmt(S.seconds);
-    }, 100);
+    S.timer = setInterval(() => { S.seconds++; $('time-val').textContent = fmt(S.seconds); }, 1000);
   }
 });
 
@@ -1762,19 +1704,17 @@ function victory(){
   const idx = S.levelIndex, prev = S.done[idx];
   const reward = prev ? 5 : 25;               // ilk bitirişte 25, tekrar oynayınca 5 altın
   S.coins += reward; updateCoins();
-  const elapsedMs = Math.max(0, Math.round(S.elapsedMs || (S.seconds * 1000)));
-  const per = (elapsedMs / 1000) / S.level.words.length;
+  const per = S.seconds / S.level.words.length;
   const stars = per <= 12 ? 3 : per <= 25 ? 2 : 1;
   S.done[idx] = {
     stars: Math.max(stars, prev ? prev.stars : 0),
-    time: prev && prev.time ? Math.min(prev.time, Math.floor(elapsedMs / 1000)) : Math.floor(elapsedMs / 1000),
-    bestMs: prev && prev.bestMs ? Math.min(prev.bestMs, elapsedMs) : elapsedMs
+    time: prev && prev.time ? Math.min(prev.time, S.seconds) : S.seconds
   };
   delete S.partial[idx];
   S.maxOpen = Math.max(S.maxOpen, Math.min(idx + 1, LEVELS.length - 1));
   saveProgress(); syncLevelPoints();
   document.querySelectorAll('.vstar').forEach((s, i) => s.classList.toggle('on', i < stars));
-  $('reward-time').textContent = fmtMs(elapsedMs);
+  $('reward-time').textContent = fmt(S.seconds);
   $('reward-coins').textContent = '+' + reward;
   modal.classList.add('show');
   const w = fxW, h = fxH;
@@ -2163,13 +2103,6 @@ function stopPresence(){ clearInterval(presenceTimer); presenceTimer = null; set
 if (USER && USER.id) setTimeout(startPresence, 0);
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') setPresence(true); else setPresence(false); });
 const SIZES = { 5:3, 6:4, 7:5, 8:6, 10:7 };          // boyut : kelime sayısı
-// Süreler: oyuncunun tahtayı paniklemeden ama gerçekten yarışarak çözebileceği aralıklar.
-const ONLINE_DURATIONS = { 5:30, 6:40, 7:50, 8:65, 10:90 };
-const onlineDuration = size => ONLINE_DURATIONS[size] || 60;
-const fmtMs = ms => {
-  const sec = Math.max(0, ms / 1000);
-  return sec < 60 ? sec.toFixed(2) + ' sn' : fmt(Math.floor(sec)) + ' ' + String(Math.round((sec % 60) * 100) / 100).padStart(5,'0') + ' dk';
-};
 function customDef(size, seed){
   const rnd = mulberry32(seed);
   const pool = [...new Set(LEVELS.flatMap(l => l.words))].filter(w => w.length <= size);
@@ -2241,94 +2174,14 @@ async function invite(fid, fname){
     unsubs.push(un); setTimeout(un, 120000);
   } catch(e){ olMsg('Davet gönderilemedi'); }
 }
-function beginRace(ref, v, opp, oppId, rated = true){
+function beginRace(ref, v, opp, oppId, rated){
   mmCancel(); olClean(); olEl.classList.remove('show');
-  R = {
-    ref, opp, oppId, over:false, rated: rated !== false, size: v.size,
-    fixedTime:true, duration:onlineDuration(v.size), seed:v.seed,
-    completedAt:null, localFinal:false
-  };
-  if (R.rated && USER && USER.id){
-    const r0 = R;
-    ratingOf(USER.id).then(x => r0.myRating = x);
-    if (oppId) ratingOf(oppId).then(x => r0.oppRating = x);
-  }
-  // İlk oyuncu yarışın başlangıç zamanını yazar; sonuçlar aynı maç dokümanında tutulur.
-  getDb().then(db => db.runTransaction(async tx => {
-    const d = await tx.get(ref), data = d.exists ? d.data() : {};
-    if (!data.startedAt) tx.set(ref, { startedAt: firebase.firestore.FieldValue.serverTimestamp(), duration:onlineDuration(v.size) }, {merge:true});
-  })).catch(()=>{});
-  R.un = ref.onSnapshot(d => {
-    const data = d.data();
-    if (data && data.cancelled && R && !R.over) raceEnd(false);
-  });
+  R = { ref, opp, oppId, over:false, rated: !!rated, size: v.size };
+  if (rated && USER && USER.id){ const r0 = R; ratingOf(USER.id).then(x => r0.myRating = x); ratingOf(oppId).then(x => r0.oppRating = x); }
+  R.un = ref.onSnapshot(d => { const v = d.data(); if (v && v.winner && R && !R.over) raceEnd(v.winner === USER.id); });
   showGame(0, customDef(v.size, v.seed), v.seed);
 }
-async function publishRaceProgress(final){
-  if (!R || !R.ref || !USER || !USER.id) return;
-  const elapsed = Math.max(0, performance.now() - (S.startedAt || performance.now())) / 1000;
-  const finishTime = R.completedAt != null ? R.completedAt : (final ? Math.min(R.duration, elapsed) : null);
-  const progress = {
-    name: USER.name,
-    found: S.found.size,
-    time: finishTime,
-    final: !!final
-  };
-  try {
-    const db = await getDb();
-    await db.collection('invites').doc(R.ref.id).set({
-      progress: { [USER.id]: progress }
-    }, {merge:true});
-  } catch(e){}
-}
-
-function compareRaceResults(results){
-  return results.slice().sort((a,b) => (b.found - a.found) || ((a.time ?? 999999) - (b.time ?? 999999)));
-}
-async function onlineTimeUp(){
-  const r = R;
-  if (!r || r.over || !r.fixedTime) return;
-  r.timeUp = true;
-  S.playing = false;
-  stopOnlineTimer();
-  stopTimer();
-  if (r.bot){
-    r.over = true;
-    showRaceResults([
-      {id:USER && USER.id, name:USER ? USER.name : 'Sen', found:S.found.size, time:r.completedAt != null ? r.completedAt : r.duration, me:true},
-      {id:'bot', name:r.opp, found:r.botFound, time:r.botTime, me:false}
-    ], r);
-    return;
-  }
-  await publishRaceProgress(true);
-  setTimeout(async () => {
-    if (!R || R !== r || r.over) return;
-    let rows = [];
-    try {
-      const db = await getDb(), d = await db.collection('invites').doc(r.ref.id).get(), data = d.data() || {};
-      const p = data.progress || {};
-      rows = Object.keys(p).map(id => ({id, name:p[id].name || 'Oyuncu', found:Number(p[id].found)||0, time:p[id].time != null ? Number(p[id].time) : r.duration, me:id===USER.id}));
-    } catch(e){}
-    if (!rows.some(x => x.me)) rows.push({id:USER.id,name:USER.name,found:S.found.size,time:r.completedAt != null ? r.completedAt : r.duration,me:true});
-    const knownOpp = r.oppId && !rows.some(x => x.id === r.oppId);
-    if (knownOpp) rows.push({id:r.oppId,name:r.opp,found:0,time:r.duration,me:false});
-    rows = compareRaceResults(rows);
-    const mine = rows.find(x => x.me);
-    const best = rows[0];
-    const won = best && best.me;
-    r.over = true;
-    showRaceResults(rows, r);
-    if (r.rated && mine){
-      applyScore(r, won, mine).then(d => {
-        const pt = $('rr-pts');
-        if (d != null) pt.textContent = (d > 0 ? '+' : '') + d + ' PUAN';
-      });
-    }
-  }, 900);
-}
 async function raceFinish(){
-  // Süreli online modda son kelimeyi bulmak maçı bitirmez; süre dolana kadar yarış devam eder.
-  if (R && R.fixedTime) return;
   S.playing = false; stopTimer();
   if (R && R.bot){ raceEnd(true); return; }
   try {
@@ -2337,33 +2190,8 @@ async function raceFinish(){
     raceEnd(won);
   } catch(e){ toast('Bağlantı hatası'); }
 }
-function showRaceResults(rows, r){
-  if (!R || R !== r) return;
-  const pt = $('rr-pts');
-  const box = $('rr-results');
-  box.innerHTML = rows.map((x,i) =>
-    '<div class="rr-result-row ' + (x.me ? 'me' : '') + '">' +
-      '<span class="rr-rank">' + (i+1) + '</span>' +
-      '<span class="rr-name">' + esc(x.name) + '</span>' +
-      '<span class="rr-found">' + x.found + ' kelime</span>' +
-      '<span class="rr-time">' + (x.time != null ? Number(x.time).toFixed(2) : r.duration.toFixed(2)) + ' sn</span>' +
-    '</div>'
-  ).join('');
-  $('rr-t').textContent = 'SÜRE DOLDU! ⏱️';
-  const mine = rows.find(x => x.me);
-  const best = rows[0];
-  $('rr-p').textContent = best && best.me ? 'Bu turu sen kazandın!' : (best ? best.name + ' önde bitirdi.' : 'Sonuçlar hazır.');
-  pt.className = 'rr-pts';
-  pt.textContent = 'En çok kelime → eşitlikte en hızlı süre';
-  lastRace = {size:r.size, random:!!r.rated};
-  resEl.classList.add('show');
-  if (r === R) {
-    clearInterval(r.countdownTimer); r.countdownTimer = null;
-    clearTimeout(r.timeoutTimer); r.timeoutTimer = null;
-  }
-}
 function raceEnd(won){
-  if (!R || R.over) return; R.over = true; S.playing = false; stopTimer(); stopOnlineTimer(); clearInterval(R.timer);
+  if (!R || R.over) return; R.over = true; S.playing = false; stopTimer(); clearInterval(R.timer);
   if (won){ SND.win(); buzz([40, 60, 40]); } else { SND.miss(); buzz(80); }
   $('rr-t').textContent = won ? 'KAZANDIN! 🏆' : 'KAYBETTİN';
   $('rr-p').textContent = won ? 'Rakibini geçtin!' : R.opp + ' önce bitirdi.';
@@ -2379,17 +2207,14 @@ function raceEnd(won){
   } else { pt.classList.add('small'); pt.textContent = r.bot ? 'Bot ile oynadın • puan yok' : 'Arkadaş maçı • puan yok'; }
   resEl.classList.add('show');
 }
-
 function raceStop(){
-  if (!R) return;
-  const r = R; R = null;
-  clearInterval(r.timer); clearInterval(r.countdownTimer); clearTimeout(r.timeoutTimer);
-  try { r.un(); } catch(e){}
-  if (!r.over && r.fixedTime && r.ref && USER && USER.id){
-    const found = S.found.size, time = r.completedAt != null ? r.completedAt : r.duration;
-    getDb().then(db => db.collection('invites').doc(r.ref.id).set({progress:{[USER.id]:{name:USER.name,found,time,final:true}}},{merge:true})).catch(()=>{});
+  if (!R) return; const r = R; R = null; clearInterval(r.timer); try { r.un(); } catch(e){}
+  if (r.bot){
+    if (!r.over) applyScore({ myRating: ELO_START, oppRating: ELO_START }, false).then(d => { if (d != null) toast('Maçı yarıda bıraktın: ' + d + ' puan'); });
+    return;
   }
-  if (!r.over && r.rated && !r.fixedTime) applyScore(r, false);
+  if (!r.over && r.rated) applyScore(r, false).then(d => { if (d != null) toast('Maçı yarıda bıraktın: ' + d + ' puan'); });
+  if (!r.over) getDb().then(db => db.runTransaction(async tx => { const d = await tx.get(r.ref); if (!d.data().winner) tx.update(r.ref, { winner: r.oppId }); })).catch(() => {});
 }
 /* ----- RASTGELE EŞLEŞME + BOT ----- */
 const BOT_NAMES = ['Elif','Mert','Zeynep','Can','Deniz','Ece','Burak','Selin','Kaan','Defne','Emre','Ayşe'];
@@ -2405,14 +2230,9 @@ function mmCancel(){
 function startBot(size){
   mmCancel(); olClean(); olEl.classList.remove('show');
   const seed = Math.floor(Math.random() * 1e9), def = customDef(size, seed);
-  R = {
-    bot:true, size, opp: BOT_NAMES[Math.floor(Math.random() * BOT_NAMES.length)] + ' 🤖',
-    over:false, rated:false, fixedTime:true, duration:onlineDuration(size),
-    seed, completedAt:null
-  };
-  // Bot da aynı süre içinde kelime çözüyor gibi davranır; sonuçta gerçek oyuncuyla aynı kriter kullanılır.
-  R.botFound = Math.max(0, Math.min(def.words.length, Math.floor(def.words.length * (.55 + Math.random() * .4))));
-  R.botTime = 8 + Math.random() * Math.max(8, R.duration - 8);
+  const target = Math.round(def.words.length * (8 + Math.random() * 7));   // bot, kelime başına ~8-15 sn
+  R = { bot:true, size, opp: BOT_NAMES[Math.floor(Math.random() * BOT_NAMES.length)] + ' 🤖', over:false };
+  R.timer = setInterval(() => { if (R && R.bot && !R.over && S.playing && S.timer && S.seconds >= target) raceEnd(false); }, 500);
   showGame(0, def, seed);
 }
 async function findMatch(){
@@ -2452,43 +2272,31 @@ async function findMatch(){
 $('ol-rand').addEventListener('click', findMatch);
 $('ol-stop').addEventListener('click', () => { mmCancel(); olMsg(''); });
 /* ===== PUANLAMA + LİDERLİK TABLOSU (sadece rastgele eşleşmede gerçek rakiple) ===== */
-const ELO_K = 32, ELO_START = 1000;
-const LV_FIRST = 5, LV_STAR = 5;
-const ONLINE_WORD_PTS = 20, ONLINE_SPEED_PTS = 2;
+const ELO_K = 32, ELO_START = 1000;                  // Elo: herkes 1000 puanla başlar, K=32
+const LV_FIRST = 5, LV_STAR = 5;                     // bölüm puanı: ilk bitirişte +5, her yıldız için +5 (tekrar oynayıp farm edilemez)
 const eloOf = o => (o && o.elo != null) ? o.elo : (o && o.score != null ? o.score : ELO_START);
 const ratingOf = async id => { try { const x = await (await getDb()).collection('leaderboard').doc(id).get(); return x.exists ? eloOf(x.data()) : ELO_START; } catch(e){ return ELO_START; } };
-const levelPoints = () => Object.values(S.done).reduce((t, d) => {
-  if (!d) return t;
-  const ms = d.bestMs || (d.time || 0) * 1000;
-  const speed = Math.max(0, Math.round(1500 - ms / 100));
-  return t + LV_FIRST + LV_STAR * (d.stars || 0) + speed;
-}, 0);
-const onlinePerformancePoints = o => Number(o && o.onlinePoints) || 0;
+const levelPoints = () => Object.values(S.done).reduce((t, d) => t + (d ? LV_FIRST + LV_STAR * (d.stars || 0) : 0), 0);
 let lastRace = { size: 6, random: true }, myScore = null, lbUn = null, lbBusy = false, lbRows = [], lbErr = false, lbRetry = null;
-async function applyScore(r, won, mineResult){
+async function applyScore(r, won){
   if (!r || r.scored || !USER || !USER.id) return null; r.scored = true;
   try {
     const db = await getDb(); let delta = 0;
     const ref = db.collection('leaderboard').doc(USER.id);
-    const mine = r.myRating != null ? r.myRating : await ratingOf(USER.id);
+    const mine = r.myRating != null ? r.myRating : await ratingOf(USER.id);          // maç başındaki puanlar
     const opp = r.oppRating != null ? r.oppRating : await ratingOf(r.oppId);
-    const exp = 1 / (1 + Math.pow(10, (opp - mine) / 400));
+    const exp = 1 / (1 + Math.pow(10, (opp - mine) / 400));                          // kazanma beklentisi
     const change = Math.round(ELO_K * ((won ? 1 : 0) - exp));
-    const perf = mineResult ? Math.max(0, mineResult.found * ONLINE_WORD_PTS + Math.round(Math.max(0, r.duration - mineResult.time) * ONLINE_SPEED_PTS)) : 0;
     await db.runTransaction(async tx => {
       const d = await tx.get(ref), o = d.exists ? d.data() : {};
-      const cur = eloOf(o), next = Math.max(0, cur + change);
-      const lvl = Math.max(o.lvl || 0, levelPoints());
-      const onlinePoints = Math.max(o.onlinePoints || 0, (o.onlinePoints || 0) + perf);
-      delta = (next + lvl + onlinePoints) - (cur + (o.lvl || 0) + (o.onlinePoints || 0));
-      myScore = next + lvl + onlinePoints;
-      tx.set(ref, { name: USER.name, avatar: avatar || '', elo: next, lvl, onlinePoints, score: next + lvl + onlinePoints,
-        wins: (o.wins || 0) + (won ? 1 : 0), games: (o.games || 0) + 1 });
+      const cur = eloOf(o), next = Math.max(0, cur + change), lvl = Math.max(o.lvl || 0, levelPoints());
+      delta = next - cur; myScore = next + lvl;
+      tx.set(ref, { name: USER.name, avatar: avatar || '', elo: next, lvl, score: next + lvl, wins: (o.wins || 0) + (won ? 1 : 0), games: (o.games || 0) + 1 });
     });
     lbRender(); return delta;
   } catch(e){ return null; }
 }
-/* Bölüm puanı: ilerleme + yıldız + hız. Aynı bölümü tekrar oynamak puanı düşürmez. */
+/* bölümlerde kazanılan puanı liderlik tablosuna yazar (S.done'dan hesaplandığı için eski ilerleme de otomatik sayılır) */
 async function syncLevelPoints(){
   if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id) return;
   const total = levelPoints();
@@ -2497,12 +2305,10 @@ async function syncLevelPoints(){
     await db.runTransaction(async tx => {
       const d = await tx.get(ref), o = d.exists ? d.data() : null;
       if (!o && !total) return;
-      const lvl = Math.max(o ? (o.lvl || 0) : 0, total), elo = eloOf(o), onlinePoints = o ? (o.onlinePoints || 0) : 0;
-      const score = elo + lvl + onlinePoints;
-      if (o && o.lvl === lvl && o.elo != null && o.score === score) { myScore = score; return; }
-      myScore = score;
-      tx.set(ref, { name: USER.name, avatar: avatar || '', elo, lvl, onlinePoints, score,
-        wins: o ? (o.wins || 0) : 0, games: o ? (o.games || 0) : 0 });
+      const lvl = Math.max(o ? (o.lvl || 0) : 0, total), elo = eloOf(o);
+      if (o && o.lvl === lvl && o.elo != null) { myScore = o.score; return; }
+      myScore = elo + lvl;
+      tx.set(ref, { name: USER.name, avatar: avatar || '', elo, lvl, score: elo + lvl, wins: o ? (o.wins || 0) : 0, games: o ? (o.games || 0) : 0 });
     });
     lbRender();
   } catch(e){}
@@ -2749,8 +2555,11 @@ function pfResultRender(){
 }
 async function searchFriend(){
   const v = $('pf-name').value.trim();
+  // Her yeni aramada önce önceki sonuç/form durumunu sıfırla.
+  pfResultHide();
+  pfMsg('');
   if (!v) return pfMsg('Bir isim veya ID yaz');
-  pfMsg('Aranıyor…', 1); pfResultHide();
+  pfMsg('Aranıyor…', 1);
   try {
     if (!/^\d{8}$/.test(v) && (!/^[A-Za-zÇĞİÖŞÜçğıöşü0-9_.]{3,16}$/.test(v) || /^\.+$/.test(v) || /^__.*__$/.test(v))) return pfMsg('Geçerli bir isim veya 8 haneli ID yaz');
     const db = await getDb(); let f = null;
@@ -2781,8 +2590,9 @@ async function sendFriendRequest(f){
     const ref = db.collection('friendRequests').doc(USER.id + '_' + f.id);
     await ref.set({ from: USER.id, fromName: USER.name, to: f.id, toName: f.name, status: 'pending', created: firebase.firestore.FieldValue.serverTimestamp() });
     pfMsg(f.name + ' için arkadaşlık isteği gönderildi', 1);
-    pfResultHide();
-    $('pf-name').value = '';
+    // Sonucu gizleme: kullanıcı aynı kartta isteğin durumunu görsün.
+    pfResultUser = f;
+    pfResultRender();
     toast(f.name + ' isteği gönderildi');
   } catch(e){ pfMsg(e && e.code === 'permission-denied' ? 'İzin hatası: Firestore kurallarını kontrol et' : 'İstek gönderilemedi, tekrar dene'); }
 }
