@@ -554,6 +554,11 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 @media (prefers-reduced-motion:reduce){
   .ftile,.orb,.btn-main::after,.demo-cap{animation:none!important}
 }
+.inv-btns{display:flex;gap:10px;margin-top:16px}
+.inv-btns button{flex:1;margin:0!important;font-size:16px!important;padding:13px 10px!important}
+.inv-btns .inv-no{border-radius:16px;font-weight:900;letter-spacing:.06em;color:#fca5a5;background:rgba(255,255,255,.08);border:1px solid rgba(196,181,253,.25)}
+#invbox{z-index:120}
+#invbox .inv-t{margin:4px 0 0;text-align:center;font-size:17px;font-weight:800;color:#e9e5ff}
 </style>
 </head>
 <body>
@@ -708,6 +713,13 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
       <div class="ol-list" id="ol-inv"></div>
       <div class="ol-list" id="ol-fr"></div>
       <button class="nm-cancel" id="ol-close">KAPAT</button>
+    </div>
+  </div>
+  <div class="help" id="invbox">
+    <div class="hcard">
+      <h3>DAVET</h3>
+      <p class="inv-t" id="inv-t"></p>
+      <div class="inv-btns"><button class="btn-main" id="inv-ok">KABUL ET</button><button class="inv-no" id="inv-no">REDDET</button></div>
     </div>
   </div>
   <div class="help" id="raceres">
@@ -970,6 +982,7 @@ const SND = {
   found(){ [523.25, 659.25, 783.99, 1046.5].forEach((f,i) => { tone(f, i * .07, .22, 'triangle', .16); tone(f * 2, i * .07, .16, 'sine', .04); }); },
   miss(){ tone(220, 0, .18, 'sawtooth', .05, 140); },
   hint(){ tone(880, 0, .12, 'sine', .12); tone(1318.5, .09, .2, 'sine', .1); },
+  invite(){ [880, 1174.66, 880, 1174.66].forEach((f, i) => { tone(f, i * .16, .14, 'triangle', .15); tone(f * 2, i * .16, .1, 'sine', .04); }); },
   win(){ [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5, 1318.5].forEach((f,i) => tone(f, i * .11, .3, 'triangle', .17)); }
 };
 function buzz(p){ try{ if (S.vib !== false && navigator.vibrate) navigator.vibrate(p); }catch(e){} }
@@ -1730,7 +1743,7 @@ async function invite(fid, fname){
     const db = await getDb(), size = olSize, seed = Math.floor(Math.random() * 1e9);
     const ref = await db.collection('invites').add({ from: USER.id, fromName: USER.name, to: fid, size, seed, status:'pending', winner:null, created: firebase.firestore.FieldValue.serverTimestamp() });
     olMsg(fname + ' bekleniyor…', 1);
-    const un = ref.onSnapshot(d => { const v = d.data(); if (v && v.status === 'accepted'){ un(); beginRace(ref, v, fname, fid); } });
+    const un = ref.onSnapshot(d => { const v = d.data(); if (v && v.status === 'accepted'){ un(); beginRace(ref, v, fname, fid); } else if (v && v.status === 'declined'){ un(); olMsg(fname + ' daveti reddetti'); toast(fname + ' daveti reddetti'); } });
     unsubs.push(un); setTimeout(un, 120000);
   } catch(e){ olMsg('Davet gönderilemedi'); }
 }
@@ -1764,6 +1777,61 @@ $('ol-add').addEventListener('click', addFriend);
 $('ol-name').addEventListener('keydown', e => { if (e.key === 'Enter') addFriend(); });
 $('ol-close').addEventListener('click', () => { olClean(); olEl.classList.remove('show'); });
 $('rr-ok').addEventListener('click', () => { resEl.classList.remove('show'); showHome(); });
+
+/* ===== DAVET BİLDİRİMİ: ekranın ortasında Kabul / Reddet ===== */
+const invBox = $('invbox');
+let invWatchId = null, invUn = null, invQueue = [], invCur = null, invSeen = new Set(), invTimer = null;
+function invShow(){
+  if (invCur || R) return;
+  while (invQueue.length && Date.now() - invQueue[0].t > 120000) invQueue.shift();
+  if (!invQueue.length) return;
+  invCur = invQueue.shift();
+  $('inv-t').textContent = invCur.v.fromName + ' sizi davet etti!';
+  invBox.classList.add('show'); SND.invite(); buzz([30, 40, 30]);
+  clearTimeout(invTimer); invTimer = setTimeout(invHide, Math.max(1000, 120000 - (Date.now() - invCur.t)));
+}
+function invHide(){ invBox.classList.remove('show'); invCur = null; clearTimeout(invTimer); setTimeout(invShow, 300); }
+$('inv-ok').addEventListener('click', async () => {
+  const it = invCur; if (!it) return;
+  invBox.classList.remove('show'); invCur = null; clearTimeout(invTimer);
+  try {
+    const db = await getDb();
+    await db.runTransaction(async tx => {
+      const d = await tx.get(it.ref);
+      if (!d.exists || d.data().status !== 'pending') throw new Error('gone');
+      tx.update(it.ref, { status:'accepted' });
+    });
+  } catch(e){ toast('Davet artık geçerli değil'); setTimeout(invShow, 300); return; }
+  invQueue = [];
+  beginRace(it.ref, it.v, it.v.fromName, it.v.from);
+});
+$('inv-no').addEventListener('click', async () => {
+  const it = invCur; if (!it) return;
+  try { await it.ref.update({ status:'declined' }); } catch(e){}
+  invHide();
+});
+async function invWatch(){
+  if (!USER || !USER.id){
+    if (invUn){ try { invUn(); } catch(e){} invUn = null; }
+    invWatchId = null; return;
+  }
+  if (!FIREBASE_CONFIG.apiKey || invWatchId === USER.id) return;
+  invWatchId = USER.id;
+  try {
+    const db = await getDb();
+    if (invUn){ try { invUn(); } catch(e){} }
+    invUn = db.collection('invites').where('to', '==', USER.id).where('status', '==', 'pending').onSnapshot(q => {
+      q.docChanges().forEach(ch => {
+        if (ch.type !== 'added') return;
+        const v = ch.doc.data(), t = v.created ? v.created.toMillis() : Date.now();
+        if (invSeen.has(ch.doc.id) || Date.now() - t > 120000) return;
+        invSeen.add(ch.doc.id); invQueue.push({ ref: ch.doc.ref, v, t });
+      });
+      invShow();
+    });
+  } catch(e){ invWatchId = null; }
+}
+setInterval(invWatch, 2000); invWatch();
 
 /* tüm butonlara tıklama sesi (Ayarlar > SES kapalıysa çalmaz) */
 document.addEventListener('pointerdown', e => { if (e.target.closest && e.target.closest('button')){ audio(); SND.click(); } }, true);
