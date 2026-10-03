@@ -360,12 +360,30 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .home-actions .btn-sq.pink{--edge:#7a1250;background:linear-gradient(180deg,#ffa8d8 0%,#f0489c 48%,#c71f7c 52%,#e8419a 100%)}
 
 /* ===== AYARLAR: sade, tek tonlu ===== */
-.smenu{gap:8px;padding:12px;background:linear-gradient(180deg,#2a1a74,#150c42);box-shadow:0 18px 44px rgba(0,0,0,.6)}
-.smenu .srow{min-height:48px;border-radius:14px;color:#e0dcff;font-weight:900;letter-spacing:.06em;background:rgba(255,255,255,.08);border:1px solid rgba(196,181,253,.22);box-shadow:none;transition:background .12s}
-.smenu button.srow:active{background:rgba(255,255,255,.16);transform:none;box-shadow:none}
+.smenu{gap:10px;padding:12px;background:linear-gradient(180deg,#2a1a74,#150c42);box-shadow:0 18px 44px rgba(0,0,0,.6);max-height:calc(100dvh - 78px);overflow-y:auto;overscroll-behavior:contain}
+.settings-group{padding:6px;border-radius:18px;background:rgba(8,5,30,.22);border:1px solid rgba(196,181,253,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.settings-title{display:flex;align-items:center;gap:9px;padding:4px 6px 8px;color:#f5f1ff;font-size:12px;font-weight:1000;letter-spacing:.14em}
+.settings-title-ic{width:27px;height:27px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 5px rgba(0,0,0,.28)}
+.settings-title-ic.account{color:#dbeafe;background:linear-gradient(180deg,#6366f1,#4338ca)}
+.settings-title-ic.gear{color:#c4b5fd;background:linear-gradient(180deg,#7c3aed,#4c1d95)}
+.smenu .srow{min-height:48px;border-radius:14px;color:#e0dcff;font-weight:900;letter-spacing:.06em;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.06));border:1px solid rgba(196,181,253,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 3px 0 rgba(0,0,0,.22);transition:background .12s,transform .12s}
+.smenu button.srow:active{background:rgba(255,255,255,.16);transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 1px 0 rgba(0,0,0,.22)}
 .smenu .srow b{box-shadow:none;background:rgba(0,0,0,.28)}
+.account-row{margin-bottom:7px}
+.srow-label{color:#f5f1ff}
+.settings-action{width:100%}
+.settings-action .row-ic{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.row-ic.logout{color:#f9a8d4;background:rgba(236,72,153,.16);border:1px solid rgba(244,114,182,.3)}
+.row-ic.delete{color:#ff7b9d;background:rgba(244,63,94,.14);border:1px solid rgba(251,113,133,.28)}
+.logout-row{color:#f9a8d4!important}
+.delete-row{color:#ff6b91!important;margin-top:7px}
+.smenu #s-sound b,.smenu #s-vib b{color:#4ade80;background:rgba(16,185,129,.12);border:1px solid rgba(52,211,153,.3)}
+.settings-extra{display:flex;flex-direction:column;gap:8px}
 .smenu #s-help{color:#fbbf24}
-.smenu #s-delete{color:#ff5a5a}
+.smenu #s-rate{color:#fde68a}
+.smenu #s-report{color:#e0dcff}
+.smenu .srow.c{min-height:44px}
+.smenu .srow b#s-acc{min-width:0;max-width:140px;flex:1}
 #delbox .hcard{text-align:center;border-color:rgba(255,90,90,.45);box-shadow:0 24px 60px rgba(0,0,0,.65),0 0 34px rgba(255,60,60,.22)}
 #delbox .del-ic{width:62px;height:62px;margin:-4px auto 8px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;background:rgba(255,90,90,.16);border:1.5px solid rgba(255,90,90,.5)}
 #delbox h3{color:#ff6b6b}
@@ -695,6 +713,8 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   <symbol id="i-logout" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></symbol>
   <symbol id="i-gear" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></symbol>
   <symbol id="i-user" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></symbol>
+  <symbol id="i-vib" viewBox="0 0 24 24"><path d="M9 4H7v16h2V4zm8 0h-2v16h2V4zM4 7H2v10h2V7zm18 0h-2v10h2V7zM12 2h-1v20h1V2z"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5-1-1h-5l-1 1H5v2h14V4z"/></symbol>
 </svg>
 
 <div class="app on-home" id="app">
@@ -824,13 +844,24 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   </main>
 
   <div class="smenu" id="smenu">
-    <div class="srow"><span>HESAP</span><b id="s-acc">-</b><button class="slogout" id="s-logout" aria-label="Çıkış yap" title="Çıkış yap"><svg class="i"><use href="#i-logout"/></svg></button></div>
-    <button class="srow" id="s-sound"><span>SES</span><b id="s-sound-v">AÇIK</b></button>
-    <button class="srow" id="s-vib"><span>TİTREŞİM</span><b id="s-vib-v">AÇIK</b></button>
-    <button class="srow c" id="s-report">SORUN BİLDİR</button>
-    <button class="srow c" id="s-rate">★ BİZİ PUANLA</button>
-    <button class="srow c" id="s-help">YARDIM</button>
-    <button class="srow danger" id="s-delete" hidden>HESABI SİL</button>
+    <div class="settings-group account-group">
+      <div class="settings-title"><span class="settings-title-ic account"><svg class="i"><use href="#i-user"/></svg></span><span>HESAP</span></div>
+      <div class="srow account-row"><span class="srow-label">HESAP</span><b id="s-acc">-</b></div>
+      <button class="srow settings-action logout-row" id="s-logout" aria-label="Çıkış yap" title="Çıkış yap"><span>ÇIKIŞ YAP</span><span class="row-ic logout"><svg class="i"><use href="#i-logout"/></svg></span></button>
+      <button class="srow settings-action delete-row" id="s-delete" hidden><span>HESABI SİL</span><span class="row-ic delete"><svg class="i"><use href="#i-trash"/></svg></span></button>
+    </div>
+
+    <div class="settings-group options-group">
+      <div class="settings-title"><span class="settings-title-ic gear"><svg class="i"><use href="#i-gear"/></svg></span><span>AYARLAR</span></div>
+      <button class="srow settings-action" id="s-sound"><span>SES</span><b id="s-sound-v">AÇIK</b></button>
+      <button class="srow settings-action" id="s-vib"><span>TİTREŞİM</span><b id="s-vib-v">AÇIK</b></button>
+    </div>
+
+    <div class="settings-extra">
+      <button class="srow c" id="s-report">SORUN BİLDİR</button>
+      <button class="srow c" id="s-rate">★ BİZİ PUANLA</button>
+      <button class="srow c" id="s-help">YARDIM</button>
+    </div>
   </div>
   <div class="sback"></div>
   <div class="help" id="help">
