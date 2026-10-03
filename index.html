@@ -356,6 +356,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .ol-sz button{padding:8px 12px;border-radius:12px;font-size:13px;font-weight:900;color:#e0dcff;background:rgba(255,255,255,.1);border:1.5px solid transparent}
 .ol-sz button.on{color:#3b1d00;background:linear-gradient(180deg,#fde68a,#fbbf24);box-shadow:0 2px 0 #92400e}
 /* ONLİNE butonu: pembe */
+.home-actions .btn-sq.gold{--edge:#92400e;color:#3b1d00;text-shadow:0 1px 0 rgba(255,255,255,.55);background:linear-gradient(180deg,#fff0a8 0%,#fbbf24 48%,#e8890a 52%,#f9b11c 100%)}
 .home-actions .btn-sq.pink{--edge:#7a1250;background:linear-gradient(180deg,#ffa8d8 0%,#f0489c 48%,#c71f7c 52%,#e8419a 100%)}
 
 /* ===== AYARLAR: sade, tek tonlu ===== */
@@ -709,10 +710,6 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   <main class="stage">
     <!-- HOME -->
     <section id="view-home" class="view">
-      <div class="lb" id="lb" role="button" tabindex="0" aria-label="Liderlik tablosu">
-        <div class="lb-h"><span>🏆 LİDERLİK TABLOSU</span><i id="lb-me"></i></div>
-        <div id="lb-list"></div>
-      </div>
       <div class="home-top">
         <div class="logo" role="img" aria-label="Sözcük Avı">
           <svg viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -744,6 +741,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 
 
       <div class="home-actions">
+        <button id="lb" class="btn-sq gold" aria-label="Liderlik tablosu"><span>🏆</span><span>LİDERLİK TABLOSU</span></button>
         <button id="btn-levels" class="btn-sq" aria-label="Bölümler"><svg class="i"><use href="#i-grid"/></svg><span>BÖLÜMLER</span></button>
         <button id="btn-online" class="btn-sq pink"><svg class="i"><use href="#i-user"/></svg><span>ONLİNE MOD</span></button>
         <button id="btn-start-game" class="btn-main"><svg class="i"><use href="#i-play"/></svg><span>OYUNA BAŞLA</span></button>
@@ -891,6 +889,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   <div class="help" id="lbbox">
     <div class="hcard">
       <h3>🏆 LİDERLİK</h3>
+      <p class="nm-sub" id="lb-me" style="margin:-4px 0 10px"></p>
       <div id="lb-full"></div>
       <button class="nm-cancel" id="lb-close">KAPAT</button>
     </div>
@@ -2177,7 +2176,6 @@ function lbRender(){
   const mine = USER && lbRows.find(r => r.id === USER.id), sc = mine ? mine.score : myScore;
   $('lb-me').textContent = sc != null ? 'Puanın: ' + sc : '';
   const empty = '<p class="lb-empty">' + (lbErr ? 'Tablo yüklenemedi, tekrar deneniyor…' : 'Henüz kimse yok, ilk sen ol!') + '</p>';
-  $('lb-list').innerHTML = lbRows.length ? lbRows.slice(0, 3).map(lbRowHTML).join('') : empty;
   $('lb-full').innerHTML = lbRows.length ? lbRows.map(lbRowHTML).join('') : empty;
 }
 async function lbStart(){
