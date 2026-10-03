@@ -463,6 +463,21 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .ptab{display:none}
 .ptab.on{display:block}
 .pfadd{padding:16px 14px 6px}
+.settings-action .srow-ic{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#67e8f9;background:rgba(34,211,238,.12);border:1px solid rgba(103,232,249,.28);flex:none}
+.settings-action .srow-ic.vib{color:#c084fc;background:rgba(168,85,247,.13);border-color:rgba(192,132,252,.3)}
+.smenu #s-sound-v,.smenu #s-vib-v{color:#4ade80}
+.smenu #s-sound-v.off,.smenu #s-vib-v.off{color:#ff5a5a}
+.pf-search-row{display:flex;gap:8px;align-items:center}
+.pf-search-row .nm-input{flex:1;min-width:0}
+.pf-search-btn{flex:none;padding:11px 13px;border-radius:13px;font-size:13px;font-weight:1000;letter-spacing:.04em;color:#fff;background:linear-gradient(180deg,#6366f1,#4338ca);border:1px solid rgba(165,180,252,.35);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 3px 0 #27206b}
+.pf-search-btn:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 1px 0 #27206b}
+.pf-result{margin-top:8px;display:flex;align-items:center;gap:8px;padding:9px 10px 9px 14px;border-radius:14px;background:linear-gradient(180deg,rgba(99,102,241,.2),rgba(124,58,237,.1));border:1px solid rgba(129,140,248,.3)}
+.pf-result .pf-result-name{flex:1;min-width:0;font-weight:900;color:#f5f1ff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pf-result .pf-result-id{display:block;font-size:10px;color:#aaa4d7;margin-top:2px}
+.pf-add-btn{flex:none;padding:8px 11px;border-radius:10px;font-size:12px;font-weight:1000;color:#fff;background:linear-gradient(180deg,#34d399,#059669);border:1px solid rgba(110,231,183,.35)}
+.pf-pending{flex:none;display:flex;align-items:center;gap:6px}
+.pf-pending .pending-label{padding:7px 8px;border-radius:9px;font-size:11px;font-weight:1000;color:#fbbf24;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.22)}
+.pf-pending .cancel-btn{padding:7px 8px;border-radius:9px;font-size:11px;font-weight:1000;color:#fca5a5;background:rgba(244,63,94,.1);border:1px solid rgba(251,113,133,.25)}
 .pfadd .nm-err{min-height:20px;margin:8px 0 0;text-align:center;font-size:12.5px;font-weight:800;color:#fca5a5}
 .pfadd .btn-main{display:block;margin:6px auto 0;font-size:17px;padding:12px 20px}
 .pfr{padding:6px 14px 18px}
@@ -697,6 +712,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   </defs>
   <symbol id="i-home" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></symbol>
   <symbol id="i-vol" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></symbol>
+  <symbol id="i-vibrate" viewBox="0 0 24 24"><path d="M7 5H5v14h2V5zm12 0h-2v14h2V5zM4 8H2v8h2V8zm18 0h-2v8h2V8zM15 3H9v18h6V3zm-2 2v14h-2V5h2z"/></symbol>
   <symbol id="i-mute" viewBox="0 0 24 24"><path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.8 8.8 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 0 0 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></symbol>
   <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></symbol>
   <symbol id="i-clock" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></symbol>
@@ -853,8 +869,8 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 
     <div class="settings-group options-group">
       <div class="settings-title"><span class="settings-title-ic gear"><svg class="i"><use href="#i-gear"/></svg></span><span>AYARLAR</span></div>
-      <button class="srow settings-action" id="s-sound"><span>SES</span><b id="s-sound-v">AÇIK</b></button>
-      <button class="srow settings-action" id="s-vib"><span>TİTREŞİM</span><b id="s-vib-v">AÇIK</b></button>
+      <button class="srow settings-action" id="s-sound"><span class="srow-ic"><svg class="i"><use href="#i-vol"/></svg></span><span>SES</span><b id="s-sound-v">AÇIK</b></button>
+      <button class="srow settings-action" id="s-vib"><span class="srow-ic vib"><svg class="i"><use href="#i-vibrate"/></svg></span><span>TİTREŞİM</span><b id="s-vib-v">AÇIK</b></button>
     </div>
 
     <div class="settings-extra">
@@ -971,9 +987,12 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
       </div>
       <div class="ptab" id="pt-friends">
         <div class="pfadd">
-          <input class="nm-input" id="pf-name" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="arkadaşının kullanıcı adı veya ID'si">
+          <div class="pf-search-row">
+            <input class="nm-input" id="pf-name" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="isim veya ID yaz">
+            <button class="pf-search-btn" id="pf-add" type="button">ARA</button>
+          </div>
           <p class="nm-err" id="pf-err"></p>
-          <button class="btn-main" id="pf-add">ARKADAŞ EKLE</button>
+          <div class="pf-result" id="pf-result" hidden></div>
         </div>
       <div class="pfr">
         <div class="pfr-h"><span>ARKADAŞLARIM</span><i id="pfr-n">0</i></div>
@@ -1797,7 +1816,9 @@ function refreshSettings(){
   renderSavedGuest();
   $('s-delete').hidden = !(USER && USER.type === 'guest');
   $('s-sound-v').textContent = S.sound ? 'AÇIK' : 'KAPALI';
+  $('s-sound-v').classList.toggle('off', !S.sound);
   $('s-vib-v').textContent = S.vib ? 'AÇIK' : 'KAPALI';
+  $('s-vib-v').classList.toggle('off', !S.vib);
   $('s-acc').textContent = USER ? USER.name : '-';
   const guest = !USER || USER.type === 'guest';
 
@@ -2406,12 +2427,38 @@ async function pfStart(){
   } catch(e){ box.innerHTML = '<p class="pfr-empty">Bağlantı hatası</p>'; }
 }
 function pfMsg(m, ok){ const e = $('pf-err'); e.style.color = ok ? '#86efac' : ''; e.textContent = m; }
-async function addFriend(){
-  const v = $('pf-name').value.trim(); if (!v) return;
-  pfMsg('Aranıyor…', 1);
+let pfResultUser = null;
+let pfPending = new Map();
+let pfOutUn = null;
+function pfResultHide(){ pfResultUser = null; const e = $('pf-result'); e.hidden = true; e.innerHTML = ''; }
+function pfResultRender(){
+  const e = $('pf-result');
+  if (!pfResultUser){ pfResultHide(); return; }
+  e.hidden = false; e.innerHTML = '';
+  const info = document.createElement('div'); info.className = 'pf-result-name';
+  const name = document.createElement('div'); name.textContent = pfResultUser.name;
+  const id = document.createElement('span'); id.className = 'pf-result-id'; id.textContent = 'ID: ' + pfResultUser.id;
+  info.append(name,id); e.appendChild(info);
+  if (pfFriends.some(x => x.id === pfResultUser.id)){
+    const b = document.createElement('span'); b.className = 'pending-label'; b.textContent = 'ARKADAŞSINIZ'; e.appendChild(b); return;
+  }
+  const pending = pfPending.has(pfResultUser.id);
+  if (pending){
+    const wrap = document.createElement('div'); wrap.className = 'pf-pending';
+    const st = document.createElement('span'); st.className = 'pending-label'; st.textContent = 'BEKLİYOR';
+    const c = document.createElement('button'); c.className = 'cancel-btn'; c.textContent = 'İPTAL'; c.onclick = () => cancelFriendRequest(pfResultUser.id);
+    wrap.append(st,c); e.appendChild(wrap);
+  } else {
+    const b = document.createElement('button'); b.className = 'pf-add-btn'; b.textContent = 'EKLE'; b.onclick = () => sendFriendRequest(pfResultUser);
+    e.appendChild(b);
+  }
+}
+async function searchFriend(){
+  const v = $('pf-name').value.trim();
+  if (!v) return pfMsg('Bir isim veya ID yaz');
+  pfMsg('Aranıyor…', 1); pfResultHide();
   try {
-    // geçersiz karakter / geçersiz belge adı: sistemde böyle biri olamaz
-    if (!/^\d{8}$/.test(v) && (!/^[A-Za-zÇĞİÖŞÜçğıöşü0-9_.]{3,16}$/.test(v) || /^\.+$/.test(v) || /^__.*__$/.test(v))) return pfMsg('Böyle bir kullanıcı yok');
+    if (!/^\d{8}$/.test(v) && (!/^[A-Za-zÇĞİÖŞÜçğıöşü0-9_.]{3,16}$/.test(v) || /^\.+$/.test(v) || /^__.*__$/.test(v))) return pfMsg('Geçerli bir isim veya 8 haneli ID yaz');
     const db = await getDb(); let f = null;
     if (/^\d{8}$/.test(v)){ const d = await db.collection('users').doc(v).get(); if (d.exists) f = { id: v, name: d.data().name || v }; }
     else { const d = await db.collection('usernames').doc(encodeURIComponent(nameKey(v))).get(); if (d.exists) f = d.data(); }
@@ -2420,52 +2467,86 @@ async function addFriend(){
     if (blocked.has(f.id)) return pfMsg('Bu kullanıcıyı engelledin, önce engeli kaldır');
     const bl = await db.collection('users').doc(f.id).collection('blocked').doc(USER.id).get();
     if (bl.exists) return pfMsg('Bu kullanıcı eklenemiyor');
-    if (pfFriends.some(x => x.id === f.id)) return pfMsg(f.name + ' zaten arkadaşın');
-    // doğrudan ekleme yok: istek gönderilir, karşı taraf KABUL ederse arkadaş olunur
-    const ref = db.collection('friendRequests').doc(USER.id + '_' + f.id);
-    await ref.set({ from: USER.id, fromName: USER.name, to: f.id, toName: f.name, status: 'pending', created: firebase.firestore.FieldValue.serverTimestamp() });
-    $('pf-name').value = ''; pfMsg('İstek gönderildi, ' + f.name + ' kabul edince eklenir', 1);
-    if (frOutUn[ref.id]) { try { frOutUn[ref.id](); } catch(e){} }
-    const un = frOutUn[ref.id] = ref.onSnapshot(d => {
-      const v = d.data(); if (!v || v.status === 'pending') return;
-      un(); delete frOutUn[ref.id];
-      if (v.status === 'accepted'){ toast(f.name + ' isteği kabul etti, arkadaş oldunuz!'); pfMsg(f.name + ' kabul etti', 1); }
-      else { toast(f.name + ' arkadaşlık isteğini reddetti'); pfMsg(f.name + ' isteği reddetti'); }
-      ref.delete().catch(() => {});
-    });
-    setTimeout(() => { if (frOutUn[ref.id]) { try { frOutUn[ref.id](); } catch(e){} delete frOutUn[ref.id]; } }, 600000);
-  } catch(e){
-    try { console.warn('Arkadaş ekleme hatası:', e && e.code, e && e.message); } catch(_){}
-    pfMsg(e && e.code === 'permission-denied' ? 'İzin hatası: Firestore kurallarını kontrol et' : 'Bağlantı hatası, tekrar dene');
-  }
+    pfResultUser = f; pfMsg('Kullanıcı bulundu', 1); pfResultRender();
+  } catch(e){ pfMsg(e && e.code === 'permission-denied' ? 'İzin hatası: Firestore kurallarını kontrol et' : 'Bağlantı hatası, tekrar dene'); }
 }
-const frOutUn = {};
-async function friendRemove(id){
-  try {
-    const db = await getDb(), b = db.batch();
-    b.delete(db.collection('users').doc(USER.id).collection('friends').doc(id));
-    b.delete(db.collection('users').doc(id).collection('friends').doc(USER.id));
-    await b.commit(); toast('Arkadaşlıktan çıkarıldı');
-  } catch(e){ toast('İşlem başarısız, tekrar dene'); }
-}
-async function friendBlock(id, name){
-  try {
-    const db = await getDb(), b = db.batch();
-    b.set(db.collection('users').doc(USER.id).collection('blocked').doc(id), { name });
-    b.delete(db.collection('users').doc(USER.id).collection('friends').doc(id));
-    b.delete(db.collection('users').doc(id).collection('friends').doc(USER.id));
-    await b.commit(); toast(name + ' engellendi');
-  } catch(e){ toast('Engellenemedi, tekrar dene'); }
-}
-async function friendUnblock(id){
+async function sendFriendRequest(f){
+  if (!f || !USER || !USER.id) return;
   try {
     const db = await getDb();
-    await db.collection('users').doc(USER.id).collection('blocked').doc(id).delete();
-    toast('Engel kaldırıldı');
-  } catch(e){ toast('İşlem başarısız, tekrar dene'); }
+    if (pfFriends.some(x => x.id === f.id)) return pfMsg(f.name + ' zaten arkadaşın');
+    if (pfPending.has(f.id)) return pfResultRender();
+    const ref = db.collection('friendRequests').doc(USER.id + '_' + f.id);
+    await ref.set({ from: USER.id, fromName: USER.name, to: f.id, toName: f.name, status: 'pending', created: firebase.firestore.FieldValue.serverTimestamp() });
+    pfMsg(f.name + ' için arkadaşlık isteği gönderildi', 1);
+    pfResultRender();
+    toast(f.name + ' isteği gönderildi');
+  } catch(e){ pfMsg(e && e.code === 'permission-denied' ? 'İzin hatası: Firestore kurallarını kontrol et' : 'İstek gönderilemedi, tekrar dene'); }
 }
-$('pf-add').addEventListener('click', addFriend);
-$('pf-name').addEventListener('keydown', e => { if (e.key === 'Enter') addFriend(); });
+async function cancelFriendRequest(id){
+  if (!USER || !USER.id || !id) return;
+  try {
+    const db = await getDb();
+    const ref = db.collection('friendRequests').doc(USER.id + '_' + id);
+    await ref.update({ status:'canceled', canceledAt: firebase.firestore.FieldValue.serverTimestamp() });
+    pfPending.delete(id); pfResultRender(); toast('Arkadaşlık isteği iptal edildi');
+  } catch(e){ toast('İstek iptal edilemedi, tekrar dene'); }
+}
+async function pfOutgoingStart(){
+  if (pfOutUn){ try { pfOutUn(); } catch(e){} pfOutUn = null; }
+  pfPending = new Map();
+  if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id) return;
+  try {
+    const db = await getDb();
+    pfOutUn = db.collection('friendRequests').where('from','==',USER.id).onSnapshot(q => {
+      pfPending = new Map();
+      q.forEach(d => { const v=d.data()||{}; if (v.status === 'pending' && v.to) pfPending.set(v.to,{ref:d.ref,name:v.toName||v.to}); });
+      pfResultRender();
+    }, () => {});
+  } catch(e){}
+}
+function pfClean(){ pfUn.forEach(u => { try { u(); } catch(e){} }); pfUn = []; }
+function pfBtn(label, cls, fn){
+  const b = document.createElement('button'); b.textContent = label; if (cls) b.className = cls; b.dataset.l = label;
+  b.addEventListener('click', () => {
+    if (b.classList.contains('arm')){ fn(); return; }
+    document.querySelectorAll('#prof .pfr-row button.arm').forEach(x => { x.classList.remove('arm'); x.textContent = x.dataset.l; });
+    b.classList.add('arm'); b.textContent = 'EMİN MİSİN?';
+    setTimeout(() => { if (b.isConnected && b.classList.contains('arm')){ b.classList.remove('arm'); b.textContent = label; } }, 3000);
+  });
+  return b;
+}
+function pfRow(name, btns){
+  const r = document.createElement('div'); r.className = 'pfr-row';
+  const sp = document.createElement('span'); sp.textContent = name; r.appendChild(sp);
+  btns.forEach(b => r.appendChild(b)); return r;
+}
+function pfRender(){
+  const box = $('pfr-list'), bbox = $('pfr-bllist');
+  box.innerHTML = ''; bbox.innerHTML = '';
+  $('pfr-n').textContent = pfFriends.length; $('pfr-bn').textContent = blocked.size;
+  if (!pfFriends.length) box.innerHTML = '<p class="pfr-empty">Henüz arkadaşın yok.</p>';
+  pfFriends.forEach(f => box.appendChild(pfRow(f.name, [ pfBtn('ÇIKAR', '', () => friendRemove(f.id)), pfBtn('ENGELLE', 'warn', () => friendBlock(f.id, f.name)) ])));
+  if (!blocked.size) bbox.innerHTML = '<p class="pfr-empty">Engellediğin kimse yok.</p>';
+  blocked.forEach((name, id) => bbox.appendChild(pfRow(name, [ pfBtn('ENGELİ KALDIR', '', () => friendUnblock(id)) ])));
+}
+async function pfStart(){
+  pfClean(); pfFriends = []; $('pfr-bllist').hidden = true;
+  const box = $('pfr-list');
+  if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id){ box.innerHTML = '<p class="pfr-empty">Arkadaşlar için ID hazırlanıyor, sonra tekrar aç.</p>'; return; }
+  box.innerHTML = '<p class="pfr-empty">Yükleniyor…</p>';
+  try {
+    const db = await getDb();
+    pfUn.push(db.collection('users').doc(USER.id).collection('friends').onSnapshot(q => {
+      pfFriends = []; q.forEach(d => pfFriends.push({ id: d.id, name: (d.data() && d.data().name) || d.id }));
+      pfRender(); pfResultRender();
+    }));
+    pfOutgoingStart();
+  } catch(e){ box.innerHTML = '<p class="pfr-empty">Bağlantı hatası</p>'; }
+}
+function pfMsg(m, ok){ const e = $('pf-err'); e.style.color = ok ? '#86efac' : ''; e.textContent = m; }
+$('pf-add').addEventListener('click', searchFriend);
+$('pf-name').addEventListener('keydown', e => { if (e.key === 'Enter') searchFriend(); });
 function pfTab(n){
   document.querySelectorAll('#prof .ptabs button').forEach(b => b.classList.toggle('on', b.dataset.t === n));
   $('pt-profile').classList.toggle('on', n === 'profile'); $('pt-friends').classList.toggle('on', n === 'friends');
