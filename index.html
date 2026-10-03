@@ -416,6 +416,22 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .avpick button{aspect-ratio:1;border-radius:12px;font-size:24px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.15)}
 .avpick button.on{outline:2px solid #fbbf24}
 
+/* ===== BULANIK ARKA PLAN (Profil / Ayarlar) ===== */
+.prof{background:rgba(5,3,20,.5);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+.sback{position:absolute;inset:0;z-index:55;background:rgba(5,3,20,.4);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);opacity:0;visibility:hidden;transition:opacity .18s,visibility .18s}
+.smenu.show + .sback{opacity:1;visibility:visible}
+/* ===== PROFİL SEKMELERİ ===== */
+.ptabs{display:flex;gap:6px;margin:14px 14px 0;padding:5px;border-radius:16px;background:rgba(0,0,0,.3)}
+.ptabs button{flex:1;padding:10px 6px;border-radius:12px;font-size:13px;font-weight:900;letter-spacing:.06em;color:#b9b3f0}
+.ptabs button.on{color:#3b1d00;background:linear-gradient(180deg,#fde68a,#fbbf24);box-shadow:0 2px 0 #92400e}
+.ptab{display:none}
+.ptab.on{display:block}
+.pfadd{padding:16px 14px 6px}
+.pfadd .nm-err{min-height:20px;margin:8px 0 0;text-align:center;font-size:12.5px;font-weight:800;color:#fca5a5}
+.pfadd .btn-main{display:block;margin:6px auto 0;font-size:17px;padding:12px 20px}
+.pfr{padding:6px 14px 18px}
+#pt-friends .pfr-h{margin-top:8px}
+
 #fx{position:absolute;inset:0;width:100%;height:100%;z-index:80;pointer-events:none}
 
 /* ================= VICTORY ================= */
@@ -694,6 +710,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
     <button class="srow" id="s-vib"><span>TİTREŞİM</span><b id="s-vib-v">AÇIK</b></button>
     <button class="srow danger" id="s-logout">ÇIKIŞ YAP</button>
   </div>
+  <div class="sback"></div>
   <div class="help" id="help">
     <div class="hcard">
       <h3>NASIL OYNANIR?</h3>
@@ -717,10 +734,8 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   <div class="help" id="olbox">
     <div class="hcard">
       <h3>ONLİNE MOD</h3>
-      <p class="nm-sub">Arkadaşını ekle ve davet et. Kelimeleri önce bitiren kazanır!</p>
-      <input class="nm-input" id="ol-name" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="arkadaşının kullanıcı adı veya ID'si">
+      <p class="nm-sub">Arkadaşını davet et. Kelimeleri önce bitiren kazanır!<br>Arkadaş eklemek için Profil &gt; Arkadaşlarım.</p>
       <p class="nm-err" id="ol-err"></p>
-      <button class="btn-main" id="ol-add">ARKADAŞ EKLE</button>
       <p class="nm-sub" style="margin:12px 0 0">TAHTA BOYUTU</p>
       <div class="ol-sz" id="ol-sz"></div>
       <div class="ol-list" id="ol-inv"></div>
@@ -745,6 +760,8 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   <div class="prof" id="prof">
     <div class="pcard">
       <div class="phead"><h3>PROFİL</h3><button class="pclose" id="prof-close" aria-label="Kapat">X</button></div>
+      <div class="ptabs"><button class="on" data-t="profile">PROFİL</button><button data-t="friends">ARKADAŞLARIM</button></div>
+      <div class="ptab on" id="pt-profile">
       <div class="pname"><b id="p-name">-</b><span><svg class="i"><use href="#i-star"/></svg><i id="p-level" style="font-style:normal">1</i></span><span><i style="font-style:normal">🏆</i><i id="p-done" style="font-style:normal">0</i></span></div>
       <div class="pid">ID: <b id="p-id">-</b></div>
       <div class="pmid">
@@ -760,11 +777,19 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
         <div class="prow"><span>KAZANILAN OYUN</span><b id="p-wins">0</b></div>
         <div class="prow"><span>TOPLAM OYUN</span><b id="p-games">0</b></div>
       </div>
+      </div>
+      <div class="ptab" id="pt-friends">
+        <div class="pfadd">
+          <input class="nm-input" id="pf-name" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="arkadaşının kullanıcı adı veya ID'si">
+          <p class="nm-err" id="pf-err"></p>
+          <button class="btn-main" id="pf-add">ARKADAŞ EKLE</button>
+        </div>
       <div class="pfr">
         <div class="pfr-h"><span>ARKADAŞLARIM</span><i id="pfr-n">0</i></div>
         <div class="pfr-list" id="pfr-list"></div>
         <button class="pfr-bl" id="pfr-blbtn">ENGELLENENLER (<span id="pfr-bn">0</span>)</button>
         <div class="pfr-list" id="pfr-bllist" hidden></div>
+      </div>
       </div>
     </div>
   </div>
@@ -1684,6 +1709,7 @@ function openProfile(){
   $('p-wins').textContent = S.wins;
   $('p-rate').textContent = '%' + (S.games ? Math.round(S.wins / S.games * 100) : 0);
   avpick.classList.remove('show'); renderAvatar();
+  pfTab('profile'); pfMsg('');
   profEl.classList.add('show');
   pfStart();
 }
@@ -1721,7 +1747,7 @@ async function openOnline(){
   try {
     const db = await getDb(); olClean();
     unsubs.push(db.collection('users').doc(USER.id).collection('friends').onSnapshot(q => {
-      const box = $('ol-fr'); box.innerHTML = q.empty ? '<p class="nm-sub">Henüz arkadaşın yok.</p>' : '';
+      const box = $('ol-fr'); box.innerHTML = q.empty ? '<p class="nm-sub">Henüz arkadaşın yok. Profil &gt; Arkadaşlarım bölümünden ekleyebilirsin.</p>' : '';
       q.forEach(d => {
         const b = document.createElement('button'); b.className = 'srow';
         b.innerHTML = '<span>' + esc(d.data().name) + '</span><b>DAVET ET</b>';
@@ -1741,25 +1767,6 @@ async function openOnline(){
       });
     }));
   } catch(e){ olMsg('Bağlantı hatası'); }
-}
-async function addFriend(){
-  const v = $('ol-name').value.trim(); if (!v) return;
-  olMsg('Aranıyor…', 1);
-  try {
-    const db = await getDb(); let f = null;
-    if (/^\d{8}$/.test(v)){ const d = await db.collection('users').doc(v).get(); if (d.exists) f = { id: v, name: d.data().name || v }; }
-    else { const d = await db.collection('usernames').doc(encodeURIComponent(nameKey(v))).get(); if (d.exists) f = d.data(); }
-    if (!f) return olMsg('Böyle bir kullanıcı bulunamadı');
-    if (f.id === USER.id) return olMsg('Kendini ekleyemezsin');
-    if (blocked.has(f.id)) return olMsg('Bu kullanıcıyı engelledin, önce engeli kaldır');
-    const bl = await db.collection('users').doc(f.id).collection('blocked').doc(USER.id).get();
-    if (bl.exists) return olMsg('Bu kullanıcı eklenemiyor');
-    const b = db.batch();
-    b.set(db.collection('users').doc(USER.id).collection('friends').doc(f.id), { name: f.name });
-    b.set(db.collection('users').doc(f.id).collection('friends').doc(USER.id), { name: USER.name });
-    await b.commit();
-    $('ol-name').value = ''; olMsg(f.name + ' eklendi', 1);
-  } catch(e){ olMsg('Bağlantı hatası, tekrar dene'); }
 }
 async function invite(fid, fname){
   try {
@@ -1796,8 +1803,6 @@ function raceStop(){
   if (!r.over) getDb().then(db => db.runTransaction(async tx => { const d = await tx.get(r.ref); if (!d.data().winner) tx.update(r.ref, { winner: r.oppId }); })).catch(() => {});
 }
 $('btn-online').addEventListener('click', () => { audio(); openOnline(); });
-$('ol-add').addEventListener('click', addFriend);
-$('ol-name').addEventListener('keydown', e => { if (e.key === 'Enter') addFriend(); });
 $('ol-close').addEventListener('click', () => { olClean(); olEl.classList.remove('show'); });
 $('rr-ok').addEventListener('click', () => { resEl.classList.remove('show'); showHome(); });
 
@@ -1907,6 +1912,26 @@ async function pfStart(){
     }));
   } catch(e){ box.innerHTML = '<p class="pfr-empty">Bağlantı hatası</p>'; }
 }
+function pfMsg(m, ok){ const e = $('pf-err'); e.style.color = ok ? '#86efac' : ''; e.textContent = m; }
+async function addFriend(){
+  const v = $('pf-name').value.trim(); if (!v) return;
+  pfMsg('Aranıyor…', 1);
+  try {
+    const db = await getDb(); let f = null;
+    if (/^\d{8}$/.test(v)){ const d = await db.collection('users').doc(v).get(); if (d.exists) f = { id: v, name: d.data().name || v }; }
+    else { const d = await db.collection('usernames').doc(encodeURIComponent(nameKey(v))).get(); if (d.exists) f = d.data(); }
+    if (!f) return pfMsg('Böyle bir kullanıcı bulunamadı');
+    if (f.id === USER.id) return pfMsg('Kendini ekleyemezsin');
+    if (blocked.has(f.id)) return pfMsg('Bu kullanıcıyı engelledin, önce engeli kaldır');
+    const bl = await db.collection('users').doc(f.id).collection('blocked').doc(USER.id).get();
+    if (bl.exists) return pfMsg('Bu kullanıcı eklenemiyor');
+    const b = db.batch();
+    b.set(db.collection('users').doc(USER.id).collection('friends').doc(f.id), { name: f.name });
+    b.set(db.collection('users').doc(f.id).collection('friends').doc(USER.id), { name: USER.name });
+    await b.commit();
+    $('pf-name').value = ''; pfMsg(f.name + ' eklendi', 1);
+  } catch(e){ pfMsg('Bağlantı hatası, tekrar dene'); }
+}
 async function friendRemove(id){
   try {
     const db = await getDb(), b = db.batch();
@@ -1931,6 +1956,14 @@ async function friendUnblock(id){
     toast('Engel kaldırıldı');
   } catch(e){ toast('İşlem başarısız, tekrar dene'); }
 }
+$('pf-add').addEventListener('click', addFriend);
+$('pf-name').addEventListener('keydown', e => { if (e.key === 'Enter') addFriend(); });
+function pfTab(n){
+  document.querySelectorAll('#prof .ptabs button').forEach(b => b.classList.toggle('on', b.dataset.t === n));
+  $('pt-profile').classList.toggle('on', n === 'profile'); $('pt-friends').classList.toggle('on', n === 'friends');
+  $('prof').querySelector('.pcard').scrollTop = 0;
+}
+document.querySelectorAll('#prof .ptabs button').forEach(b => b.addEventListener('click', () => pfTab(b.dataset.t)));
 $('pfr-blbtn').addEventListener('click', () => { const l = $('pfr-bllist'); l.hidden = !l.hidden; });
 $('prof-close').addEventListener('click', pfClean);
 profEl.addEventListener('click', e => { if (e.target === profEl) pfClean(); });
