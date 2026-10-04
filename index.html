@@ -198,7 +198,11 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
   padding:10px;border-radius:18px;background:rgba(10,6,38,.62);border:1px solid var(--stroke);
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:inset 0 0 24px rgba(0,0,0,.25)
 }
-.word-list{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;max-height:104px;overflow-y:auto;scrollbar-width:none}
+.word-list{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center}
+.word-list .chip{white-space:nowrap}
+.word-list.n-md{gap:5px}.word-list.n-md .chip{padding:5px 9px;font-size:11.5px;letter-spacing:.05em}
+.word-list.n-sm{gap:4px}.word-list.n-sm .chip{padding:4px 8px;font-size:10.5px;letter-spacing:.03em;border-width:1px}
+.word-list.n-xs{gap:3px}.word-list.n-xs .chip{padding:3px 6px;font-size:9.5px;letter-spacing:.02em;border-width:1px}
 .word-list::-webkit-scrollbar{display:none}
 .chip{
   position:relative;display:flex;align-items:center;gap:5px;padding:6px 11px;border-radius:999px;
@@ -581,6 +585,8 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .rr-pts{min-height:26px;margin:0;text-align:center;font-size:22px;font-weight:1000;letter-spacing:.04em;color:#fde68a}
 .rr-pts.lose{color:#fca5a5}
 .rr-pts.small{font-size:13px;font-weight:800;color:#b9b3f0}
+.rr-time{margin:2px 0 6px;text-align:center;font-size:15px;font-weight:900;color:#fde68a}
+.rr-time[hidden]{display:none}
 .rr-coin{display:flex;flex-direction:column;align-items:center;gap:3px;margin:8px auto 0;padding:10px 22px;border-radius:18px;border:1.5px solid rgba(74,222,128,.55);background:rgba(34,197,94,.16)}
 .rr-coin[hidden]{display:none}
 .rr-coin b{font-size:26px;font-weight:1000;letter-spacing:.03em;color:#86efac;text-shadow:0 2px 0 rgba(0,0,0,.35)}
@@ -1072,6 +1078,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
     <div class="hcard">
       <h3 id="rr-t"></h3>
       <p class="nm-sub" id="rr-p"></p>
+      <p class="rr-time" id="rr-time" hidden></p>
       <p class="rr-pts" id="rr-pts"></p>
       <div class="rr-coin" id="rr-coin" hidden><b id="rr-coin-n"></b><small id="rr-coin-s"></small></div>
       <button class="btn-main" id="rr-again">YENİDEN OYNA</button>
@@ -1580,6 +1587,7 @@ introEl.addEventListener('pointerdown', () => { if (Date.now() >= introReady) cl
 
 function renderWords(){
   wordListEl.innerHTML = ''; S.chips = {};
+  { const n = S.level.words.length; wordListEl.className = 'word-list' + (n >= 13 ? ' n-xs' : n >= 9 ? ' n-sm' : n >= 7 ? ' n-md' : ''); }
   S.level.words.forEach(w => {
     const chip = document.createElement('div');
     chip.className = 'chip';
@@ -2530,25 +2538,38 @@ async function beginRace(ref, v, opp, oppId, rated){
       const msg = v.stakeError === 'Yetersiz coin' ? 'Maç iptal edildi: bir oyuncunun coin bakiyesi yetersiz.' : 'Maç iptal edildi.';
       R.over = true; S.playing = false; stopTimer(); toast(msg); R = null; return;
     }
-    if (v && v.winner && R && !R.over) raceEnd(v.winner === USER.id);
+    if (v && v.winner && R && !R.over) raceEnd(v.winner === USER.id, v.time);
   });
   showGame(0, customDef(v.size, v.seed), v.seed);
 }
 async function raceFinish(){
   S.playing = false; stopTimer();
-  if (R && R.bot){ raceEnd(true); return; }
+  if (R && R.bot){ raceEnd(true, S.seconds); return; }
   try {
-    const db = await getDb(); let won = false; const r = R;
-    await db.runTransaction(async tx => { const d = await tx.get(r.ref); if (!d.data().winner){ tx.update(r.ref, { winner: USER.id, time: S.seconds }); won = true; } });
-    raceEnd(won);
+    const db = await getDb(); let won = false, wTime; const r = R;
+    await db.runTransaction(async tx => { const d = await tx.get(r.ref); if (!d.data().winner){ tx.update(r.ref, { winner: USER.id, time: S.seconds }); won = true; } else wTime = d.data().time; });
+    raceEnd(won, won ? S.seconds : wTime);
   } catch(e){ toast('Bağlantı hatası'); }
 }
-function raceEnd(won){
+function raceEnd(won, time){
   if (!R || R.over) return; R.over = true; S.playing = false; stopTimer(); clearInterval(R.timer);
   if (won){ SND.win(); buzz([40, 60, 40]); } else { SND.miss(); buzz(80); }
   $('rr-t').textContent = won ? 'KAZANDIN! 🏆' : 'KAYBETTİN';
   $('rr-p').textContent = won ? 'Rakibini geçtin!' : R.opp + ' önce bitirdi.';
   const r = R, pt = $('rr-pts'); pt.className = 'rr-pts';
+  const tEl = $('rr-time'), R0 = R;
+  const showT = t => {
+    if (t == null || t === '') return false;
+    t = Math.round(Number(t)); if (isNaN(t) || t < 0) return false;
+    const d = t < 60 ? t + ' saniyede' : Math.floor(t / 60) + ' dk ' + (t % 60) + " sn'de";
+    tEl.hidden = false;
+    tEl.textContent = won ? '⏱ ' + d + ' bitirdin' : '⏱ ' + String(R0.opp).replace(' 🤖', '') + ' ' + d + ' bitirdi';
+    return true;
+  };
+  tEl.hidden = true;
+  if (!showT(time) && !won && R0.ref && R0.ref.get){
+    R0.ref.get().then(d => { const t = d.exists ? d.data().time : null; if (t != null) showT(t); }).catch(() => {});
+  }
   const cb = $('rr-coin');
   if (r.stake && !r.bot){
     const st = Number(r.stake) || 0;
@@ -2599,7 +2620,7 @@ function startBot(size){
   const seed = Math.floor(Math.random() * 1e9), def = customDef(size, seed);
   const target = Math.round(def.words.length * (8 + Math.random() * 7));   // bot, kelime başına ~8-15 sn
   R = { bot:true, size, opp: BOT_NAMES[Math.floor(Math.random() * BOT_NAMES.length)] + ' 🤖', over:false };
-  R.timer = setInterval(() => { if (R && R.bot && !R.over && S.playing && S.timer && S.seconds >= target) raceEnd(false); }, 500);
+  R.timer = setInterval(() => { if (R && R.bot && !R.over && S.playing && S.timer && S.seconds >= target) raceEnd(false, target); }, 500);
   showGame(0, def, seed);
 }
 async function findMatch(){
