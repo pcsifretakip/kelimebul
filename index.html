@@ -2049,7 +2049,7 @@ $('s-logout').addEventListener('click', () => {
 const AVATARS = ['🦊','🐼','🦁','🐯','🐸','🐵','🦉','🐙','🦄','🐧','🐶','🐱'];
 let avatar = store.get('kb_avatar') || '';
 let avatarPhoto = store.get('kb_avatar_photo') || '';
-const profEl = $('prof'), avpick = $('avpick');
+const profEl = $('prof'), avpick = $('avpick') || document.createElement('div');
 function avatarHTML(){ return avatarPhoto ? '<img src="' + avatarPhoto + '" alt="Profil fotoğrafı">' : (avatar ? avatar : '<svg class="i"><use href="#i-user"/></svg>'); }
 function renderAvatar(){
   $('btn-avatar').innerHTML = avatarHTML();
