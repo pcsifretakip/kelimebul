@@ -1129,6 +1129,41 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .jr-trail{position:absolute;width:12px;height:12px;border-radius:50%;background:#4ade80;box-shadow:0 0 12px #22c55e;
   transform:translate(-50%,-50%);pointer-events:none;z-index:29;animation:jrTrail .9s ease-out forwards}
 @keyframes jrTrail{to{opacity:0;transform:translate(-50%,-50%) scale(.2)}}
+/* bilgilendirmeleri gizle */
+.status,.toast,.intro{display:none!important}
+
+/* ===== Yeni zafer ekranı ===== */
+#modal-victory .vcard{position:relative;transform:none!important}
+#modal-victory .vcard::before{content:"";position:absolute;left:50%;top:-30px;width:520px;height:520px;margin-left:-260px;z-index:-1;pointer-events:none;opacity:0;
+  background:repeating-conic-gradient(from 0deg,rgba(251,191,36,.30) 0 7deg,transparent 7deg 20deg);
+  -webkit-mask-image:radial-gradient(circle,#000 0,transparent 68%);mask-image:radial-gradient(circle,#000 0,transparent 68%)}
+#modal-victory.show .vcard::before{animation:vRays 22s linear infinite,vFade .8s .2s forwards}
+@keyframes vRays{to{transform:rotate(360deg)}}
+@keyframes vFade{to{opacity:1}}
+#modal-victory .vtitle{opacity:0;background:linear-gradient(100deg,#fde68a 35%,#fff 50%,#fde68a 65%) 200% 0/250% 100%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;filter:drop-shadow(0 4px 0 #b45309) drop-shadow(0 8px 16px rgba(0,0,0,.5))}
+#modal-victory.show .vtitle{animation:vTitle .7s cubic-bezier(.2,1.6,.4,1) .1s forwards,vShine 1.1s .9s ease-out forwards}
+@keyframes vTitle{0%{opacity:0;transform:scale(2.4) translateY(-30px);letter-spacing:.3em}100%{opacity:1;transform:none;letter-spacing:.05em}}
+@keyframes vShine{to{background-position:-100% 0}}
+#modal-victory .vstar{position:relative;font-size:64px;transform:scale(0);opacity:0}
+#modal-victory .vstar:nth-child(2){font-size:84px;margin-bottom:12px}
+#modal-victory.show .vstar{animation:vStarOff .45s cubic-bezier(.3,1.5,.5,1) forwards;animation-delay:calc(.55s + var(--i)*.28s)}
+#modal-victory.show .vstar.on{animation:vStarOn .8s cubic-bezier(.2,1.4,.4,1) forwards;animation-delay:calc(.55s + var(--i)*.28s)}
+@keyframes vStarOff{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes vStarOn{0%{transform:scale(3) rotate(-50deg);opacity:0;filter:brightness(3)}
+  55%{transform:scale(.88) rotate(6deg);opacity:1;filter:drop-shadow(0 0 22px #fbbf24) brightness(1.5)}
+  100%{transform:scale(1) rotate(0);opacity:1}}
+.v-ring{opacity:0;transform:scale(.6)}
+#modal-victory.show .v-ring{animation:vPop .6s cubic-bezier(.3,1.5,.5,1) 1.2s forwards}
+@keyframes vPop{to{opacity:1;transform:none}}
+#modal-victory .vstats{opacity:0;transform:translateY(24px)}
+#modal-victory.show .vstats{animation:vUp .55s cubic-bezier(.2,1,.3,1) 1.45s forwards}
+#modal-victory .btn-main{opacity:0;transform:translateY(24px)}
+#modal-victory.show .btn-main{animation:vUp .55s cubic-bezier(.2,1,.3,1) 1.75s forwards}
+@keyframes vUp{to{opacity:1;transform:none}}
+#modal-victory.leave .vcard{opacity:0;transition:opacity .3s}
+.v-burst{position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px;border-radius:50%;border:3px solid #fde047;pointer-events:none;animation:vBurst .7s ease-out forwards}
+@keyframes vBurst{to{transform:scale(7);opacity:0;border-width:1px}}
 </style>
 
 <style>
@@ -1776,6 +1811,8 @@ const store = {
   set(k,v){ try { localStorage.setItem(k, v); } catch(e){} }
 };
 
+const TEST_UNLOCK_ALL = true;   // test bitince false yap
+const SHOW_NOTICES = false;     // bilgilendirme toast'ları kapalı
 const S = {
   levelIndex: 0, maxOpen: 0, done: {}, partial: {}, coins: 150, sound: true,
   level: null, found: new Set(), colorOf: {}, caps: [],
@@ -1791,6 +1828,7 @@ const S = {
   const m = parseInt(store.get('cidahl_doga_max'), 10);
   S.maxOpen = Math.min(last, Math.max(isNaN(l) ? 0 : l, isNaN(m) ? 0 : m));
   S.levelIndex = S.maxOpen;
+  if (TEST_UNLOCK_ALL) S.maxOpen = last;   // TEST: tüm bölümler açık
   try { S.done = JSON.parse(store.get('cidahl_doga_done') || '{}') || {}; } catch(e) { S.done = {}; }
   try { S.partial = JSON.parse(store.get('cidahl_doga_partial') || '{}') || {}; } catch(e) { S.partial = {}; }
   // Açılmış bölümler tamamlanmış sayılmaz; yıldız yalnızca bölüm gerçekten bitirilince verilir.
@@ -1923,6 +1961,7 @@ function confetti(x, y, n, a0, a1, power = 1){
    ===================================================== */
 let toastTimer = 0;
 function toast(msg){
+  if (!SHOW_NOTICES) return;
   toastEl.textContent = msg; toastEl.classList.add('show');
   clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1800);
 }
@@ -2014,10 +2053,11 @@ function startLevel(index, def, seed){
   }
   requestAnimationFrame(() => requestAnimationFrame(() => { restoreFoundWords(); }));
   // önce kategori tanıtım ekranı, sonra oyun ve süre başlar
-  showIntro(index, def, () => {
+  // tanıtım/açıklama ekranı kaldırıldı: oyun doğrudan başlar
+  requestAnimationFrame(() => requestAnimationFrame(() => {
     if (tok !== S.token) return;
     S.playing = true; startTimer(); measure();
-  });
+  }));
 }
 
 /* =====================================================
@@ -2484,6 +2524,26 @@ function vicScene(idx){
     box.appendChild(o);
   }
 }
+
+function vicFx(stars, reward, elapsed){
+  const st = [...document.querySelectorAll('.vstar')];
+  for (let i = 0; i < stars; i++) setTimeout(() => {
+    const el = st[i]; if (!el) return;
+    const b = document.createElement('i'); b.className = 'v-burst';
+    el.parentNode.style.position = 'relative'; el.parentNode.appendChild(b);
+    const r = el.getBoundingClientRect(), pr = el.parentNode.getBoundingClientRect();
+    b.style.left = (r.left - pr.left + r.width / 2) + 'px'; b.style.top = (r.top - pr.top + r.height / 2) + 'px';
+    setTimeout(() => b.remove(), 800);
+    tone(660 + i * 220, 0, .35, 'triangle', .16, 990 + i * 220); buzz(20);
+    const a = app.getBoundingClientRect(); sparkBurst(r.left + r.width / 2 - a.left, r.top + r.height / 2 - a.top, '#fde047', 12, 1.3);
+  }, 750 + i * 280);
+  const cnt = (el, to, fmtFn, delay) => { const t0 = performance.now() + delay;
+    const f = now => { const k = Math.max(0, Math.min(1, (now - t0) / 900)), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = fmtFn(Math.round(to * e)); if (k < 1) requestAnimationFrame(f); };
+    requestAnimationFrame(f); };
+  cnt($('reward-coins'), reward, v => '+' + v, 1500);
+  cnt($('reward-time'), elapsed, fmt, 1500);
+}
 function victory(){
   if (R){ raceFinish(); return; }
   S.playing = false; stopTimer(); SND.win(); buzz([40, 60, 40, 60, 120]);
@@ -2505,7 +2565,7 @@ function victory(){
   $('reward-time').textContent = fmt(elapsed);
   vicScene(idx);
   $('reward-coins').textContent = '+' + reward;
-  modal.classList.add('show');
+  modal.classList.add('show'); vicFx(stars, reward, elapsed);
   const w = fxW, h = fxH;
   confetti(w * .08, h * .85, 70, -Math.PI * .45, -Math.PI * .1);
   confetti(w * .92, h * .85, 70, -Math.PI * .9, -Math.PI * .55);
