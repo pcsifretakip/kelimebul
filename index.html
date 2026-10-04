@@ -1424,22 +1424,26 @@ const DIRS = {
 };
 const GROUPS = [
   ['Amazon Yağmur Ormanları','#16a34a',[
-    ['AMAZON’A GİRİŞ',6,'amazon orman nehir yağmur'],
-    ['ORMAN CANLILARI',6,'jaguar tukan maymun yılan'],
-    ['YAĞMUR ORMANI',7,'yağmur palmiye orkide liana kakao'],
-    ['AMAZON NEHRİ',7,'nehir kano balık piranha kıyı'],
-    ['ORMAN KATMANLARI',7,'toprak gövde dal yaprak taç'],
-    ['YABANİ HAYAT',8,'anakonda jaguar tapir maymun tukan kurbağa'],
-    ['BİTKİLER',8,'orkide palmiye kauçuk kakao eğrelti yosun'],
-    ['NEHİRDE YAŞAM',8,'piranha yunus timsah balık su samuru'],
-    ['YAĞMURUN İZLERİ',8,'bulut sağanak damla nem sis fırtına'],
-    ['ORMAN KEŞFİ',9,'keşif pusula harita kano patika kamp nehir'],
-    ['AMAZON KABİLELERİ',9,'kabile köy avcı ok yay tekne ateş'],
-    ['GİZEMLİ ORMAN',9,'gölge iz pençe ses gece yaprak dal'],
-    ['DERİN AMAZON',10,'anakonda jaguar piranha tapir tukan yarasa kurbağa'],
-    ['YAŞAM DÖNGÜSÜ',10,'tohum çiçek meyve polen böcek kuş ağaç nehir'],
-    ['AMAZONUN KALBİ',10,'orman nehir yağmur jaguar anakonda piranha palmiye orkide'],
-    ['AMAZON FİNALİ',10,'amazon yağmur orman nehir jaguar anakonda piranha tukan orkide palmiye keşif']
+    ['EL ALETLERİ',6,'çekiç pense tornavida testere anahtar keski'],
+    ['SANAYİ MALZEMELERİ',6,'rulman civata somun profil zincir conta'],
+    ['HASTANE ALETLERİ',7,'stetoskop termometre tansiyon oksimetre şırınga neşter'],
+    ['AMELİYAT MALZEMELERİ',7,'neşter penset makas ekartör dikiş bistüri'],
+    ['DÜNYA ŞEHİRLERİ',7,'istanbul paris londra tokyo roma madrid'],
+    ['ÜNLÜ FUTBOLCULAR',8,'messi ronaldo mbappe neymar zidane ronaldinho'],
+    ['ÇİÇEK TÜRLERİ',8,'gül lale papatya orkide menekşe sümbül'],
+    ['OTOMOBİL MARKALARI',8,'toyota ford bmw mercedes audi renault'],
+    ['TÜRKİYE İLLERİ',9,'sakarya istanbul ankara izmir bursa antalya'],
+    ['TARİHİ ŞAHSİYETLER',9,'atatürk fatih kanuni napolyon iskender sezar'],
+    ['MEYVE VE SEBZELER',9,'elma armut kiraz domates biber patlıcan'],
+    ['BİLİM KURGU FİLMLERİ',10,'avatar matrix dune alien terminator interstellar'],
+    ['KÖPEK IRKLARI',10,'labrador golden husky beagle boxer bulldog'],
+    ['MÜZİK ENSTRÜMANLARI',10,'piyano gitar keman davul flüt bağlama'],
+    ['SÜPER KAHRAMANLAR',10,'batman superman thor hulk flash aquaman'],
+    ['YÖRESEL YEMEKLER',10,'mantı kebap pide lahmacun keşkek tantuni'],
+    ['BAŞKENTLER',10,'ankara paris berlin tokyo madrid lizbon'],
+    ['AKSİYON OYUNLARI',10,'doom halo farcry hitman tekken mortal'],
+    ['ÜLKELER VE BAYRAKLAR',10,'türkiye japonya brezilya kanada almanya italya'],
+    ['MUTFAK EŞYALARI',10,'tencere tava bıçak kepçe tabak süzgeç']
   ]],
   ['Sahra Çölü','#f59e0b',[['HAYVANLAR',7,'deve akrep yılan kartal tilki çakal'],['ÇÖL DOĞASI',7,'kumul vaha güneş sıcak fırtına kayalık'],['YOLCULAR',7,'kervan tuareg çadır hurma rehber harita']]],
   ['Himalaya Dağları','#60a5fa',[['ZİRVELER',7,'everest lhotse makalu zirve buzul kar'],['HAYVANLAR',7,'yeti kaplan geyik kartal maral tilki'],['KÜLTÜR',7,'şerpa tapınak budist nepal tibet bhutan']]],
@@ -1462,9 +1466,26 @@ const GROUPS = [
   ['Iguazú Şelaleleri','#06b6d4',[['ŞELALE',7,'şelale iguazu nehir köpük uçurum sis'],['HAYVANLAR',7,'jaguar tukan kelebek kayman maymun koati'],['ÜLKELER',8,'brezilya arjantin paraguay sınır köprü patika']]]
 ];
 const INFO = [
-  ["Güney Amerika / BREZİLYA","Bilinen canlı türlerinin yaklaşık onda biri Amazon ormanlarında yaşar; jaguardan piranhaya sayısız hayvana yuva olur."],
-  ["Amazon Havzası / BREZİLYA","Sık yağmur ormanında orkideler, lianalar ve dev ağaçlar ışığa ulaşmak için yarışır."],
-  ["Güney Amerika / BREZİLYA","Amazon, su hacmi bakımından dünyanın en büyük nehridir ve Atlas Okyanusu'na dökülür."],
+  ["DÜNYA / EL ALETLERİ","Biliyor muydun? Tornavidanın yıldız uçlu Phillips tipi, vidaların merkezden kaymasını azaltmak amacıyla geliştirildi."],
+  ["SANAYİ / MALZEMELER","Rulmanlar, dönen parçalar arasındaki sürtünmeyi azaltarak makinelerin daha verimli ve uzun ömürlü çalışmasına yardımcı olur."],
+  ["SAĞLIK / HASTANE","Stetoskopun ilk örneklerinden biri, doktorların kalbi doğrudan kulağıyla dinlemesine göre daha pratik ve hijyenik bir yöntem sağladı."],
+  ["CERRAHİ / AMELİYAT","Modern cerrahide kullanılan bazı hassas aletler, milimetrenin çok küçük bölümlerine kadar hassas hareketleri kontrol etmeye yardımcı olur."],
+  ["DÜNYA / ŞEHİRLER","İstanbul, toprakları iki kıtaya yayılan dünyanın en bilinen metropollerinden biridir."],
+  ["FUTBOL / DÜNYA","Profesyonel futbolda bazı yıldız oyuncular kariyerlerinin farklı dönemlerinde birden fazla mevkide forma giydi."],
+  ["DOĞA / ÇİÇEKLER","Bazı orkide türleri, tozlaşmayı sağlayan böcekleri çekmek için başka canlıların kokularını veya görünümlerini taklit edebilir."],
+  ["OTOMOTİV / DÜNYA","Otomobil üretiminde robotik kollar, kaynak ve montaj gibi işlemleri yüksek hassasiyetle tekrar tekrar gerçekleştirebilir."],
+  ["TÜRKİYE / COĞRAFYA","Türkiye'nin 81 ili bulunur; İstanbul ise nüfusuyla ülkenin en büyük şehridir."],
+  ["TARİH / ŞAHSİYETLER","Fatih Sultan Mehmet, İstanbul'u 21 yaşında fethederek dünya tarihinin en tanınan hükümdarlarından biri oldu."],
+  ["BESLENME / MEYVE-SEBZE","Domates botanik açıdan bir meyve kabul edilir; mutfakta ise çoğunlukla sebze gibi kullanılır."],
+  ["SİNEMA / BİLİM KURGU","Bilim kurgu filmleri, henüz gerçekleşmemiş teknolojileri ve gelecek senaryolarını hayal ederek bilimin sınırlarını sorgulatabilir."],
+  ["HAYVANLAR / KÖPEKLER","Köpeklerin koku alma duyusu insanlardan çok daha güçlüdür; bazı ırklar iz sürme görevlerinde özellikle başarılıdır."],
+  ["MÜZİK / ENSTRÜMANLAR","Piyano, tellerine çekiçlerin vurmasıyla ses üreten ve hem telli hem klavyeli özellik taşıyan eşsiz bir enstrümandır."],
+  ["ÇİZGİ ROMAN / KAHRAMANLAR","Bazı süper kahramanların doğaüstü güçleri bulunmaz; teknoloji, zekâ ve eğitimlerini en büyük avantajları olarak kullanırlar."],
+  ["TÜRKİYE / MUTFAK","Mantı, farklı bölgelerde farklı biçimlerde hazırlanır; Kayseri mantısı ise küçük boyutuyla özellikle tanınır."],
+  ["DÜNYA / BAŞKENTLER","Dünyanın en kuzeydeki başkentlerinden Reykjavik, jeotermal enerji kaynaklarını günlük yaşamında yoğun biçimde kullanır."],
+  ["OYUN / AKSİYON","Aksiyon oyunlarında oyuncunun tepki süresi, özellikle hızlı çatışmalarda sonucu belirleyen en önemli becerilerden biridir."],
+  ["DÜNYA / ÜLKELER","Bayraklardaki renk ve semboller çoğu zaman ülkelerin tarihini, kültürünü veya bağımsızlık mücadelesini temsil eder."],
+  ["MUTFAK / EŞYALAR","Döküm demir tencereler ısıyı uzun süre koruyabildiği için yavaş pişirme yöntemlerinde oldukça kullanışlıdır."],
   ["Kuzey Afrika / SAHRA","Sahra'daki hayvanlar kuraklığa ve aşırı sıcağa uyum sağlamıştır; deve çölün en bilinen yolcusudur."],
   ["Kuzey Afrika / SAHRA","Dünyanın en büyük sıcak çölüdür; kum tepeleri, vahalar ve kayalık platolar barındırır."],
   ["Kuzey Afrika / SAHRA","Yüzyıllardır kervanlar ve Tuareg halkı çölü aşarak ticaret ve yolculuk yapar."],
@@ -2392,7 +2413,7 @@ function drawMap(scroll){
   GROUPS.forEach((g, gi) => {
     const below = groupBlocks.slice(gi + 1).reduce((a,b) => a+b, 0);
     const top = H - 60 - below - groupBlocks[gi];
-    const first = groupStarts[gi], unlocked = first <= S.maxOpen;
+    const first = groupStarts[gi], unlocked = gi === 0 ? true : first <= S.maxOpen;
     const side = P[first + 1].x > 180 ? 'left:16px' : 'right:16px';
     html += '<div class="jr-band' + (gi % 2 ? ' alt' : '') + (unlocked ? '' : ' lock') + '" style="top:' + top + 'px;height:' + groupBlocks[gi] + 'px;--c:' + g[1] + '"><span class="jr-emo" style="' + side + '">' + JR_EMO[gi] + '</span></div>';
     html += '<div class="jr-ban' + (unlocked ? '' : ' lock') + '" style="top:' + (top + 12) + 'px;--c:' + g[1] + '">' + g[0].replace(/</g, '') + '</div>';
@@ -2407,7 +2428,7 @@ function drawMap(scroll){
   svg = '<svg class="jr-road" width="360" height="' + H + '" viewBox="0 0 360 ' + H + '" fill="none" stroke-linecap="round">' + out + fill + '</svg>';
   let nodes = '';
   LEVELS.forEach((d, i) => {
-    const p = P[i], dn = S.done[i], ok = i <= S.maxOpen, isCur = i === cur && ok && !dn;
+    const p = P[i], dn = S.done[i], ok = d.group === 0 ? true : i <= S.maxOpen, isCur = i === cur && ok && !dn;
     const st = dn ? '<span class="jr-stars">' + [1, 2, 3].map(n => '<svg class="i st' + (n <= dn.stars ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>' : '';
     nodes += '<div class="jr-nw" style="left:' + p.x + 'px;top:' + p.y + 'px;--c:' + GROUPS[d.group][1] + '">' +
       (isCur ? '<div class="jr-pin"><span>' + avatarHTML() + '</span></div>' : '') +
