@@ -371,7 +371,8 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .ol-sz button.on{color:#3b1d00;background:linear-gradient(180deg,#fde68a,#fbbf24);box-shadow:0 2px 0 #92400e}
 /* ONLİNE butonu: pembe */
 .home-actions .btn-sq.gold{--edge:#92400e;color:#3b1d00;text-shadow:0 1px 0 rgba(255,255,255,.55);background:linear-gradient(180deg,#fff0a8 0%,#fbbf24 48%,#e8890a 52%,#f9b11c 100%)}
-.home-actions .btn-sq.pink{--edge:#7a1250;background:linear-gradient(180deg,#ffa8d8 0%,#f0489c 48%,#c71f7c 52%,#e8419a 100%)}
+.home-actions .btn-sq.pink{--edge:#075985;background:linear-gradient(180deg,#38bdf8 0%,#0284c7 48%,#0369a1 52%,#0ea5e9 100%);color:#fff;box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 6px 0 #075985,0 12px 28px rgba(14,165,233,.28)}
+.home-actions .btn-sq.pink:active{box-shadow:inset 0 2px 0 rgba(255,255,255,.25),0 2px 0 #075985,0 6px 16px rgba(14,165,233,.22)}
 
 /* ===== AYARLAR: sade, tek tonlu ===== */
 .smenu{gap:10px;padding:12px;background:linear-gradient(180deg,#2a1a74,#150c42);box-shadow:0 18px 44px rgba(0,0,0,.6);max-height:calc(100dvh - 78px);overflow-y:auto;overscroll-behavior:contain}
@@ -414,6 +415,13 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .smenu.show .srow{animation:none}
 .pav .av img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
 /* ===== PROFİL: sade, tek tonlu (mor + altın) ===== */
+.photo-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:2px 16px 12px}
+.photo-actions button{min-height:42px;border-radius:13px;border:1px solid rgba(196,181,253,.25);display:flex;align-items:center;justify-content:center;gap:7px;font:inherit;font-size:11px;font-weight:1000;letter-spacing:.04em;cursor:pointer;transition:transform .15s,filter .15s}
+.photo-actions button:active{transform:translateY(2px)}
+.photo-actions .i{font-size:17px;flex:none}
+.photo-change{color:#fff;background:linear-gradient(180deg,#38bdf8,#0284c7);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 3px 0 #075985}
+.photo-delete{color:#fecaca;background:linear-gradient(180deg,rgba(127,29,29,.72),rgba(69,10,10,.72));border-color:rgba(248,113,113,.3)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 3px 0 rgba(69,10,10,.9)}
+.photo-actions button:hover{filter:brightness(1.08)}
 .pcard{border-radius:28px;border:1px solid rgba(196,181,253,.35);background:linear-gradient(180deg,#2a1a74,#150c42);box-shadow:0 24px 60px rgba(0,0,0,.65),0 0 28px rgba(124,92,255,.3)}
 .prof.show .pcard{animation:pcPop .45s cubic-bezier(.2,.9,.3,1.2)}
 @keyframes pcPop{0%{opacity:0;transform:scale(.85) translateY(20px)}100%{opacity:1;transform:none}}
@@ -424,7 +432,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .pcard .pid{display:block;width:max-content;margin:14px auto 0;padding:5px 16px;border-radius:999px;background:rgba(0,0,0,.35);box-shadow:inset 0 2px 5px rgba(0,0,0,.45)}
 .pcard .pmid{padding:16px 16px 6px;gap:18px}
 .pcard .pav .av{border-radius:50%;box-shadow:0 0 0 3px #fbbf24,0 6px 0 rgba(0,0,0,.35)}
-.pcard .pedit{border-radius:50%;color:#3b1d00;background:#fbbf24;border:2px solid #fff;box-shadow:0 3px 0 rgba(0,0,0,.35)}
+.pcard .pedit{border-radius:50%;color:#fff;background:linear-gradient(180deg,#38bdf8,#0284c7);border:2px solid rgba(255,255,255,.9);box-shadow:0 3px 0 #075985}.pcard .pedit .i{font-size:16px}
 .pcard .pbox{height:46px;border-radius:16px;box-shadow:inset 0 2px 6px rgba(0,0,0,.5)}
 .pcard .pstats{gap:12px;padding:10px 14px 22px;background:none}
 .pcard .prow{padding:0 8px 0 16px;height:50px;border-radius:16px;color:#d9d4ff;background:rgba(255,255,255,.07);border:1px solid var(--stroke);box-shadow:0 4px 0 rgba(0,0,0,.28)}
@@ -454,7 +462,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .pmid{display:flex;align-items:center;gap:16px;padding:16px 18px}
 .pav{position:relative;flex:none;width:92px;height:92px}
 .pav .av{width:100%;height:100%;border-radius:22px;font-size:54px;box-shadow:inset 0 -6px 14px rgba(0,0,0,.25),0 6px 14px rgba(0,0,0,.35)}
-.pedit{position:absolute;left:-8px;bottom:-8px;width:36px;height:36px;border-radius:10px;font-size:18px;color:#fff;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#4ade80,#16a34a);border:2px solid #fff;box-shadow:0 3px 0 rgba(0,0,0,.35)}
+.pedit{position:absolute;right:-6px;bottom:-6px;width:36px;height:36px;border-radius:50%;font-size:18px;color:#fff;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#38bdf8,#0284c7);border:2px solid #fff;box-shadow:0 3px 0 #075985}
 .pboxes{flex:1;display:flex;flex-direction:column;gap:10px;min-width:0}
 .pbox{display:flex;align-items:center;gap:8px;height:42px;padding:0 12px;border-radius:14px;font-size:20px;font-weight:1000;color:#fff;background:rgba(0,0,0,.35);box-shadow:inset 0 2px 6px rgba(0,0,0,.5)}
 .pbox svg.i{flex:none;font-size:26px;color:#fbbf24}
@@ -990,13 +998,16 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
       <div class="pname"><b id="p-name">-</b><span><svg class="i"><use href="#i-star"/></svg><i id="p-level" style="font-style:normal">1</i></span><span><i style="font-style:normal">🏆</i><i id="p-done" style="font-style:normal">0</i></span></div>
       <div class="pid">ID: <b id="p-id">-</b></div>
       <div class="pmid">
-        <div class="pav"><div class="av" id="p-av"></div><button class="pedit" id="p-edit" aria-label="Profil fotoğrafı ekle veya değiştir">✎</button><input id="p-photo" type="file" accept="image/*" hidden></div>
+        <div class="pav"><div class="av" id="p-av"></div><button class="pedit" id="p-edit" aria-label="Profil fotoğrafını değiştir"><svg class="i"><use href="#i-user"/></svg></button><input id="p-photo" type="file" accept="image/*" hidden></div>
         <div class="pboxes">
           <div class="pbox"><svg class="i"><use href="#i-coin"/></svg><b id="p-coins">0</b></div>
           <div class="pbox"><svg class="i"><use href="#i-star"/></svg><b id="p-stars">0</b></div>
         </div>
       </div>
-      <div class="avpick" id="avpick"></div><div class="av-actions" id="av-actions"><button type="button" id="av-phone">📷 TELEFONDAN SEÇ</button><button type="button" class="danger" id="av-delete">🗑️ PROFİL RESMİNİ SİL</button></div>
+      <div class="photo-actions" id="av-actions">
+        <button type="button" class="photo-change" id="av-phone"><svg class="i"><use href="#i-user"/></svg><span>TELEFONDAN SEÇ</span></button>
+        <button type="button" class="photo-delete" id="av-delete"><svg class="i"><use href="#i-trash"/></svg><span>PROFİL RESMİNİ KALDIR</span></button>
+      </div>
       <div class="pstats">
         <div class="prow"><span>KAZANMA ORANI</span><b id="p-rate">%0</b></div>
         <div class="prow"><span>KAZANILAN OYUN</span><b id="p-wins">0</b></div>
@@ -1223,8 +1234,8 @@ const S = {
   S.levelIndex = S.maxOpen;
   try { S.done = JSON.parse(store.get('wow_search_done') || '{}') || {}; } catch(e) { S.done = {}; }
   try { S.partial = JSON.parse(store.get('wow_search_partial') || '{}') || {}; } catch(e) { S.partial = {}; }
-  // eski kayıttan geçiş: daha önce açılmış bölümleri tamamlanmış say
-  for (let i = 0; i < S.maxOpen; i++) if (!S.done[i]) S.done[i] = { stars: 1, time: 0 };
+  // Açılmış bölümler tamamlanmış sayılmaz; yıldız yalnızca bölüm gerçekten bitirilince verilir.
+  // Böylece yeni/ilk kullanıcıya otomatik 1 yıldız yazılmaz.
 }
 function saveProgress(){
   store.set('wow_search_max', S.maxOpen);
@@ -2075,7 +2086,7 @@ $('prof-close').addEventListener('click', () => profEl.classList.remove('show'))
 profEl.addEventListener('click', e => { if (e.target === profEl) profEl.classList.remove('show'); });
 const photoInput = $('p-photo');
 $('p-edit').addEventListener('click', () => {
-  avpick.classList.toggle('show');
+  if (photoInput) photoInput.click();
 });
 $('av-phone').addEventListener('click', () => {
   if (photoInput) photoInput.click();
