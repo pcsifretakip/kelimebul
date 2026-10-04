@@ -989,44 +989,40 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #modal-victory .btn-main{width:100%}
 
 
-/* ===== YOLCULUK ===== */
+/* ===== YOLCULUK (harita) ===== */
 .app.on-journey .topbar{display:none}
-.jr{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;overflow:hidden;padding-top:env(safe-area-inset-top,0px);background:radial-gradient(120% 60% at 50% 100%,#6b3a12 0%,transparent 60%),linear-gradient(180deg,#0a0f1d 0%,#1a1a2c 45%,#2c1d12 100%)}
-.jr-x{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:14px;width:46px;height:46px;border-radius:50%;border:0;background:linear-gradient(180deg,#4aa0ff,#2563eb);color:#fff;font-size:22px;font-weight:900;box-shadow:0 4px 0 #1d4ed8;z-index:2}
-.jr-hero{display:flex;align-items:center;gap:14px;padding:70px 16px 0}
-.jr-av{width:76px;height:76px;border-radius:50%;flex:none;border:5px solid #b8641f;background:#0b3d91;overflow:hidden;display:grid;place-items:center;font-size:38px;color:#fff;box-shadow:0 0 0 3px rgba(251,191,36,.35)}
-.jr-av img{width:100%;height:100%;object-fit:cover}.jr-av svg{width:44px;height:44px}
-.jr-who{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;position:relative}
-.jr-who b{font-size:22px;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.jr-who small{font-size:14px;font-weight:700;color:#cbd5e1}
-.jr-pen{width:30px;height:30px;border-radius:50%;border:0;background:#fff;color:#2563eb;font-size:16px;margin-top:4px;align-self:flex-start}
-.jr-badge{width:76px;height:76px;border-radius:50%;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#4aa0ff,#1d4ed8);color:#fff;box-shadow:0 5px 0 #1e40af;line-height:1}
-.jr-badge small{font-size:12px;font-weight:900;letter-spacing:.04em}.jr-badge b{font-size:32px;font-weight:900}
-.jr-tabs{display:flex;margin:14px 14px 10px;padding:3px;border-radius:999px;background:rgba(30,58,138,.55)}
-.jr-tabs button{flex:1;padding:8px 4px;border:0;border-radius:999px;background:transparent;color:#9fb3d9;font-size:12px;font-weight:900}
-.jr-tabs button.on{background:linear-gradient(180deg,#4aa0ff,#2563eb);color:#fff;box-shadow:0 3px 0 #1d4ed8}
-.jr-list{flex:1;overflow-y:auto;padding:2px 14px calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;-webkit-overflow-scrolling:touch}
-.jr-grp{flex:none;border-radius:18px;border:2px solid #4d94f0;background:linear-gradient(180deg,#3b82d6,#2a5fae);color:#fff;box-shadow:0 3px 0 #1e3f7a}
-.jr-grp.sel{border-color:#3b9bff;background:linear-gradient(180deg,#2f8cff,#2563eb);padding-bottom:3px}
-.jr-top{display:flex;align-items:center;gap:8px;padding:3px 10px;min-height:0}
-.jr-ic{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;flex:none;font-size:11px;background:rgba(255,255,255,.12);border:2px solid #7bb5ff}
-.jr-ic svg{width:13px;height:13px}
-.jr-grp.sel .jr-ic{background:#2563eb}
-.jr-grp.done .jr-ic{background:#f5b301;color:#4a2f00;border-color:#ffd25a}
-.jr-name{flex:1;text-align:center;font-weight:900;font-size:13px;line-height:1.15;text-transform:uppercase;padding:3px 0}
-.jr-tri{width:24px;text-align:center;font-size:14px;flex:none}
-.jr-lv{margin:0 2px 2px;padding:6px 8px 6px 12px;border-radius:0 0 15px 15px;background:#f1ede6;color:#1c1530;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px}
-.jr-lv+.jr-lv{border-radius:0 0 15px 15px;border-top:2px solid #ddd8cf}
-.jr-lv.lk{background:#c9c4ba;color:#6b6659}
-.jr-lv.cur .jr-ln{color:#0f172a}
-.jr-ln{font-size:15px;font-weight:900;line-height:1.15}
-.jr-rt{display:flex;align-items:center;gap:10px}
-.jr-rt .i{width:17px;height:17px}
-.jr-rt .st{color:#c9c3b8}.jr-rt .st.on{color:#f5b301}
-.jr-pill{padding:2px 10px;border-radius:999px;background:#e3dfd6;border:2px solid #cfc9bd;font-weight:900;font-size:12px}
-.jr-play{width:38px;height:38px;border-radius:50%;background:linear-gradient(180deg,#3ddc4b,#16a34a);box-shadow:0 4px 0 #0f7a35;position:relative}
-.jr-play::before{content:'';position:absolute;left:15px;top:10px;border-style:solid;border-width:9px 0 9px 14px;border-color:transparent transparent transparent #fff}
-.jr-foot{text-align:center;color:#fff;font-weight:900;font-size:15px;line-height:1.3;margin:10px 6px 0;text-shadow:0 2px 4px rgba(0,0,0,.5)}
+.jr{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;overflow:hidden;background:#0f1a2e}
+.jr-hud{flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 10px;background:linear-gradient(180deg,#0a0f1d,#142038);border-bottom:2px solid rgba(255,255,255,.1);z-index:3}
+.jr-hud h2{margin:0;font-size:18px;font-weight:900;letter-spacing:.12em;color:#fff}
+.jr-me{width:42px;height:42px;border-radius:50%;border:3px solid #b8641f;background:#0b3d91;overflow:hidden;display:grid;place-items:center;font-size:22px;color:#fff;padding:0}
+.jr-me img{width:100%;height:100%;object-fit:cover}.jr-me svg{width:22px;height:22px}
+.jr-x{width:42px;height:42px;border-radius:50%;border:0;background:linear-gradient(180deg,#4aa0ff,#2563eb);color:#fff;font-size:18px;font-weight:900;box-shadow:0 3px 0 #1d4ed8}
+.jr-map{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;-webkit-overflow-scrolling:touch}
+.jr-wrap{position:relative;width:100%}
+.jr-band{position:absolute;left:0;right:0;border-top:2px solid color-mix(in srgb,var(--c) 60%,transparent);background:linear-gradient(180deg,color-mix(in srgb,var(--c) 34%,#0f1a2e),color-mix(in srgb,var(--c) 14%,#0f1a2e))}
+.jr-band.alt{background:linear-gradient(180deg,color-mix(in srgb,var(--c) 26%,#0f1a2e),color-mix(in srgb,var(--c) 10%,#0f1a2e))}
+.jr-band.lock{filter:saturate(.45) brightness(.8)}
+.jr-emo{position:absolute;top:50%;font-size:46px;opacity:.55;transform:translateY(-50%)}
+.jr-ban{position:absolute;left:50%;transform:translateX(-50%);max-width:92%;padding:6px 16px;border-radius:999px;background:var(--c);border:2px solid rgba(255,255,255,.7);color:#fff;font-size:12px;font-weight:900;text-transform:uppercase;text-align:center;line-height:1.2;box-shadow:0 3px 0 rgba(0,0,0,.35);z-index:3}
+.jr-ban.lock{filter:saturate(.4) brightness(.8)}
+.jr-canvas{position:absolute;top:0;left:50%;margin-left:-180px;width:360px;z-index:2}
+.jr-road{position:absolute;inset:0;pointer-events:none}
+.jr-nw{position:absolute;width:0;height:0}
+.jr-node{position:absolute;left:-28px;top:-28px;width:56px;height:56px;border-radius:50%;border:4px solid #fff;background:var(--c);color:#fff;font-size:20px;font-weight:900;display:grid;place-items:center;padding:0;box-shadow:0 5px 0 rgba(0,0,0,.35);text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.jr-node svg{width:22px;height:22px}
+.jr-node.open{background:var(--c)}
+.jr-node.lk{background:#7b8296;border-color:#b6bccb;color:#e5e7eb;box-shadow:0 5px 0 #4b5160}
+.jr-node.cur{left:-35px;top:-35px;width:70px;height:70px;font-size:26px;background:#22c55e;border-color:#fff;box-shadow:0 5px 0 #15803d,0 0 0 0 rgba(34,197,94,.7);animation:jrPulse 1.4s infinite}
+@keyframes jrPulse{0%{box-shadow:0 5px 0 #15803d,0 0 0 0 rgba(34,197,94,.7)}70%{box-shadow:0 5px 0 #15803d,0 0 0 16px rgba(34,197,94,0)}100%{box-shadow:0 5px 0 #15803d,0 0 0 0 rgba(34,197,94,0)}}
+.jr-stars{position:absolute;left:-24px;top:20px;width:48px;display:flex;justify-content:center;gap:0;pointer-events:none}
+.jr-stars .st{width:16px;height:16px;color:#4b5563;filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}.jr-stars .st.on{color:#fbbf24}
+.jr-cap{position:absolute;left:-55px;top:42px;width:110px;text-align:center;font-size:11px;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.9);line-height:1.1;pointer-events:none}
+.jr-nw:has(.cur) .jr-cap{top:46px}
+.jr-pin{position:absolute;left:-19px;top:-82px;width:38px;height:38px;animation:jrBob 1.2s ease-in-out infinite;pointer-events:none}
+.jr-pin span{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:3px solid #fff;background:#0b3d91;overflow:hidden;color:#fff;font-size:20px}
+.jr-pin span img{width:100%;height:100%;object-fit:cover}.jr-pin span svg{width:20px;height:20px}
+.jr-pin::after{content:'';position:absolute;left:11px;bottom:-9px;border:8px solid transparent;border-top-color:#fff;border-bottom:0}
+@keyframes jrBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 </style>
 </head>
 <body>
@@ -1200,14 +1196,8 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 
     <!-- MOD SEÇİMİ (kaydırmalı sahne) -->
     <section id="view-modes" class="view off modes jr">
-      <button class="jr-x" id="jr-back" aria-label="Kapat">✕</button>
-      <div class="jr-hero">
-        <div class="jr-av" id="jr-av"></div>
-        <div class="jr-who"><b id="jr-name">-</b><small id="jr-date"></small><button class="jr-pen" id="jr-pen" aria-label="Profili düzenle">✎</button></div>
-        <div class="jr-badge"><small>BÖLÜM</small><b id="jr-lvl">1</b></div>
-      </div>
-      <div class="jr-tabs"><button id="jt-prof">PROFİL</button><button class="on">YOLCULUK</button><button id="jt-ach">BAŞARIMLAR</button></div>
-      <div class="jr-list" id="jr-list"></div>
+      <div class="jr-hud"><button class="jr-me" id="jr-me" aria-label="Profil"></button><h2>YOLCULUK</h2><button class="jr-x" id="jr-back" aria-label="Kapat">✕</button></div>
+      <div class="jr-map" id="jr-map"><div class="jr-wrap" id="jr-wrap"></div></div>
     </section>
 
     <!-- LEVEL SELECT -->
@@ -2365,57 +2355,48 @@ $('btn-next-level').addEventListener('click', () => {
 /* =====================================================
    BÖLÜM SEÇİM EKRANI
    ===================================================== */
-let jrOpen = -1;
-function jrHeader(cur){
-  $('jr-av').innerHTML = avatarHTML();
-  $('jr-name').textContent = USER ? USER.name : '-';
-  const d = new Date().toLocaleDateString('tr-TR', { month:'long', year:'numeric' });
-  $('jr-date').textContent = d.charAt(0).toLocaleUpperCase('tr-TR') + d.slice(1);
-  $('jr-lvl').textContent = cur + 1;
-}
-function renderModes(){
+const JR_EMO = ['🌴','🏜️','🏔️','🌊','⛰️','🎈','🐠','🐧','🌲','🌋','🐢','🌵','🏞️','🏺','✨','♨️','🌳','❄️','🦎','💦'];
+function renderModes(){ drawMap(true); }
+function drawMap(scroll){
+  const map = $('jr-map'), wrap = $('jr-wrap'), keep = map.scrollTop;
+  const BLK = 330, G = GROUPS.length, H = G * BLK + 140;
   let cur = LEVELS.findIndex((_, i) => !S.done[i] && i <= S.maxOpen); if (cur < 0) cur = LEVELS.length - 1;
-  jrOpen = LEVELS[cur].group; jrHeader(cur); drawJourney(true);
-}
-function drawJourney(scroll){
-  const list = $('jr-list'), keep = list.scrollTop; list.innerHTML = '';
-  let cur = LEVELS.findIndex((_, i) => !S.done[i] && i <= S.maxOpen); if (cur < 0) cur = LEVELS.length - 1;
-  let doneAll = 0, hasLock = false, selEl = null;
+  $('jr-me').innerHTML = avatarHTML();
+  const P = LEVELS.map((d, i) => ({ x:180 + 95 * Math.sin(i * 1.3 + .4), y:H - 60 - d.group * BLK - 40 - d.lv * 100 }));
+  let html = '', svg = '';
   GROUPS.forEach((g, gi) => {
-    const idx = []; LEVELS.forEach((d, i) => { if (d.group === gi) idx.push(i); });
-    const dn = idx.filter(i => S.done[i]).length, unlocked = idx[0] <= S.maxOpen, all = dn === idx.length;
-    doneAll += dn; if (!unlocked) hasLock = true;
-    const open = unlocked && gi === jrOpen;
-    const el = document.createElement('div');
-    el.className = 'jr-grp ' + (unlocked ? 'on' : 'lock') + (open ? ' sel' : '') + (all ? ' done' : '');
-    el.style.setProperty('--c', g[1]);
-    const ic = all ? '<svg class="i"><use href="#i-star"/></svg>' : unlocked ? '<b>' + (gi + 1) + '</b>' : iconSVG('lock');
-    el.innerHTML = '<div class="jr-top"><span class="jr-ic">' + ic + '</span><span class="jr-name"></span>' + (unlocked ? '<span class="jr-tri">' + (open ? '▴' : '▾') + '</span>' : '') + '</div>';
-    el.querySelector('.jr-name').textContent = g[0];
-    if (unlocked) el.querySelector('.jr-top').addEventListener('click', () => { audio(); jrOpen = open ? -1 : gi; drawJourney(); });
-    if (open){
-      selEl = el;
-      idx.forEach(i => {
-        const d = LEVELS[i], done = S.done[i], ok = i <= S.maxOpen, isCur = i === cur;
-        const r = document.createElement('div');
-        r.className = 'jr-lv ' + (done ? 'done' : isCur ? 'cur' : ok ? 'ok' : 'lk');
-        const found = (S.partial[i] || []).length;
-        const right = done ? [1, 2, 3].map(n => '<svg class="i st' + (n <= done.stars ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') : ok ? '<span class="jr-pill">' + found + '/' + d.words.length + '</span><span class="jr-play"></span>' : iconSVG('lock');
-        r.innerHTML = '<b class="jr-ln"></b><span class="jr-rt">' + right + '</span>';
-        r.querySelector('.jr-ln').textContent = d.category;
-        if (ok) r.addEventListener('click', () => { audio(); showGame(i); });
-        el.appendChild(r);
-      });
-    }
-    list.appendChild(el);
+    const top = H - 60 - (gi + 1) * BLK, first = gi * 3, unlocked = first <= S.maxOpen;
+    const side = P[first + 1].x > 180 ? 'left:16px' : 'right:16px';
+    html += '<div class="jr-band' + (gi % 2 ? ' alt' : '') + (unlocked ? '' : ' lock') + '" style="top:' + top + 'px;height:' + BLK + 'px;--c:' + g[1] + '"><span class="jr-emo" style="' + side + '">' + JR_EMO[gi] + '</span></div>';
+    html += '<div class="jr-ban' + (unlocked ? '' : ' lock') + '" style="top:' + (top + 12) + 'px;--c:' + g[1] + '">' + g[0].replace(/</g, '') + '</div>';
   });
-  if (hasLock){ const f = document.createElement('p'); f.className = 'jr-foot'; f.textContent = 'DAHA FAZLASINI AÇMAK İÇİN BÖLÜMLERİ TAMAMLA'; list.appendChild(f); }
-  if (scroll && selEl) requestAnimationFrame(() => { list.scrollTop = Math.max(0, selEl.offsetTop - 80); }); else list.scrollTop = keep;
+  let out = '', fill = '';
+  for (let i = 1; i < P.length; i++){
+    const a = P[i - 1], b = P[i], ym = (a.y + b.y) / 2;
+    const d = 'M' + a.x + ' ' + a.y + ' C' + a.x + ' ' + ym + ' ' + b.x + ' ' + ym + ' ' + b.x + ' ' + b.y;
+    out += '<path d="' + d + '" stroke="#2a1a0a" stroke-width="24"/>';
+    fill += '<path d="' + d + '" stroke="' + (S.done[i - 1] ? '#fbbf24' : '#eadbb4') + '" stroke-width="16"/>';
+  }
+  svg = '<svg class="jr-road" width="360" height="' + H + '" viewBox="0 0 360 ' + H + '" fill="none" stroke-linecap="round">' + out + fill + '</svg>';
+  let nodes = '';
+  LEVELS.forEach((d, i) => {
+    const p = P[i], dn = S.done[i], ok = i <= S.maxOpen, isCur = i === cur && ok && !dn;
+    const st = dn ? '<span class="jr-stars">' + [1, 2, 3].map(n => '<svg class="i st' + (n <= dn.stars ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>' : '';
+    nodes += '<div class="jr-nw" style="left:' + p.x + 'px;top:' + p.y + 'px;--c:' + GROUPS[d.group][1] + '">' +
+      (isCur ? '<div class="jr-pin"><span>' + avatarHTML() + '</span></div>' : '') +
+      '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '">' + (ok ? (i + 1) : iconSVG('lock')) + '</button>' + st +
+      '<div class="jr-cap">' + d.category + '</div></div>';
+  });
+  wrap.style.height = H + 'px';
+  wrap.innerHTML = html + '<div class="jr-canvas" style="height:' + H + 'px">' + svg + nodes + '</div>';
+  wrap.querySelectorAll('.jr-node').forEach(b => b.addEventListener('click', () => {
+    const i = +b.dataset.i;
+    if (i <= S.maxOpen) showGame(i); else toast('Önce önceki bölümü tamamla.');
+  }));
+  if (scroll) requestAnimationFrame(() => { map.scrollTop = Math.max(0, P[cur].y - map.clientHeight * .6); }); else map.scrollTop = keep;
 }
 $('jr-back').addEventListener('click', () => { audio(); showHome(); });
-$('jr-pen').addEventListener('click', () => { audio(); openProfile(); });
-$('jt-prof').addEventListener('click', () => { audio(); openProfile(); });
-$('jt-ach').addEventListener('click', () => { audio(); toast('Başarımlar yakında eklenecek.'); });
+$('jr-me').addEventListener('click', () => { audio(); openProfile(); });
 
 function renderLevels(){
   const grid = $('lv-grid'); grid.innerHTML = '';
