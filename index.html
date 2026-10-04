@@ -791,7 +791,8 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .inv-btns{display:flex;gap:10px;margin-top:16px}
 .inv-btns button{flex:1;margin:0!important;font-size:16px!important;padding:13px 10px!important}
 .inv-btns .inv-no{border-radius:16px;font-weight:900;letter-spacing:.06em;color:#fca5a5;background:rgba(255,255,255,.08);border:1px solid rgba(196,181,253,.25)}
-#invbox{z-index:120}
+#invbox,#frbox{z-index:300}
+.toast{z-index:310}
 #invbox .inv-t,#frbox .inv-t{margin:4px 0 0;text-align:center;font-size:17px;font-weight:800;color:#e9e5ff}
 .pcard{max-height:92%;overflow-y:auto}
 .pfr{padding:0 14px 18px}
@@ -805,6 +806,9 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .pfr-row button.warn{color:#fca5a5}
 .pfr-row button.arm{background:#be123c;color:#fff;border-color:transparent}
 .pfr-empty{margin:2px 0 4px;text-align:center;font-size:13px;font-weight:700;color:#b9b3f0}
+.pfr-tabs{display:flex;gap:6px;margin:2px 0 10px;padding:4px;border-radius:14px;background:rgba(0,0,0,.28)}
+.pfr-tabs button{flex:1;padding:9px 4px;border-radius:10px;font-size:12px;font-weight:900;letter-spacing:.04em;color:#b9b3f0}
+.pfr-tabs button.on{color:#e9e5ff;background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1px rgba(196,181,253,.35)}
 .pfr-bl{width:100%;margin:14px 0 8px;padding:10px;border-radius:12px;font-size:13px;font-weight:900;letter-spacing:.06em;color:#b9b3f0;background:rgba(255,255,255,.06);border:1px solid rgba(196,181,253,.2)}
 .level-box{display:none!important}
 </style>
@@ -1119,9 +1123,8 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
           <div class="pf-result" id="pf-result" hidden></div>
         </div>
       <div class="pfr">
-        <div class="pfr-h"><span>ARKADAŞLARIM</span><i id="pfr-n">0</i></div>
+        <div class="pfr-tabs"><button class="on" data-s="f" type="button">ARKADAŞLAR (<span id="pfr-n">0</span>)</button><button data-s="b" type="button">ENGELLENENLER (<span id="pfr-bn">0</span>)</button></div>
         <div class="pfr-list" id="pfr-list"></div>
-        <button class="pfr-bl" id="pfr-blbtn">ENGELLENENLER (<span id="pfr-bn">0</span>)</button>
         <div class="pfr-list" id="pfr-bllist" hidden></div>
       </div>
       </div>
@@ -2264,9 +2267,14 @@ $('del-yes').addEventListener('click', async () => {
   try { localStorage.clear(); } catch(e){}
   ['kb_user', 'kb_guest', 'kb_lock'].forEach(k => { try { document.cookie = k + '=;max-age=0;path=/'; } catch(e){} });
   Object.keys(keep).forEach(k => { if (keep[k] != null) store.set(k, keep[k]); });
-  const delId = USER && USER.id; stopPresence(); USER = null;
+  const delId = USER && USER.id, delName = USER && USER.type === 'guest' ? USER.name : null; stopPresence(); USER = null;
   if (delId && FIREBASE_CONFIG.apiKey){            // buluttaki kayıtlar (en iyi çaba)
-    try { const db = await getDb(); await Promise.race([Promise.all([db.collection('users').doc(delId).delete(), db.collection('leaderboard').doc(delId).delete()]), new Promise(r => setTimeout(r, 1500))]); } catch(e){}
+    try {
+      const db = await getDb();
+      const jobs = [db.collection('users').doc(delId).delete(), db.collection('leaderboard').doc(delId).delete().catch(() => db.collection('leaderboard').doc(delId).set({ deleted: true }, { merge: true }))];
+      if (delName) jobs.push(db.collection('usernames').doc(encodeURIComponent(nameKey(delName))).delete());   // ad serbest kalsın, eski hesaba geri girilmesin
+      await Promise.race([Promise.allSettled(jobs), new Promise(r => setTimeout(r, 2000))]);
+    } catch(e){}
   }
   try { if (fbAuth) await Promise.race([fbAuth.signOut(), new Promise(r => setTimeout(r, 800))]); } catch(e){}
   location.reload();                                                                    // bellekteki her şey de sıfırlansın
@@ -2772,11 +2780,25 @@ async function lbStart(){
   const fail = () => { lbUn = null; lbErr = true; lbRender(); clearTimeout(lbRetry); lbRetry = setTimeout(lbStart, 15000); };
   try {
     const db = await getDb();
-    lbUn = db.collection('leaderboard').orderBy('score', 'desc').limit(10).onSnapshot(q => {
-      lbErr = false; lbRows = []; q.forEach(d => lbRows.push(Object.assign({ id: d.id }, d.data()))); lbRender();
+    lbUn = db.collection('leaderboard').orderBy('score', 'desc').limit(30).onSnapshot(async q => {
+      const all = []; q.forEach(d => all.push(Object.assign({ id: d.id }, d.data())));
+      const tk = ++lbTok, rows = await lbAlive(all);       // silinen hesaplar listelenmez
+      if (tk !== lbTok) return;
+      lbErr = false; lbRows = rows; lbRender();
     }, e => { try { console.warn('Liderlik tablosu okunamadı:', e && e.code, e && e.message); } catch(_){} fail(); });
   } catch(e){ fail(); }
   lbBusy = false;
+}
+let lbTok = 0; const lbSeen = new Map();
+async function lbAlive(rows){
+  const db = await getDb(), now = Date.now();
+  rows = rows.filter(r => r.deleted !== true);
+  await Promise.all(rows.map(async r => {
+    const c = lbSeen.get(r.id); if (c && now - c.t < 60000) return;
+    let v = true; try { v = (await db.collection('users').doc(r.id).get()).exists; } catch(e){}
+    lbSeen.set(r.id, { v, t: now });
+  }));
+  return rows.filter(r => (lbSeen.get(r.id) || { v: true }).v).slice(0, 10);
 }
 $('lb').addEventListener('click', () => { if (lbErr) lbStart(); lbRender(); $('lbbox').classList.add('show'); });
 $('lb-close').addEventListener('click', () => $('lbbox').classList.remove('show'));
@@ -2945,7 +2967,7 @@ function pfRender(){
 }
 async function pfStart(){
   pfClean(); pfFriends = [];
-  $('pfr-bllist').hidden = true;
+  pfSub('f');
   const box = $('pfr-list');
   if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id){ box.innerHTML = '<p class="pfr-empty">Arkadaşlar için ID hazırlanıyor, sonra tekrar aç.</p>'; return; }
   box.innerHTML = '<p class="pfr-empty">Yükleniyor…</p>';
@@ -3075,7 +3097,7 @@ function pfRender(){
   blocked.forEach((name, id) => bbox.appendChild(pfRow(name, [ pfBtn('ENGELİ KALDIR', '', () => friendUnblock(id)) ])));
 }
 async function pfStart(){
-  pfClean(); pfFriends = []; $('pfr-bllist').hidden = true;
+  pfClean(); pfFriends = []; pfSub('f');
   const box = $('pfr-list');
   if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id){ box.innerHTML = '<p class="pfr-empty">Arkadaşlar için ID hazırlanıyor, sonra tekrar aç.</p>'; return; }
   box.innerHTML = '<p class="pfr-empty">Yükleniyor…</p>';
@@ -3097,7 +3119,11 @@ function pfTab(n){
   $('prof').querySelector('.pcard').scrollTop = 0;
 }
 document.querySelectorAll('#prof .ptabs button').forEach(b => b.addEventListener('click', () => pfTab(b.dataset.t)));
-$('pfr-blbtn').addEventListener('click', () => { const l = $('pfr-bllist'); l.hidden = !l.hidden; });
+function pfSub(n){
+  $('pfr-list').hidden = n !== 'f'; $('pfr-bllist').hidden = n !== 'b';
+  document.querySelectorAll('.pfr-tabs button').forEach(b => b.classList.toggle('on', b.dataset.s === n));
+}
+document.querySelectorAll('.pfr-tabs button').forEach(b => b.addEventListener('click', () => pfSub(b.dataset.s)));
 $('prof-close').addEventListener('click', pfClean);
 profEl.addEventListener('click', e => { if (e.target === profEl) pfClean(); });
 
