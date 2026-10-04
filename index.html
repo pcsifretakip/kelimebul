@@ -978,8 +978,32 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 /* ===== ZAFER SAHNESİ ===== */
 #modal-victory{background:radial-gradient(90% 60% at 50% 38%,rgba(124,77,255,.5),rgba(6,3,24,.93))}
 .vorbs{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-.vorb{position:absolute;bottom:-70px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0%,var(--c) 42%,rgba(255,255,255,0) 72%);box-shadow:0 0 22px var(--c),0 0 48px var(--c);opacity:0;animation:vorbUp var(--dur) ease-in var(--dl) infinite}
-@keyframes vorbUp{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:.95}85%{opacity:.85}100%{transform:translateY(-105vh) scale(1.15);opacity:0}}
+.vorb{
+  position:absolute;bottom:-50px;width:12px!important;height:34px!important;
+  border-radius:4px 4px 10px 10px;
+  background:linear-gradient(180deg,#fff,var(--c) 38%,rgba(255,255,255,0) 100%);
+  box-shadow:0 0 10px var(--c),0 0 28px var(--c),0 0 52px color-mix(in srgb,var(--c) 45%,transparent);
+  opacity:0;filter:blur(.1px);
+  clip-path:polygon(50% 0,100% 28%,72% 100%,50% 82%,28% 100%,0 28%);
+  animation:vorbUp var(--dur) cubic-bezier(.2,.72,.22,1) var(--dl) infinite;
+}
+.vorb:nth-child(3n){width:8px!important;height:24px!important}
+.vorb:nth-child(4n){width:16px!important;height:44px!important}
+.vorb:nth-child(2n){animation-name:vorbUp2}
+@keyframes vorbUp{
+  0%{transform:translate3d(0,20px,0) rotate(-12deg) scale(.35);opacity:0}
+  12%{opacity:1}
+  48%{transform:translate3d(24px,-42vh,0) rotate(18deg) scale(1);opacity:.95}
+  82%{transform:translate3d(-18px,-78vh,0) rotate(42deg) scale(.75);opacity:.55}
+  100%{transform:translate3d(12px,-108vh,0) rotate(65deg) scale(.15);opacity:0}
+}
+@keyframes vorbUp2{
+  0%{transform:translate3d(0,20px,0) rotate(18deg) scale(.3);opacity:0}
+  14%{opacity:1}
+  45%{transform:translate3d(-28px,-38vh,0) rotate(-24deg) scale(1.05);opacity:.9}
+  80%{transform:translate3d(20px,-80vh,0) rotate(-48deg) scale(.7);opacity:.5}
+  100%{transform:translate3d(-10px,-108vh,0) rotate(-70deg) scale(.1);opacity:0}
+}
 #modal-victory .vcard{background:none;border:0;box-shadow:none;padding:0;max-width:340px;display:flex;flex-direction:column;align-items:center;--neon:#fbbf24;--glow:rgba(251,191,36,.3)}
 #modal-victory .vtitle{font-size:40px;font-weight:1000;letter-spacing:.05em;color:#fde68a;text-shadow:0 4px 0 #b45309,0 10px 22px rgba(0,0,0,.5);margin-bottom:12px}
 #modal-victory .vstars{position:static;transform:none;justify-content:center;margin-bottom:14px}
@@ -1424,46 +1448,44 @@ const DIRS = {
 };
 const GROUPS = [
   ['Amazon Yağmur Ormanları','#16a34a',[
-    ['EL ALETLERİ',9,'çekiç pense tornavida testere anahtar keski'],
-    ['SANAYİ MALZEMELERİ',6,'rulman civata somun profil zincir conta'],
-    ['HASTANE ALETLERİ',10,'stetoskop termometre tansiyon oksimetre şırınga neşter'],
+    ['ÇİÇEK TÜRLERİ',7,'gül lale papatya orkide menekşe sümbül'],
+    ['SANAYİ MALZEMELERİ',7,'rulman civata somun profil zincir conta'],
     ['AMELİYAT MALZEMELERİ',7,'neşter penset makas ekartör dikiş bistüri'],
-    ['DÜNYA ŞEHİRLERİ',8,'istanbul paris londra tokyo roma madrid'],
-    ['ÜNLÜ FUTBOLCULAR',10,'messi ronaldo mbappe neymar zidane ronaldinho'],
-    ['ÇİÇEK TÜRLERİ',8,'gül lale papatya orkide menekşe sümbül'],
+    ['DÜNYA ŞEHİRLERİ',7,'istanbul paris londra tokyo roma madrid'],
+    ['KÖPEK IRKLARI',8,'labrador golden husky beagle boxer bulldog'],
+    ['MÜZİK ENSTRÜMANLARI',8,'piyano gitar keman davul flüt bağlama'],
+    ['YÖRESEL YEMEKLER',8,'mantı kebap pide lahmacun keşkek tantuni'],
+    ['BAŞKENTLER',8,'ankara paris berlin tokyo madrid lizbon'],
     ['OTOMOBİL MARKALARI',8,'toyota ford bmw mercedes audi renault'],
+    ['SÜPER KAHRAMANLAR',8,'batman superman thor hulk flash aquaman'],
     ['TÜRKİYE İLLERİ',9,'sakarya istanbul ankara izmir bursa antalya'],
-    ['TARİHİ ŞAHSİYETLER',9,'atatürk fatih kanuni napolyon iskender sezar'],
     ['MEYVE VE SEBZELER',9,'elma armut kiraz domates biber patlıcan'],
-    ['BİLİM KURGU FİLMLERİ',12,'avatar matrix dune alien terminator interstellar'],
-    ['KÖPEK IRKLARI',10,'labrador golden husky beagle boxer bulldog'],
-    ['MÜZİK ENSTRÜMANLARI',10,'piyano gitar keman davul flüt bağlama'],
-    ['SÜPER KAHRAMANLAR',10,'batman superman thor hulk flash aquaman'],
-    ['YÖRESEL YEMEKLER',10,'mantı kebap pide lahmacun keşkek tantuni'],
-    ['BAŞKENTLER',10,'ankara paris berlin tokyo madrid lizbon'],
-    ['AKSİYON OYUNLARI',10,'doom halo farcry hitman tekken mortal'],
-    ['ÜLKELER VE BAYRAKLAR',10,'türkiye japonya brezilya kanada almanya italya'],
-    ['MUTFAK EŞYALARI',10,'tencere tava bıçak kepçe tabak süzgeç']
+    ['TARİHİ ŞAHSİYETLER',9,'atatürk fatih kanuni napolyon iskender sezar'],
+    ['HASTANE ALETLERİ',10,'stetoskop termometre tansiyon oksimetre şırınga neşter'],
+    ['ÜNLÜ FUTBOLCULAR',10,'messi ronaldo mbappe neymar zidane ronaldinho'],
+    ['EL ALETLERİ',10,'çekiç pense tornavida testere anahtar keski'],
+    ['BİLİM KURGU FİLMLERİ',11,'avatar matrix dune alien terminator interstellar'],
+    ['AKSİYON OYUNLARI',12,'doom halo farcry hitman tekken mortal']
   ]],
-  ['Sahra Çölü','#f59e0b',[['HAYVANLAR',7,'deve akrep yılan kartal tilki çakal'],['ÇÖL DOĞASI',7,'kumul vaha güneş sıcak fırtına kayalık'],['YOLCULAR',7,'kervan tuareg çadır hurma rehber harita']]],
-  ['Himalaya Dağları','#60a5fa',[['ZİRVELER',7,'everest lhotse makalu zirve buzul kar'],['HAYVANLAR',7,'yeti kaplan geyik kartal maral tilki'],['KÜLTÜR',7,'şerpa tapınak budist nepal tibet bhutan']]],
-  ['Pasifik Okyanusu Derinlikleri','#0ea5e9',[['CANLILAR',8,'balina ahtapot yengeç kalamar vatoz yunus'],['DERİNLİK',8,'hendek derin karanlık basınç dalgıç sonar'],['ADALAR',7,'mercan atol lagün dalga fırtına yelken']]],
-  ['İskandinav Fiyortları','#14b8a6',[['ÜLKELER',8,'norveç isveç estonya izlanda oslo bergen'],['DOĞA',7,'fiyort buzul şelale kuzey orman göl'],['HAYVANLAR',7,'geyik fok kurt somon martı vaşak']]],
-  ['Kapadokya Volkanik Vadileri','#fb923c',[['YERLER',8,'göreme uçhisar ürgüp avanos ihlara nevşehir'],['VOLKANİK DOĞA',7,'vadi volkan kaya erciyes kızıl lav'],['KÜLTÜR',7,'balon mağara testi kilise seramik çömlek']]],
-  ['Büyük Set Resifi','#06b6d4',[['CANLILAR',8,'mercan vatoz yengeç denizatı yosun anemon'],['KEŞİF',7,'dalış maske şnorkel tüplü tekne kamera'],['AVUSTRALYA',7,'sidney kanguru koala perth darwin kıta']]],
-  ['Antarktika Buz Sahanlığı','#93c5fd',[['HAYVANLAR',8,'penguen fok balina kril martı albatros'],['BUZ',7,'buzul buzdağı kutup soğuk tipi don'],['KAŞİFLER',8,'amundsen scott kızak istasyon bayrak harita']]],
-  ['Tayga Ormanları','#15803d',[['AĞAÇLAR',7,'ladin köknar sedir melez kayın çam'],['HAYVANLAR',7,'kurt geyik vaşak samur sincap kunduz'],['SİBİRYA',7,'sibirya rusya kızak soğuk nehir kış']]],
-  ['Hawaii Yanardağları','#ef4444',[['VOLKANLAR',7,'volkan krater magma mauna kilauea lav'],['ADALAR',8,'honolulu maui oahu kauai plaj sörf'],['KÜLTÜR',7,'hula çelenk ukulele ananas kokos dans']]],
-  ['Galápagos Adaları','#84cc16',[['HAYVANLAR',8,'iguana penguen martı fok ispinoz pelikan'],['DARWIN',7,'darwin evrim beagle gemi keşif kitap'],['ADALAR',7,'ekvator volkan kıyı plaj lav deniz']]],
-  ['Atacama Çölü','#d97706',[['ÇÖL DOĞASI',7,'kurak vadi volkan kum tuz gökyüzü'],['HAYVANLAR',8,'lama alpaka flamingo kondor tilki kuş'],['GÖZLEM',8,'teleskop yıldız gece uzay kozmos galaksi']]],
-  ['Büyük Kanyon','#ea580c',[['DOĞA',7,'kanyon kaya nehir uçurum vadi tabaka'],['HAYVANLAR',7,'kondor geyik puma kartal akrep çakal'],['MACERA',8,'yürüyüş kamp rafting harita çadır patika']]],
-  ['Nil Nehri Deltası','#22c55e',[['MISIR',7,'piramit firavun sfenks mumya kahire aswan'],['HAYVANLAR',8,'timsah begemot flamingo leylek pelikan kurbağa'],['DELTA',7,'delta nehir sazlık çamur tarım papirüs']]],
-  ['Waitomo Ateş Böceği Mağaraları','#6366f1',[['MAĞARA',7,'mağara sarkıt dikit yeraltı nehir damla'],['IŞIK',7,'böcek ışık parıltı mavi gece ipek'],['YENİ ZELANDA',8,'kivi maori auckland koyun haka okyanus']]],
-  ['Yellowstone Jeotermal Alanı','#f97316',[['GAYZERLER',7,'gayzer buhar sıcak kükürt çamur havuz'],['HAYVANLAR',7,'bizon kurt geyik kartal puma kunduz'],['PARK',7,'amerika milli orman göl kamp rehber']]],
-  ['Madagascar Baobab Ormanları','#a16207',[['BAOBAB',7,'baobab gövde yaprak meyve orman kök'],['HAYVANLAR',7,'lemur fosa gekko kurbağa yılan örümcek'],['ADA',7,'afrika hint vanilya baharat kıyı yağmur']]],
-  ['Baykal Gölü','#3b82f6',[['GÖL',7,'baykal derin tatlı berrak buz kıyı'],['HAYVANLAR',7,'nerpa omul balık kartal kurt ayı'],['KIŞ',7,'buz don kızak tipi kar soğuk']]],
-  ['Sokotra Adası','#a855f7',[['BİTKİLER',7,'aloe tütsü incir çiçek reçine ağaç'],['ADA',7,'yemen hint kıyı plaj kum kayalık'],['YAŞAM',7,'endemik nadir kuş böcek yılan gece']]],
-  ['Iguazú Şelaleleri','#06b6d4',[['ŞELALE',7,'şelale iguazu nehir köpük uçurum sis'],['HAYVANLAR',7,'jaguar tukan kelebek kayman maymun koati'],['ÜLKELER',8,'brezilya arjantin paraguay sınır köprü patika']]]
+  ['Sahra Çölü','#f59e0b',[]],
+  ['Himalaya Dağları','#60a5fa',[]],
+  ['Pasifik Okyanusu Derinlikleri','#0ea5e9',[]],
+  ['İskandinav Fiyortları','#14b8a6',[]],
+  ['Kapadokya Volkanik Vadileri','#fb923c',[]],
+  ['Büyük Set Resifi','#06b6d4',[]],
+  ['Antarktika Buz Sahanlığı','#93c5fd',[]],
+  ['Tayga Ormanları','#15803d',[]],
+  ['Hawaii Yanardağları','#ef4444',[]],
+  ['Galápagos Adaları','#84cc16',[]],
+  ['Atacama Çölü','#d97706',[]],
+  ['Büyük Kanyon','#ea580c',[]],
+  ['Nil Nehri Deltası','#22c55e',[]],
+  ['Waitomo Ateş Böceği Mağaraları','#6366f1',[]],
+  ['Yellowstone Jeotermal Alanı','#f97316',[]],
+  ['Madagascar Baobab Ormanları','#a16207',[]],
+  ['Baykal Gölü','#3b82f6',[]],
+  ['Sokotra Adası','#a855f7',[]],
+  ['Iguazú Şelaleleri','#06b6d4',[]]
 ];
 const INFO = [
   ["DÜNYA / EL ALETLERİ","Biliyor muydun? Tornavidanın yıldız uçlu Phillips tipi, vidaların merkezden kaymasını azaltmak amacıyla geliştirildi."],
@@ -1545,7 +1567,7 @@ const INFO = [
   ["Üç Ülke Sınırı / ARJANTİN","Şelalelerin yakınında Brezilya, Arjantin ve Paraguay sınırları buluşur."]
 ];
 let _n = 0;
-const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => ({ category:l[0], group:gi, lv:j, info:INFO[_n++], size:l[1], dirs:l[1] >= 8 ? 'hard' : 'medium', mode:'classic', subtitle:g[0].toLocaleUpperCase('tr-TR'), words:l[2].split(' ') })));
+const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => ({ category:l[0], group:gi, lv:j, info:INFO[_n++], size:l[1], dirs: j < 6 ? 'easy' : (j < 12 ? 'medium' : 'hard'), mode:'classic', subtitle:g[0].toLocaleUpperCase('tr-TR'), words:l[2].split(' ') })));
 const LEVELS = CLASSIC_LEVELS;
 const MODES = [
   { key:'classic', category:'KLASİK SERBEST', icon:'sprout', color:'#22c55e', subtitle:'Rahatça oyna. Bölümleri seç ve normal kelime bulma modunda ilerle.', available:true }
@@ -2354,7 +2376,7 @@ function vicScene(idx){
   const cols = ['#f472b6', '#fde047', '#67e8f9', '#4ade80', '#c084fc', '#fb923c'];
   for (let i = 0; i < 12; i++){
     const o = document.createElement('span'), sz = 22 + Math.random() * 28; o.className = 'vorb';
-    o.style.cssText = 'left:' + (Math.random() * 90) + '%;width:' + sz + 'px;height:' + sz + 'px;--c:' + cols[i % cols.length] + ';--dur:' + (5 + Math.random() * 4) + 's;--dl:' + (Math.random() * 3) + 's';
+    o.style.cssText = 'left:' + (Math.random() * 94) + '%;width:' + sz + 'px;height:' + sz + 'px;--c:' + cols[i % cols.length] + ';--dur:' + (4.2 + Math.random() * 3.8) + 's;--dl:' + (Math.random() * 2.2) + 's';
     box.appendChild(o);
   }
 }
@@ -2415,7 +2437,8 @@ function drawMap(scroll){
     const below = groupBlocks.slice(gi + 1).reduce((a,b) => a+b, 0);
     const top = H - 60 - below - groupBlocks[gi];
     const first = groupStarts[gi], unlocked = gi === 0 ? true : first <= S.maxOpen;
-    const side = P[first + 1].x > 180 ? 'left:16px' : 'right:16px';
+    const refPoint = P[Math.min(first, Math.max(0, P.length - 1))] || {x:180};
+    const side = refPoint.x > 180 ? 'left:16px' : 'right:16px';
     html += '<div class="jr-band' + (gi % 2 ? ' alt' : '') + (unlocked ? '' : ' lock') + '" style="top:' + top + 'px;height:' + groupBlocks[gi] + 'px;--c:' + g[1] + '"><span class="jr-emo" style="' + side + '">' + JR_EMO[gi] + '</span></div>';
     html += '<div class="jr-ban' + (unlocked ? '' : ' lock') + '" style="top:' + (top + 12) + 'px;--c:' + g[1] + '">' + g[0].replace(/</g, '') + '</div>';
   });
