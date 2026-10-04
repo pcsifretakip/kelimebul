@@ -829,6 +829,28 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .pfr-tabs button{flex:1;padding:9px 4px;border-radius:10px;font-size:12px;font-weight:900;letter-spacing:.04em;color:#b9b3f0}
 .pfr-tabs button.on{color:#e9e5ff;background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1px rgba(196,181,253,.35)}
 .pfr-bl{width:100%;margin:14px 0 8px;padding:10px;border-radius:12px;font-size:13px;font-weight:900;letter-spacing:.06em;color:#b9b3f0;background:rgba(255,255,255,.06);border:1px solid rgba(196,181,253,.2)}
+
+/* ===== ARKADAŞLARIM: yeni sade tasarım ===== */
+#pt-friends .pfadd{margin:16px 14px 0;padding:14px 14px 12px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.03));border:1px solid var(--stroke)}
+#pt-friends .pf-cap{margin:0 2px 10px;font-size:12px;font-weight:1000;letter-spacing:.12em;color:#fbbf24}
+#pt-friends .pf-search-row{gap:8px}
+#pt-friends .nm-input{padding:12px 14px;border-radius:14px;font-size:15px;text-align:left}
+#pt-friends .pf-search-btn{padding:12px 18px;border-radius:14px;font-size:13px}
+#pt-friends .pfadd .nm-err{min-height:0;margin:8px 2px 0;text-align:left}
+#pt-friends .pfadd .nm-err:empty{display:none}
+#pt-friends .pf-result{margin-top:10px;gap:10px;padding:10px 10px 10px 10px;border-radius:16px}
+#pt-friends .pf-result .pf-result-name{font-size:15px}
+.pfr-av{flex:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:16px;font-weight:1000;color:#3b1d00;background:linear-gradient(180deg,#fde68a,#f59e0b);box-shadow:inset 0 -3px 6px rgba(0,0,0,.18)}
+#pt-friends .pfr{padding:16px 14px 20px}
+#pt-friends .pfr-tabs{margin:0 0 12px;padding:4px;border-radius:14px;background:rgba(0,0,0,.3)}
+#pt-friends .pfr-tabs button{padding:10px 4px;border-radius:11px;font-size:12px}
+#pt-friends .pfr-list{gap:8px}
+#pt-friends .pfr-row{gap:10px;padding:9px 10px;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid var(--stroke)}
+#pt-friends .pfr-row span{font-size:15px;font-weight:900;color:#f5f1ff}
+#pt-friends .pfr-row button{flex:none;padding:8px 10px;border-radius:10px;font-size:11px;font-weight:1000;letter-spacing:.04em}
+#pt-friends .pfr-row button.warn{color:#fca5a5;background:rgba(244,63,94,.1);border-color:rgba(251,113,133,.28)}
+#pt-friends .pfr-row button.arm{background:#be123c;color:#fff;border-color:transparent}
+#pt-friends .pfr-empty{margin:0;padding:20px 12px;border-radius:16px;border:1px dashed rgba(196,181,253,.28);background:rgba(255,255,255,.03);font-size:13px;font-weight:800;color:#aaa4d7}
 .level-box{display:none!important}
 </style>
 </head>
@@ -1135,8 +1157,9 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
       </div>
       <div class="ptab" id="pt-friends">
         <div class="pfadd">
+          <div class="pf-cap">ARKADAŞ EKLE</div>
           <div class="pf-search-row">
-            <input class="nm-input" id="pf-name" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="isim veya ID yaz">
+            <input class="nm-input" id="pf-name" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="İsim veya ID yaz">
             <button class="pf-search-btn" id="pf-add" type="button">ARA</button>
           </div>
           <p class="nm-err" id="pf-err"></p>
@@ -2965,6 +2988,7 @@ function pfBtn(label, cls, fn){
 }
 function pfRow(name, btns){
   const r = document.createElement('div'); r.className = 'pfr-row';
+  const av = document.createElement('i'); av.className = 'pfr-av'; av.textContent = (String(name || '?').trim().charAt(0) || '?').toLocaleUpperCase('tr'); r.appendChild(av);
   const sp = document.createElement('span'); sp.textContent = name; r.appendChild(sp);
   btns.forEach(b => r.appendChild(b)); return r;
 }
@@ -3006,6 +3030,7 @@ function pfResultRender(){
   const info = document.createElement('div'); info.className = 'pf-result-name';
   const name = document.createElement('div'); name.textContent = pfResultUser.name;
   const id = document.createElement('span'); id.className = 'pf-result-id'; id.textContent = 'ID: ' + pfResultUser.id;
+  const av = document.createElement('i'); av.className = 'pfr-av'; av.textContent = (String(pfResultUser.name || '?').trim().charAt(0) || '?').toLocaleUpperCase('tr'); e.appendChild(av);
   info.append(name,id); e.appendChild(info);
   if (pfFriends.some(x => x.id === pfResultUser.id)){
     const b = document.createElement('span'); b.className = 'pending-label'; b.textContent = 'ARKADAŞSINIZ'; e.appendChild(b); return;
@@ -3099,6 +3124,7 @@ function pfBtn(label, cls, fn){
 }
 function pfRow(name, btns){
   const r = document.createElement('div'); r.className = 'pfr-row';
+  const av = document.createElement('i'); av.className = 'pfr-av'; av.textContent = (String(name || '?').trim().charAt(0) || '?').toLocaleUpperCase('tr'); r.appendChild(av);
   const sp = document.createElement('span'); sp.textContent = name; r.appendChild(sp);
   btns.forEach(b => r.appendChild(b)); return r;
 }
