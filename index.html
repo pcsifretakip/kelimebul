@@ -581,6 +581,12 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .rr-pts{min-height:26px;margin:0;text-align:center;font-size:22px;font-weight:1000;letter-spacing:.04em;color:#fde68a}
 .rr-pts.lose{color:#fca5a5}
 .rr-pts.small{font-size:13px;font-weight:800;color:#b9b3f0}
+.rr-coin{display:flex;flex-direction:column;align-items:center;gap:3px;margin:8px auto 0;padding:10px 22px;border-radius:18px;border:1.5px solid rgba(74,222,128,.55);background:rgba(34,197,94,.16)}
+.rr-coin[hidden]{display:none}
+.rr-coin b{font-size:26px;font-weight:1000;letter-spacing:.03em;color:#86efac;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.rr-coin small{font-size:12px;font-weight:800;color:#c3bef0}
+.rr-coin.lose{border-color:rgba(248,113,113,.6);background:rgba(239,68,68,.16)}
+.rr-coin.lose b{color:#fca5a5}
 @media (max-height:720px){.demo-board{width:min(150px,40vw)}}
 /* ===== TAMAMLANMIŞ BÖLÜM (salt okunur) ===== */
 .review-next{display:none;flex:none;margin:0 auto;max-width:320px;font-size:17px;padding:12px 20px;box-shadow:inset 0 2px 0 rgba(255,255,255,.4),inset 0 0 0 1.5px rgba(196,181,253,.45),0 5px 0 #34148f,0 8px 20px rgba(124,77,255,.45)}
@@ -1067,6 +1073,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
       <h3 id="rr-t"></h3>
       <p class="nm-sub" id="rr-p"></p>
       <p class="rr-pts" id="rr-pts"></p>
+      <div class="rr-coin" id="rr-coin" hidden><b id="rr-coin-n"></b><small id="rr-coin-s"></small></div>
       <button class="btn-main" id="rr-again">YENİDEN OYNA</button>
       <button class="btn-main alt" id="rr-home">ANA SAYFAYA DÖN</button>
     </div>
@@ -2496,7 +2503,7 @@ async function settleMatchCoins(r, won){
     await db.runTransaction(async tx => {
       const md = await tx.get(r.ref);
       const mv = md.exists ? md.data() || {} : {};
-      if (mv.coinSettled === true) return;
+      if (mv.coinSettled === true){ if (won && mv.winner === USER.id) newMine = (Number(S.coins) || 0) + stake*2; return; }
       const winnerRef = won ? meRef : opRef;
       const winner = await tx.get(winnerRef);
       const wc = winner.exists && winner.data().coins != null ? Number(winner.data().coins) || 0 : 0;
@@ -2542,7 +2549,17 @@ function raceEnd(won){
   $('rr-t').textContent = won ? 'KAZANDIN! 🏆' : 'KAYBETTİN';
   $('rr-p').textContent = won ? 'Rakibini geçtin!' : R.opp + ' önce bitirdi.';
   const r = R, pt = $('rr-pts'); pt.className = 'rr-pts';
-  if (r.stake && !r.bot) settleMatchCoins(r, won);
+  const cb = $('rr-coin');
+  if (r.stake && !r.bot){
+    const st = Number(r.stake) || 0;
+    cb.hidden = false; cb.classList.toggle('lose', !won);
+    $('rr-coin-n').textContent = (won ? '+' : '−') + st + ' 🪙';
+    const bal = () => 'Bakiye: ' + S.coins + ' 🪙';
+    $('rr-coin-s').textContent = (won ? 'Ödül ' + (st * 2) + ' 🪙 • Bedel ' + st + ' 🪙  •  ' : 'Maç bedeli kaybedildi  •  ') + bal();
+    Promise.resolve(settleMatchCoins(r, won)).then(() => {
+      $('rr-coin-s').textContent = (won ? 'Ödül ' + (st * 2) + ' 🪙 • Bedel ' + st + ' 🪙  •  ' : 'Maç bedeli kaybedildi  •  ') + bal();
+    });
+  } else cb.hidden = true;
   lastRace = { size: r.size, random: !!(r.rated || r.bot) };
   if (r.rated){
     pt.textContent = 'Puan hesaplanıyor…'; pt.classList.add('small');
