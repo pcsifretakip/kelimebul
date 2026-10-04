@@ -213,24 +213,29 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 .cell.hint::after{content:"";position:absolute;inset:-3px;border-radius:14px;border:3px solid var(--gold);animation:hintRing .8s ease-out 3}
 @keyframes hintRing{0%{transform:scale(.7);opacity:1;box-shadow:0 0 0 0 rgba(251,191,36,.7)}100%{transform:scale(1.25);opacity:0;box-shadow:0 0 0 12px rgba(251,191,36,0)}}
 
-/* capsules (drawn under the letters) */
-.cap{position:absolute;border-radius:48% 52% 46% 54% / 55% 44% 56% 45%;overflow:hidden;
-  background:linear-gradient(180deg,rgba(255,255,255,.22),var(--c) 32%,var(--c) 72%,rgba(255,255,255,.10));
-  box-shadow:0 0 7px var(--c),0 0 18px var(--c),inset 0 0 0 1.5px rgba(255,255,255,.48);
+/* gerçek fırça darbesi: kapsül değil, düzensiz kıllı boya izi */
+.cap{position:absolute;overflow:visible;
+  background:linear-gradient(180deg,rgba(255,255,255,.10),var(--c) 18%,var(--c) 70%,rgba(255,255,255,.08));
+  clip-path:polygon(0 34%,3% 23%,1% 12%,8% 15%,14% 5%,23% 10%,31% 2%,39% 8%,48% 0%,57% 7%,66% 3%,74% 10%,84% 5%,91% 13%,98% 9%,100% 22%,97% 33%,100% 43%,97% 54%,100% 66%,94% 72%,98% 82%,89% 80%,83% 91%,73% 86%,64% 96%,54% 90%,45% 100%,36% 92%,27% 97%,18% 88%,9% 94%,4% 82%,0 86%,3% 72%,0 61%,3% 50%);
+  box-shadow:0 0 7px var(--c),0 0 18px var(--c),0 0 30px color-mix(in srgb,var(--c) 55%,transparent);
   filter:drop-shadow(0 0 3px var(--c));transform-origin:center}
-.cap::before{content:"";position:absolute;inset:0;border-radius:inherit;
-  background:repeating-linear-gradient(175deg,rgba(255,255,255,.26) 0 1px,transparent 1px 4px);
-  opacity:.48;mix-blend-mode:screen}
-.cap::after{content:"";position:absolute;left:2%;right:2%;top:24%;height:24%;
-  border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.38),transparent);filter:blur(.5px);opacity:.55}
+.cap::before{content:"";position:absolute;inset:0;
+  background:
+    repeating-linear-gradient(168deg,rgba(255,255,255,.30) 0 1px,transparent 1px 5px),
+    repeating-linear-gradient(8deg,transparent 0 7px,rgba(0,0,0,.14) 7px 9px,transparent 9px 13px);
+  opacity:.58;mix-blend-mode:screen;
+  clip-path:inherit}
+.cap::after{content:"";position:absolute;left:-2%;right:-2%;top:8%;height:84%;
+  background:repeating-linear-gradient(172deg,transparent 0 6px,rgba(255,255,255,.16) 6px 7px,transparent 7px 12px);
+  opacity:.45;filter:blur(.35px);clip-path:inherit}
 /* bulunan kelimeler yarı saydam: üst üste geçince iki renk de görünür */
 .cap:not(.drag):not(.bad){opacity:.84}
 .cap.new{animation:capWipe .42s cubic-bezier(.2,.85,.25,1) backwards}
 @keyframes capWipe{
-  from{clip-path:inset(0 100% 0 0 round 999px);filter:brightness(1.6) drop-shadow(0 0 8px var(--c))}
-  to{clip-path:inset(-30px -30px -30px -30px round 999px);filter:brightness(1) drop-shadow(0 0 3px var(--c))}
+  from{clip-path:polygon(0 50%,10% 45%,20% 48%,30% 43%,40% 47%,50% 44%,60% 48%,70% 43%,80% 47%,90% 44%,100% 48%,100% 55%,90% 58%,80% 54%,70% 59%,60% 55%,50% 60%,40% 55%,30% 58%,20% 54%,10% 59%,0 55%);filter:brightness(1.6) drop-shadow(0 0 8px var(--c))}
+  to{filter:brightness(1) drop-shadow(0 0 3px var(--c))}
 }
-.cap.drag{--c:rgba(34,211,238,.9);background:linear-gradient(180deg,rgba(255,255,255,.32),rgba(34,211,238,.82),rgba(34,211,238,.55));box-shadow:0 0 8px rgba(34,211,238,.95),0 0 22px rgba(34,211,238,.8),inset 0 0 0 1.5px rgba(255,255,255,.62)}
+.cap.drag{--c:rgba(34,211,238,.9);background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(34,211,238,.86) 45%,rgba(34,211,238,.58));box-shadow:0 0 8px rgba(34,211,238,.95),0 0 22px rgba(34,211,238,.8),0 0 34px rgba(34,211,238,.45)}
 .cap.bad{--c:#ef4444;background:rgba(239,68,68,.68);box-shadow:0 0 8px #ef4444,0 0 18px #ef4444;animation:capBad .38s ease-out forwards}
 @keyframes capBad{0%,100%{translate:0 0}20%{translate:-4px 0}40%{translate:4px 0}60%{translate:-3px 0}80%{translate:2px 0}}
 .cap.bad.out{opacity:0;transition:opacity .22s}
@@ -2255,7 +2260,7 @@ renderAvatar();
 
 /* ===== ONLİNE MOD: arkadaş ekle, davet et, önce bitiren kazanır (Firestore) ===== */
 const olEl = $('olbox'), resEl = $('raceres'), olErr = $('ol-err');
-let R = null, unsubs = [], olSize = 5, olStake = 50;
+let R = null, unsubs = [], olSize = null, olStake = null;
 let presenceTimer = null, duelTimer = null;
 async function setPresence(online){
   if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id) return;
@@ -2305,14 +2310,15 @@ function renderStake(){
   updateStakeInfo();
 }
 function updateStakeInfo(){
-  const pot = $('ol-pot'); if (pot) pot.textContent = 'Kazanan: ' + (olStake * 2) + ' 🪙  •  Bakiyen: ' + S.coins + ' 🪙';
+  const pot = $('ol-pot');
+  if (pot) pot.textContent = olStake ? ('Kazanan: ' + (olStake * 2) + ' 🪙  •  Bakiyen: ' + S.coins + ' 🪙') : 'Maç bedelini seç';
 }
 renderStake();
 const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
 function olClean(){ unsubs.forEach(u => { try { u(); } catch(e){} }); unsubs = []; }
 function olMsg(m, ok){ olErr.style.color = ok ? '#86efac' : ''; olErr.textContent = m; }
 async function openOnline(){
-  mmCancel(); olSize = 5; olStake = 50; document.querySelectorAll('#ol-sz button').forEach(x => x.classList.toggle('on', +x.dataset.n === 5)); renderStake();
+  mmCancel(); olSize = null; olStake = null; document.querySelectorAll('#ol-sz button').forEach(x => x.classList.remove('on')); renderStake();
   olMsg(''); $('ol-fr').innerHTML = ''; $('ol-inv').innerHTML = ''; $('ol-duel-list').hidden = true; $('ol-duel-list').innerHTML = '';
   clearInterval(duelTimer); duelTimer = null;
   olEl.classList.add('show');
@@ -2356,6 +2362,7 @@ $('ol-duel').addEventListener('click', () => {
   else { clearInterval(duelTimer); duelTimer = null; }
 });
 async function invite(fid, fname){
+  if (!olSize || !olStake) return olMsg('Önce tahta boyutunu ve maç bedelini seç.');
   mmCancel();
   try {
     const db = await getDb(), size = olSize, stake = olStake, seed = Math.floor(Math.random() * 1e9);
@@ -2505,6 +2512,7 @@ function startBot(size){
   showGame(0, def, seed);
 }
 async function findMatch(){
+  if (!olSize || !olStake) return olMsg('Önce tahta boyutunu ve maç bedelini seç.');
   if (mmBusy) return; mmBusy = true; mmUI(true);
   mmEnd = Date.now() + MM_WAIT;                          // 10 sn geri sayım; bitince rakip yoksa bot ile eşleşir
   const tick = () => { const left = Math.max(0, Math.ceil((mmEnd - Date.now()) / 1000)); olMsg(left > 0 ? 'Rakip aranıyor… ' + left : 'Eşleşiliyor…', 1); };
@@ -2623,8 +2631,6 @@ $('ol-close').addEventListener('click', () => { mmCancel(); olMsg(''); olClean()
 $('rr-home').addEventListener('click', () => { resEl.classList.remove('show'); showHome(); });
 $('rr-again').addEventListener('click', () => {
   resEl.classList.remove('show'); showHome();
-  olSize = lastRace.size || olSize;
-  document.querySelectorAll('#ol-sz button').forEach(x => x.classList.toggle('on', +x.dataset.n === olSize));
   openOnline(); if (lastRace.random) findMatch();
 });
 
