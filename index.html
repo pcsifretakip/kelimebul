@@ -568,6 +568,29 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .ol-search{display:flex;align-items:center;justify-content:center;gap:10px}
 .ol-search::before{content:"";width:16px;height:16px;border-radius:50%;border:3px solid rgba(251,191,36,.3);border-top-color:#fbbf24;animation:olspin .8s linear infinite}
 @keyframes olspin{to{transform:rotate(360deg)}}
+
+/* ===== ONLİNE MOD: yeni oyun tarzı tasarım ===== */
+#olbox .hcard{max-height:92%;overflow:auto;padding:18px 16px 14px}
+.ol-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:2px}
+.ol-head h3{margin:0;font-size:20px;text-align:left}
+.ol-bal{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,.35);border:1px solid rgba(251,191,36,.35);font-size:15px;font-weight:1000;color:#fde68a}
+.ol-bal svg.i{font-size:18px;color:#fbbf24}
+.ol-step{display:flex;align-items:center;gap:8px;margin:16px 0 8px;font-size:12px;font-weight:1000;letter-spacing:.1em;color:#c9c3f5}
+.ol-step i{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:11px;font-weight:1000;color:#3b1d00;background:#fbbf24}
+#olbox .ol-sz,#olbox .ol-stake{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:0}
+#olbox .ol-sz button,#olbox .ol-stake button{min-width:0;height:56px;padding:0 2px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#e0dcff;background:rgba(255,255,255,.08);border:1.5px solid rgba(196,181,253,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.ol-sz button b,.ol-stake button b{font-size:16px;font-weight:1000;line-height:1}
+.ol-sz button small{font-size:9px;font-weight:800;color:#aaa4d7;line-height:1}
+.ol-stake button svg.i{font-size:15px;color:#fbbf24}
+#olbox .ol-sz button.on,#olbox .ol-stake button.on{color:#3b1d00;background:linear-gradient(180deg,#fde68a,#fbbf24);border-color:#f59e0b;box-shadow:0 3px 0 #92400e}
+.ol-sz button.on small{color:#7c4a03}
+.ol-stake button.on svg.i{color:#b45309}
+.ol-prize{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0 0;padding:10px 12px;border-radius:14px;font-size:12px;font-weight:900;letter-spacing:.06em;color:#b9b3f0;background:rgba(0,0,0,.28);border:1px dashed rgba(251,191,36,.4)}
+.ol-prize.set{background:rgba(251,191,36,.1);border-style:solid}
+.ol-prize b{display:inline-flex;align-items:center;gap:5px;font-size:20px;font-weight:1000;color:#fde68a}
+.ol-prize b svg.i{font-size:20px;color:#fbbf24}
+#olbox .ol-play{gap:10px;margin-top:14px}
+.ol-play:not(.ready) button{opacity:.6;filter:saturate(.6)}
 /* ===== LİDERLİK TABLOSU ===== */
 .lb{position:relative;z-index:2;flex:none;width:100%;max-width:320px;padding:8px 10px 6px;border-radius:18px;text-align:left;background:rgba(8,5,30,.55);border:1px solid rgba(196,181,253,.28);box-shadow:0 6px 18px rgba(0,0,0,.35)}
 .lb[hidden]{display:none}
@@ -1062,15 +1085,15 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   </div>
   <div class="help" id="olbox">
     <div class="hcard">
-      <h3>ONLİNE MOD</h3>
-      <p class="ol-sec" style="margin-top:0">TAHTA BOYUTU</p>
+      <div class="ol-head"><h3>ONLİNE MOD</h3><div class="ol-bal"><svg class="i"><use href="#i-coin"/></svg><b id="ol-bal">0</b></div></div>
+      <div class="ol-step"><i>1</i>TAHTA BOYUTU</div>
       <div class="ol-sz" id="ol-sz"></div>
-      <p class="ol-sec ol-stake-title">MAÇ BEDELİ</p>
+      <div class="ol-step"><i>2</i>MAÇ BEDELİ</div>
       <div class="ol-stake" id="ol-stake"></div>
-      <p class="ol-pot" id="ol-pot">Kazanan: 100 🪙</p>
+      <div class="ol-prize" id="ol-pot"></div>
       <div class="ol-play" id="ol-play">
-        <button class="btn-main" id="ol-rand">RASTGELE EŞLEŞ</button>
-        <button class="ol-duel-btn" id="ol-duel">⚔️ ARKADAŞINLA DÜELLO YAP</button>
+        <button class="btn-main" id="ol-rand">🎲 RASTGELE EŞLEŞ</button>
+        <button class="ol-duel-btn" id="ol-duel">⚔️ ARKADAŞINLA DÜELLO</button>
       </div>
       <p class="nm-err" id="ol-err"></p>
       <button class="ol-stop-btn" id="ol-stop" hidden>✕ ARAMAYI İPTAL ET</button>
@@ -2435,8 +2458,8 @@ function customDef(size, seed){
   return { category, size, dirs:'hard', words: pool.slice(0, SIZES[size] || 8) };
 }
 Object.keys(SIZES).forEach(n => {
-  const b = document.createElement('button'); b.textContent = n + '×' + n; b.dataset.n = n;
-  b.onclick = () => { olSize = +n; document.querySelectorAll('#ol-sz button').forEach(x => x.classList.toggle('on', x === b)); };
+  const b = document.createElement('button'); b.innerHTML = '<b>' + n + '×' + n + '</b><small>' + SIZES[n] + ' kelime</small>'; b.dataset.n = n;
+  b.onclick = () => { olSize = +n; document.querySelectorAll('#ol-sz button').forEach(x => x.classList.toggle('on', x === b)); updateStakeInfo(); };
   if (+n === olSize) b.classList.add('on');
   $('ol-sz').appendChild(b);
 });
@@ -2446,7 +2469,7 @@ function renderStake(){
   box.innerHTML = '';
   STAKES.forEach(n => {
     const b = document.createElement('button');
-    b.textContent = n + ' 🪙'; b.dataset.n = n;
+    b.innerHTML = '<b>' + n + '</b><svg class="i"><use href="#i-coin"/></svg>'; b.dataset.n = n;
     b.classList.toggle('on', n === olStake);
     b.classList.toggle('low', S.coins < n);
     b.onclick = () => {
@@ -2460,8 +2483,14 @@ function renderStake(){
   updateStakeInfo();
 }
 function updateStakeInfo(){
-  const pot = $('ol-pot');
-  if (pot) pot.textContent = olStake ? ('Kazanan: ' + (olStake * 2) + ' 🪙  •  Bakiyen: ' + S.coins + ' 🪙') : 'Maç bedelini seç';
+  const pot = $('ol-pot'), bal = $('ol-bal'), play = $('ol-play');
+  if (bal) bal.textContent = S.coins;
+  if (play) play.classList.toggle('ready', !!(olSize && olStake));
+  if (pot){
+    pot.classList.toggle('set', !!olStake);
+    pot.innerHTML = olStake ? '<span>KAZANACAĞIN ÖDÜL</span><b>' + (olStake * 2) + ' <svg class="i"><use href="#i-coin"/></svg></b>'
+      : '<span>' + (olSize ? 'Maç bedelini seç' : 'Tahta boyutunu ve maç bedelini seç') + '</span>';
+  }
 }
 renderStake();
 const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
