@@ -180,29 +180,29 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 .btn-main svg.i{font-size:26px}
 
 /* ================= GAME ================= */
-#view-game:not(.off){display:flex;flex-direction:column;padding:10px 12px calc(10px + env(safe-area-inset-bottom));gap:10px}
+#view-game:not(.off){display:flex;flex-direction:column;padding:5px 7px calc(5px + env(safe-area-inset-bottom));gap:5px}
 .banner{
   display:flex;align-items:center;justify-content:space-between;gap:8px;
-  padding:9px 12px;border-radius:16px;
+  padding:5px 8px;border-radius:13px;
   background:linear-gradient(90deg,rgba(76,57,200,.75),rgba(109,40,217,.7),rgba(76,57,200,.75));
   border:1px solid rgba(255,255,255,.18);box-shadow:0 8px 20px rgba(0,0,0,.28)
 }
-.banner .b-label{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:800;letter-spacing:.14em;color:#c7c1ff}
+.banner .b-label{display:flex;align-items:center;gap:4px;font-size:9px;font-weight:800;letter-spacing:.14em;color:#c7c1ff}
 .banner .b-label svg.i{font-size:14px;color:var(--gold)}
-.banner h2{font-size:19px;font-weight:1000;letter-spacing:.07em;color:#fde68a;text-align:center;flex:1}
-.timer{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:10px;font-size:13px;font-weight:900;color:#d8d4ff;
+.banner h2{font-size:15px;font-weight:1000;letter-spacing:.07em;color:#fde68a;text-align:center;flex:1}
+.timer{display:flex;align-items:center;gap:5px;padding:3px 7px;border-radius:8px;font-size:11px;font-weight:900;color:#d8d4ff;
   background:rgba(8,5,30,.55);border:1px solid rgba(255,255,255,.14);font-variant-numeric:tabular-nums}
 .timer svg.i{font-size:14px}
 
 .words-panel{
-  padding:10px;border-radius:18px;background:rgba(10,6,38,.62);border:1px solid var(--stroke);
+  padding:5px;border-radius:18px;background:rgba(10,6,38,.62);border:1px solid var(--stroke);
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:inset 0 0 24px rgba(0,0,0,.25)
 }
-.word-list{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center}
+.word-list{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;align-items:center}
 .word-list .chip{white-space:nowrap}
-.word-list.n-md{gap:5px}.word-list.n-md .chip{padding:5px 9px;font-size:11.5px;letter-spacing:.05em}
-.word-list.n-sm{gap:4px}.word-list.n-sm .chip{padding:4px 8px;font-size:10.5px;letter-spacing:.03em;border-width:1px}
-.word-list.n-xs{gap:3px}.word-list.n-xs .chip{padding:3px 6px;font-size:9.5px;letter-spacing:.02em;border-width:1px}
+.word-list.n-md{gap:3px}.word-list.n-md .chip{padding:3px 7px;font-size:10px;letter-spacing:.05em}
+.word-list.n-sm{gap:3px}.word-list.n-sm .chip{padding:3px 6px;font-size:9.5px;letter-spacing:.03em;border-width:1px}
+.word-list.n-xs{gap:2px}.word-list.n-xs .chip{padding:2px 5px;font-size:8.5px;letter-spacing:.02em;border-width:1px}
 .word-list::-webkit-scrollbar{display:none}
 .chip{
   position:relative;display:flex;align-items:center;gap:5px;padding:6px 11px;border-radius:999px;
@@ -261,7 +261,7 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 .cap.bad.out{opacity:0;transition:opacity .22s}
 
 .status{
-  display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:16px;
+  display:none;align-items:center;gap:10px;padding:9px 14px;border-radius:16px;
   background:rgba(10,6,38,.62);border:1px solid var(--stroke);font-size:12px;font-weight:800;color:#c3bef0
 }
 .status .txt{flex:1;line-height:1.25}
@@ -945,16 +945,16 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 
 /* ===== OYUN İÇİ: joker satırı ===== */
 .app.on-game .topbar .grp.r{min-width:104px}
-.jokers{flex:none;display:flex;align-items:flex-start;justify-content:space-between;padding:2px 6px 16px}
-.jk-grp{display:flex;gap:14px}
-.jk{position:relative;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;
+.jokers{flex:none;display:flex;align-items:flex-start;justify-content:space-between;padding:0 4px 5px}
+.jk-grp{display:flex;gap:8px}
+.jk{position:relative;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;
   background:linear-gradient(180deg,#a78bfa 0%,#7c4dff 48%,#5b2bd9 100%);box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 5px 0 #34148f,0 10px 18px rgba(0,0,0,.35);transition:transform .1s,box-shadow .1s}
-.jk svg.i{font-size:32px}
+.jk svg.i{font-size:24px}
 .jk:active{transform:translateY(4px);box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 1px 0 #34148f}
 .jk.dis{background:linear-gradient(180deg,#8d8aa6,#5f5c78);box-shadow:inset 0 2px 0 rgba(255,255,255,.25),0 5px 0 #3a3850}
-.jk-price{position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);display:flex;align-items:center;gap:3px;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:1000;color:#fde68a;background:#150c42;border:1.5px solid rgba(196,181,253,.6);white-space:nowrap}
-.jk-price svg.i{font-size:13px}
-.jk-badge{position:absolute;top:-4px;right:-4px;min-width:22px;height:22px;padding:0 5px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:1000;color:#3b1d00;background:var(--gold);box-shadow:0 2px 0 #92400e}
+.jk-price{position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);display:flex;align-items:center;gap:3px;padding:2px 9px;border-radius:99px;font-size:9px;font-weight:1000;color:#fde68a;background:#150c42;border:1.5px solid rgba(196,181,253,.6);white-space:nowrap}
+.jk-price svg.i{font-size:10px}
+.jk-badge{position:absolute;top:-3px;right:-3px;min-width:17px;height:17px;padding:0 5px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:1000;color:#3b1d00;background:var(--gold);box-shadow:0 2px 0 #92400e}
 .jk-badge:empty{display:none}
 .app.on-review .jokers{display:none}
 .smenu #s-home{display:none}
@@ -1094,7 +1094,8 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #view-modes .mode-level-name { display:none !important; }
 <style>
 /* ===== YOLCULUK: sadece tamamlanan bölüm yeşil, diğerleri yeşil değil ===== */
-#view-modes .jr-cap { display:none !important; }
+#view-modes .jr-cap,
+#view-modes .jr-ban { display:none !important; }
 #view-modes .jr-node { background:#334155; color:#fff; }
 #view-modes .jr-node.open { background:#334155; }
 #view-modes .jr-node.cur { background:#2563eb; box-shadow:0 5px 0 #1d4ed8,0 0 0 0 rgba(37,99,235,.65); }
