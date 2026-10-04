@@ -1048,6 +1048,16 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .jr-pin::after{content:'';position:absolute;left:11px;bottom:-9px;border:8px solid transparent;border-top-color:#fff;border-bottom:0}
 @keyframes jrBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 </style>
+
+<style>
+/* YOLCULUK: seviye içi kategori adları görünmesin */
+#view-modes .level-name,
+#view-modes .level-title,
+#view-modes .level-label,
+#view-modes .level-subtitle,
+#view-modes .mode-sub,
+#view-modes .mode-level-name { display:none !important; }
+</style>
 </head>
 <body>
 
@@ -1488,24 +1498,24 @@ const GROUPS = [
   ['Iguazú Şelaleleri','#06b6d4',[]]
 ];
 const INFO = [
-  ["DÜNYA / EL ALETLERİ","Biliyor muydun? Tornavidanın yıldız uçlu Phillips tipi, vidaların merkezden kaymasını azaltmak amacıyla geliştirildi."],
-  ["SANAYİ / MALZEMELER","Rulmanlar, dönen parçalar arasındaki sürtünmeyi azaltarak makinelerin daha verimli ve uzun ömürlü çalışmasına yardımcı olur."],
-  ["SAĞLIK / HASTANE","Stetoskopun ilk örneklerinden biri, doktorların kalbi doğrudan kulağıyla dinlemesine göre daha pratik ve hijyenik bir yöntem sağladı."],
-  ["CERRAHİ / AMELİYAT","Modern cerrahide kullanılan bazı hassas aletler, milimetrenin çok küçük bölümlerine kadar hassas hareketleri kontrol etmeye yardımcı olur."],
-  ["DÜNYA / ŞEHİRLER","İstanbul, toprakları iki kıtaya yayılan dünyanın en bilinen metropollerinden biridir."],
-  ["FUTBOL / DÜNYA","Profesyonel futbolda bazı yıldız oyuncular kariyerlerinin farklı dönemlerinde birden fazla mevkide forma giydi."],
-  ["DOĞA / ÇİÇEKLER","Bazı orkide türleri, tozlaşmayı sağlayan böcekleri çekmek için başka canlıların kokularını veya görünümlerini taklit edebilir."],
-  ["OTOMOTİV / DÜNYA","Otomobil üretiminde robotik kollar, kaynak ve montaj gibi işlemleri yüksek hassasiyetle tekrar tekrar gerçekleştirebilir."],
-  ["TÜRKİYE / COĞRAFYA","Türkiye'nin 81 ili bulunur; İstanbul ise nüfusuyla ülkenin en büyük şehridir."],
-  ["TARİH / ŞAHSİYETLER","Fatih Sultan Mehmet, İstanbul'u 21 yaşında fethederek dünya tarihinin en tanınan hükümdarlarından biri oldu."],
-  ["BESLENME / MEYVE-SEBZE","Domates botanik açıdan bir meyve kabul edilir; mutfakta ise çoğunlukla sebze gibi kullanılır."],
-  ["SİNEMA / BİLİM KURGU","Bilim kurgu filmleri, henüz gerçekleşmemiş teknolojileri ve gelecek senaryolarını hayal ederek bilimin sınırlarını sorgulatabilir."],
-  ["HAYVANLAR / KÖPEKLER","Köpeklerin koku alma duyusu insanlardan çok daha güçlüdür; bazı ırklar iz sürme görevlerinde özellikle başarılıdır."],
-  ["MÜZİK / ENSTRÜMANLAR","Piyano, tellerine çekiçlerin vurmasıyla ses üreten ve hem telli hem klavyeli özellik taşıyan eşsiz bir enstrümandır."],
-  ["ÇİZGİ ROMAN / KAHRAMANLAR","Bazı süper kahramanların doğaüstü güçleri bulunmaz; teknoloji, zekâ ve eğitimlerini en büyük avantajları olarak kullanırlar."],
-  ["TÜRKİYE / MUTFAK","Mantı, farklı bölgelerde farklı biçimlerde hazırlanır; Kayseri mantısı ise küçük boyutuyla özellikle tanınır."],
-  ["DÜNYA / BAŞKENTLER","Dünyanın en kuzeydeki başkentlerinden Reykjavik, jeotermal enerji kaynaklarını günlük yaşamında yoğun biçimde kullanır."],
-  ["OYUN / AKSİYON","Aksiyon oyunlarında oyuncunun tepki süresi, özellikle hızlı çatışmalarda sonucu belirleyen en önemli becerilerden biridir."],
+  ["DÜNYA / EL ALETLERİ","Ameliyat aletlerinin bazıları, cerrahın el hareketini çok küçük ve hassas hareketlere dönüştürecek şekilde tasarlanır. Milimetrenin çok küçük bölümlerindeki kontrol, ameliyatın başarısında kritik olabilir."],
+  ["SANAYİ / MALZEMELER","Rulmanların içindeki küçücük bilyeler, ağır makinelerde hareket eden parçalar arasındaki sürtünmeyi ciddi biçimde azaltır. Küçük bir parça, tonlarca yük taşıyan bir sistemin çalışmasını değiştirebilir."],
+  ["SAĞLIK / HASTANE","Stetoskopun ilk örneklerinden biri ahşap bir tüptü. Doktorlar bu basit tüpü kullanarak kalp ve akciğer seslerini doğrudan kulağa göre daha rahat dinleyebiliyordu."],
+  ["CERRAHİ / AMELİYAT","Bazı cerrahi dikişler zaman içinde vücut tarafından parçalanabilir. Böylece bazı durumlarda dikişleri çıkarmak için ikinci bir işlem gerekmez."],
+  ["DÜNYA / ŞEHİRLER","İstanbul'un en sıra dışı özelliklerinden biri, iki kıtaya yayılan bir şehir olmasıdır. Boğaz aynı zamanda Avrupa ile Asya arasında doğal bir sınır oluşturur."],
+  ["FUTBOL / DÜNYA","Futbol topunun üzerindeki paneller sadece tasarım değildir. Panel yapısı topun havadaki hareketini, hızını ve oyuncunun verdiği falsoyu etkileyebilir."],
+  ["DOĞA / ÇİÇEKLER","Vanilya aslında orkide ailesinden gelir. Mutfağımızda kullandığımız vanilya aroması, bu bitkinin meyvesinden elde edilir."],
+  ["OTOMOTİV / DÜNYA","Modern fabrikalardaki robotlar aynı hareketi binlerce kez çok yüksek hassasiyetle tekrarlayabilir. Bu nedenle bazı üretim işlemlerinde insan elinden çok daha tutarlı sonuç verebilirler."],
+  ["TÜRKİYE / COĞRAFYA","Türkiye'nin 81 ili var. Fakat en kalabalık il ile yüzölçümü en büyük il aynı değildir: İstanbul nüfusta, Konya yüzölçümünde öne çıkar."],
+  ["TARİH / ŞAHSİYETLER","Napolyon sadece savaşlarıyla değil, hukuk alanındaki etkisiyle de tarihe geçti. Onun döneminde oluşturulan Napolyon Kanunları birçok ülkenin hukuk sistemini etkiledi."],
+  ["BESLENME / MEYVE-SEBZE","Çileğin üzerindeki küçük noktalar düşündüğümüz gibi sıradan 'tohumlar' değildir; botanik açıdan her biri farklı bir yapıdır. Günlük hayattaki görüntüsü bilimsel gerçeği biraz yanıltır."],
+  ["SİNEMA / BİLİM KURGU","Uzay boşluğunda sesin yayılacağı hava olmadığı için gerçek bir patlama sesi duyulmaz. Filmlerdeki uzay patlamalarının gürültülü olması tamamen sinema efektidir."],
+  ["HAYVANLAR / KÖPEKLER","Bir köpeğin koku alma sistemi insana göre olağanüstü hassastır. Bazı eğitimli köpekler çok eski ve zayıf kokuları bile takip edebilir."],
+  ["MÜZİK / ENSTRÜMANLAR","Piyanonun sesi yalnızca tellerden gelmez. Tellerin titreşimi ahşap gövdeye aktarılır ve gövde sesi büyütür; yani piyanonun büyük sesi dev bir akustik sistemin sonucudur."],
+  ["ÇİZGİ ROMAN / KAHRAMANLAR","Gerçek hayattaki en etkileyici 'süper güçlerden' biri insan beyninin tehlike anında vücudu saniyeler içinde alarma geçirebilmesidir."],
+  ["TÜRKİYE / MUTFAK","Mantının küçük yapılmasının bir avantajı vardır: Küçük parçalar daha hızlı pişer ve kaşıkta daha kolay taşınır. Bu yüzden şekli sadece gelenek değil, pratiklik de taşır."],
+  ["DÜNYA / BAŞKENTLER","Dünyada birçok ülkenin başkenti en büyük şehri değildir. Türkiye'de de başkent Ankara, nüfusu en yüksek şehir ise İstanbul'dur."],
+  ["OYUN / AKSİYON","Video oyunlarında hızlı hareket eden karakterleri takip etmek, beynin görsel bilgiyi çok hızlı işlemesini gerektirir. İyi oyuncular yalnızca refleksle değil, öngörüyle de avantaj kazanır."],
   ["DÜNYA / ÜLKELER","Bayraklardaki renk ve semboller çoğu zaman ülkelerin tarihini, kültürünü veya bağımsızlık mücadelesini temsil eder."],
   ["MUTFAK / EŞYALAR","Döküm demir tencereler ısıyı uzun süre koruyabildiği için yavaş pişirme yöntemlerinde oldukça kullanışlıdır."],
   ["Kuzey Afrika / SAHRA","Sahra'daki hayvanlar kuraklığa ve aşırı sıcağa uyum sağlamıştır; deve çölün en bilinen yolcusudur."],
@@ -2526,7 +2536,7 @@ $('btn-review-next').addEventListener('click', () => {
   if (nx >= LEVELS.length || nx > S.maxOpen){ showLevels(); } else { startLevel(nx); }
 });
 $('btn-levels').addEventListener('click', () => { audio(); showLevels(); });
-$('btn-home').addEventListener('click', showHome);
+$('btn-home').addEventListener('click', () => { audio(); leaveGame(); showLevels(); });
 $('btn-sound').addEventListener('click', () => toggleSound());
 
 /* ana ekran süsü: yüzen harf karoları */
