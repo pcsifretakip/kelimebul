@@ -989,61 +989,40 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #modal-victory .btn-main{width:100%}
 
 
-/* ===== YOLCULUK — DOĞAL / 3D HARİTA ===== */
+/* ===== YOLCULUK (harita) ===== */
 .app.on-journey .topbar{display:none}
-.jr{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;overflow:hidden;background:#91d67a;font-family:inherit}
-.jr-hud{flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 9px) 14px 9px;background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(244,250,238,.96));border-bottom:1px solid rgba(65,86,47,.18);box-shadow:0 3px 14px rgba(42,61,29,.18);z-index:10}
-.jr-hud h2{margin:0;font-size:17px;font-weight:1000;letter-spacing:.1em;color:#36522b;text-shadow:0 1px 0 #fff}
-.jr-me{width:42px;height:42px;border-radius:50%;border:3px solid #fff;background:#5b91e8;overflow:hidden;display:grid;place-items:center;font-size:22px;color:#fff;padding:0;box-shadow:0 3px 0 #789b60,0 4px 10px rgba(34,60,20,.18)}
+.jr{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;overflow:hidden;background:#0f1a2e}
+.jr-hud{flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 10px;background:linear-gradient(180deg,#0a0f1d,#142038);border-bottom:2px solid rgba(255,255,255,.1);z-index:3}
+.jr-hud h2{margin:0;font-size:18px;font-weight:900;letter-spacing:.12em;color:#fff}
+.jr-me{width:42px;height:42px;border-radius:50%;border:3px solid #b8641f;background:#0b3d91;overflow:hidden;display:grid;place-items:center;font-size:22px;color:#fff;padding:0}
 .jr-me img{width:100%;height:100%;object-fit:cover}.jr-me svg{width:22px;height:22px}
-.jr-x{width:42px;height:42px;border-radius:50%;border:2px solid rgba(65,86,47,.2);background:linear-gradient(180deg,#fff,#e8f0df);color:#4d633e;font-size:19px;font-weight:900;box-shadow:0 3px 0 #a6bb92,0 5px 12px rgba(34,60,20,.12)}
-.jr-map{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;-webkit-overflow-scrolling:touch;background:linear-gradient(90deg,#72c665 0,#9bdf7e 22%,#aee78c 50%,#94dc79 78%,#6fc360 100%)}
-.jr-wrap{position:relative;width:100%;min-height:100%;overflow:hidden;background:linear-gradient(180deg,#9de180 0,#b7ea98 48%,#83d26c 100%)}
-.jr-band{position:absolute;left:0;right:0;overflow:hidden;border-top:0;background:linear-gradient(180deg,rgba(132,205,103,.38),rgba(105,190,86,.18));}
-.jr-band.alt{background:linear-gradient(180deg,rgba(185,231,126,.25),rgba(91,177,78,.2))}
-.jr-band.lock{filter:saturate(.62) brightness(.84)}
-.jr-emo{display:none}
-.jr-ban{pointer-events:auto;cursor:pointer;position:absolute;left:50%;transform:translateX(-50%);max-width:82%;padding:8px 17px;border-radius:12px;background:linear-gradient(180deg,#fff8d8,#e8bf6d);border:3px solid #9a642d;color:#684018;font-size:11px;font-weight:1000;text-transform:uppercase;text-align:center;line-height:1.15;box-shadow:0 4px 0 #70461f,0 7px 14px rgba(70,65,25,.18);z-index:6;letter-spacing:.05em}
-.jr-ban::before,.jr-ban::after{content:'';position:absolute;top:50%;width:14px;height:4px;background:#805126;border-radius:4px;box-shadow:0 1px 0 rgba(255,255,255,.45)}
-.jr-ban::before{right:100%;transform:rotate(15deg);transform-origin:right center}.jr-ban::after{left:100%;transform:rotate(-15deg);transform-origin:left center}
-.jr-ban.lock{filter:saturate(.55) brightness(.82)}
-.jr-canvas{position:absolute;top:0;left:50%;margin-left:-180px;width:360px;z-index:3;pointer-events:none}
-.jr-scenery{position:absolute;inset:0;width:360px;height:100%;z-index:1;overflow:visible;pointer-events:none}
-.jr-road{position:absolute;inset:0;pointer-events:none;z-index:3;filter:drop-shadow(0 7px 4px rgba(57,76,33,.22))}
-.jr-nw{position:absolute;width:0;height:0;z-index:20;pointer-events:auto}
-.jr-node{pointer-events:auto;cursor:pointer;position:absolute;left:-29px;top:-29px;width:58px;height:58px;border-radius:50%;border:4px solid #fff8db;background:linear-gradient(145deg,#ffdb65 0%,#f39b23 52%,#c96813 100%);color:#fff;font-size:20px;font-weight:1000;display:grid;place-items:center;padding:0;box-shadow:0 5px 0 #8b4a16,0 7px 12px rgba(73,55,24,.28),inset 0 2px 3px rgba(255,255,255,.7);text-shadow:0 2px 2px rgba(112,55,5,.55);transition:transform .16s ease,filter .16s ease}
-.jr-node:hover{transform:translateY(-2px) scale(1.04);filter:brightness(1.06)}
-.jr-node svg{width:22px;height:22px}.jr-node.open{background:linear-gradient(145deg,#ffdf70,#f5a42a 55%,#d36b15)}
-.jr-node.done{background:linear-gradient(145deg,#ffe890,#eeb62e 55%,#bd7316);border-color:#fff9d6}
-.jr-node.done::after{content:'✓';position:absolute;right:-4px;top:-8px;width:21px;height:21px;border-radius:50%;display:grid;place-items:center;background:#49a94b;border:2px solid #fff;color:#fff;font-size:13px;font-weight:1000;box-shadow:0 2px 0 #286a2d}
-.jr-node.lk{background:linear-gradient(145deg,#aeb4ac,#777e76);border-color:#e7e9df;color:#f0f2ed;box-shadow:0 5px 0 #50564f,0 7px 12px rgba(49,54,43,.25),inset 0 2px 3px rgba(255,255,255,.35);text-shadow:0 1px 2px #4a4f49}
-.jr-node.cur{left:-36px;top:-36px;width:72px;height:72px;font-size:27px;background:linear-gradient(145deg,#ffe77d,#ffb72f 55%,#e16c17);border:5px solid #fff;box-shadow:0 6px 0 #8b4a16,0 0 0 5px rgba(255,222,91,.35),0 12px 20px rgba(85,62,16,.3);animation:jrPulse 1.55s infinite}
-@keyframes jrPulse{0%,100%{transform:translateY(0) scale(1);box-shadow:0 6px 0 #8b4a16,0 0 0 4px rgba(255,222,91,.25),0 12px 20px rgba(85,62,16,.3)}50%{transform:translateY(-3px) scale(1.035);box-shadow:0 7px 0 #8b4a16,0 0 0 12px rgba(255,222,91,0),0 15px 23px rgba(85,62,16,.25)}}
-.jr-stars{position:absolute;left:-25px;top:27px;width:50px;display:flex;justify-content:center;gap:0;pointer-events:none;z-index:8}.jr-stars .st{width:16px;height:16px;color:#a5a99f;filter:drop-shadow(0 1px 1px rgba(55,49,25,.5))}.jr-stars .st.on{color:#ffd43b;filter:drop-shadow(0 1px 1px rgba(91,57,7,.55))}
-.jr-cap{pointer-events:auto;cursor:pointer;position:absolute;z-index:22;left:-62px;top:42px;width:124px;text-align:center;font-size:10px;font-weight:900;color:#fff;text-shadow:0 1px 3px rgba(39,57,28,.95);line-height:1.1;pointer-events:none;z-index:9}
-.jr-nw:has(.cur) .jr-cap{top:49px}
-.jr-pin{position:absolute;left:-22px;top:-94px;width:44px;height:50px;animation:jrBob 1.25s ease-in-out infinite;pointer-events:none;z-index:10}
-.jr-pin span{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;border:3px solid #fff;background:#5b91e8;overflow:hidden;color:#fff;font-size:20px;box-shadow:0 4px 0 #315e9e,0 5px 10px rgba(36,58,34,.3)}
-.jr-pin span img{width:100%;height:100%;object-fit:cover}.jr-pin span svg{width:22px;height:22px}
-.jr-pin::after{content:'';position:absolute;left:13px;bottom:0;border:9px solid transparent;border-top-color:#fff;border-bottom:0;filter:drop-shadow(0 2px 0 #315e9e)}
-@keyframes jrBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-@media(max-width:380px){.jr-canvas{margin-left:-165px;width:330px}.jr-road,.jr-scenery{width:330px}.jr-node{transform:scale(.94)}.jr-node.cur{transform:scale(.94)}.jr-ban{font-size:10px;padding:7px 13px}}
-
-
-/* YOLCULUK — ANA SAYFANIN PREMIUM ARKA PLAN DİLİ */
-.jr{background:#0b0720}
-.jr-map{background:transparent}
-.jr-wrap{background:linear-gradient(180deg,#17103f 0,#0e0a29 58%,#08061b 100%)}
-.jr-map::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 50% 18%,rgba(251,191,36,.18),transparent 22%),radial-gradient(circle at 15% 55%,rgba(124,58,237,.17),transparent 27%),radial-gradient(circle at 88% 70%,rgba(45,212,191,.12),transparent 25%)}
-.jr-wrap::before{content:"";position:absolute;left:50%;top:8%;width:560px;height:560px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle,rgba(251,191,36,.18),rgba(168,85,247,.12) 34%,transparent 68%);pointer-events:none;z-index:0}
-.jr-wrap::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;background:radial-gradient(120% 90% at 50% 40%,transparent 42%,rgba(3,1,16,.72) 100%)}
-.jr-band{background:linear-gradient(180deg,rgba(124,58,237,.055),rgba(15,23,42,.01))!important;border-top:1px solid rgba(167,139,250,.07)}
-.jr-band.alt{background:linear-gradient(180deg,rgba(45,212,191,.04),rgba(15,23,42,.01))!important}
-.jr-scenery{display:none!important}
-.jr-road{filter:drop-shadow(0 8px 7px rgba(0,0,0,.48))}
-.jr-nw{pointer-events:auto}
-.jr-node{pointer-events:auto;cursor:pointer}
-.jr-cap,.jr-ban{pointer-events:auto;cursor:pointer}
+.jr-x{width:42px;height:42px;border-radius:50%;border:0;background:linear-gradient(180deg,#4aa0ff,#2563eb);color:#fff;font-size:18px;font-weight:900;box-shadow:0 3px 0 #1d4ed8}
+.jr-map{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;-webkit-overflow-scrolling:touch}
+.jr-wrap{position:relative;width:100%}
+.jr-band{position:absolute;left:0;right:0;border-top:2px solid color-mix(in srgb,var(--c) 60%,transparent);background:linear-gradient(180deg,color-mix(in srgb,var(--c) 34%,#0f1a2e),color-mix(in srgb,var(--c) 14%,#0f1a2e))}
+.jr-band.alt{background:linear-gradient(180deg,color-mix(in srgb,var(--c) 26%,#0f1a2e),color-mix(in srgb,var(--c) 10%,#0f1a2e))}
+.jr-band.lock{filter:saturate(.45) brightness(.8)}
+.jr-emo{position:absolute;top:50%;font-size:46px;opacity:.55;transform:translateY(-50%)}
+.jr-ban{position:absolute;left:50%;transform:translateX(-50%);max-width:92%;padding:6px 16px;border-radius:999px;background:var(--c);border:2px solid rgba(255,255,255,.7);color:#fff;font-size:12px;font-weight:900;text-transform:uppercase;text-align:center;line-height:1.2;box-shadow:0 3px 0 rgba(0,0,0,.35);z-index:3}
+.jr-ban.lock{filter:saturate(.4) brightness(.8)}
+.jr-canvas{position:absolute;top:0;left:50%;margin-left:-180px;width:360px;z-index:2}
+.jr-road{position:absolute;inset:0;pointer-events:none}
+.jr-nw{position:absolute;width:0;height:0}
+.jr-node{position:absolute;left:-28px;top:-28px;width:56px;height:56px;border-radius:50%;border:4px solid #fff;background:var(--c);color:#fff;font-size:20px;font-weight:900;display:grid;place-items:center;padding:0;box-shadow:0 5px 0 rgba(0,0,0,.35);text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.jr-node svg{width:22px;height:22px}
+.jr-node.open{background:var(--c)}
+.jr-node.lk{background:#7b8296;border-color:#b6bccb;color:#e5e7eb;box-shadow:0 5px 0 #4b5160}
+.jr-node.cur{left:-35px;top:-35px;width:70px;height:70px;font-size:26px;background:#22c55e;border-color:#fff;box-shadow:0 5px 0 #15803d,0 0 0 0 rgba(34,197,94,.7);animation:jrPulse 1.4s infinite}
+@keyframes jrPulse{0%{box-shadow:0 5px 0 #15803d,0 0 0 0 rgba(34,197,94,.7)}70%{box-shadow:0 5px 0 #15803d,0 0 0 16px rgba(34,197,94,0)}100%{box-shadow:0 5px 0 #15803d,0 0 0 0 rgba(34,197,94,0)}}
+.jr-stars{position:absolute;left:-24px;top:20px;width:48px;display:flex;justify-content:center;gap:0;pointer-events:none}
+.jr-stars .st{width:16px;height:16px;color:#4b5563;filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}.jr-stars .st.on{color:#fbbf24}
+.jr-cap{position:absolute;left:-55px;top:42px;width:110px;text-align:center;font-size:11px;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.9);line-height:1.1;pointer-events:none}
+.jr-nw:has(.cur) .jr-cap{top:46px}
+.jr-pin{position:absolute;left:-19px;top:-82px;width:38px;height:38px;animation:jrBob 1.2s ease-in-out infinite;pointer-events:none}
+.jr-pin span{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:3px solid #fff;background:#0b3d91;overflow:hidden;color:#fff;font-size:20px}
+.jr-pin span img{width:100%;height:100%;object-fit:cover}.jr-pin span svg{width:20px;height:20px}
+.jr-pin::after{content:'';position:absolute;left:11px;bottom:-9px;border:8px solid transparent;border-top-color:#fff;border-bottom:0}
+@keyframes jrBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 </style>
 </head>
 <body>
@@ -1444,7 +1423,24 @@ const DIRS = {
   hard:   [[0,1],[1,0],[1,1],[0,-1],[-1,0],[-1,-1],[1,-1],[-1,1]]
 };
 const GROUPS = [
-  ['Amazon Yağmur Ormanları','#16a34a',[['HAYVANLAR',8,'jaguar piranha anakonda tukan maymun kurbağa'],['BİTKİLER',7,'liana orkide kauçuk kakao palmiye eğrelti'],['AMAZON NEHRİ',7,'nehir tekne yağmur balık kano kıyı']]],
+  ['Amazon Yağmur Ormanları','#16a34a',[
+    ['AMAZON’A GİRİŞ',6,'amazon orman nehir yağmur'],
+    ['ORMAN CANLILARI',6,'jaguar tukan maymun yılan'],
+    ['YAĞMUR ORMANI',7,'yağmur palmiye orkide liana kakao'],
+    ['AMAZON NEHRİ',7,'nehir kano balık piranha kıyı'],
+    ['ORMAN KATMANLARI',7,'toprak gövde dal yaprak taç'],
+    ['YABANİ HAYAT',8,'anakonda jaguar tapir maymun tukan kurbağa'],
+    ['BİTKİLER',8,'orkide palmiye kauçuk kakao eğrelti yosun'],
+    ['NEHİRDE YAŞAM',8,'piranha yunus timsah balık su samuru'],
+    ['YAĞMURUN İZLERİ',8,'bulut sağanak damla nem sis fırtına'],
+    ['ORMAN KEŞFİ',9,'keşif pusula harita kano patika kamp nehir'],
+    ['AMAZON KABİLELERİ',9,'kabile köy avcı ok yay tekne ateş'],
+    ['GİZEMLİ ORMAN',9,'gölge iz pençe ses gece yaprak dal'],
+    ['DERİN AMAZON',10,'anakonda jaguar piranha tapir tukan yarasa kurbağa'],
+    ['YAŞAM DÖNGÜSÜ',10,'tohum çiçek meyve polen böcek kuş ağaç nehir'],
+    ['AMAZONUN KALBİ',10,'orman nehir yağmur jaguar anakonda piranha palmiye orkide'],
+    ['AMAZON FİNALİ',10,'amazon yağmur orman nehir jaguar anakonda piranha tukan orkide palmiye keşif']
+  ]],
   ['Sahra Çölü','#f59e0b',[['HAYVANLAR',7,'deve akrep yılan kartal tilki çakal'],['ÇÖL DOĞASI',7,'kumul vaha güneş sıcak fırtına kayalık'],['YOLCULAR',7,'kervan tuareg çadır hurma rehber harita']]],
   ['Himalaya Dağları','#60a5fa',[['ZİRVELER',7,'everest lhotse makalu zirve buzul kar'],['HAYVANLAR',7,'yeti kaplan geyik kartal maral tilki'],['KÜLTÜR',7,'şerpa tapınak budist nepal tibet bhutan']]],
   ['Pasifik Okyanusu Derinlikleri','#0ea5e9',[['CANLILAR',8,'balina ahtapot yengeç kalamar vatoz yunus'],['DERİNLİK',8,'hendek derin karanlık basınç dalgıç sonar'],['ADALAR',7,'mercan atol lagün dalga fırtına yelken']]],
@@ -2380,94 +2376,51 @@ const JR_EMO = ['🌴','🏜️','🏔️','🌊','⛰️','🎈','🐠','🐧',
 function renderModes(){ drawMap(true); }
 function drawMap(scroll){
   const map = $('jr-map'), wrap = $('jr-wrap'), keep = map.scrollTop;
-  const BLK = 330, G = GROUPS.length, H = G * BLK + 140;
+  const G = GROUPS.length;
+  const groupCounts = GROUPS.map(g => g[2].length);
+  const groupStarts = groupCounts.map((_, i) => groupCounts.slice(0, i).reduce((a,b) => a+b, 0));
+  const groupBlocks = groupCounts.map(n => Math.max(330, n * 105 + 150));
+  const H = groupBlocks.reduce((a,b) => a+b, 0) + 80;
   let cur = LEVELS.findIndex((_, i) => !S.done[i] && i <= S.maxOpen); if (cur < 0) cur = LEVELS.length - 1;
   $('jr-me').innerHTML = avatarHTML();
-  const P = LEVELS.map((d, i) => ({
-    x:180 + 92 * Math.sin(i * 1.34 + .45),
-    y:H - 65 - d.group * BLK - 38 - d.lv * 100
-  }));
-
-  /* Doğal arazi: her bölüm kendi küçük manzara parçalarını taşır. */
-  let scenery = '';
-  const esc = s => String(s || '').replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  function tree(x,y,sc=.85){
-    return '<g transform="translate('+x+' '+y+') scale('+sc+')">'+
-      '<ellipse cx="0" cy="26" rx="24" ry="7" fill="rgba(45,93,35,.22)"/>'+
-      '<path d="M-5 20h10v13H-5z" fill="#8b5a35"/>'+
-      '<circle cx="0" cy="4" r="17" fill="#3f9f48" stroke="#277637" stroke-width="2"/>'+
-      '<circle cx="-12" cy="9" r="11" fill="#55b957"/><circle cx="11" cy="9" r="11" fill="#348e3f"/>'+
-      '<circle cx="-5" cy="-4" r="7" fill="#76c95e" opacity=".75"/></g>';
-  }
-  function pine(x,y,sc=.8){
-    return '<g transform="translate('+x+' '+y+') scale('+sc+')"><ellipse cx="0" cy="31" rx="25" ry="7" fill="rgba(45,93,35,.18)"/><path d="M-4 18h8v15h-8z" fill="#80502d"/><path d="M0 -26L-22 8h12L-25 23h50L10 8h12z" fill="#277a3c" stroke="#1e6232" stroke-width="2"/><path d="M0 -20L-7 -2h14z" fill="#4da94f"/></g>';
-  }
-  function rock(x,y,sc=.8){ return '<g transform="translate('+x+' '+y+') scale('+sc+')"><ellipse cx="0" cy="8" rx="20" ry="6" fill="rgba(45,70,35,.2)"/><path d="M-18 7l6-15 15-6 14 11-4 14H-9z" fill="#8e9b8b" stroke="#667366" stroke-width="2"/><path d="M-9 -8l11-4 6 5-11 4z" fill="#b6c0ad" opacity=".65"/></g>'; }
-  for(let gi=0;gi<G;gi++){
-    const top=H-60-(gi+1)*BLK;
-    const y=top+55;
-    const leftX=35+(gi*47)%45, rightX=300-(gi*39)%45;
-    scenery += '<g opacity=".98">';
-    scenery += '<path d="M0 '+(top+125)+' Q70 '+(top+55)+' 138 '+(top+132)+' T300 '+(top+105)+' T360 '+(top+135)+' V'+(top+330)+' H0Z" fill="rgba(77,165,70,.18)"/>';
-    scenery += tree(leftX,y+70,.82)+tree(rightX,y+135,.72);
-    scenery += pine(52,top+245,.7)+pine(310,top+265,.62);
-    scenery += rock(92,top+300,.55)+rock(276,top+90,.48);
-    /* küçük çiçek kümeleri */
-    scenery += '<g fill="#fff7d1" opacity=".9"><circle cx="'+(25+(gi*31)%65)+'" cy="'+(top+185)+'" r="3"/><circle cx="'+(34+(gi*31)%65)+'" cy="'+(top+181)+'" r="2.5"/><circle cx="'+(335-(gi*27)%65)+'" cy="'+(top+210)+'" r="3"/></g>';
-    scenery += '</g>';
-  }
-  /* Uzak tepeler + güneş + küçük bulutlar */
-  scenery += '<g opacity=".8"><path d="M0 180Q55 95 110 170Q170 80 230 165Q292 92 360 165V300H0Z" fill="#76bd68"/><path d="M0 210Q65 135 130 205Q205 120 270 205Q320 145 360 200V330H0Z" fill="#a8dc82"/></g>';
-  scenery += '<g opacity=".78"><circle cx="52" cy="65" r="23" fill="#ffe58a"/><circle cx="50" cy="65" r="31" fill="none" stroke="#ffe58a" stroke-opacity=".25" stroke-width="10"/><path d="M25 103Q38 92 51 103Q65 90 81 104" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="6" stroke-linecap="round"/></g>';
-  scenery += '<g fill="#fff" opacity=".55"><circle cx="292" cy="75" r="13"/><circle cx="307" cy="70" r="18"/><circle cx="327" cy="77" r="12"/><rect x="286" y="76" width="52" height="12" rx="6"/></g>';
-
-  let out='', fill='';
-  for(let i=1;i<P.length;i++){
-    const a=P[i-1],b=P[i],ym=(a.y+b.y)/2;
-    const d='M'+a.x+' '+a.y+' C'+a.x+' '+ym+' '+b.x+' '+ym+' '+b.x+' '+b.y;
-    out += '<path d="'+d+'" stroke="#9a642f" stroke-width="39" opacity=".5"/>';
-    out += '<path d="'+d+'" stroke="#d6b47a" stroke-width="34"/>';
-    out += '<path d="'+d+'" stroke="#ead4a3" stroke-width="26"/>';
-    fill += '<path d="'+d+'" stroke="'+(S.done[i-1]?'#f2ca54':'#e6d29f')+'" stroke-width="4" stroke-dasharray="1 15" opacity=".9"/>';
-  }
-  const roadSvg='<svg class="jr-road" width="360" height="'+H+'" viewBox="0 0 360 '+H+'" fill="none" stroke-linecap="round">'+out+fill+'</svg>';
-
-  let html='';
-  GROUPS.forEach((g,gi)=>{
-    const top=H-60-(gi+1)*BLK, first=gi*3, unlocked=first<=S.maxOpen;
-    html += '<div class="jr-band '+(gi%2?'alt ':'')+(unlocked?'':'lock')+'" style="top:'+top+'px;height:'+BLK+'px"></div>';
-    html += '<div class="jr-ban '+(unlocked?'':'lock')+'" style="top:'+(top+14)+'px">'+esc(g[0])+'</div>';
+  const P = LEVELS.map((d, i) => {
+    const before = groupBlocks.slice(0, d.group).reduce((a,b) => a+b, 0);
+    const base = H - 40 - before;
+    return { x:180 + 95 * Math.sin(i * 1.3 + .4), y:base - 45 - d.lv * 105 };
   });
-
-  let nodes='';
-  LEVELS.forEach((d,i)=>{
-    const p=P[i], dn=S.done[i], ok=i<=S.maxOpen, isCur=i===cur&&ok&&!dn;
-    const st=dn?'<span class="jr-stars">'+[1,2,3].map(n=>'<svg class="i st'+(n<=dn.stars?' on':'')+'"><use href="#i-star"/></svg>').join('')+'</span>':'';
-    nodes += '<div class="jr-nw" style="left:'+p.x+'px;top:'+p.y+'px;--c:'+GROUPS[d.group][1]+'">'+
-      (isCur?'<div class="jr-pin"><span>'+avatarHTML()+'</span></div>':'')+
-      '<button class="jr-node '+(dn?'done':isCur?'cur':ok?'open':'lk')+'" data-i="'+i+'" aria-label="Bölüm '+(i+1)+'">'+(ok?(i+1):iconSVG('lock'))+'</button>'+st+
-      '<div class="jr-cap">'+esc(d.category)+'</div></div>';
+  let html = '', svg = '';
+  GROUPS.forEach((g, gi) => {
+    const below = groupBlocks.slice(gi + 1).reduce((a,b) => a+b, 0);
+    const top = H - 60 - below - groupBlocks[gi];
+    const first = groupStarts[gi], unlocked = first <= S.maxOpen;
+    const side = P[first + 1].x > 180 ? 'left:16px' : 'right:16px';
+    html += '<div class="jr-band' + (gi % 2 ? ' alt' : '') + (unlocked ? '' : ' lock') + '" style="top:' + top + 'px;height:' + groupBlocks[gi] + 'px;--c:' + g[1] + '"><span class="jr-emo" style="' + side + '">' + JR_EMO[gi] + '</span></div>';
+    html += '<div class="jr-ban' + (unlocked ? '' : ' lock') + '" style="top:' + (top + 12) + 'px;--c:' + g[1] + '">' + g[0].replace(/</g, '') + '</div>';
   });
-  wrap.style.height=H+'px';
-  wrap.innerHTML=html+'<div class="jr-canvas" style="height:'+H+'px"><svg class="jr-scenery" width="360" height="'+H+'" viewBox="0 0 360 '+H+'" preserveAspectRatio="none">'+scenery+'</svg>'+roadSvg+nodes+'</div>';
-  wrap.querySelectorAll('.jr-node').forEach(b=>b.addEventListener('click',(e)=>{
-    e.stopPropagation();
-    const i=+b.dataset.i;
-    if(i<=S.maxOpen) showGame(i); else toast('Önce önceki bölümü tamamla.');
+  let out = '', fill = '';
+  for (let i = 1; i < P.length; i++){
+    const a = P[i - 1], b = P[i], ym = (a.y + b.y) / 2;
+    const d = 'M' + a.x + ' ' + a.y + ' C' + a.x + ' ' + ym + ' ' + b.x + ' ' + ym + ' ' + b.x + ' ' + b.y;
+    out += '<path d="' + d + '" stroke="#2a1a0a" stroke-width="24"/>';
+    fill += '<path d="' + d + '" stroke="' + (S.done[i - 1] ? '#fbbf24' : '#eadbb4') + '" stroke-width="16"/>';
+  }
+  svg = '<svg class="jr-road" width="360" height="' + H + '" viewBox="0 0 360 ' + H + '" fill="none" stroke-linecap="round">' + out + fill + '</svg>';
+  let nodes = '';
+  LEVELS.forEach((d, i) => {
+    const p = P[i], dn = S.done[i], ok = i <= S.maxOpen, isCur = i === cur && ok && !dn;
+    const st = dn ? '<span class="jr-stars">' + [1, 2, 3].map(n => '<svg class="i st' + (n <= dn.stars ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>' : '';
+    nodes += '<div class="jr-nw" style="left:' + p.x + 'px;top:' + p.y + 'px;--c:' + GROUPS[d.group][1] + '">' +
+      (isCur ? '<div class="jr-pin"><span>' + avatarHTML() + '</span></div>' : '') +
+      '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '">' + (ok ? (i + 1) : iconSVG('lock')) + '</button>' + st +
+      '<div class="jr-cap">' + d.category + '</div></div>';
+  });
+  wrap.style.height = H + 'px';
+  wrap.innerHTML = html + '<div class="jr-canvas" style="height:' + H + 'px">' + svg + nodes + '</div>';
+  wrap.querySelectorAll('.jr-node').forEach(b => b.addEventListener('click', () => {
+    const i = +b.dataset.i;
+    if (i <= S.maxOpen) showGame(i); else toast('Önce önceki bölümü tamamla.');
   }));
-  wrap.querySelectorAll('.jr-cap').forEach(cap=>cap.addEventListener('click',(e)=>{
-    e.stopPropagation();
-    const node=cap.parentElement?.querySelector('.jr-node');
-    if(node) node.click();
-  }));
-  wrap.querySelectorAll('.jr-ban').forEach((ban,gi)=>ban.addEventListener('click',(e)=>{
-    e.stopPropagation();
-    const first=LEVELS.findIndex(d=>d.group===gi);
-    if(first>=0){
-      if(first<=S.maxOpen) showGame(first); else toast('Önce önceki bölümü tamamla.');
-    }
-  }));
-  if(scroll) requestAnimationFrame(()=>{map.scrollTop=Math.max(0,P[cur].y-map.clientHeight*.6)}); else map.scrollTop=keep;
+  if (scroll) requestAnimationFrame(() => { map.scrollTop = Math.max(0, P[cur].y - map.clientHeight * .6); }); else map.scrollTop = keep;
 }
 $('jr-back').addEventListener('click', () => { audio(); showHome(); });
 $('jr-me').addEventListener('click', () => { audio(); openProfile(); });
