@@ -2065,9 +2065,14 @@ const ckSet = (k, v) => { try { document.cookie = k + '=' + encodeURIComponent(v
 function getGuest(){ try { const g = JSON.parse(store.get('kb_guest') || ckGet('kb_guest') || 'null'); return g && g.id && g.name ? g : null; } catch(e){ return null; } }
 function saveGuest(u){ const j = JSON.stringify({ type: 'guest', name: u.name, id: u.id }); store.set('kb_guest', j); ckSet('kb_guest', j); }
 function saveUser(u){ if (u && u.type === 'guest' && u.id) saveGuest(u); const j = JSON.stringify(u); store.set('kb_user', j); ckSet('kb_user', j); }
+/* bir telefonda tek hesap: ilk girişte tür (google/facebook/misafir) kilitlenir */
+const LOCK_TXT = { google:'Google', facebook:'Facebook', guest:'Misafir' };
+function getLock(){ try { const l = JSON.parse(store.get('kb_lock') || ckGet('kb_lock') || 'null'); return l && l.type ? l : null; } catch(e){ return null; } }
+function saveLock(u){ if (!u || !u.type || getLock()) return; const j = JSON.stringify({ type: u.type, uid: u.uid || null, id: u.id || null }); store.set('kb_lock', j); ckSet('kb_lock', j); }
 try { USER = JSON.parse(store.get('kb_user') || 'null'); } catch(e) { USER = null; }
 if (!USER) { try { USER = JSON.parse(ckGet('kb_user') || 'null'); if (USER) saveUser(USER); } catch(e) { USER = null; } }
 else saveUser(USER);
+if (USER) saveLock(USER); else { const g0 = getGuest(); if (g0) saveLock(g0); }   // eski kullanıcılar için kilit
 try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch(e){}
 
 const menuEl = $('smenu'), helpEl = $('help');
@@ -2078,7 +2083,7 @@ function renderSavedGuest(){
 }
 function refreshSettings(){
   renderSavedGuest();
-  $('s-delete').hidden = !(USER && USER.type === 'guest');
+  $('s-delete').hidden = !USER;
   $('s-sound-v').textContent = S.sound ? 'AÇIK' : 'KAPALI';
   $('s-sound-v').classList.toggle('off', !S.sound);
   $('s-vib-v').textContent = S.vib ? 'AÇIK' : 'KAPALI';
@@ -2093,7 +2098,7 @@ function toggleSound(){
   if (S.sound){ audio(); SND.hint(); }
 }
 function setUser(u){
-  USER = u; saveUser(u); refreshSettings(); startPresence(); showHome();
+  USER = u; saveUser(u); saveLock(u); refreshSettings(); startPresence(); showHome();
   syncCoinsFromCloud();
 }
 
@@ -2111,11 +2116,14 @@ async function getFbAuth(){
   fbAuth = firebase.auth(); return fbAuth;
 }
 async function socialLogin(kind){
+  const lk = getLock();
+  if (lk && lk.type !== kind){ toast('Bu telefonda ' + LOCK_TXT[lk.type] + ' hesabı kayıtlı, başka hesap kullanılamaz'); return; }
   try {
     const auth = await getFbAuth();
     const prov = kind === 'google' ? new firebase.auth.GoogleAuthProvider() : new firebase.auth.FacebookAuthProvider();
     const r = await auth.signInWithPopup(prov);
-    const id = (USER && USER.id) || await registerUser(kind, null);
+    if (lk && lk.uid && lk.uid !== r.user.uid){ try { await auth.signOut(); } catch(e){} toast('Bu telefonda başka hesap kullanılamaz'); return; }
+    const id = (USER && USER.id) || (lk && lk.id) || await registerUser(kind, null);
     setUser({ type: kind, name: r.user.displayName || 'Oyuncu', uid: r.user.uid, id });
   } catch(e) {
     toast(e && e.message === 'config' ? 'Firebase ayarı eksik' : 'Giriş başarısız');
@@ -2200,7 +2208,9 @@ nmOk.addEventListener('click', submitName);
 nmInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitName(); });
 nmInput.addEventListener('input', () => { const v = nmInput.value.replace(NAME_BAD, ''); if (v !== nmInput.value) nmInput.value = v; });
 $('nm-cancel').addEventListener('click', () => nameBox.classList.remove('show'));
-const guestLogin = () => { audio(); const g = getGuest(); if (g) setUser(g); else openNameBox(); };   // kayıtlı hesap varsa yenisi açılamaz
+const guestLogin = () => { audio();
+  const lk = getLock(); if (lk && lk.type !== 'guest'){ toast('Bu telefonda ' + LOCK_TXT[lk.type] + ' hesabı kayıtlı, başka hesap kullanılamaz'); return; }
+  const g = getGuest(); if (g) setUser(g); else openNameBox(); };   // kayıtlı hesap varsa yenisi açılamaz
 $('lg-guest').addEventListener('click', guestLogin);
 $('lg-saved').addEventListener('click', guestLogin);
 $('lg-google').addEventListener('click', () => socialLogin('google'));
@@ -2244,7 +2254,7 @@ $('s-rate').addEventListener('click', () => {
   if (!window.open(url, '_blank')) location.href = url;
 });
 $('help-ok').addEventListener('click', () => helpEl.classList.remove('show'));
-/* misafir hesabını sil: ortada onay penceresi, EVET'te her şey sıfırlanır ve başa dönülür */
+/* hesabı sil (tüm hesap türleri): ortada onay penceresi, EVET'te her şey sıfırlanır ve başa dönülür */
 $('s-delete').addEventListener('click', () => { closeMenu(); $('delbox').classList.add('show'); });
 $('del-no').addEventListener('click', () => $('delbox').classList.remove('show'));
 $('delbox').addEventListener('click', e => { if (e.target === $('delbox')) $('delbox').classList.remove('show'); });
@@ -2252,9 +2262,12 @@ $('del-yes').addEventListener('click', async () => {
   $('delbox').classList.remove('show'); leaveGame();
   const keep = { kb_sound: store.get('kb_sound'), kb_vib: store.get('kb_vib') };      // ses/titreşim tercihi kalsın
   try { localStorage.clear(); } catch(e){}
-  ['kb_user', 'kb_guest'].forEach(k => { try { document.cookie = k + '=;max-age=0;path=/'; } catch(e){} });
+  ['kb_user', 'kb_guest', 'kb_lock'].forEach(k => { try { document.cookie = k + '=;max-age=0;path=/'; } catch(e){} });
   Object.keys(keep).forEach(k => { if (keep[k] != null) store.set(k, keep[k]); });
-  stopPresence(); USER = null;
+  const delId = USER && USER.id; stopPresence(); USER = null;
+  if (delId && FIREBASE_CONFIG.apiKey){            // buluttaki kayıtlar (en iyi çaba)
+    try { const db = await getDb(); await Promise.race([Promise.all([db.collection('users').doc(delId).delete(), db.collection('leaderboard').doc(delId).delete()]), new Promise(r => setTimeout(r, 1500))]); } catch(e){}
+  }
   try { if (fbAuth) await Promise.race([fbAuth.signOut(), new Promise(r => setTimeout(r, 800))]); } catch(e){}
   location.reload();                                                                    // bellekteki her şey de sıfırlansın
 });
