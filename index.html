@@ -626,6 +626,11 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .btn-sq svg.i{font-size:24px}
 .btn-sq:active{transform:translateY(5px);box-shadow:inset 0 -10px 18px rgba(0,0,0,.28),inset 0 2px 0 rgba(255,255,255,.6),0 2px 0 var(--edge),0 6px 12px rgba(0,0,0,.4)}
 
+
+/* ================= MODLAR ================= */
+.lv-card .lv-name{font-size:16px}
+.lv-card .lv-foot{min-height:22px}
+.mode-sub{display:block;margin-top:3px;font-size:11px;font-weight:700;color:#aaa3d7;line-height:1.25}
 /* ================= LEVEL SELECT ================= */
 .levels{display:flex;flex-direction:column}
 .lv-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px}
@@ -766,7 +771,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
       <button class="icon-btn" id="btn-home" aria-label="Ana menü"><svg class="i"><use href="#i-home"/></svg></button>
       <div class="coin"><svg class="i coin-ic"><use href="#i-coin"/></svg><span id="coin-count">150</span></div>
     </div>
-    <div class="level-box"><small>KATEGORİ</small><b id="header-level-num">1</b></div>
+    <div class="level-box"><small>MOD</small><b id="header-level-num">1</b></div>
     <div class="grp r">
       <button class="icon-btn" id="btn-settings" aria-label="Ayarlar"><svg class="i"><use href="#i-gear"/></svg></button>
       <button class="icon-btn" id="btn-sound" aria-label="Ses"><svg class="i" id="sound-icon"><use href="#i-vol"/></svg></button>
@@ -809,7 +814,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 
       <div class="home-actions">
         <button id="lb" class="btn-sq gold" aria-label="Liderlik tablosu"><span>🏆</span><span>LİDERLİK TABLOSU</span></button>
-        <button id="btn-levels" class="btn-sq" aria-label="Kategoriler"><svg class="i"><use href="#i-grid"/></svg><span>KATEGORİLER</span></button>
+        <button id="btn-levels" class="btn-sq" aria-label="Mod Seç"><svg class="i"><use href="#i-grid"/></svg><span>MOD SEÇ</span></button>
         <button id="btn-online" class="btn-sq pink"><svg class="i"><use href="#i-user"/></svg><span>ONLİNE MOD</span></button>
               </div>
     </section>
@@ -817,7 +822,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
     <!-- GAME -->
     <section id="view-game" class="view off">
       <div class="banner">
-        <span class="b-label"><svg class="i"><use href="#i-pin"/></svg>KATEGORİ</span>
+        <span class="b-label"><svg class="i"><use href="#i-pin"/></svg>MOD</span>
         <h2 id="category-title">İLKBAHAR</h2>
         <div class="timer"><svg class="i"><use href="#i-clock"/></svg><span id="time-val">00:00</span></div>
       </div>
@@ -835,7 +840,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
         <div class="prog"><i id="prog-fill"></i></div>
         <span id="found-progress">0 / 0</span>
       </div>
-      <button class="btn-main review-next" id="btn-review-next">SONRAKİ KATEGORİ</button>
+      <button class="btn-main review-next" id="btn-review-next">SONRAKİ MOD</button>
     </section>
 
     <!-- LOGIN -->
@@ -878,7 +883,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 
     <!-- LEVEL SELECT -->
     <section id="view-levels" class="view off levels">
-      <div class="lv-head"><h2>Kategoriler</h2><span class="lv-count" id="lv-count">0 / 0</span></div>
+      <div class="lv-head"><h2>MOD SEÇ</h2><span class="lv-count" id="lv-count">0 / 0</span></div>
       <div class="lv-grid" id="lv-grid"></div>
     </section>
   </main>
@@ -1036,7 +1041,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 
   <!-- CATEGORY INTRO -->
   <div class="intro" id="intro">
-    <div class="intro-num" id="intro-num">BÖLÜM 1</div>
+    <div class="intro-num" id="intro-num">MOD 1</div>
     <div class="intro-ring"><div class="intro-ic" id="intro-ic"></div></div>
     <div class="intro-name" id="intro-name"></div>
     <div class="intro-sub" id="intro-sub"></div>
@@ -1050,14 +1055,14 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
         <svg class="i vstar" style="--i:1"><use href="#i-star"/></svg>
         <svg class="i vstar" style="--i:2"><use href="#i-star"/></svg>
       </div>
-      <h3>KATEGORİ TAMAMLANDI!</h3>
+      <h3>MOD TAMAMLANDI!</h3>
       <p>Tüm kelimeleri buldun, harikasın!</p>
       <div class="vstats">
         <div><small>Kazanılan Altın</small><b class="g"><svg class="i"><use href="#i-coin"/></svg><span id="reward-coins">+25</span></b></div>
         <div class="sep"></div>
         <div><small>Geçen Süre</small><b class="t" id="reward-time">00:00</b></div>
       </div>
-      <button id="btn-next-level" class="btn-main">SONRAKİ KATEGORİ</button>
+      <button id="btn-next-level" class="btn-main">SONRAKİ MOD</button>
     </div>
   </div>
 
@@ -1083,27 +1088,31 @@ const DIRS = {
   hard:   [[0,1],[1,0],[1,1],[0,-1],[-1,0],[-1,-1],[1,-1],[-1,1]]
 };
 const LEVELS = [
-  { category:'İLKBAHAR',   size:7,  dirs:'easy',   words:['güneş','çiçek','yeşil','ılık','ağaç','kuş','yağmur'] },
-  { category:'OKUL',       size:7,  dirs:'easy',   words:['kalem','kitap','sınıf','silgi','tahta','ders','defter'] },
-  { category:'YAZ TATİLİ', size:8,  dirs:'medium', words:['deniz','güneş','kumsal','karpuz','yüzme','havuz','dondurma'] },
-  { category:'HAYVANLAR',  size:8,  dirs:'medium', words:['kedi','köpek','aslan','zürafa','kaplan','tavşan','ördek'] },
-  { category:'MEYVELER',   size:8,  dirs:'hard',   words:['elma','armut','çilek','kiraz','şeftali','üzüm','muz','incir'] },
-  { category:'MUTFAK EŞYALARI', size:9,  dirs:'hard',   words:['tencere','kaşık','çatal','bıçak','tabak','bardak','ocak','fırın','çaydanlık'] },
-  { category:'UZAY',       size:9,  dirs:'hard',   words:['yıldız','gezegen','roket','uydu','astronot','dünya','mars','güneş','kuyruklu'] },
-  { category:'ŞEHİRLER',   size:9,  dirs:'hard',   words:['istanbul','ankara','izmir','bursa','adana','trabzon','konya','antalya','mersin'] },
-  { category:'SPOR',       size:10, dirs:'hard',   words:['futbol','basketbol','voleybol','tenis','yüzme','koşu','güreş','okçuluk','boks'] },
-  { category:'MESLEKLER',  size:10, dirs:'hard',   words:['doktor','öğretmen','mühendis','pilot','çiftçi','aşçı','şoför','itfaiyeci','avukat','hemşire'] },
-  { category:'EL ALETLERİ',     size:10, dirs:'hard', words:['çekiç','tornavida','pense','testere','matkap','keski','anahtar','kerpeten'] },
-  { category:'ÇİÇEKLER',        size:10, dirs:'hard', words:['gül','papatya','lale','menekşe','karanfil','sümbül','orkide','zambak','nergis'] },
-  { category:'AĞAÇ TÜRLERİ',    size:10, dirs:'hard', words:['çam','meşe','kayın','ceviz','çınar','ladin','söğüt','akasya','kavak','dişbudak'] },
-  { category:'KUŞ TÜRLERİ',     size:10, dirs:'hard', words:['kartal','serçe','güvercin','baykuş','leylek','papağan','kumru','şahin','karga','kanarya'] },
-  { category:'DENİZ CANLILARI', size:10, dirs:'hard', words:['yengeç','ahtapot','istiridye','midye','karides','yunus','balina','denizatı','denizanası'] },
-  { category:'BALIK TÜRLERİ',   size:10, dirs:'hard', words:['hamsi','levrek','çipura','somon','sardalya','uskumru','palamut','lüfer','alabalık','kefal'] },
-  // Test kategorileri — içerikler şimdilik birkaç örnek kelimeden oluşuyor.
-  { category:'ZAMAN YARIŞI (ZOR)', size:7, dirs:'easy', mode:'time', words:['masa','kalem','kitap','evet','araba'] },
-  { category:'ZORLU KELİMELER (UZMAN)', size:11, dirs:'hard', mode:'expert', words:['kadirşinas','çevrebilim','mukaddime','mütemadiyen'] },
-  { category:'NOKTASIZ HARFLER (ÖZEL MOD)', size:9, dirs:'hard', mode:'plain', words:['kalem','kitap','masa','bahar','merdiven'] },
-  { category:'NOSTALJİ & DEYİMLER', size:9, dirs:'hard', mode:'nostalgia', words:['pösteki','müsamere','keza','etek','kulak'] }
+  {
+    category:'ZAMANA KARŞI',
+    size:8,
+    dirs:'hard',
+    mode:'time',
+    timeLimit:60,
+    subtitle:'Süreye karşı yarış! En kısa sürede tüm kelimeleri bul.',
+    words:['kalem','kitap','şehir','bahar','yıldız','köprü','deniz','mercan']
+  },
+  {
+    category:'KLASİK SERBEST',
+    size:8,
+    dirs:'medium',
+    mode:'classic',
+    subtitle:'Rahatça oyna. Normal kelime bulma modu.',
+    words:['kalem','kitap','çiçek','güneş','araba','orman','bulut','nehir']
+  },
+  {
+    category:'ZOR MOD',
+    size:12,
+    dirs:'hard',
+    mode:'hard',
+    subtitle:'Daha uzun ve zor kelimeler. Daha büyük oyun tahtası.',
+    words:['kadirşinas','mütemadiyen','çevrebilim','başkalaşım','özgürleştirmek','sorumluluk','karşılaştırma','alışkanlık','dayanışma','bilinçaltı']
+  }
 ];
 
 const FILLER = 'AAAAAAAEEEEEEİİİİİNNNNNRRRRLLLLIIIIDDDKKKMMMYYUUUTTTSSSOOOBBÜÜÜŞŞŞZZGGÇÇÇHHĞĞVCÖÖPF';
@@ -1173,7 +1182,8 @@ const ICONS = {
   tree:`<path d="M32 5c9 0 16 7 14 16 6 3 6 13-2 16-3 2-6 2-12 2s-9 0-12-2c-8-3-8-13-2-16C16 12 23 5 32 5z"/><path d="M32 39v19"/><path d="M32 50l-8-7M32 46l8-7"/>`,
   bird:`<ellipse cx="29" cy="36" rx="18" ry="12"/><circle cx="48" cy="23" r="8"/><path d="M55 21l7 3-7 3"/><circle cx="50" cy="21.5" r="1.4"/><path d="M12 33L3 27M12 38L3 43"/><path d="M22 34c6-6 14-3 15 3"/><path d="M27 48v9M34 48v9"/>`,
   jelly:`<path d="M12 32C12 10 52 10 52 32z"/><path d="M19 32c-4 8 4 12 0 22M32 32c-4 8 4 12 0 24M45 32c-4 8 4 12 0 22"/>`,
-  fish:`<path d="M6 32C16 15 38 15 48 32 38 49 16 49 6 32z"/><path d="M48 32l12-11v22z"/><circle cx="19" cy="29" r="2"/><path d="M30 22c4 6 4 14 0 20"/>`,
+  fish:`<path d="M6 32C16 15 38 15 48 32 38 49 16 49 6 32z"/><path d="M48 32l12-11v22z"/><circle cx="19" cy="29" r="2"/><path d="M30 22c4 6 4 14 0 20"/>`, 
+  clock:`<circle cx="32" cy="32" r="23"/><path d="M32 18v15l10 6"/><path d="M32 5v4M32 55v4M5 32h4M55 32h4"/>`,
   lock:`<rect x="12" y="28" width="40" height="28" rx="5"/><path d="M20 28v-8a12 12 0 0 1 24 0v8"/><circle cx="32" cy="42" r="3"/>`
 };
 const THEME = {
@@ -1193,6 +1203,9 @@ const THEME = {
   'KUŞ TÜRLERİ':     { icon:'bird',    color:'#60a5fa' },
   'DENİZ CANLILARI': { icon:'jelly',   color:'#06b6d4' },
   'BALIK TÜRLERİ':   { icon:'fish',    color:'#3b82f6' },
+  'ZAMANA KARŞI':    { icon:'clock',   color:'#f43f5e' },
+  'KLASİK SERBEST':  { icon:'sprout',  color:'#22c55e' },
+  'ZOR MOD':         { icon:'rocket',  color:'#8b5cf6' },
   'ZAMAN YARIŞI (ZOR)':     { icon:'ball',   color:'#f43f5e' },
   'ZORLU KELİMELER (UZMAN)':  { icon:'rocket',   color:'#8b5cf6' },
   'NOKTASIZ HARFLER (ÖZEL MOD)': { icon:'pencil',    color:'#06b6d4' },
@@ -1386,7 +1399,7 @@ function startLevel(index, def, seed){
   const review = !def && !!S.done[index];             // tamamlanmış bölüm: bitmiş hali gösterilir, puan/altın yok
   if (!review){ S.games++; store.set('kb_games', S.games); }
   app.classList.toggle('on-review', review);
-  $('status-txt').textContent = review ? '✔ Kategori tamamlandı • tekrar puan kazanılmaz' : 'Harfleri parmağınla sürükleyip kelimeyi bul!';
+  $('status-txt').textContent = review ? '✔ Mod tamamlandı • tekrar puan kazanılmaz' : 'Harfleri parmağınla sürükleyip kelimeyi bul!';
   S.token++; stopTimer();
   const tok = S.token;
   S.levelIndex = index;
@@ -1442,12 +1455,12 @@ function showIntro(index, def, cb){
   introEl.style.setProperty('--neon', th.color);
   introEl.style.setProperty('--glow', hexA(th.color, .33));
   introEl.style.setProperty('--glow2', hexA(th.color, .3));
-  $('intro-num').textContent = def ? 'ONLİNE YARIŞ' : 'KATEGORİ ' + (index + 1);
+  $('intro-num').textContent = def ? 'ONLİNE YARIŞ' : 'MOD ' + (index + 1);
   const ic = $('intro-ic');
   ic.innerHTML = iconSVG(th.icon);
   ic.querySelectorAll('path,circle,ellipse,rect,line,polyline,polygon').forEach(e => e.setAttribute('pathLength', '1'));
   $('intro-name').textContent = d.category;
-  $('intro-sub').textContent = d.words.length + ' kelime bul';
+  $('intro-sub').textContent = d.subtitle || (d.words.length + ' kelime bul');
   introEl.classList.remove('show'); void introEl.offsetWidth; introEl.classList.add('show');
   introReady = Date.now() + 700;
   introDone = cb;
@@ -1706,8 +1719,26 @@ $('btn-hint').addEventListener('click', () => {
    ZAMANLAYICI + ZAFER
    ===================================================== */
 function startTimer(){
-  stopTimer(); S.seconds = 0; $('time-val').textContent = '00:00';
-  S.timer = setInterval(() => { S.seconds++; $('time-val').textContent = fmt(S.seconds); }, 1000);
+  stopTimer();
+  const limit = S.level && S.level.mode === 'time' ? (S.level.timeLimit || 60) : 0;
+  S.seconds = limit ? limit : 0;
+  $('time-val').textContent = fmt(S.seconds);
+  S.timer = setInterval(() => {
+    if (limit){
+      S.seconds--;
+      $('time-val').textContent = fmt(Math.max(0, S.seconds));
+      if (S.seconds <= 0){
+        stopTimer();
+        S.playing = false;
+        SND.miss();
+        toast('Süre doldu! Modu yeniden dene.');
+        setTimeout(() => { if (!S.playing && S.level && S.level.mode === 'time') startLevel(S.levelIndex); }, 900);
+      }
+    } else {
+      S.seconds++;
+      $('time-val').textContent = fmt(S.seconds);
+    }
+  }, 1000);
 }
 function stopTimer(){ if (S.timer){ clearInterval(S.timer); S.timer = null; } }
 document.addEventListener('visibilitychange', () => {
@@ -1725,17 +1756,18 @@ function victory(){
   const idx = S.levelIndex, prev = S.done[idx];
   const reward = prev ? 5 : 25;               // ilk bitirişte 25, tekrar oynayınca 5 altın
   S.coins += reward; updateCoins();
-  const per = S.seconds / S.level.words.length;
+  const elapsed = S.level.mode === 'time' ? (S.level.timeLimit - S.seconds) : S.seconds;
+  const per = elapsed / S.level.words.length;
   const stars = per <= 12 ? 3 : per <= 25 ? 2 : 1;
   S.done[idx] = {
     stars: Math.max(stars, prev ? prev.stars : 0),
-    time: prev && prev.time ? Math.min(prev.time, S.seconds) : S.seconds
+    time: prev && prev.time ? Math.min(prev.time, elapsed) : elapsed
   };
   delete S.partial[idx];
   S.maxOpen = Math.max(S.maxOpen, Math.min(idx + 1, LEVELS.length - 1));
   saveProgress(); syncLevelPoints();
   document.querySelectorAll('.vstar').forEach((s, i) => s.classList.toggle('on', i < stars));
-  $('reward-time').textContent = fmt(S.seconds);
+  $('reward-time').textContent = fmt(elapsed);
   $('reward-coins').textContent = '+' + reward;
   modal.classList.add('show');
   const w = fxW, h = fxH;
@@ -1745,7 +1777,7 @@ function victory(){
 }
 $('btn-next-level').addEventListener('click', () => {
   modal.classList.remove('show');
-  startLevel((S.levelIndex + 1) % LEVELS.length);
+  if (S.levelIndex + 1 < LEVELS.length) startLevel(S.levelIndex + 1); else showLevels();
 });
 
 /* =====================================================
@@ -1755,20 +1787,19 @@ function renderLevels(){
   const grid = $('lv-grid'); grid.innerHTML = '';
   let doneCount = 0;
   LEVELS.forEach((d, i) => {
-    const th = themeOf(d), done = S.done[i], locked = i > S.maxOpen;
+    const th = themeOf(d), done = S.done[i];
     if (done) doneCount++;
     const b = document.createElement('button');
-    b.className = 'lv-card ' + (locked ? 'lock' : done ? 'done' : 'cur');
+    b.className = 'lv-card ' + (done ? 'done' : 'cur');
     b.style.setProperty('--neon', th.color);
     b.style.setProperty('--glow', hexA(th.color, .3));
-    b.disabled = locked;
+    b.disabled = false;
     b.innerHTML = '<span class="lv-num"></span><div class="lv-ic"></div><div class="lv-name"></div><div class="lv-foot"></div>';
     b.querySelector('.lv-num').textContent = i + 1;
-    b.querySelector('.lv-ic').innerHTML = iconSVG(locked ? 'lock' : th.icon);
-    b.querySelector('.lv-name').textContent = d.category;
+    b.querySelector('.lv-ic').innerHTML = iconSVG(th.icon);
+    b.querySelector('.lv-name').innerHTML = d.category + '<span class="mode-sub">' + (d.subtitle || '') + '</span>';
     const foot = b.querySelector('.lv-foot');
-    if (locked) foot.innerHTML = '<span class="pill-lock">KİLİTLİ</span>';
-    else if (done) foot.innerHTML = [1, 2, 3].map(n => '<svg class="i st' + (n <= done.stars ? ' on' : '') + '"><use href="#i-star"/></svg>').join('');
+    if (done) foot.innerHTML = [1, 2, 3].map(n => '<svg class="i st' + (n <= done.stars ? ' on' : '') + '"><use href="#i-star"/></svg>').join('');
     else foot.innerHTML = '<span class="pill-play">OYNA</span>';
     b.addEventListener('click', () => { audio(); showGame(i); });
     grid.appendChild(b);
