@@ -180,7 +180,7 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 .btn-main svg.i{font-size:26px}
 
 /* ================= GAME ================= */
-#view-game:not(.off){display:flex;flex-direction:column;padding:5px 7px calc(5px + env(safe-area-inset-bottom));gap:5px}
+#view-game:not(.off){display:flex;flex-direction:column;padding:5px 7px calc(5px + env(safe-area-inset-bottom));gap:6px}
 .banner{
   display:flex;align-items:center;justify-content:space-between;gap:8px;
   padding:5px 8px;border-radius:13px;
@@ -222,8 +222,8 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 
 .board-wrap{flex:1;min-height:0;container-type:size;display:flex;align-items:center;justify-content:center}
 .grid{
-  position:relative;touch-action:none;container-type:inline-size;
-  width:min(100%,52vh);width:min(100cqw,100cqh);aspect-ratio:1;
+  position:relative;touch-action:none;container-type:size;
+  width:100%;width:100cqw;height:100%;height:min(100cqh,calc(100cqw * 1.32));
   display:grid;gap:3px;padding:9px;border-radius:24px;
   background:
     radial-gradient(70% 55% at 12% 8%,rgba(192,96,255,.5),rgba(192,96,255,0) 70%),
@@ -236,7 +236,7 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
   position:relative;z-index:2;display:flex;align-items:center;justify-content:center;
   border-radius:12px;background:rgba(255,255,255,.075);
   font-weight:900;line-height:1;color:#f3f1ff;text-shadow:0 2px 0 rgba(0,0,0,.4);
-  font-size:clamp(14px,5.6vw,28px);font-size:calc((100cqw - 18px) / var(--n) * .56);
+  font-size:clamp(14px,5.6vw,28px);font-size:calc(min(100cqw - 18px, 100cqh - 18px) / var(--n) * .56);
   transition:color .15s,transform .12s;
 }
 .cell.sel{color:#fff;transform:scale(1.14)}
@@ -1114,6 +1114,21 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   white-space:nowrap;
 }
 
+
+/* ===== Profesyonel bölüm geçişi ===== */
+.iris{position:absolute;inset:0;z-index:85;pointer-events:none;visibility:hidden;
+  background:radial-gradient(circle at 50% 50%,#2a1a74 0,#0f0838 55%,#05021a 100%);clip-path:circle(0% at 50% 50%)}
+.iris::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.12) 50%,transparent 65%);transform:translateX(-100%)}
+.iris.in{visibility:visible;animation:irisIn .5s cubic-bezier(.65,0,.35,1) forwards}
+.iris.in::after{animation:irisSheen .5s ease-in forwards}
+.iris.out{visibility:visible;clip-path:circle(150% at 50% 50%);animation:irisOut .55s ease-out forwards}
+@keyframes irisIn{to{clip-path:circle(150% at 50% 50%)}}
+@keyframes irisOut{to{opacity:0}}
+@keyframes irisSheen{to{transform:translateX(100%)}}
+#modal-victory.leave .vcard{transform:scale(.88) translateY(-18px);opacity:0;transition:transform .35s cubic-bezier(.5,0,.8,.4),opacity .3s}
+.jr-trail{position:absolute;width:12px;height:12px;border-radius:50%;background:#4ade80;box-shadow:0 0 12px #22c55e;
+  transform:translate(-50%,-50%);pointer-events:none;z-index:29;animation:jrTrail .9s ease-out forwards}
+@keyframes jrTrail{to{opacity:0;transform:translate(-50%,-50%) scale(.2)}}
 </style>
 
 <style>
@@ -1514,6 +1529,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
     </div>
   </div>
 
+  <div class="iris" id="iris"></div>
   <canvas id="fx"></canvas>
 </div>
 
@@ -2087,7 +2103,7 @@ function measure(){
   const b = n > 1 ? S.cells[1].getBoundingClientRect() : a;
   const c = n > 1 ? S.cells[n].getBoundingClientRect() : a;
   S.geo = { left: gr.left, top: gr.top, x0: a.left - gr.left + a.width / 2, y0: a.top - gr.top + a.height / 2,
-            px: b.left - a.left || a.width, py: c.top - a.top || a.height, cell: a.width };
+            px: b.left - a.left || a.width, py: c.top - a.top || a.height, cell: Math.min(a.width, a.height) };
   S.caps.forEach(cp => placeCap(cp.el, cp.path[0], cp.path[cp.path.length - 1]));
   if (S.dragCap && S.sel) placeCap(S.dragCap, S.sel.path[0], S.sel.path[S.sel.path.length - 1]);
 }
@@ -2507,7 +2523,7 @@ function playJourneyUnlockAnimation(fromIdx){
   setView('modes');
   updateHome();
 
-  requestAnimationFrame(() => {
+  setTimeout(() => {
     const map = $('jr-map');
     const wrap = $('jr-wrap');
     const canvas = wrap.querySelector('.jr-canvas');
@@ -2542,6 +2558,12 @@ function playJourneyUnlockAnimation(fromIdx){
       runner.style.transform = 'translate(-50%,-50%) scale(1)';
       runner.style.left = P[nextIdx].x + 'px';
       runner.style.top = P[nextIdx].y + 'px';
+      const tr = setInterval(() => {
+        const d = document.createElement('i'); d.className = 'jr-trail';
+        d.style.left = runner.offsetLeft + 'px'; d.style.top = runner.offsetTop + 'px';
+        canvas.appendChild(d); setTimeout(() => d.remove(), 950);
+      }, 55);
+      setTimeout(() => clearInterval(tr), 900);
       map.scrollTo({top: Math.max(0, P[nextIdx].y - map.clientHeight * .60), behavior:'smooth'});
     });
 
@@ -2555,21 +2577,33 @@ function playJourneyUnlockAnimation(fromIdx){
         ],
         {duration:900, easing:'ease-in-out', iterations:2}
       );
+      try {
+        const r = nextNode.getBoundingClientRect(), ar = app.getBoundingClientRect(), q = { x: r.left + r.width / 2 - ar.left, y: r.top + r.height / 2 - ar.top };
+        ring(q.x, q.y, '#4ade80', 90); setTimeout(() => ring(q.x, q.y, '#fde047', 130), 160);
+        sparkBurst(q.x, q.y, '#4ade80', 14, 1.4); SND.win && buzz([30, 40, 30]);
+      } catch(e){}
       runner.style.transform = 'translate(-50%,-50%) scale(.72)';
       setTimeout(() => runner.remove(), 650);
     }, 920);
-  });
+  }, 500);
 }
 
 $('btn-next-level').addEventListener('click', () => {
-  const fromIdx = S.levelIndex;
-  modal.classList.remove('show');
-  if (fromIdx + 1 < LEVELS.length) {
-    playJourneyUnlockAnimation(fromIdx);
-  } else {
-    showLevels();
-  }
+  if (irisBusy) return;
+  const fromIdx = S.levelIndex, iris = $('iris');
+  irisBusy = true; buzz(15);
+  modal.classList.add('leave');
+  setTimeout(() => {
+    iris.className = 'iris in';
+    setTimeout(() => {
+      modal.classList.remove('show','leave');
+      if (fromIdx + 1 < LEVELS.length) playJourneyUnlockAnimation(fromIdx); else showLevels();
+      requestAnimationFrame(() => { iris.className = 'iris out'; });
+      setTimeout(() => { iris.className = 'iris'; irisBusy = false; }, 600);
+    }, 520);
+  }, 220);
 });
+let irisBusy = false;
 
 /* =====================================================
    BÖLÜM SEÇİM EKRANI
