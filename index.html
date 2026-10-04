@@ -874,7 +874,8 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #pt-friends .pfr-row button.warn{color:#fca5a5;background:rgba(244,63,94,.1);border-color:rgba(251,113,133,.28)}
 #pt-friends .pfr-row button.arm{background:#be123c;color:#fff;border-color:transparent}
 #pt-friends .pfr-empty{margin:0;padding:20px 12px;border-radius:16px;border:1px dashed rgba(196,181,253,.28);background:rgba(255,255,255,.03);font-size:13px;font-weight:800;color:#aaa4d7}
-.level-box{display:none!important}
+.app:not(.on-game) .level-box{display:none!important}
+.app.on-game #btn-home,.app.on-game #btn-hint{display:none}
 
 /* ===== MOD SEÇİMİ: kaydırmalı tek sahne ===== */
 .modes{display:flex;flex-direction:column;overflow:hidden;touch-action:pan-y;--neon:#22c55e;--glow:rgba(34,197,94,.3)}
@@ -920,13 +921,59 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .smenu #s-sound b::after,.smenu #s-vib b::after{content:"";position:absolute;top:3px;right:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.35);transition:right .15s,left .15s}
 .smenu #s-sound b.off,.smenu #s-vib b.off{background:rgba(0,0,0,.38);border-color:rgba(255,255,255,.18);box-shadow:none}
 .smenu #s-sound b.off::after,.smenu #s-vib b.off::after{right:auto;left:3px;background:#b9b3f0}
-.smenu #s-help,.smenu #s-report,.smenu #s-rate,.smenu #s-logout.logout-row{min-height:54px;border-radius:99px;justify-content:center;gap:10px;padding:0 20px;font-size:15px;color:#fff!important;text-shadow:0 2px 0 rgba(0,0,0,.3);
+.smenu #s-home,.smenu #s-help,.smenu #s-report,.smenu #s-rate,.smenu #s-logout.logout-row{min-height:54px;border-radius:99px;justify-content:center;gap:10px;padding:0 20px;font-size:15px;color:#fff!important;text-shadow:0 2px 0 rgba(0,0,0,.3);
   background:linear-gradient(180deg,#a78bfa 0%,#7c4dff 48%,#5b2bd9 100%);border:0;box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 5px 0 #34148f}
 .smenu #s-logout.logout-row{background:linear-gradient(180deg,#ff7a7a,#e11d48 55%,#be123c);box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 5px 0 #7f1230}
 .smenu #s-logout .row-ic{width:auto;height:auto;background:none;border:0;color:#fff}
-.smenu #s-help:active,.smenu #s-report:active,.smenu #s-rate:active,.smenu #s-logout:active{transform:translateY(4px);box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 1px 0 rgba(0,0,0,.4)}
+.smenu #s-home:active,.smenu #s-help:active,.smenu #s-report:active,.smenu #s-rate:active,.smenu #s-logout:active{transform:translateY(4px);box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 1px 0 rgba(0,0,0,.4)}
 .smenu .s-grow{flex:1;min-height:6px}
 .smenu .s-del-link{align-self:flex-start;padding:8px 4px;font-size:13px;font-weight:900;letter-spacing:.04em;color:#ff8fab;text-decoration:underline}
+
+/* ===== OYUN İÇİ: joker satırı ===== */
+.app.on-game .topbar .grp.r{min-width:104px}
+.jokers{flex:none;display:flex;align-items:flex-start;justify-content:space-between;padding:2px 6px 16px}
+.jk-grp{display:flex;gap:14px}
+.jk{position:relative;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;
+  background:linear-gradient(180deg,#a78bfa 0%,#7c4dff 48%,#5b2bd9 100%);box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 5px 0 #34148f,0 10px 18px rgba(0,0,0,.35);transition:transform .1s,box-shadow .1s}
+.jk svg.i{font-size:32px}
+.jk:active{transform:translateY(4px);box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 1px 0 #34148f}
+.jk.dis{background:linear-gradient(180deg,#8d8aa6,#5f5c78);box-shadow:inset 0 2px 0 rgba(255,255,255,.25),0 5px 0 #3a3850}
+.jk-price{position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);display:flex;align-items:center;gap:3px;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:1000;color:#fde68a;background:#150c42;border:1.5px solid rgba(196,181,253,.6);white-space:nowrap}
+.jk-price svg.i{font-size:13px}
+.jk-badge{position:absolute;top:-4px;right:-4px;min-width:22px;height:22px;padding:0 5px;border-radius:99px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:1000;color:#3b1d00;background:var(--gold);box-shadow:0 2px 0 #92400e}
+.jk-badge:empty{display:none}
+.app.on-review .jokers{display:none}
+.smenu #s-home{display:none}
+.app.on-game .smenu #s-home{display:flex}
+
+/* ===== KELİME BANKASI ===== */
+#bankbox .hcard{position:relative;max-width:360px;padding:18px 16px 18px;text-align:center}
+.bk-x{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;font-size:24px;line-height:1;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(180deg,#a78bfa,#7c4dff);box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 3px 0 #34148f}
+#bankbox h3{font-size:25px;font-weight:1000;letter-spacing:.05em;color:#ddd6fe;text-shadow:0 3px 0 rgba(0,0,0,.4);padding:0 34px}
+.bk-ic{margin:10px auto 12px;color:var(--gold);filter:drop-shadow(0 0 14px rgba(251,191,36,.5))}
+.bk-ic svg.i{font-size:78px;margin:0 auto}
+.bk-list{border-radius:16px;overflow:hidden;background:#eceaff;color:#1b1245;text-align:left;box-shadow:0 4px 0 rgba(0,0,0,.25)}
+.bk-head{padding:9px 10px;text-align:center;font-size:11px;font-weight:1000;letter-spacing:.04em;color:#fff;background:linear-gradient(180deg,#a78bfa,#7c4dff)}
+.bk-body{min-height:130px;max-height:190px;overflow-y:auto;padding:10px 12px;display:flex;flex-wrap:wrap;gap:6px 14px;align-content:flex-start;font-size:15px;font-weight:900;user-select:text}
+.bk-body em{font-style:normal;font-weight:700;font-size:13px;line-height:1.4;color:#5b5690}
+.bk-prog{position:relative;margin:16px 26px 0 0;height:30px;border-radius:99px;background:#0e0838;border:2px solid rgba(196,181,253,.6);display:flex;align-items:center;justify-content:center}
+.bk-prog i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:inherit;background:linear-gradient(90deg,#34d399,#4ade80);transition:width .5s}
+.bk-prog #bank-num{position:relative;font-weight:1000;font-size:15px}
+.bk-gift{position:absolute;right:-30px;top:-10px;font-size:32px;line-height:1}
+
+/* ===== ZAFER SAHNESİ ===== */
+#modal-victory{background:radial-gradient(90% 60% at 50% 38%,rgba(124,77,255,.5),rgba(6,3,24,.93))}
+.vorbs{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.vorb{position:absolute;bottom:-70px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0%,var(--c) 42%,rgba(255,255,255,0) 72%);box-shadow:0 0 22px var(--c),0 0 48px var(--c);opacity:0;animation:vorbUp var(--dur) ease-in var(--dl) infinite}
+@keyframes vorbUp{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:.95}85%{opacity:.85}100%{transform:translateY(-105vh) scale(1.15);opacity:0}}
+#modal-victory .vcard{background:none;border:0;box-shadow:none;padding:0;max-width:340px;display:flex;flex-direction:column;align-items:center;--neon:#fbbf24;--glow:rgba(251,191,36,.3)}
+#modal-victory .vtitle{font-size:40px;font-weight:1000;letter-spacing:.05em;color:#fde68a;text-shadow:0 4px 0 #b45309,0 10px 22px rgba(0,0,0,.5);margin-bottom:12px}
+#modal-victory .vstars{position:static;transform:none;justify-content:center;margin-bottom:14px}
+.v-ring{width:170px;margin:0 0 16px;pointer-events:none}
+.v-ring .md-in b{font-size:38px}
+#modal-victory .vstats{width:100%}
+#modal-victory .btn-main{width:100%}
+
 </style>
 </head>
 <body>
@@ -958,6 +1005,9 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   <symbol id="i-vib" viewBox="0 0 24 24"><path d="M9 4H7v16h2V4zm8 0h-2v16h2V4zM4 7H2v10h2V7zm18 0h-2v10h2V7zM12 2h-1v20h1V2z"/></symbol>
   <symbol id="i-img" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5-1-1h-5l-1 1H5v2h14V4z"/></symbol>
+  <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></symbol>
+  <symbol id="i-magnet" viewBox="0 0 24 24"><path d="M4 3h5v9a3 3 0 0 0 6 0V3h5v9a8 8 0 0 1-16 0V3zm0 2v3h3V5H4zm13 0v3h3V5h-3z"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></symbol>
 </svg>
 
 <div class="app on-home" id="app">
@@ -969,7 +1019,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
       <button class="icon-btn" id="btn-home" aria-label="Ana menü"><svg class="i"><use href="#i-home"/></svg></button>
       <div class="coin"><svg class="i coin-ic"><use href="#i-coin"/></svg><span id="coin-count">150</span></div>
     </div>
-    <div class="level-box"><small>MOD</small><b id="header-level-num">1</b></div>
+    <div class="level-box"><small>BÖLÜM</small><b id="header-level-num">1</b></div>
     <div class="grp r">
       <button class="icon-btn" id="btn-settings" aria-label="Ayarlar"><svg class="i"><use href="#i-gear"/></svg></button>
       <button class="icon-btn" id="btn-sound" aria-label="Ses"><svg class="i" id="sound-icon"><use href="#i-vol"/></svg></button>
@@ -1045,6 +1095,14 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
         <span class="txt" id="status-txt">Harfleri parmağınla sürükleyip kelimeyi bul!</span>
         <div class="prog"><i id="prog-fill"></i></div>
         <span id="found-progress">0 / 0</span>
+      </div>
+      <div class="jokers" id="jokers">
+        <div class="jk-grp">
+          <button class="jk" id="jk-shuffle" aria-label="Karıştır"><svg class="i"><use href="#i-shuffle"/></svg></button>
+          <button class="jk" id="jk-hint" aria-label="İpucu"><svg class="i"><use href="#i-bulb"/></svg><span class="jk-price">50<svg class="i"><use href="#i-coin"/></svg></span></button>
+          <button class="jk" id="jk-magnet" aria-label="Mıknatıs"><svg class="i"><use href="#i-magnet"/></svg><span class="jk-price">100<svg class="i"><use href="#i-coin"/></svg></span></button>
+        </div>
+        <button class="jk" id="jk-bank" aria-label="Kelime Bankası"><svg class="i"><use href="#i-book"/></svg><span class="jk-badge" id="bank-badge"></span></button>
       </div>
       <button class="btn-main review-next" id="btn-review-next">SONRAKİ MOD</button>
     </section>
@@ -1123,11 +1181,24 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
     <button class="srow c" id="s-help">YARDIM</button>
     <button class="srow c" id="s-report">SORUN BİLDİR</button>
     <button class="srow c" id="s-rate">★ BİZİ PUANLA</button>
+    <button class="srow c" id="s-home">ANA MENÜ</button>
     <button class="srow settings-action logout-row" id="s-logout" aria-label="Çıkış yap" title="Çıkış yap"><span>ÇIKIŞ YAP</span><span class="row-ic logout"><svg class="i"><use href="#i-logout"/></svg></span></button>
     <div class="s-grow"></div>
     <button class="s-del-link" id="s-delete" hidden>Hesabı Sil</button>
   </div>
   <div class="sback"></div>
+  <div class="help" id="bankbox">
+    <div class="hcard">
+      <button class="bk-x" id="bank-close" type="button" aria-label="Kapat">×</button>
+      <h3>KELİME BANKASI</h3>
+      <div class="bk-ic"><svg class="i"><use href="#i-book"/></svg></div>
+      <div class="bk-list">
+        <div class="bk-head">BU BÖLÜMDE BULUNAN EKSTRA KELİMELER</div>
+        <div class="bk-body" id="bank-words"></div>
+      </div>
+      <div class="bk-prog"><i id="bank-fill"></i><span id="bank-num">0/25</span><span class="bk-gift">🎁</span></div>
+    </div>
+  </div>
   <div class="help" id="help">
     <div class="hcard">
       <h3>NASIL OYNANIR?</h3>
@@ -1272,14 +1343,18 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 
   <!-- VICTORY -->
   <div class="modal" id="modal-victory">
+    <div class="vorbs" id="vorbs"></div>
     <div class="vcard" id="victory-card">
+      <h3 class="vtitle">TEBRİKLER!</h3>
       <div class="vstars">
         <svg class="i vstar" style="--i:0"><use href="#i-star"/></svg>
         <svg class="i vstar" style="--i:1"><use href="#i-star"/></svg>
         <svg class="i vstar" style="--i:2"><use href="#i-star"/></svg>
       </div>
-      <h3>MOD TAMAMLANDI!</h3>
-      <p>Tüm kelimeleri buldun, harikasın!</p>
+      <div class="md-ring v-ring">
+        <svg class="rg" viewBox="0 0 200 200"><circle class="md-track" cx="100" cy="100" r="88"/><circle class="md-prog" id="v-prog" cx="100" cy="100" r="88"/></svg>
+        <div class="md-in"><b id="v-count">0/0</b><small>TAMAMLANDI</small></div>
+      </div>
       <div class="vstats">
         <div><small>Kazanılan Altın</small><b class="g"><svg class="i"><use href="#i-coin"/></svg><span id="reward-coins">+25</span></b></div>
         <div class="sep"></div>
@@ -1598,6 +1673,7 @@ const fmt = s => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 
 
 let coinSyncBusy = false, coinSyncTimer = null;
 function updateCoins(){
+  try { refreshJokers(); } catch(e){}
   $('coin-count').textContent = S.coins;
   store.set('wow_search_coins', S.coins);
   updateStakeInfo();
@@ -1648,7 +1724,7 @@ function startLevel(index, def, seed){
   S.level = def ? buildLevel(def, seed) : buildLevel(LEVELS[index], index);
   const savedFound = (!def && !review && Array.isArray(S.partial[index])) ? S.partial[index] : [];
   S.found = new Set(savedFound.filter(w => S.level.words.includes(w)));
-  S.colorOf = {}; S.caps = []; S.sel = null; S.selecting = false; S.dragCap = null;
+  S.bank = []; S.colorOf = {}; S.caps = []; S.sel = null; S.selecting = false; S.dragCap = null;
   S.level.words.forEach((w, i) => S.colorOf[w] = PALETTE[i % PALETTE.length]);
   $('header-level-num').textContent = def ? def.size + '×' + def.size : S.level.id;
   $('category-title').textContent = S.level.category;
@@ -1984,6 +2060,101 @@ $('btn-hint').addEventListener('click', () => {
 });
 
 /* =====================================================
+   JOKERLER: KARIŞTIR / İPUCU / MIKNATIS / KELİME BANKASI
+   ===================================================== */
+const MAGNET_COST = 100;
+const BANK_WORD_REWARD = 5, BANK_GIFT = 5, BANK_GOAL = 25;     // şimdilik 5 / 5 / 25
+let bankTotal = parseInt(store.get('kb_bank_total') || '0', 10) || 0;
+S.bank = [];
+function refreshJokers(){
+  const a = $('jk-hint'), b = $('jk-magnet'); if (!a || !b) return;
+  a.classList.toggle('dis', S.coins < 50);
+  b.classList.toggle('dis', S.coins < MAGNET_COST);
+}
+$('jk-hint').addEventListener('click', () => $('btn-hint').click());
+
+function shuffleBoard(){
+  audio();
+  if (!S.playing) return;
+  if (R){ toast('Online modda kullanılamaz'); return; }
+  const L = S.level, n = L.size, left = L.words.filter(w => !S.found.has(w));
+  if (!left.length) return;
+  const def = LEVELS[S.levelIndex] || {};
+  const dirs = DIRS[def.dirs] || Object.values(DIRS)[0];
+  const fixed = Array.from({ length: n }, () => Array(n).fill(false));
+  S.found.forEach(w => { const pl = L.placements[w]; if (!pl) return; for (let i = 0; i < pl.len; i++) fixed[pl.r + pl.dr * i][pl.c + pl.dc * i] = true; });
+  const order = [...left].sort((a, b) => b.length - a.length);
+  for (let attempt = 0; attempt < 60; attempt++){
+    const g = L.grid.map((row, r) => row.map((ch, c) => fixed[r][c] ? ch : ''));
+    const pls = {}; let ok = true;
+    for (const w of order){
+      const A = [...w]; let placed = false;
+      for (let t = 0; t < 300 && !placed; t++){
+        const [dr, dc] = dirs[Math.floor(Math.random() * dirs.length)];
+        const r0 = Math.floor(Math.random() * n), c0 = Math.floor(Math.random() * n);
+        const r1 = r0 + dr * (A.length - 1), c1 = c0 + dc * (A.length - 1);
+        if (r1 < 0 || r1 >= n || c1 < 0 || c1 >= n) continue;
+        let fit = true;
+        for (let i = 0; i < A.length; i++){ const q = g[r0 + dr * i][c0 + dc * i]; if (q !== '' && q !== A[i]){ fit = false; break; } }
+        if (!fit) continue;
+        for (let i = 0; i < A.length; i++) g[r0 + dr * i][c0 + dc * i] = A[i];
+        pls[w] = { r: r0, c: c0, dr, dc, len: A.length }; placed = true;
+      }
+      if (!placed){ ok = false; break; }
+    }
+    if (!ok) continue;
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (g[r][c] === '') g[r][c] = FILLER[Math.floor(Math.random() * FILLER.length)];
+    L.grid = g; Object.assign(L.placements, pls);
+    S.cells.forEach((el, i) => {
+      const r = Math.floor(i / n), c = i % n; if (fixed[r][c]) return;
+      el.textContent = g[r][c]; el.classList.remove('hint');
+      el.style.setProperty('--d', ((r + c) * 25) + 'ms');
+      el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+    });
+    SND.hint(); toast('Kalan kelimeler yeniden yerleştirildi');
+    return;
+  }
+  toast('Karıştırılamadı, tekrar dene');
+}
+$('jk-shuffle').addEventListener('click', shuffleBoard);
+
+function useMagnet(){
+  audio();
+  if (!S.playing) return;
+  if (R){ toast('Online modda kullanılamaz'); return; }
+  const left = S.level.words.filter(w => !S.found.has(w));
+  if (!left.length) return;
+  if (S.coins < MAGNET_COST){ toast('Yeterli altının yok!'); SND.miss(); return; }
+  const w = left[Math.floor(Math.random() * left.length)], pl = S.level.placements[w];
+  S.coins -= MAGNET_COST; updateCoins(); SND.hint();
+  const path = Array.from({ length: pl.len }, (_, k) => ({ r: pl.r + pl.dr * k, c: pl.c + pl.dc * k }));
+  onFound(w, path);
+}
+$('jk-magnet').addEventListener('click', useMagnet);
+
+/* Kelime Bankası (şimdilik sadece arayüz; ekstra kelime tanıma sonra bağlanacak: addBankWord('KELİME') çağır) */
+function renderBank(){
+  const box = $('bank-words');
+  box.innerHTML = S.bank.length ? S.bank.map(w => '<span>' + w + '</span>').join('') : '<em>Listede olmayan kelimeleri bulursan burada birikir.</em>';
+  const c = bankTotal % BANK_GOAL;
+  $('bank-fill').style.width = (c / BANK_GOAL * 100) + '%';
+  $('bank-num').textContent = c + '/' + BANK_GOAL;
+  $('bank-badge').textContent = S.bank.length ? S.bank.length : '';
+}
+function addBankWord(word){
+  word = String(word || '').trim(); if (!word || S.bank.includes(word)) return false;
+  S.bank.push(word); bankTotal++; store.set('kb_bank_total', String(bankTotal));
+  S.coins += BANK_WORD_REWARD;
+  if (bankTotal % BANK_GOAL === 0){ S.coins += BANK_GIFT; toast('🎁 Hediye: +' + BANK_GIFT + ' altın!'); }
+  updateCoins(); renderBank(); return true;
+}
+$('jk-bank').addEventListener('click', () => { audio(); renderBank(); $('bankbox').classList.add('show'); });
+$('bank-close').addEventListener('click', () => $('bankbox').classList.remove('show'));
+$('bankbox').addEventListener('click', e => { if (e.target === $('bankbox')) $('bankbox').classList.remove('show'); });
+$('s-home').addEventListener('click', () => { closeMenu(); $('btn-home').click(); });
+refreshJokers();
+
+/* =====================================================
    ZAMANLAYICI + ZAFER
    ===================================================== */
 function startTimer(){
@@ -2017,6 +2188,21 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
+function vicScene(idx){
+  const total = LEVELS.length; let done = 0; LEVELS.forEach((_, i) => { if (S.done[i]) done++; });
+  $('v-count').textContent = done + '/' + total;
+  const C = 2 * Math.PI * 88, pr = $('v-prog');
+  pr.style.transition = 'none'; pr.style.strokeDasharray = '0 ' + C; void pr.getBoundingClientRect(); pr.style.transition = '';
+  setTimeout(() => { pr.style.strokeDasharray = (total ? done / total * C : 0) + ' ' + C; }, 450);
+  $('btn-next-level').textContent = idx + 1 < total ? 'BÖLÜM ' + (idx + 2) : 'MODLAR';
+  const box = $('vorbs'); box.innerHTML = '';
+  const cols = ['#f472b6', '#fde047', '#67e8f9', '#4ade80', '#c084fc', '#fb923c'];
+  for (let i = 0; i < 12; i++){
+    const o = document.createElement('span'), sz = 22 + Math.random() * 28; o.className = 'vorb';
+    o.style.cssText = 'left:' + (Math.random() * 90) + '%;width:' + sz + 'px;height:' + sz + 'px;--c:' + cols[i % cols.length] + ';--dur:' + (5 + Math.random() * 4) + 's;--dl:' + (Math.random() * 3) + 's';
+    box.appendChild(o);
+  }
+}
 function victory(){
   if (R){ raceFinish(); return; }
   S.playing = false; stopTimer(); SND.win(); buzz([40, 60, 40, 60, 120]);
@@ -2036,12 +2222,14 @@ function victory(){
   saveProgress(); syncLevelPoints();
   document.querySelectorAll('.vstar').forEach((s, i) => s.classList.toggle('on', i < stars));
   $('reward-time').textContent = fmt(elapsed);
+  vicScene(idx);
   $('reward-coins').textContent = '+' + reward;
   modal.classList.add('show');
   const w = fxW, h = fxH;
   confetti(w * .08, h * .85, 70, -Math.PI * .45, -Math.PI * .1);
   confetti(w * .92, h * .85, 70, -Math.PI * .9, -Math.PI * .55);
   setTimeout(() => confetti(w * .5, h * .3, 60, -Math.PI, 0, .7), 350);
+  setTimeout(() => { confetti(w * .2, h * .15, 40, 0, Math.PI, .5); confetti(w * .8, h * .15, 40, 0, Math.PI, .5); }, 900);
 }
 $('btn-next-level').addEventListener('click', () => {
   modal.classList.remove('show');
@@ -2148,6 +2336,7 @@ function setView(name){
   viewLogin.classList.toggle('off', name !== 'login');
   viewLogin.classList.remove('enter'); if (name === 'login'){ void viewLogin.offsetWidth; viewLogin.classList.add('enter'); }
   app.classList.toggle('on-login', name === 'login');
+  app.classList.toggle('on-game', name === 'game');
   closeMenu();
 }
 function leaveGame(){ raceStop(); S.playing = false; S.token++; stopTimer(); cancelIntro(); modal.classList.remove('show'); }
