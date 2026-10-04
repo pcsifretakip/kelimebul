@@ -978,22 +978,25 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 /* ===== YOLCULUK ===== */
 .jr{display:flex;flex-direction:column;overflow:hidden}
 .jr-list{flex:1;overflow-y:auto;padding:6px 14px calc(24px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
-.jr-row{flex:none;border-radius:22px;border:2px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;transition:transform .15s}
-.jr-row:active{transform:scale(.98)}
+.jr-grp{flex:none;border-radius:22px;border:2px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff}
+.jr-grp.on{border-color:var(--c);background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.04))}
+.jr-grp.lock{opacity:.55}
+.jr-grp.sel{background:var(--c);border-color:rgba(255,255,255,.55);box-shadow:0 0 22px color-mix(in srgb,var(--c) 55%,transparent);padding-bottom:8px}
 .jr-top{display:flex;align-items:center;gap:10px;padding:12px 14px;min-height:54px}
-.jr-ic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none;font-size:14px;background:rgba(255,255,255,.12)}
+.jr-ic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none;font-size:14px;background:rgba(255,255,255,.14)}
 .jr-ic svg{width:18px;height:18px}
-.jr-name{flex:1;text-align:center;font-weight:900;font-size:16px;letter-spacing:.02em;padding-right:30px;line-height:1.15}
-.jr-row.lock{opacity:.55}
-.jr-row.open,.jr-row.done{background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.04));border-color:var(--c)}
-.jr-row.done .jr-ic{background:#f5b301;color:#4a2f00}
-.jr-row.cur{background:var(--c);border-color:rgba(255,255,255,.55);box-shadow:0 0 22px color-mix(in srgb,var(--c) 55%,transparent)}
-.jr-row.cur .jr-ic{background:rgba(255,255,255,.35)}
-.jr-body{margin:0 8px 8px;padding:12px 12px 12px 16px;border-radius:16px;background:#f1ede6;color:#1c1530;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.jr-sub{display:block;font-size:15px;font-weight:900;line-height:1.2;margin-bottom:6px}
-.jr-pill{display:inline-block;padding:3px 12px;border-radius:999px;background:#ddd8cf;font-weight:900;font-size:13px}
-.jr-play{flex:none;width:52px;height:52px;border-radius:50%;border:0;background:#22c55e;color:#fff;font-size:22px;box-shadow:0 4px 0 #15803d}
-.jr-play svg{display:none}
+.jr-grp.done .jr-ic{background:#f5b301;color:#4a2f00}
+.jr-name{flex:1;text-align:center;font-weight:900;font-size:16px;line-height:1.15;text-transform:uppercase}
+.jr-tri{width:30px;text-align:center;font-size:20px;flex:none}
+.jr-lv{margin:0 8px 6px;padding:10px 12px 10px 16px;border-radius:16px;background:#f1ede6;color:#1c1530;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:56px}
+.jr-lv.lk{background:rgba(255,255,255,.22);color:#fff}
+.jr-lv.cur{box-shadow:0 0 0 3px #22c55e}
+.jr-ln{font-size:15px;font-weight:900}
+.jr-rt{display:flex;align-items:center;gap:8px}
+.jr-rt .i{width:20px;height:20px}
+.jr-rt .st{color:#c9c3b8}.jr-rt .st.on{color:#f5b301}
+.jr-pill{padding:3px 12px;border-radius:999px;background:#ddd8cf;font-weight:900;font-size:13px}
+.jr-play{width:42px;height:42px;border-radius:50%;background:#22c55e;color:#fff;display:grid;place-items:center;font-size:18px;box-shadow:0 3px 0 #15803d}
 .jr-foot{text-align:center;color:#fff;font-weight:900;font-size:17px;line-height:1.3;margin:12px 6px 0}
 </style>
 </head>
@@ -1392,47 +1395,29 @@ const DIRS = {
   medium: [[0,1],[1,0],[1,1],[0,-1],[-1,0]],
   hard:   [[0,1],[1,0],[1,1],[0,-1],[-1,0],[-1,-1],[1,-1],[-1,1]]
 };
-const CLASSIC_LEVELS = [
-  { category:'İLKBAHAR', size:4, dirs:'easy', mode:'classic', subtitle:'Doğanın renkli kelimelerini bul.', words:['gül','kuş','arı'] },
-  { category:'OKUL', size:5, dirs:'easy', mode:'classic', subtitle:'Okul ve eğitim kelimelerini bul.', words:['kalem','kitap','sıra','ders'] },
-  { category:'YAZ TATİLİ', size:5, dirs:'easy', mode:'classic', subtitle:'Yaz tatilinden kelimeler.', words:['deniz','kum','güneş','plaj','tatil'] },
-  { category:'HAYVANLAR', size:6, dirs:'medium', mode:'classic', subtitle:'Hayvanları keşfet.', words:['aslan','kaplan','tavşan','fil','kedi'] },
-  { category:'MEYVELER', size:6, dirs:'medium', mode:'classic', subtitle:'Lezzetli meyveleri bul.', words:['elma','armut','kiraz','çilek','kavun','muz'] },
-  { category:'MUTFAK EŞYALARI', size:7, dirs:'medium', mode:'classic', subtitle:'Mutfaktaki eşyaları bul.', words:['tabak','bardak','çatal','kaşık','bıçak','tencere','tepsi'] },
-  { category:'UZAY', size:7, dirs:'hard', mode:'classic', subtitle:'Uzayın gizemli kelimeleri.', words:['gezegen','yıldız','roket','uydu','dünya','mars','güneş'] },
-  { category:'ŞEHİRLER', size:8, dirs:'hard', mode:'classic', subtitle:'Şehir isimlerini bul.', words:['istanbul','ankara','izmir','bursa','antalya','adana','samsun','sakarya'] },
-  { category:'SPOR', size:9, dirs:'hard', mode:'classic', subtitle:'Spor dünyasından kelimeler.', words:['futbol','basketbol','tenis','yüzme','voleybol','güreş','golf','koşu','okçuluk'] },
-  { category:'MESLEKLER', size:10, dirs:'hard', mode:'classic', subtitle:'Meslekleri keşfet.', words:['doktor','öğretmen','mühendis','avukat','pilot','aşçı','şoför','polis','itfaiyeci','hemşire'] },
-  { category:'EL ALETLERİ', size:7, dirs:'medium', mode:'classic', subtitle:'Atölyenin vazgeçilmezleri.', words:['çekiç','pense','törpü','keser','testere','civata'] },
-  { category:'SANAYİ MALZEMELERİ', size:7, dirs:'medium', mode:'classic', subtitle:'Fabrikadan parçalar.', words:['vida','somun','rulman','kaynak','boru','kablo','conta'] },
-  { category:'HASTANE ALETLERİ', size:8, dirs:'hard', mode:'classic', subtitle:'Hastanede kullanılanlar.', words:['serum','şırınga','maske','eldiven','pamuk','tansiyon','sedye'] },
-  { category:'AMELİYAT MALZEMELERİ', size:7, dirs:'medium', mode:'classic', subtitle:'Ameliyathane malzemeleri.', words:['bistüri','penset','makas','dikiş','önlük','klemp'] },
-  { category:'DÜNYA ŞEHİRLERİ', size:7, dirs:'medium', mode:'classic', subtitle:'Dünyanın ünlü şehirleri.', words:['paris','roma','tokyo','londra','berlin','madrid','moskova'] },
-  { category:'ÜNLÜ FUTBOLCULAR', size:7, dirs:'medium', mode:'classic', subtitle:'Sahanın yıldızları.', words:['messi','arda','hakan','burak','icardi','ronaldo','neymar'] },
-  { category:'ÇİÇEK TÜRLERİ', size:8, dirs:'hard', mode:'classic', subtitle:'Rengarenk çiçekler.', words:['lale','papatya','zambak','orkide','sümbül','karanfil','menekşe'] },
-  { category:'OTOMOBİL MARKALARI', size:7, dirs:'medium', mode:'classic', subtitle:'Yollardaki markalar.', words:['fiat','ford','honda','toyota','renault','audi','tesla'] },
-  { category:'TÜRKİYE İLLERİ', size:7, dirs:'medium', mode:'classic', subtitle:'Memleketten iller.', words:['rize','konya','mersin','edirne','sivas','hatay'] },
-  { category:'TARİHİ ŞAHSİYETLER', size:7, dirs:'medium', mode:'classic', subtitle:'Tarihe damga vuranlar.', words:['atatürk','fatih','kanuni','yavuz','osman','orhan','selim'] },
-  { category:'MEYVE VE SEBZELER', size:7, dirs:'medium', mode:'classic', subtitle:'Manavdan lezzetler.', words:['elma','havuç','domates','biber','patates','soğan','kabak'] },
-  { category:'BİLİM KURGU FİLMLERİ', size:7, dirs:'medium', mode:'classic', subtitle:'Gelecekten filmler.', words:['matrix','avatar','alien','gravity','tenet','arrival','dune'] },
-  { category:'KÖPEK IRKLARI', size:7, dirs:'medium', mode:'classic', subtitle:'Sadık dostlar.', words:['boxer','husky','golden','poodle','beagle','kangal','akita'] },
-  { category:'MÜZİK ENSTRÜMANLARI', size:7, dirs:'medium', mode:'classic', subtitle:'Seslerin kaynağı.', words:['gitar','piyano','keman','flüt','davul','bağlama','kanun'] },
-  { category:'SÜPER KAHRAMANLAR', size:8, dirs:'hard', mode:'classic', subtitle:'Dünyayı kurtaranlar.', words:['batman','superman','thor','hulk','flash','aquaman','ironman'] },
-  { category:'YÖRESEL YEMEKLER', size:8, dirs:'hard', mode:'classic', subtitle:'Türk mutfağından.', words:['baklava','lahmacun','kebap','mantı','pide','çiğköfte','künefe'] },
-  { category:'BAŞKENTLER', size:7, dirs:'medium', mode:'classic', subtitle:'Ülkelerin başkentleri.', words:['ankara','berlin','madrid','atina','lizbon','viyana','varşova'] },
-  { category:'AKSİYON OYUNLARI', size:8, dirs:'hard', mode:'classic', subtitle:'Oyun dünyasından.', words:['doom','halo','tekken','fortnite','valorant','pubg'] },
-  { category:'ÜLKELER VE BAYRAKLAR', size:8, dirs:'hard', mode:'classic', subtitle:'Bayrakların ülkeleri.', words:['türkiye','japonya','fransa','brezilya','almanya','kanada','mısır'] },
-  { category:'TATLI ÇEŞİTLERİ', size:8, dirs:'hard', mode:'classic', subtitle:'Şerbetli ve sütlü.', words:['sütlaç','revani','lokum','helva','tulumba','aşure','dondurma'] },
-  { category:'EVCİL HAYVANLAR', size:8, dirs:'hard', mode:'classic', subtitle:'Evin neşesi.', words:['kedi','köpek','hamster','papağan','balık','tavşan','muhabbet'] },
-  { category:'ŞARKICILAR VE MÜZİK GRUPLARI', size:7, dirs:'medium', mode:'classic', subtitle:'Müziğin yıldızları.', words:['tarkan','sezen','ajda','queen','abba','nirvana','duman'] },
-  { category:'DİZİ VE FİLM PLATFORMLARI', size:7, dirs:'medium', mode:'classic', subtitle:'İzleme platformları.', words:['netflix','disney','blutv','gain','exxen','prime','tabii'] },
-  { category:'ROMAN VE KİTAP TÜRLERİ', size:7, dirs:'medium', mode:'classic', subtitle:'Edebiyat türleri.', words:['roman','şiir','öykü','masal','fabl','tiyatro','destan'] },
-  { category:'PROGRAMLAMA DİLLERİ', size:7, dirs:'medium', mode:'classic', subtitle:'Kodlama dünyası.', words:['python','java','swift','kotlin','ruby','rust','dart'] },
-  { category:'MOBİL UYGULAMALAR', size:8, dirs:'hard', mode:'classic', subtitle:'Telefondaki uygulamalar.', words:['whatsapp','tiktok','spotify','twitter','youtube','telegram','snapchat'] },
-  { category:'SPOR DALLARI', size:8, dirs:'hard', mode:'classic', subtitle:'Spor branşları.', words:['judo','boks','eskrim','yüzme','kayak','okçuluk','halter'] },
-  { category:'BASKETBOL TAKIMLARI', size:7, dirs:'medium', mode:'classic', subtitle:'Parkenin devleri.', words:['lakers','bulls','celtics','heat','spurs','nets','knicks'] },
-  { category:'KRİPTO PARALAR', size:8, dirs:'hard', mode:'classic', subtitle:'Dijital paralar.', words:['bitcoin','ethereum','solana','ripple','dogecoin','tether','cardano'] }
+const GROUPS = [
+  ['Amazon Yağmur Ormanları','#16a34a',[['HAYVANLAR',8,'jaguar piranha anakonda tukan maymun kurbağa'],['BİTKİLER',7,'liana orkide kauçuk kakao palmiye eğrelti'],['AMAZON NEHRİ',7,'nehir tekne yağmur balık kano kıyı']]],
+  ['Sahra Çölü','#f59e0b',[['HAYVANLAR',7,'deve akrep yılan kartal tilki çakal'],['ÇÖL DOĞASI',7,'kumul vaha güneş sıcak fırtına kayalık'],['YOLCULAR',7,'kervan tuareg çadır hurma rehber harita']]],
+  ['Himalaya Dağları','#60a5fa',[['ZİRVELER',7,'everest lhotse makalu zirve buzul kar'],['HAYVANLAR',7,'yeti kaplan geyik kartal maral tilki'],['KÜLTÜR',7,'şerpa tapınak budist nepal tibet bhutan']]],
+  ['Pasifik Okyanusu Derinlikleri','#0ea5e9',[['CANLILAR',8,'balina ahtapot yengeç kalamar vatoz yunus'],['DERİNLİK',8,'hendek derin karanlık basınç dalgıç sonar'],['ADALAR',7,'mercan atol lagün dalga fırtına yelken']]],
+  ['İskandinav Fiyortları','#14b8a6',[['ÜLKELER',8,'norveç isveç estonya izlanda oslo bergen'],['DOĞA',7,'fiyort buzul şelale kuzey orman göl'],['HAYVANLAR',7,'geyik fok kurt somon martı vaşak']]],
+  ['Kapadokya Volkanik Vadileri','#fb923c',[['YERLER',8,'göreme uçhisar ürgüp avanos ihlara nevşehir'],['VOLKANİK DOĞA',7,'vadi volkan kaya erciyes kızıl lav'],['KÜLTÜR',7,'balon mağara testi kilise seramik çömlek']]],
+  ['Büyük Set Resifi','#06b6d4',[['CANLILAR',8,'mercan vatoz yengeç denizatı yosun anemon'],['KEŞİF',7,'dalış maske şnorkel tüplü tekne kamera'],['AVUSTRALYA',7,'sidney kanguru koala perth darwin kıta']]],
+  ['Antarktika Buz Sahanlığı','#93c5fd',[['HAYVANLAR',8,'penguen fok balina kril martı albatros'],['BUZ',7,'buzul buzdağı kutup soğuk tipi don'],['KAŞİFLER',8,'amundsen scott kızak istasyon bayrak harita']]],
+  ['Tayga Ormanları','#15803d',[['AĞAÇLAR',7,'ladin köknar sedir melez kayın çam'],['HAYVANLAR',7,'kurt geyik vaşak samur sincap kunduz'],['SİBİRYA',7,'sibirya rusya kızak soğuk nehir kış']]],
+  ['Hawaii Yanardağları','#ef4444',[['VOLKANLAR',7,'volkan krater magma mauna kilauea lav'],['ADALAR',8,'honolulu maui oahu kauai plaj sörf'],['KÜLTÜR',7,'hula çelenk ukulele ananas kokos dans']]],
+  ['Galápagos Adaları','#84cc16',[['HAYVANLAR',8,'iguana penguen martı fok ispinoz pelikan'],['DARWIN',7,'darwin evrim beagle gemi keşif kitap'],['ADALAR',7,'ekvator volkan kıyı plaj lav deniz']]],
+  ['Atacama Çölü','#d97706',[['ÇÖL DOĞASI',7,'kurak vadi volkan kum tuz gökyüzü'],['HAYVANLAR',8,'lama alpaka flamingo kondor tilki kuş'],['GÖZLEM',8,'teleskop yıldız gece uzay kozmos galaksi']]],
+  ['Büyük Kanyon','#ea580c',[['DOĞA',7,'kanyon kaya nehir uçurum vadi tabaka'],['HAYVANLAR',7,'kondor geyik puma kartal akrep çakal'],['MACERA',8,'yürüyüş kamp rafting harita çadır patika']]],
+  ['Nil Nehri Deltası','#22c55e',[['MISIR',7,'piramit firavun sfenks mumya kahire aswan'],['HAYVANLAR',8,'timsah begemot flamingo leylek pelikan kurbağa'],['DELTA',7,'delta nehir sazlık çamur tarım papirüs']]],
+  ['Waitomo Ateş Böceği Mağaraları','#6366f1',[['MAĞARA',7,'mağara sarkıt dikit yeraltı nehir damla'],['IŞIK',7,'böcek ışık parıltı mavi gece ipek'],['YENİ ZELANDA',8,'kivi maori auckland koyun haka okyanus']]],
+  ['Yellowstone Jeotermal Alanı','#f97316',[['GAYZERLER',7,'gayzer buhar sıcak kükürt çamur havuz'],['HAYVANLAR',7,'bizon kurt geyik kartal puma kunduz'],['PARK',7,'amerika milli orman göl kamp rehber']]],
+  ['Madagascar Baobab Ormanları','#a16207',[['BAOBAB',7,'baobab gövde yaprak meyve orman kök'],['HAYVANLAR',7,'lemur fosa gekko kurbağa yılan örümcek'],['ADA',7,'afrika hint vanilya baharat kıyı yağmur']]],
+  ['Baykal Gölü','#3b82f6',[['GÖL',7,'baykal derin tatlı berrak buz kıyı'],['HAYVANLAR',7,'nerpa omul balık kartal kurt ayı'],['KIŞ',7,'buz don kızak tipi kar soğuk']]],
+  ['Sokotra Adası','#a855f7',[['BİTKİLER',7,'aloe tütsü incir çiçek reçine ağaç'],['ADA',7,'yemen hint kıyı plaj kum kayalık'],['YAŞAM',7,'endemik nadir kuş böcek yılan gece']]],
+  ['Iguazú Şelaleleri','#06b6d4',[['ŞELALE',7,'şelale iguazu nehir köpük uçurum sis'],['HAYVANLAR',7,'jaguar tukan kelebek kayman maymun koati'],['ÜLKELER',8,'brezilya arjantin paraguay sınır köprü patika']]]
 ];
+const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map(l => ({ category:l[0], group:gi, size:l[1], dirs:l[1] >= 8 ? 'hard' : 'medium', mode:'classic', subtitle:g[0].toLocaleUpperCase('tr-TR'), words:l[2].split(' ') })));
 const LEVELS = CLASSIC_LEVELS;
 const MODES = [
   { key:'classic', category:'KLASİK SERBEST', icon:'sprout', color:'#22c55e', subtitle:'Rahatça oyna. Bölümleri seç ve normal kelime bulma modunda ilerle.', available:true }
@@ -1534,7 +1519,7 @@ const THEME = {
   'NOKTASIZ HARFLER (ÖZEL MOD)': { icon:'pencil',    color:'#06b6d4' },
   'NOSTALJİ & DEYİMLER': { icon:'flower', color:'#f59e0b' }
 };
-const themeOf = d => THEME[d.category] || { icon:'sprout', color:'#a78bfa' };
+const themeOf = d => (d.group != null && GROUPS[d.group]) ? { icon:'sprout', color:GROUPS[d.group][1] } : THEME[d.category] || { icon:'sprout', color:'#a78bfa' };
 const iconSVG = name => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="overflow:visible">' + (ICONS[name] || '') + '</svg>';
 function hexA(hex, a){ const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')'; }
 
@@ -1564,26 +1549,26 @@ const S = {
   const c = parseInt(store.get('wow_search_coins'), 10);
   if (!isNaN(c)) S.coins = c;
   const last = LEVELS.length - 1;
-  const l = parseInt(store.get('cidahl_classic_level'), 10);
-  const m = parseInt(store.get('cidahl_classic_max'), 10);
+  const l = parseInt(store.get('cidahl_doga_level'), 10);
+  const m = parseInt(store.get('cidahl_doga_max'), 10);
   S.maxOpen = Math.min(last, Math.max(isNaN(l) ? 0 : l, isNaN(m) ? 0 : m));
   S.levelIndex = S.maxOpen;
-  try { S.done = JSON.parse(store.get('cidahl_classic_done') || '{}') || {}; } catch(e) { S.done = {}; }
-  try { S.partial = JSON.parse(store.get('cidahl_classic_partial') || '{}') || {}; } catch(e) { S.partial = {}; }
+  try { S.done = JSON.parse(store.get('cidahl_doga_done') || '{}') || {}; } catch(e) { S.done = {}; }
+  try { S.partial = JSON.parse(store.get('cidahl_doga_partial') || '{}') || {}; } catch(e) { S.partial = {}; }
   // Açılmış bölümler tamamlanmış sayılmaz; yıldız yalnızca bölüm gerçekten bitirilince verilir.
   // Böylece yeni/ilk kullanıcıya otomatik 1 yıldız yazılmaz.
 }
 function saveProgress(){
-  store.set('cidahl_classic_max', S.maxOpen);
-  store.set('cidahl_classic_level', S.maxOpen);
-  store.set('cidahl_classic_done', JSON.stringify(S.done));
-  store.set('cidahl_classic_partial', JSON.stringify(S.partial));
+  store.set('cidahl_doga_max', S.maxOpen);
+  store.set('cidahl_doga_level', S.maxOpen);
+  store.set('cidahl_doga_done', JSON.stringify(S.done));
+  store.set('cidahl_doga_partial', JSON.stringify(S.partial));
 }
 function savePartialProgress(){
   if (!S.level || S.levelIndex == null) return;
   if (S.found.size) S.partial[S.levelIndex] = Array.from(S.found);
   else delete S.partial[S.levelIndex];
-  store.set('cidahl_classic_partial', JSON.stringify(S.partial));
+  store.set('cidahl_doga_partial', JSON.stringify(S.partial));
 }
 
 /* =====================================================
@@ -2273,29 +2258,46 @@ $('btn-next-level').addEventListener('click', () => {
 /* =====================================================
    BÖLÜM SEÇİM EKRANI
    ===================================================== */
+let jrOpen = -1;
 function renderModes(){
-  const list = $('jr-list'); list.innerHTML = '';
   let cur = LEVELS.findIndex((_, i) => !S.done[i] && i <= S.maxOpen); if (cur < 0) cur = LEVELS.length - 1;
-  let done = 0, curEl = null, hasLock = false;
-  LEVELS.forEach((d, i) => {
-    const th = THEME[d.category] || {}, col = th.color || PALETTE[i % PALETTE.length];
-    const dn = S.done[i], unlocked = i <= S.maxOpen, isCur = i === cur && unlocked && !dn;
-    if (dn) done++; if (!unlocked) hasLock = true;
-    const row = document.createElement('div');
-    row.className = 'jr-row ' + (isCur ? 'cur' : dn ? 'done' : unlocked ? 'open' : 'lock');
-    row.style.setProperty('--c', col);
-    const found = (S.partial[i] || []).length;
-    const ic = dn ? '<svg class="i"><use href="#i-star"/></svg>' : unlocked ? '<b>' + (i + 1) + '</b>' : iconSVG('lock');
-    row.innerHTML = '<div class="jr-top"><span class="jr-ic">' + ic + '</span><span class="jr-name"></span></div>' +
-      (isCur ? '<div class="jr-body"><div><b class="jr-sub"></b><span class="jr-pill">' + found + '/' + d.words.length + '</span></div><button class="jr-play" aria-label="Oyna"><svg class="i"><use href="#i-play"/></svg>▶</button></div>' : '');
-    row.querySelector('.jr-name').textContent = d.category;
-    if (isCur){ row.querySelector('.jr-sub').textContent = d.subtitle || ''; curEl = row; }
-    if (unlocked) row.addEventListener('click', () => { audio(); showGame(i); });
-    list.appendChild(row);
+  jrOpen = LEVELS[cur].group; drawJourney(true);
+}
+function drawJourney(scroll){
+  const list = $('jr-list'), keep = list.scrollTop; list.innerHTML = '';
+  let cur = LEVELS.findIndex((_, i) => !S.done[i] && i <= S.maxOpen); if (cur < 0) cur = LEVELS.length - 1;
+  let doneAll = 0, hasLock = false, selEl = null;
+  GROUPS.forEach((g, gi) => {
+    const idx = []; LEVELS.forEach((d, i) => { if (d.group === gi) idx.push(i); });
+    const dn = idx.filter(i => S.done[i]).length, unlocked = idx[0] <= S.maxOpen, all = dn === idx.length;
+    doneAll += dn; if (!unlocked) hasLock = true;
+    const open = unlocked && gi === jrOpen;
+    const el = document.createElement('div');
+    el.className = 'jr-grp ' + (unlocked ? 'on' : 'lock') + (open ? ' sel' : '') + (all ? ' done' : '');
+    el.style.setProperty('--c', g[1]);
+    const ic = all ? '<svg class="i"><use href="#i-star"/></svg>' : unlocked ? '<b>' + (gi + 1) + '</b>' : iconSVG('lock');
+    el.innerHTML = '<div class="jr-top"><span class="jr-ic">' + ic + '</span><span class="jr-name"></span>' + (unlocked ? '<span class="jr-tri">' + (open ? '▴' : '▾') + '</span>' : '') + '</div>';
+    el.querySelector('.jr-name').textContent = g[0];
+    if (unlocked) el.querySelector('.jr-top').addEventListener('click', () => { audio(); jrOpen = open ? -1 : gi; drawJourney(); });
+    if (open){
+      selEl = el;
+      idx.forEach(i => {
+        const d = LEVELS[i], done = S.done[i], ok = i <= S.maxOpen, isCur = i === cur;
+        const r = document.createElement('div');
+        r.className = 'jr-lv ' + (done ? 'done' : isCur ? 'cur' : ok ? 'ok' : 'lk');
+        const found = (S.partial[i] || []).length;
+        const right = done ? [1, 2, 3].map(n => '<svg class="i st' + (n <= done.stars ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') : ok ? '<span class="jr-pill">' + found + '/' + d.words.length + '</span><span class="jr-play">▶</span>' : iconSVG('lock');
+        r.innerHTML = '<b class="jr-ln"></b><span class="jr-rt">' + right + '</span>';
+        r.querySelector('.jr-ln').textContent = d.category;
+        if (ok) r.addEventListener('click', () => { audio(); showGame(i); });
+        el.appendChild(r);
+      });
+    }
+    list.appendChild(el);
   });
   if (hasLock){ const f = document.createElement('p'); f.className = 'jr-foot'; f.textContent = 'DAHA FAZLASINI AÇMAK İÇİN BÖLÜMLERİ TAMAMLA'; list.appendChild(f); }
-  $('jr-count').textContent = done + ' / ' + LEVELS.length;
-  if (curEl) requestAnimationFrame(() => { list.scrollTop = Math.max(0, curEl.offsetTop - 90); });
+  $('jr-count').textContent = doneAll + ' / ' + LEVELS.length;
+  if (scroll && selEl) requestAnimationFrame(() => { list.scrollTop = Math.max(0, selEl.offsetTop - 80); }); else list.scrollTop = keep;
 }
 $('jr-back').addEventListener('click', () => { audio(); showHome(); });
 
