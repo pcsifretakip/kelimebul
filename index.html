@@ -2607,11 +2607,13 @@ function raceStop(){
 /* ----- RASTGELE EŞLEŞME + BOT ----- */
 const BOT_NAMES = ['Elif','Mert','Zeynep','Can','Deniz','Ece','Burak','Selin','Kaan','Defne','Emre','Ayşe'];
 const MM_WAIT = 10000;                                   // sistemde kimse yoksa bu kadar bekle, sonra bot
-let mmBusy = false, mmUn = null, mmTimer = null, mmRef = null, mmCount = null, mmEnd = 0;
+let mmBusy = false, mmUn = null, mmQ = null, mmTrying = false, mmTimer = null, mmRef = null, mmCount = null, mmEnd = 0;
 function mmUI(on){ $('ol-play').hidden = on; $('ol-stop').hidden = !on; $('ol-duel-list').hidden = on ? true : $('ol-duel-list').hidden; olErr.classList.toggle('ol-search', on); }
 function mmCancel(){
   clearTimeout(mmTimer); mmTimer = null; clearInterval(mmCount); mmCount = null;
   if (mmUn){ try { mmUn(); } catch(e){} mmUn = null; }
+  if (mmQ){ try { mmQ(); } catch(e){} mmQ = null; }
+  mmTrying = false;
   if (mmRef){ const r = mmRef; mmRef = null; getDb().then(db => db.runTransaction(async tx => { const d = await tx.get(r); if (d.exists && d.data().status === 'waiting') tx.update(r, { status:'cancelled' }); })).catch(() => {}); }
   mmBusy = false; mmUI(false);
 }
@@ -2636,7 +2638,7 @@ async function findMatch(){
     const snap = await db.collection('invites').where('status', '==', 'waiting').where('size', '==', size).get();
     if (!mmBusy) return;
     const now = Date.now(), cands = [];
-    snap.forEach(d => { const v = d.data(), t = v.created ? v.created.toMillis() : now; if (v.from !== USER.id && Number(v.stake || 50) === stake && !blocked.has(v.from) && now - t < MM_WAIT + 5000) cands.push(d); });
+    snap.forEach(d => { const v = d.data(), t = v.created ? v.created.toMillis() : now; if (v.from !== USER.id && Number(v.stake || 50) === stake && !blocked.has(v.from) && now - t < MM_WAIT + 15000) cands.push(d); });
     for (let i = cands.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [cands[i], cands[j]] = [cands[j], cands[i]]; }
     for (const d of cands){
       let v = null;
@@ -2650,13 +2652,41 @@ async function findMatch(){
     if (!mmBusy){ ref.update({ status:'cancelled' }).catch(() => {}); return; }
     mmRef = ref;
     mmUn = ref.onSnapshot(d => { const v = d.data(); if (v && v.status === 'accepted' && mmBusy){ mmRef = null; beginRace(ref, v, v.toName || 'Rakip', v.to, true); } });
-    mmTimer = setTimeout(async () => {
+    // iki oyuncu aynı anda ararsa birbirinin ilanını göremez; bu yüzden ilan açtıktan sonra da bekleyenleri dinle.
+    // Çift kabulü önlemek için sadece ilan kimliği küçük olan taraf diğerini kabul eder.
+    mmQ = db.collection('invites').where('status', '==', 'waiting').where('size', '==', size).onSnapshot(qs => {
+      if (!mmBusy || !mmRef || mmTrying) return;
+      const now2 = Date.now();
+      for (const d of qs.docs){
+        if (d.id === ref.id) continue;
+        const v = d.data(), t = v.created ? v.created.toMillis() : now2;
+        if (v.from === USER.id || Number(v.stake || 50) !== stake || blocked.has(v.from) || now2 - t > MM_WAIT + 15000) continue;
+        if (ref.id > d.id) continue;                       // büyük kimlikli taraf kabul edilmeyi bekler
+        mmTrying = true;
+        let got = null;
+        db.runTransaction(async tx => {
+          const mine = await tx.get(ref), theirs = await tx.get(d.ref);
+          if (!mine.exists || mine.data().status !== 'waiting') throw new Error('mine');
+          if (!theirs.exists || theirs.data().status !== 'waiting') throw new Error('gone');
+          got = theirs.data();
+          tx.update(d.ref, { status:'accepted', to: USER.id, toName: USER.name });
+          tx.update(ref, { status:'cancelled' });
+        }).then(() => {
+          if (!mmBusy) return;
+          mmRef = null; beginRace(d.ref, got, got.fromName, got.from, true);
+        }).catch(() => { mmTrying = false; });
+        break;
+      }
+    }, () => {});
+    const giveUp = async () => {
+      if (mmTrying){ mmTimer = setTimeout(giveUp, 1500); return; }
       try {
         let gone = false;
         await db.runTransaction(async tx => { const x = await tx.get(ref); if (x.data().status === 'waiting'){ tx.update(ref, { status:'cancelled' }); gone = true; } });
         if (gone){ mmRef = null; toBot(); }                 // sistemde kimse yok -> bot
       } catch(e){ toBot(); }
-    }, Math.max(0, mmEnd - Date.now()));
+    };
+    mmTimer = setTimeout(giveUp, Math.max(0, mmEnd - Date.now()));
   } catch(e){ toBot(); }
 }
 $('ol-rand').addEventListener('click', findMatch);
