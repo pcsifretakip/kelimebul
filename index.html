@@ -61,7 +61,7 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 }
 .topbar .grp{display:flex;align-items:center;gap:8px;min-width:104px}
 .topbar .grp.r{justify-content:flex-end}
-.app.on-home #btn-sound,.app.on-home #btn-hint,.app.on-home #btn-home,.app.on-levels #btn-sound,.app.on-levels #btn-hint{display:none}
+.app.on-home #btn-sound,.app.on-home #btn-hint,.app.on-home #btn-home,.app.on-home #btn-settings,.app.on-levels #btn-sound,.app.on-levels #btn-hint{display:none}
 .app:not(.on-home) #btn-avatar{display:none}
 .app.on-levels #btn-settings{display:none}
 .app:not(.on-home):not(.on-levels) #btn-sound{display:none}
@@ -369,10 +369,30 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .ol-sz{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px}
 .ol-sz button{padding:8px 12px;border-radius:12px;font-size:13px;font-weight:900;color:#e0dcff;background:rgba(255,255,255,.1);border:1.5px solid transparent}
 .ol-sz button.on{color:#3b1d00;background:linear-gradient(180deg,#fde68a,#fbbf24);box-shadow:0 2px 0 #92400e}
+.ol-stake-title{margin-top:14px!important}
+.ol-stake-note{font-size:11px!important;text-align:center;color:#aaa4d7!important;margin:3px 0 7px!important}
+.ol-stake{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+.ol-stake button{min-width:64px;padding:8px 10px;border-radius:12px;font-size:13px;font-weight:1000;color:#e0dcff;background:rgba(255,255,255,.1);border:1.5px solid rgba(196,181,253,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.ol-stake button.on{color:#3b1d00;background:linear-gradient(180deg,#fde68a,#fbbf24);border-color:#f59e0b;box-shadow:0 2px 0 #92400e}
+.ol-stake button.low{opacity:.38;filter:grayscale(.45)}
+.ol-pot{margin:7px 0 10px!important;text-align:center;font-size:12px!important;font-weight:1000!important;color:#fbbf24!important}
 /* ONLİNE butonu: pembe */
 .home-actions .btn-sq.gold{--edge:#92400e;color:#3b1d00;text-shadow:0 1px 0 rgba(255,255,255,.55);background:linear-gradient(180deg,#fff0a8 0%,#fbbf24 48%,#e8890a 52%,#f9b11c 100%)}
 .home-actions .btn-sq.pink{--edge:#075985;background:linear-gradient(180deg,#38bdf8 0%,#0284c7 48%,#0369a1 52%,#0ea5e9 100%);color:#fff;box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 6px 0 #075985,0 12px 28px rgba(14,165,233,.28)}
 .home-actions .btn-sq.pink:active{box-shadow:inset 0 2px 0 rgba(255,255,255,.25),0 2px 0 #075985,0 6px 16px rgba(14,165,233,.22)}
+
+.home-actions .btn-sq.home-settings{
+  --edge:#4c1d95;color:#fff;
+  background:linear-gradient(180deg,#a78bfa 0%,#7c3aed 48%,#5b21b6 52%,#8b5cf6 100%);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 6px 0 #4c1d95,0 12px 28px rgba(124,58,237,.22);
+}
+.home-actions .btn-sq.home-settings:active{
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.22),0 2px 0 #4c1d95,0 6px 16px rgba(124,58,237,.18);
+}
+.app.on-home .topbar .coin{
+  position:absolute;right:14px;top:calc(10px + env(safe-area-inset-top));z-index:2;
+}
+
 
 /* ===== AYARLAR: sade, tek tonlu ===== */
 .smenu{gap:10px;padding:12px;background:linear-gradient(180deg,#2a1a74,#150c42);box-shadow:0 18px 44px rgba(0,0,0,.6);max-height:calc(100dvh - 78px);overflow-y:auto;overscroll-behavior:contain}
@@ -634,6 +654,9 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 /* ================= LEVEL SELECT ================= */
 .levels{display:flex;flex-direction:column}
 .lv-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px}
+.lv-back{border:1px solid rgba(167,139,250,.45);background:rgba(30,20,70,.75);color:#ddd6fe;border-radius:12px;padding:7px 10px;font:inherit;font-size:11px;font-weight:1000;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.lv-back:active{transform:translateY(1px)}
+.lv-head.modes h2{margin-left:0}
 .lv-head h2{font-size:24px;font-weight:1000;letter-spacing:.03em}
 .lv-count{padding:4px 12px;border-radius:99px;font-size:13px;font-weight:900;color:var(--gold);background:rgba(8,5,30,.6);border:1px solid rgba(251,191,36,.4);font-variant-numeric:tabular-nums}
 .lv-grid{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:minmax(0,1fr);align-content:start;gap:10px;
@@ -645,6 +668,12 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   color:var(--text);text-align:left;transition:transform .12s
 }
 .lv-card:active:not(:disabled){transform:scale(.96)}
+.mode-card{min-height:88px}
+.mode-card .lv-name{font-size:16px;flex-direction:column;align-items:flex-start;gap:5px}
+.mode-card .mode-sub{font-size:11px;line-height:1.35;font-weight:800;letter-spacing:.02em;color:rgba(255,255,255,.58)}
+.mode-soon{opacity:.98}
+.mode-lock{padding:7px 11px;border-radius:999px;background:rgba(124,58,237,.9);color:#fff;font-size:10px;font-weight:1000;white-space:nowrap}
+.mode-available{box-shadow:0 0 22px var(--glow),inset 0 0 18px rgba(255,255,255,.025)}
 .lv-num{flex:none;width:26px;text-align:center;font-size:16px;font-weight:1000;color:rgba(255,255,255,.55);font-variant-numeric:tabular-nums}
 .lv-ic{flex:none;width:44px;height:44px;color:var(--neon);filter:drop-shadow(0 0 3px var(--neon)) drop-shadow(0 0 10px var(--neon))}
 .lv-ic svg{width:100%;height:100%;display:block}
@@ -816,6 +845,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
         <button id="lb" class="btn-sq gold" aria-label="Liderlik tablosu"><span>🏆</span><span>LİDERLİK TABLOSU</span></button>
         <button id="btn-levels" class="btn-sq" aria-label="Mod Seç"><svg class="i"><use href="#i-grid"/></svg><span>MOD SEÇ</span></button>
         <button id="btn-online" class="btn-sq pink"><svg class="i"><use href="#i-user"/></svg><span>ONLİNE MOD</span></button>
+        <button id="btn-settings-home" class="btn-sq home-settings" aria-label="Ayarlar"><svg class="i"><use href="#i-gear"/></svg><span>AYARLAR</span></button>
               </div>
     </section>
 
@@ -883,7 +913,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 
     <!-- LEVEL SELECT -->
     <section id="view-levels" class="view off levels">
-      <div class="lv-head"><h2>MOD SEÇ</h2><span class="lv-count" id="lv-count">0 / 0</span></div>
+      <div class="lv-head"><button class="lv-back" id="lv-back-modes" hidden>← MODLAR</button><h2 id="lv-title">MOD SEÇ</h2><span class="lv-count" id="lv-count">0 / 0</span></div>
       <div class="lv-grid" id="lv-grid"></div>
     </section>
   </main>
@@ -934,6 +964,10 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
       <p class="nm-sub">Tahta boyutunu seç, rakip bul. Kelimeleri önce bitiren kazanır!<br>Gerçek rakiple kazandıkça puan toplarsın. Kimse yoksa bot ile oynarsın.</p>
       <p class="ol-sec" style="margin-top:0">TAHTA BOYUTU</p>
       <div class="ol-sz" id="ol-sz"></div>
+      <p class="ol-sec ol-stake-title">MAÇ BEDELİ</p>
+      <p class="ol-stake-note">Her oyuncu seçtiği coin miktarını ortaya koyar. Kazanan toplam coinleri alır.</p>
+      <div class="ol-stake" id="ol-stake"></div>
+      <p class="ol-pot" id="ol-pot">Kazanan: 100 🪙</p>
       <div class="ol-play" id="ol-play">
         <button class="btn-main" id="ol-rand">RASTGELE EŞLEŞ</button>
         <button class="ol-duel-btn" id="ol-duel">⚔️ ARKADAŞINLA DÜELLO YAP</button>
@@ -1087,32 +1121,23 @@ const DIRS = {
   medium: [[0,1],[1,0],[1,1],[0,-1],[-1,0]],
   hard:   [[0,1],[1,0],[1,1],[0,-1],[-1,0],[-1,-1],[1,-1],[-1,1]]
 };
-const LEVELS = [
-  {
-    category:'ZAMANA KARŞI',
-    size:8,
-    dirs:'hard',
-    mode:'time',
-    timeLimit:60,
-    subtitle:'Süreye karşı yarış! En kısa sürede tüm kelimeleri bul.',
-    words:['kalem','kitap','şehir','bahar','yıldız','köprü','deniz','mercan']
-  },
-  {
-    category:'KLASİK SERBEST',
-    size:8,
-    dirs:'medium',
-    mode:'classic',
-    subtitle:'Rahatça oyna. Normal kelime bulma modu.',
-    words:['kalem','kitap','çiçek','güneş','araba','orman','bulut','nehir']
-  },
-  {
-    category:'ZOR MOD',
-    size:12,
-    dirs:'hard',
-    mode:'hard',
-    subtitle:'Daha uzun ve zor kelimeler. Daha büyük oyun tahtası.',
-    words:['kadirşinas','mütemadiyen','çevrebilim','başkalaşım','özgürleştirmek','sorumluluk','karşılaştırma','alışkanlık','dayanışma','bilinçaltı']
-  }
+const CLASSIC_LEVELS = [
+  { category:'İLKBAHAR', size:8, dirs:'medium', mode:'classic', subtitle:'Doğanın renkli kelimelerini bul.', words:['çiçek','bahar','yağmur','kelebek','güneş','çimen','ağaç','kuş'] },
+  { category:'OKUL', size:8, dirs:'medium', mode:'classic', subtitle:'Okul ve eğitim kelimelerini bul.', words:['kalem','kitap','silgi','defter','sınıf','öğrenci','tahta','çanta'] },
+  { category:'YAZ TATİLİ', size:8, dirs:'medium', mode:'classic', subtitle:'Yaz tatilinden kelimeler.', words:['deniz','kum','güneş','tatil','plaj','şemsiye','dondurma','yüzmek'] },
+  { category:'HAYVANLAR', size:8, dirs:'medium', mode:'classic', subtitle:'Hayvanları keşfet.', words:['aslan','kaplan','tavşan','fil','maymun','zürafa','köpek','kedi'] },
+  { category:'MEYVELER', size:8, dirs:'medium', mode:'classic', subtitle:'Lezzetli meyveleri bul.', words:['elma','armut','kiraz','çilek','karpuz','kavun','portakal','muz'] },
+  { category:'MUTFAK EŞYALARI', size:8, dirs:'medium', mode:'classic', subtitle:'Mutfaktaki eşyaları bul.', words:['tabak','bardak','çatal','kaşık','bıçak','tencere','tepsi','sürahi'] },
+  { category:'UZAY', size:8, dirs:'medium', mode:'classic', subtitle:'Uzayın gizemli kelimeleri.', words:['gezegen','yıldız','roket','uydu','galaksi','dünya','ay','güneş'] },
+  { category:'ŞEHİRLER', size:8, dirs:'medium', mode:'classic', subtitle:'Şehir isimlerini bul.', words:['istanbul','ankara','izmir','bursa','antalya','adana','samsun','sakarya'] },
+  { category:'SPOR', size:8, dirs:'medium', mode:'classic', subtitle:'Spor dünyasından kelimeler.', words:['futbol','basketbol','tenis','yüzme','koşu','voleybol','güreş','kayak'] },
+  { category:'MESLEKLER', size:8, dirs:'medium', mode:'classic', subtitle:'Meslekleri keşfet.', words:['doktor','öğretmen','mühendis','avukat','pilot','aşçı','şoför','polis'] }
+];
+const LEVELS = CLASSIC_LEVELS;
+const MODES = [
+  { key:'time', category:'ZAMANA KARŞI', icon:'clock', color:'#f43f5e', subtitle:'Süreye karşı yarış! En kısa sürede tüm kelimeleri bul.', available:false },
+  { key:'classic', category:'KLASİK SERBEST', icon:'sprout', color:'#22c55e', subtitle:'Rahatça oyna. Bölümleri seç ve normal kelime bulma modunda ilerle.', available:true },
+  { key:'hard', category:'ZOR MOD', icon:'rocket', color:'#8b5cf6', subtitle:'Daha uzun ve zor kelimeler. Daha büyük oyun tahtası.', available:false }
 ];
 
 const FILLER = 'AAAAAAAEEEEEEİİİİİNNNNNRRRRLLLLIIIIDDDKKKMMMYYUUUTTTSSSOOOBBÜÜÜŞŞŞZZGGÇÇÇHHĞĞVCÖÖPF';
@@ -1235,32 +1260,32 @@ const S = {
   level: null, found: new Set(), colorOf: {}, caps: [],
   cells: [], chips: {}, token: 0, playing: false,
   selecting: false, sel: null, dragCap: null,
-  seconds: 0, timer: null, geo: null
+  seconds: 0, timer: null, geo: null, mode: 'classic'
 };
 {
   const c = parseInt(store.get('wow_search_coins'), 10);
   if (!isNaN(c)) S.coins = c;
   const last = LEVELS.length - 1;
-  const l = parseInt(store.get('wow_search_level'), 10);
-  const m = parseInt(store.get('wow_search_max'), 10);
+  const l = parseInt(store.get('cidahl_classic_level'), 10);
+  const m = parseInt(store.get('cidahl_classic_max'), 10);
   S.maxOpen = Math.min(last, Math.max(isNaN(l) ? 0 : l, isNaN(m) ? 0 : m));
   S.levelIndex = S.maxOpen;
-  try { S.done = JSON.parse(store.get('wow_search_done') || '{}') || {}; } catch(e) { S.done = {}; }
-  try { S.partial = JSON.parse(store.get('wow_search_partial') || '{}') || {}; } catch(e) { S.partial = {}; }
+  try { S.done = JSON.parse(store.get('cidahl_classic_done') || '{}') || {}; } catch(e) { S.done = {}; }
+  try { S.partial = JSON.parse(store.get('cidahl_classic_partial') || '{}') || {}; } catch(e) { S.partial = {}; }
   // Açılmış bölümler tamamlanmış sayılmaz; yıldız yalnızca bölüm gerçekten bitirilince verilir.
   // Böylece yeni/ilk kullanıcıya otomatik 1 yıldız yazılmaz.
 }
 function saveProgress(){
-  store.set('wow_search_max', S.maxOpen);
-  store.set('wow_search_level', S.maxOpen);
-  store.set('wow_search_done', JSON.stringify(S.done));
-  store.set('wow_search_partial', JSON.stringify(S.partial));
+  store.set('cidahl_classic_max', S.maxOpen);
+  store.set('cidahl_classic_level', S.maxOpen);
+  store.set('cidahl_classic_done', JSON.stringify(S.done));
+  store.set('cidahl_classic_partial', JSON.stringify(S.partial));
 }
 function savePartialProgress(){
   if (!S.level || S.levelIndex == null) return;
   if (S.found.size) S.partial[S.levelIndex] = Array.from(S.found);
   else delete S.partial[S.levelIndex];
-  store.set('wow_search_partial', JSON.stringify(S.partial));
+  store.set('cidahl_classic_partial', JSON.stringify(S.partial));
 }
 
 /* =====================================================
@@ -1382,7 +1407,35 @@ function toast(msg){
 }
 const fmt = s => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
 
-function updateCoins(){ $('coin-count').textContent = S.coins; store.set('wow_search_coins', S.coins); }
+let coinSyncBusy = false, coinSyncTimer = null;
+function updateCoins(){
+  $('coin-count').textContent = S.coins;
+  store.set('wow_search_coins', S.coins);
+  updateStakeInfo();
+  clearTimeout(coinSyncTimer);
+  coinSyncTimer = setTimeout(syncCoinsToCloud, 250);
+}
+async function syncCoinsToCloud(){
+  if (coinSyncBusy || !FIREBASE_CONFIG.apiKey || !USER || !USER.id) return;
+  coinSyncBusy = true;
+  try{
+    const db = await getDb();
+    await db.collection('users').doc(USER.id).set({name:USER.name || '', coins:Math.max(0, Math.floor(S.coins || 0))},{merge:true});
+  }catch(e){} finally { coinSyncBusy = false; }
+}
+async function syncCoinsFromCloud(){
+  if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id) return;
+  try{
+    const db = await getDb(), ref = db.collection('users').doc(USER.id), snap = await ref.get();
+    if (snap.exists && snap.data().coins != null){
+      S.coins = Math.max(0, Number(snap.data().coins) || 0);
+      store.set('wow_search_coins', S.coins);
+      updateCoins();
+    }else{
+      await ref.set({name:USER.name || '', coins:Math.max(0,Math.floor(S.coins || 0))},{merge:true});
+    }
+  }catch(e){}
+}
 function updateHome(){
   $('header-level-num').textContent = S.maxOpen + 1;
   try { lbStart(); lbOwn(); } catch(e){}
@@ -1783,8 +1836,38 @@ $('btn-next-level').addEventListener('click', () => {
 /* =====================================================
    BÖLÜM SEÇİM EKRANI
    ===================================================== */
+function renderModes(){
+  const grid = $('lv-grid'); grid.innerHTML = '';
+  $('lv-title').textContent = 'MOD SEÇ';
+  $('lv-back-modes').hidden = true;
+  $('lv-count').textContent = '2 / 3';
+  MODES.forEach((m, i) => {
+    const b = document.createElement('button');
+    b.className = 'lv-card mode-card' + (m.available ? ' mode-available' : ' mode-soon');
+    b.style.setProperty('--neon', m.color);
+    b.style.setProperty('--glow', hexA(m.color, .3));
+    b.innerHTML =
+      '<span class="lv-num">' + (i + 1) + '</span>' +
+      '<div class="lv-ic">' + iconSVG(m.icon) + '</div>' +
+      '<div class="lv-name">' + m.category + '<span class="mode-sub">' + m.subtitle + '</span></div>' +
+      '<div class="lv-foot">' + (m.available ? '<span class="pill-play">GİR</span>' : '<span class="mode-lock">YAKINDA</span>') + '</div>';
+    b.addEventListener('click', () => {
+      audio();
+      if (!m.available){
+        toast(m.category + ' daha sonra eklenecek.');
+        return;
+      }
+      S.mode = m.key;
+      renderLevels();
+    });
+    grid.appendChild(b);
+  });
+}
+
 function renderLevels(){
   const grid = $('lv-grid'); grid.innerHTML = '';
+  $('lv-title').textContent = 'KLASİK SERBEST';
+  $('lv-back-modes').hidden = false;
   let doneCount = 0;
   LEVELS.forEach((d, i) => {
     const th = themeOf(d), done = S.done[i];
@@ -1824,7 +1907,9 @@ function setView(name){
 function leaveGame(){ raceStop(); S.playing = false; S.token++; stopTimer(); cancelIntro(); modal.classList.remove('show'); }
 function showGame(i, def, seed){ setView('game'); startLevel(i, def, seed); }
 function showHome(){ leaveGame(); setView('home'); updateHome(); }
-function showLevels(){ leaveGame(); renderLevels(); setView('levels'); updateHome(); }
+function showLevels(){ leaveGame(); renderModes(); setView('levels'); updateHome(); }
+function showClassicLevels(){ leaveGame(); S.mode = 'classic'; renderLevels(); setView('levels'); updateHome(); }
+$('lv-back-modes').addEventListener('click', () => { audio(); showLevels(); });
 $('btn-review-next').addEventListener('click', () => {
   audio(); const nx = S.levelIndex + 1;
   if (nx >= LEVELS.length || nx > S.maxOpen){ showLevels(); } else { startLevel(nx); }
@@ -1899,6 +1984,7 @@ function toggleSound(){
 }
 function setUser(u){
   USER = u; saveUser(u); refreshSettings(); startPresence(); showHome();
+  syncCoinsFromCloud();
 }
 
 function loadScript(src){
@@ -1966,7 +2052,7 @@ async function registerUser(type, name){          // name yoksa sadece ID üreti
         const n = nRef ? await tx.get(nRef) : null;
         if (n && n.exists) throw new Error('taken');
         if (u.exists) throw new Error('idtaken');
-        tx.set(uRef, { name: name || '', type, created: firebase.firestore.FieldValue.serverTimestamp() });
+        tx.set(uRef, { name: name || '', type, coins: 150, created: firebase.firestore.FieldValue.serverTimestamp() });
         if (nRef) tx.set(nRef, { id, name });
       });
       return id;
@@ -2011,6 +2097,7 @@ $('lg-google').addEventListener('click', () => socialLogin('google'));
 $('lg-facebook').addEventListener('click', () => socialLogin('facebook'));
 
 $('btn-settings').addEventListener('click', e => { e.stopPropagation(); refreshSettings(); menuEl.classList.toggle('show'); });
+$('btn-settings-home').addEventListener('click', e => { e.stopPropagation(); refreshSettings(); menuEl.classList.toggle('show'); });
 menuEl.addEventListener('click', e => e.stopPropagation());
 document.addEventListener('click', closeMenu);
 $('s-sound').addEventListener('click', toggleSound);
@@ -2152,7 +2239,7 @@ renderAvatar();
 
 /* ===== ONLİNE MOD: arkadaş ekle, davet et, önce bitiren kazanır (Firestore) ===== */
 const olEl = $('olbox'), resEl = $('raceres'), olErr = $('ol-err');
-let R = null, unsubs = [], olSize = 5;
+let R = null, unsubs = [], olSize = 5, olStake = 50;
 let presenceTimer = null, duelTimer = null;
 async function setPresence(online){
   if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id) return;
@@ -2182,11 +2269,34 @@ Object.keys(SIZES).forEach(n => {
   if (+n === olSize) b.classList.add('on');
   $('ol-sz').appendChild(b);
 });
+const STAKES = [10, 25, 50, 100, 250];
+function renderStake(){
+  const box = $('ol-stake'); if (!box) return;
+  box.innerHTML = '';
+  STAKES.forEach(n => {
+    const b = document.createElement('button');
+    b.textContent = n + ' 🪙'; b.dataset.n = n;
+    b.classList.toggle('on', n === olStake);
+    b.classList.toggle('low', S.coins < n);
+    b.onclick = () => {
+      if (S.coins < n) return olMsg('Bu maç bedeli için yeterli coinin yok.');
+      olStake = n;
+      document.querySelectorAll('#ol-stake button').forEach(x => x.classList.toggle('on', +x.dataset.n === n));
+      updateStakeInfo();
+    };
+    box.appendChild(b);
+  });
+  updateStakeInfo();
+}
+function updateStakeInfo(){
+  const pot = $('ol-pot'); if (pot) pot.textContent = 'Kazanan: ' + (olStake * 2) + ' 🪙  •  Bakiyen: ' + S.coins + ' 🪙';
+}
+renderStake();
 const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
 function olClean(){ unsubs.forEach(u => { try { u(); } catch(e){} }); unsubs = []; }
 function olMsg(m, ok){ olErr.style.color = ok ? '#86efac' : ''; olErr.textContent = m; }
 async function openOnline(){
-  mmCancel(); olSize = 5; document.querySelectorAll('#ol-sz button').forEach(x => x.classList.toggle('on', +x.dataset.n === 5));
+  mmCancel(); olSize = 5; olStake = 50; document.querySelectorAll('#ol-sz button').forEach(x => x.classList.toggle('on', +x.dataset.n === 5)); renderStake();
   olMsg(''); $('ol-fr').innerHTML = ''; $('ol-inv').innerHTML = ''; $('ol-duel-list').hidden = true; $('ol-duel-list').innerHTML = '';
   clearInterval(duelTimer); duelTimer = null;
   olEl.classList.add('show');
@@ -2232,18 +2342,92 @@ $('ol-duel').addEventListener('click', () => {
 async function invite(fid, fname){
   mmCancel();
   try {
-    const db = await getDb(), size = olSize, seed = Math.floor(Math.random() * 1e9);
-    const ref = await db.collection('invites').add({ from: USER.id, fromName: USER.name, to: fid, size, seed, status:'pending', winner:null, created: firebase.firestore.FieldValue.serverTimestamp() });
+    const db = await getDb(), size = olSize, stake = olStake, seed = Math.floor(Math.random() * 1e9);
+    if (S.coins < stake) return olMsg('Yeterli coin yok. Daha düşük bir maç bedeli seç.');
+    const ref = await db.collection('invites').add({ from: USER.id, fromName: USER.name, to: fid, size, stake, seed, status:'pending', winner:null, created: firebase.firestore.FieldValue.serverTimestamp() });
     olMsg(fname + ' bekleniyor…', 1);
     const un = ref.onSnapshot(d => { const v = d.data(); if (v && v.status === 'accepted'){ un(); beginRace(ref, v, fname, fid); } else if (v && v.status === 'declined'){ un(); olMsg(fname + ' daveti reddetti'); toast(fname + ' daveti reddetti'); } });
     unsubs.push(un); setTimeout(un, 120000);
   } catch(e){ olMsg('Davet gönderilemedi'); }
 }
-function beginRace(ref, v, opp, oppId, rated){
+async function prepareMatchStake(ref, v, oppId){
+  const stake = Math.max(0, Number(v && v.stake || 0));
+  if (!stake || !USER || !USER.id) return true;
+  try{
+    const db = await getDb(), result = {ok:false, reason:''};
+    await db.runTransaction(async tx => {
+      const mRef = ref, m = await tx.get(mRef);
+      if (!m.exists) throw new Error('match_missing');
+      const mv = m.data() || {};
+      if (mv.stakeSettled === true){ result.ok = true; return; }
+      if (mv.status === 'cancelled') throw new Error('cancelled');
+      const myRef = db.collection('users').doc(USER.id), opRef = db.collection('users').doc(oppId);
+      const my = await tx.get(myRef), op = await tx.get(opRef);
+      const myCoins = my.exists && my.data().coins != null ? Number(my.data().coins) || 0 : Number(S.coins) || 0;
+      const opCoins = op.exists && op.data().coins != null ? Number(op.data().coins) || 0 : 0;
+      if (myCoins < stake || opCoins < stake){
+        tx.update(mRef,{status:'cancelled',stakeSettled:false,stakeError:'Yetersiz coin'});
+        result.reason = myCoins < stake ? 'Kendi coin bakiyen yetersiz.' : 'Rakibin coin bakiyesi bu maç için yetersiz.';
+        return;
+      }
+      tx.set(myRef,{name:USER.name || '',coins:myCoins-stake},{merge:true});
+      tx.set(opRef,{coins:opCoins-stake},{merge:true});
+      tx.update(mRef,{stake,stakeSettled:true,status:'accepted'});
+      result.charged = true; result.ok = true;
+    });
+    if (result.ok){
+      if (result.charged){
+        S.coins = Math.max(0, S.coins - stake);
+        store.set('wow_search_coins', S.coins); updateCoins();
+      }else{
+        await syncCoinsFromCloud();
+      }
+      return true;
+    }
+    throw new Error(result.reason || 'stake_failed');
+  }catch(e){
+    throw e;
+  }
+}
+async function settleMatchCoins(r, won){
+  if (!r || !r.stake || !USER || !USER.id || !r.oppId || r.coinsSettled) return;
+  r.coinsSettled = true;
+  try{
+    const db = await getDb(), stake = Math.max(0, Number(r.stake) || 0);
+    const meRef = db.collection('users').doc(USER.id), opRef = db.collection('users').doc(r.oppId);
+    let newMine = null;
+    await db.runTransaction(async tx => {
+      const md = await tx.get(r.ref);
+      const mv = md.exists ? md.data() || {} : {};
+      if (mv.coinSettled === true) return;
+      const winnerRef = won ? meRef : opRef;
+      const winner = await tx.get(winnerRef);
+      const wc = winner.exists && winner.data().coins != null ? Number(winner.data().coins) || 0 : 0;
+      tx.set(winnerRef,{coins:wc + stake*2},{merge:true});
+      tx.update(r.ref,{coinSettled:true,winner:won ? USER.id : r.oppId});
+      if (won) newMine = (Number(S.coins) || 0) + stake*2;
+    });
+    if (newMine != null){ S.coins = newMine; updateCoins(); }
+  }catch(e){ r.coinsSettled = false; }
+}
+async function beginRace(ref, v, opp, oppId, rated){
   mmCancel(); olClean(); olEl.classList.remove('show');
-  R = { ref, opp, oppId, over:false, rated: !!rated, size: v.size };
+  R = { ref, opp, oppId, over:false, rated: !!rated, size: v.size, stake: Number(v.stake || 0), coinsSettled:false };
+  try{
+    if (R.stake > 0) await prepareMatchStake(ref, v, oppId);
+  }catch(e){
+    const msg = e && e.message ? e.message : 'Maç başlatılamadı.';
+    R = null; toast(msg); return;
+  }
   if (rated && USER && USER.id){ const r0 = R; ratingOf(USER.id).then(x => r0.myRating = x); ratingOf(oppId).then(x => r0.oppRating = x); }
-  R.un = ref.onSnapshot(d => { const v = d.data(); if (v && v.winner && R && !R.over) raceEnd(v.winner === USER.id); });
+  R.un = ref.onSnapshot(d => {
+    const v = d.data();
+    if (v && v.status === 'cancelled' && R && !R.over){
+      const msg = v.stakeError === 'Yetersiz coin' ? 'Maç iptal edildi: bir oyuncunun coin bakiyesi yetersiz.' : 'Maç iptal edildi.';
+      R.over = true; S.playing = false; stopTimer(); toast(msg); R = null; return;
+    }
+    if (v && v.winner && R && !R.over) raceEnd(v.winner === USER.id);
+  });
   showGame(0, customDef(v.size, v.seed), v.seed);
 }
 async function raceFinish(){
@@ -2261,6 +2445,7 @@ function raceEnd(won){
   $('rr-t').textContent = won ? 'KAZANDIN! 🏆' : 'KAYBETTİN';
   $('rr-p').textContent = won ? 'Rakibini geçtin!' : R.opp + ' önce bitirdi.';
   const r = R, pt = $('rr-pts'); pt.className = 'rr-pts';
+  if (r.stake && !r.bot) settleMatchCoins(r, won);
   lastRace = { size: r.size, random: !!(r.rated || r.bot) };
   if (r.rated){
     pt.textContent = 'Puan hesaplanıyor…'; pt.classList.add('small');
@@ -2279,6 +2464,9 @@ function raceStop(){
     return;
   }
   if (!r.over && r.rated) applyScore(r, false).then(d => { if (d != null) toast('Maçı yarıda bıraktın: ' + d + ' puan'); });
+  if (!r.over && r.stake && !r.bot){
+    settleMatchCoins(r, false);
+  }
   if (!r.over) getDb().then(db => db.runTransaction(async tx => { const d = await tx.get(r.ref); if (!d.data().winner) tx.update(r.ref, { winner: r.oppId }); })).catch(() => {});
 }
 /* ----- RASTGELE EŞLEŞME + BOT ----- */
@@ -2305,14 +2493,14 @@ async function findMatch(){
   mmEnd = Date.now() + MM_WAIT;                          // 10 sn geri sayım; bitince rakip yoksa bot ile eşleşir
   const tick = () => { const left = Math.max(0, Math.ceil((mmEnd - Date.now()) / 1000)); olMsg(left > 0 ? 'Rakip aranıyor… ' + left : 'Eşleşiliyor…', 1); };
   tick(); clearInterval(mmCount); mmCount = setInterval(tick, 250);
-  const size = olSize, toBot = () => { if (mmBusy) startBot(size); };
+  const size = olSize, stake = olStake, toBot = () => { if (mmBusy) startBot(size); };
   if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id){ mmTimer = setTimeout(toBot, MM_WAIT); return; }
   try {
     const db = await getDb(); if (!mmBusy) return;
     const snap = await db.collection('invites').where('status', '==', 'waiting').where('size', '==', size).get();
     if (!mmBusy) return;
     const now = Date.now(), cands = [];
-    snap.forEach(d => { const v = d.data(), t = v.created ? v.created.toMillis() : now; if (v.from !== USER.id && !blocked.has(v.from) && now - t < MM_WAIT + 5000) cands.push(d); });
+    snap.forEach(d => { const v = d.data(), t = v.created ? v.created.toMillis() : now; if (v.from !== USER.id && Number(v.stake || 50) === stake && !blocked.has(v.from) && now - t < MM_WAIT + 5000) cands.push(d); });
     for (let i = cands.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [cands[i], cands[j]] = [cands[j], cands[i]]; }
     for (const d of cands){
       let v = null;
@@ -2321,7 +2509,8 @@ async function findMatch(){
     }
     if (!mmBusy) return;
     const seed = Math.floor(Math.random() * 1e9);
-    const ref = await db.collection('invites').add({ from: USER.id, fromName: USER.name, to: null, size, seed, status:'waiting', winner:null, created: firebase.firestore.FieldValue.serverTimestamp() });
+    if (S.coins < stake){ mmCancel(); olMsg('Yeterli coin yok. Daha düşük bir maç bedeli seç.'); return; }
+    const ref = await db.collection('invites').add({ from: USER.id, fromName: USER.name, to: null, size, stake, seed, status:'waiting', winner:null, created: firebase.firestore.FieldValue.serverTimestamp() });
     if (!mmBusy){ ref.update({ status:'cancelled' }).catch(() => {}); return; }
     mmRef = ref;
     mmUn = ref.onSnapshot(d => { const v = d.data(); if (v && v.status === 'accepted' && mmBusy){ mmRef = null; beginRace(ref, v, v.toName || 'Rakip', v.to, true); } });
@@ -2432,7 +2621,7 @@ function invShow(){
   while (invQueue.length && (Date.now() - invQueue[0].t > 120000 || blocked.has(invQueue[0].v.from))) invQueue.shift();
   if (!invQueue.length) return;
   invCur = invQueue.shift();
-  $('inv-t').textContent = invCur.v.fromName + ' sizi davet etti!';
+  $('inv-t').textContent = invCur.v.fromName + ' sizi davet etti! • Maç bedeli: ' + Number(invCur.v.stake || 50) + ' 🪙';
   invBox.classList.add('show'); SND.invite(); buzz([30, 40, 30]);
   clearTimeout(invTimer); invTimer = setTimeout(invHide, Math.max(1000, 120000 - (Date.now() - invCur.t)));
 }
