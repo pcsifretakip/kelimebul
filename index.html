@@ -875,6 +875,58 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #pt-friends .pfr-row button.arm{background:#be123c;color:#fff;border-color:transparent}
 #pt-friends .pfr-empty{margin:0;padding:20px 12px;border-radius:16px;border:1px dashed rgba(196,181,253,.28);background:rgba(255,255,255,.03);font-size:13px;font-weight:800;color:#aaa4d7}
 .level-box{display:none!important}
+
+/* ===== MOD SEÇİMİ: kaydırmalı tek sahne ===== */
+.modes{display:flex;flex-direction:column;overflow:hidden;touch-action:pan-y;--neon:#22c55e;--glow:rgba(34,197,94,.3)}
+.md-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(90% 52% at 50% 40%,var(--glow) 0%,rgba(0,0,0,0) 72%);transition:background .35s}
+.md-stage{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:0 56px}
+.md-stage.in-r{animation:mdR .32s ease-out}
+.md-stage.in-l{animation:mdL .32s ease-out}
+@keyframes mdR{from{opacity:0;transform:translateX(46px)}to{opacity:1;transform:none}}
+@keyframes mdL{from{opacity:0;transform:translateX(-46px)}to{opacity:1;transform:none}}
+.md-name{font-size:25px;font-weight:1000;letter-spacing:.07em;text-align:center;line-height:1.1;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+.md-ring{position:relative;width:min(60vw,250px);aspect-ratio:1;border-radius:50%;background:rgba(8,5,30,.5);box-shadow:0 0 34px var(--glow),inset 0 0 30px rgba(255,255,255,.04);transition:transform .12s}
+.md-ring:active{transform:scale(.97)}
+.md-ring svg.rg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.md-track{fill:none;stroke:rgba(255,255,255,.13);stroke-width:10}
+.md-prog{fill:none;stroke:var(--neon);stroke-width:10;stroke-linecap:round;stroke-dasharray:0 553;transition:stroke-dasharray .6s ease,opacity .2s;filter:drop-shadow(0 0 6px var(--neon))}
+.md-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.md-in .lv-ic{width:42px;height:42px;margin-bottom:2px}
+.md-in b{font-size:46px;font-weight:1000;line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+.md-in small{font-size:11px;font-weight:900;letter-spacing:.14em;color:rgba(255,255,255,.62)}
+.md-sub{max-width:300px;text-align:center;font-size:13px;font-weight:800;line-height:1.4;color:rgba(255,255,255,.62)}
+.md-arrow{position:absolute;top:42%;z-index:3;width:42px;height:42px;border-radius:50%;font-size:30px;font-weight:900;line-height:1;display:flex;align-items:center;justify-content:center;padding-bottom:3px;color:#ddd6fe;background:rgba(30,20,70,.75);border:1px solid rgba(167,139,250,.45);box-shadow:inset 0 1px 0 rgba(255,255,255,.14)}
+.md-arrow:active{transform:scale(.92)}
+.md-arrow.l{left:10px}.md-arrow.r{right:10px}
+.md-bottom{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;padding:0 24px calc(26px + env(safe-area-inset-bottom))}
+.md-bottom .btn-main{max-width:320px}
+.md-list{padding:8px 18px;border-radius:99px;font-size:12px;font-weight:1000;letter-spacing:.1em;color:#ddd6fe;background:rgba(30,20,70,.7);border:1px solid rgba(167,139,250,.4)}
+.md-list[hidden]{display:none}
+.md-list:active{transform:translateY(1px)}
+.md-dots{display:flex;gap:7px;align-items:center;height:10px}
+.md-dots span{width:8px;height:8px;border-radius:99px;background:rgba(255,255,255,.25);transition:width .2s,background .2s}
+.md-dots span.on{width:22px;background:var(--neon);box-shadow:0 0 8px var(--neon)}
+
+/* ===== AYARLAR: tam ekran ===== */
+.smenu{position:absolute;inset:0;top:0;left:0;right:0;bottom:0;width:100%;max-width:none;height:100%;max-height:none;transform:none;border-radius:inherit;border:0;box-shadow:none;
+  padding:calc(70px + env(safe-area-inset-top)) 22px calc(16px + env(safe-area-inset-bottom));gap:12px;align-items:stretch;
+  background:linear-gradient(180deg,rgba(42,26,116,.97),rgba(15,9,50,.98));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);overflow-y:auto}
+.smenu.show{transform:none}
+.smenu [hidden]{display:none!important}
+.smenu-close{top:calc(12px + env(safe-area-inset-top));right:14px;width:44px;height:44px;font-size:30px;background:linear-gradient(180deg,#a78bfa,#7c4dff);border:1px solid rgba(196,181,253,.6);box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 3px 0 #34148f}
+.smenu-title{margin:0 0 4px;text-align:center;font-size:34px;font-weight:1000;letter-spacing:.08em;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+.smenu .account-row{margin:0 0 4px;min-height:42px;background:rgba(0,0,0,.22);box-shadow:none}
+.smenu #s-sound b,.smenu #s-vib b{position:relative;flex:none;width:62px;height:34px;padding:0;border-radius:99px;font-size:0;color:transparent;background:linear-gradient(180deg,#a78bfa,#7c4dff);border:1px solid rgba(196,181,253,.6);box-shadow:inset 0 2px 0 rgba(255,255,255,.3)}
+.smenu #s-sound b::after,.smenu #s-vib b::after{content:"";position:absolute;top:3px;right:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.35);transition:right .15s,left .15s}
+.smenu #s-sound b.off,.smenu #s-vib b.off{background:rgba(0,0,0,.38);border-color:rgba(255,255,255,.18);box-shadow:none}
+.smenu #s-sound b.off::after,.smenu #s-vib b.off::after{right:auto;left:3px;background:#b9b3f0}
+.smenu #s-help,.smenu #s-report,.smenu #s-rate,.smenu #s-logout.logout-row{min-height:54px;border-radius:99px;justify-content:center;gap:10px;padding:0 20px;font-size:15px;color:#fff!important;text-shadow:0 2px 0 rgba(0,0,0,.3);
+  background:linear-gradient(180deg,#a78bfa 0%,#7c4dff 48%,#5b2bd9 100%);border:0;box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 5px 0 #34148f}
+.smenu #s-logout.logout-row{background:linear-gradient(180deg,#ff7a7a,#e11d48 55%,#be123c);box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 5px 0 #7f1230}
+.smenu #s-logout .row-ic{width:auto;height:auto;background:none;border:0;color:#fff}
+.smenu #s-help:active,.smenu #s-report:active,.smenu #s-rate:active,.smenu #s-logout:active{transform:translateY(4px);box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 1px 0 rgba(0,0,0,.4)}
+.smenu .s-grow{flex:1;min-height:6px}
+.smenu .s-del-link{align-self:flex-start;padding:8px 4px;font-size:13px;font-weight:900;letter-spacing:.04em;color:#ff8fab;text-decoration:underline}
 </style>
 </head>
 <body>
@@ -1035,6 +1087,26 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
       <p class="lg-note"><em>Misafir girişi</em> ile oynanan oyunların ilerlemesi telefon ayarlarınız sıfırlandığında kaybolabilir. Lütfen Facebook veya Google ile bağlanın.</p>
     </section>
 
+    <!-- MOD SEÇİMİ (kaydırmalı sahne) -->
+    <section id="view-modes" class="view off modes">
+      <div class="md-bg"></div>
+      <button class="md-arrow l" id="md-prev" aria-label="Önceki mod">‹</button>
+      <button class="md-arrow r" id="md-next" aria-label="Sonraki mod">›</button>
+      <div class="md-stage" id="md-stage">
+        <div class="md-name" id="md-name"></div>
+        <button class="md-ring" id="md-ring" aria-label="Bölümleri aç">
+          <svg class="rg" viewBox="0 0 200 200"><circle class="md-track" cx="100" cy="100" r="88"/><circle class="md-prog" id="md-prog" cx="100" cy="100" r="88"/></svg>
+          <div class="md-in"><div class="lv-ic" id="md-ic"></div><b id="md-count">0/0</b><small id="md-lbl">TAMAMLANDI</small></div>
+        </button>
+        <p class="md-sub" id="md-sub"></p>
+      </div>
+      <div class="md-bottom">
+        <button class="btn-main" id="md-go">BÖLÜM 1</button>
+        <button class="md-list" id="md-list">TÜM BÖLÜMLER</button>
+        <div class="md-dots" id="md-dots"></div>
+      </div>
+    </section>
+
     <!-- LEVEL SELECT -->
     <section id="view-levels" class="view off levels">
       <div class="lv-head"><button class="lv-back" id="lv-back-modes" hidden>← MODLAR</button><h2 id="lv-title">MOD SEÇ</h2><span class="lv-count" id="lv-count">0 / 0</span></div>
@@ -1044,24 +1116,16 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 
   <div class="smenu" id="smenu">
     <button class="smenu-close" id="smenu-close" type="button" aria-label="Ayarları kapat" title="Kapat">×</button>
-    <div class="settings-group account-group">
-      <div class="settings-title"><span class="settings-title-ic account"><svg class="i"><use href="#i-user"/></svg></span><span>HESAP</span></div>
-      <div class="srow account-row"><span class="srow-label">HESAP</span><b id="s-acc">-</b></div>
-      <button class="srow settings-action logout-row" id="s-logout" aria-label="Çıkış yap" title="Çıkış yap"><span>ÇIKIŞ YAP</span><span class="row-ic logout"><svg class="i"><use href="#i-logout"/></svg></span></button>
-      <button class="srow settings-action delete-row" id="s-delete" hidden><span>HESABI SİL</span><span class="row-ic delete"><svg class="i"><use href="#i-trash"/></svg></span></button>
-    </div>
-
-    <div class="settings-group options-group">
-      <div class="settings-title"><span class="settings-title-ic gear"><svg class="i"><use href="#i-gear"/></svg></span><span>AYARLAR</span></div>
-      <button class="srow settings-action" id="s-sound"><span class="srow-ic"><svg class="i"><use href="#i-vol"/></svg></span><span>SES</span><b id="s-sound-v">AÇIK</b></button>
-      <button class="srow settings-action" id="s-vib"><span class="srow-ic vib"><svg class="i"><use href="#i-vibrate"/></svg></span><span>TİTREŞİM</span><b id="s-vib-v">AÇIK</b></button>
-    </div>
-
-    <div class="settings-extra">
-      <button class="srow c" id="s-report">SORUN BİLDİR</button>
-      <button class="srow c" id="s-rate">★ BİZİ PUANLA</button>
-      <button class="srow c" id="s-help">YARDIM</button>
-    </div>
+    <h2 class="smenu-title">AYARLAR</h2>
+    <div class="srow account-row"><span class="srow-label">HESAP</span><b id="s-acc">-</b></div>
+    <button class="srow settings-action" id="s-sound"><span class="srow-ic"><svg class="i"><use href="#i-vol"/></svg></span><span>SES</span><b id="s-sound-v">AÇIK</b></button>
+    <button class="srow settings-action" id="s-vib"><span class="srow-ic vib"><svg class="i"><use href="#i-vibrate"/></svg></span><span>TİTREŞİM</span><b id="s-vib-v">AÇIK</b></button>
+    <button class="srow c" id="s-help">YARDIM</button>
+    <button class="srow c" id="s-report">SORUN BİLDİR</button>
+    <button class="srow c" id="s-rate">★ BİZİ PUANLA</button>
+    <button class="srow settings-action logout-row" id="s-logout" aria-label="Çıkış yap" title="Çıkış yap"><span>ÇIKIŞ YAP</span><span class="row-ic logout"><svg class="i"><use href="#i-logout"/></svg></span></button>
+    <div class="s-grow"></div>
+    <button class="s-del-link" id="s-delete" hidden>Hesabı Sil</button>
   </div>
   <div class="sback"></div>
   <div class="help" id="help">
@@ -1987,33 +2051,61 @@ $('btn-next-level').addEventListener('click', () => {
 /* =====================================================
    BÖLÜM SEÇİM EKRANI
    ===================================================== */
-function renderModes(){
-  const grid = $('lv-grid'); grid.innerHTML = '';
-  $('lv-title').textContent = 'MOD SEÇ';
-  $('lv-back-modes').hidden = true;
-  $('lv-count').textContent = '2 / 3';
-  MODES.forEach((m, i) => {
-    const b = document.createElement('button');
-    b.className = 'lv-card mode-card' + (m.available ? ' mode-available' : ' mode-soon');
-    b.style.setProperty('--neon', m.color);
-    b.style.setProperty('--glow', hexA(m.color, .3));
-    b.innerHTML =
-      '<span class="lv-num">' + (i + 1) + '</span>' +
-      '<div class="lv-ic">' + iconSVG(m.icon) + '</div>' +
-      '<div class="lv-name">' + m.category + '<span class="mode-sub">' + m.subtitle + '</span></div>' +
-      '<div class="lv-foot">' + (m.available ? '<span class="pill-play">GİR</span>' : '<span class="mode-lock">YAKINDA</span>') + '</div>';
-    b.addEventListener('click', () => {
-      audio();
-      if (!m.available){
-        toast(m.category + ' daha sonra eklenecek.');
-        return;
-      }
-      S.mode = m.key;
-      renderLevels();
-    });
-    grid.appendChild(b);
-  });
+let modeIdx = 0;
+function modeInfo(m){
+  if (m.key === 'classic'){
+    let done = 0; LEVELS.forEach((_, i) => { if (S.done[i]) done++; });
+    let idx = LEVELS.findIndex((_, i) => !S.done[i] && i <= S.maxOpen);
+    if (idx < 0) idx = LEVELS.length - 1;
+    return { done, total: LEVELS.length, idx };
+  }
+  return { done: 0, total: 0, idx: 0 };
 }
+function renderModes(dir){
+  modeIdx = Math.max(0, Math.min(MODES.length - 1, modeIdx));
+  const m = MODES[modeIdx], v = $('view-modes'), info = modeInfo(m);
+  v.style.setProperty('--neon', m.color);
+  v.style.setProperty('--glow', hexA(m.color, .3));
+  $('md-name').textContent = m.category;
+  $('md-sub').textContent = m.subtitle;
+  $('md-ic').innerHTML = iconSVG(m.available ? m.icon : 'lock');
+  $('md-count').textContent = m.available ? info.done + '/' + info.total : '—';
+  $('md-lbl').textContent = m.available ? 'TAMAMLANDI' : 'YAKINDA';
+  const C = 2 * Math.PI * 88, p = (m.available && info.total) ? info.done / info.total : 0;
+  const pr = $('md-prog'); pr.style.opacity = p > 0 ? 1 : 0; pr.style.strokeDasharray = (p * C) + ' ' + C;
+  const go = $('md-go'); go.textContent = m.available ? 'BÖLÜM ' + (info.idx + 1) : 'YAKINDA'; go.disabled = !m.available;
+  $('md-list').hidden = !m.available;
+  $('md-prev').style.visibility = modeIdx > 0 ? 'visible' : 'hidden';
+  $('md-next').style.visibility = modeIdx < MODES.length - 1 ? 'visible' : 'hidden';
+  $('md-dots').innerHTML = MODES.map((_, i) => '<span' + (i === modeIdx ? ' class="on"' : '') + '></span>').join('');
+  if (dir){ const st = $('md-stage'); st.classList.remove('in-l', 'in-r'); void st.offsetWidth; st.classList.add(dir > 0 ? 'in-r' : 'in-l'); }
+}
+function modeStep(d){
+  const n = modeIdx + d; if (n < 0 || n >= MODES.length) return;
+  modeIdx = n; audio(); renderModes(d);
+}
+function openModeLevels(){
+  const m = MODES[modeIdx]; if (!m.available){ toast(m.category + ' daha sonra eklenecek.'); return; }
+  audio(); S.mode = m.key; renderLevels(); setView('levels');
+}
+$('md-prev').addEventListener('click', () => modeStep(-1));
+$('md-next').addEventListener('click', () => modeStep(1));
+$('md-ring').addEventListener('click', openModeLevels);
+$('md-list').addEventListener('click', openModeLevels);
+$('md-go').addEventListener('click', () => {
+  const m = MODES[modeIdx]; if (!m.available){ toast(m.category + ' daha sonra eklenecek.'); return; }
+  audio(); S.mode = m.key; showGame(modeInfo(m).idx);
+});
+(function(){
+  const v = $('view-modes'); let sx = 0, sy = 0, on = false;
+  v.addEventListener('pointerdown', e => { sx = e.clientX; sy = e.clientY; on = true; });
+  v.addEventListener('pointerup', e => {
+    if (!on) return; on = false;
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) modeStep(dx < 0 ? 1 : -1);
+  });
+  v.addEventListener('pointercancel', () => { on = false; });
+})();
 
 function renderLevels(){
   const grid = $('lv-grid'); grid.innerHTML = '';
@@ -2048,10 +2140,11 @@ function renderLevels(){
    ===================================================== */
 function setView(name){
   app.classList.toggle('on-home', name === 'home');
-  app.classList.toggle('on-levels', name === 'levels');
+  app.classList.toggle('on-levels', name === 'levels' || name === 'modes');
   viewHome.classList.toggle('off', name !== 'home');
   viewGame.classList.toggle('off', name !== 'game');
   viewLevels.classList.toggle('off', name !== 'levels');
+  $('view-modes').classList.toggle('off', name !== 'modes');
   viewLogin.classList.toggle('off', name !== 'login');
   viewLogin.classList.remove('enter'); if (name === 'login'){ void viewLogin.offsetWidth; viewLogin.classList.add('enter'); }
   app.classList.toggle('on-login', name === 'login');
@@ -2060,7 +2153,7 @@ function setView(name){
 function leaveGame(){ raceStop(); S.playing = false; S.token++; stopTimer(); cancelIntro(); modal.classList.remove('show'); }
 function showGame(i, def, seed){ setView('game'); startLevel(i, def, seed); }
 function showHome(){ leaveGame(); setView('home'); updateHome(); }
-function showLevels(){ leaveGame(); renderModes(); setView('levels'); updateHome(); }
+function showLevels(){ leaveGame(); renderModes(); setView('modes'); updateHome(); }
 function showClassicLevels(){ leaveGame(); S.mode = 'classic'; renderLevels(); setView('levels'); updateHome(); }
 $('lv-back-modes').addEventListener('click', () => { audio(); showLevels(); });
 $('btn-review-next').addEventListener('click', () => {
