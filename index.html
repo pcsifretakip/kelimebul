@@ -1047,6 +1047,41 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .jr-pin span img{width:100%;height:100%;object-fit:cover}.jr-pin span svg{width:20px;height:20px}
 .jr-pin::after{content:'';position:absolute;left:11px;bottom:-9px;border:8px solid transparent;border-top-color:#fff;border-bottom:0}
 @keyframes jrBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* Yolculuk bölüm geçiş animasyonu */
+.jr-runner{
+  position:absolute;
+  width:42px;height:42px;
+  border-radius:50%;
+  background:#22c55e;
+  border:4px solid #fff;
+  box-shadow:0 0 0 5px rgba(34,197,94,.22),0 0 24px rgba(34,197,94,.65);
+  z-index:30;
+  transform:translate(-50%,-50%) scale(.82);
+  pointer-events:none;
+  transition:left 900ms cubic-bezier(.22,.8,.25,1), top 900ms cubic-bezier(.22,.8,.25,1), transform 260ms ease;
+}
+.jr-runner::after{
+  content:"";
+  position:absolute;
+  left:50%;top:50%;
+  width:10px;height:10px;
+  border-radius:50%;
+  background:#fff;
+  transform:translate(-50%,-50%);
+}
+.jr-node.jr-unlock-pulse{
+  animation:jrUnlockPulse 900ms ease-in-out 2;
+}
+@keyframes jrUnlockPulse{
+  0%,100%{transform:scale(1);filter:none}
+  50%{transform:scale(1.18);filter:brightness(1.25);box-shadow:0 0 0 10px rgba(34,197,94,.18),0 0 28px rgba(34,197,94,.75)}
+}
+.jr-node.jr-new-open{
+  background:#22c55e !important;
+  color:#fff !important;
+}
+
 </style>
 
 <style>
@@ -1057,6 +1092,14 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #view-modes .level-subtitle,
 #view-modes .mode-sub,
 #view-modes .mode-level-name { display:none !important; }
+<style>
+/* ===== YOLCULUK: sadece tamamlanan bölüm yeşil, diğerleri yeşil değil ===== */
+#view-modes .jr-cap { display:none !important; }
+#view-modes .jr-node { background:#334155; color:#fff; }
+#view-modes .jr-node.open { background:#334155; }
+#view-modes .jr-node.cur { background:#2563eb; box-shadow:0 5px 0 #1d4ed8,0 0 0 0 rgba(37,99,235,.65); }
+#view-modes .jr-node.done { background:#16a34a; border-color:#fff; box-shadow:0 5px 0 #15803d; }
+</style>
 </style>
 </head>
 <body>
@@ -1476,27 +1519,9 @@ const GROUPS = [
     ['EL ALETLERİ',10,'çekiç pense tornavida testere anahtar keski'],
     ['BİLİM KURGU FİLMLERİ',11,'avatar matrix dune alien terminator interstellar'],
     ['AKSİYON OYUNLARI',12,'doom halo farcry hitman tekken mortal']
-  ]],
-  ['Sahra Çölü','#f59e0b',[]],
-  ['Himalaya Dağları','#60a5fa',[]],
-  ['Pasifik Okyanusu Derinlikleri','#0ea5e9',[]],
-  ['İskandinav Fiyortları','#14b8a6',[]],
-  ['Kapadokya Volkanik Vadileri','#fb923c',[]],
-  ['Büyük Set Resifi','#06b6d4',[]],
-  ['Antarktika Buz Sahanlığı','#93c5fd',[]],
-  ['Tayga Ormanları','#15803d',[]],
-  ['Hawaii Yanardağları','#ef4444',[]],
-  ['Galápagos Adaları','#84cc16',[]],
-  ['Atacama Çölü','#d97706',[]],
-  ['Büyük Kanyon','#ea580c',[]],
-  ['Nil Nehri Deltası','#22c55e',[]],
-  ['Waitomo Ateş Böceği Mağaraları','#6366f1',[]],
-  ['Yellowstone Jeotermal Alanı','#f97316',[]],
-  ['Madagascar Baobab Ormanları','#a16207',[]],
-  ['Baykal Gölü','#3b82f6',[]],
-  ['Sokotra Adası','#a855f7',[]],
-  ['Iguazú Şelaleleri','#06b6d4',[]]
+  ]]
 ];
+
 const INFO = [
   ["DÜNYA / EL ALETLERİ","Ameliyat aletlerinin bazıları, cerrahın el hareketini çok küçük ve hassas hareketlere dönüştürecek şekilde tasarlanır. Milimetrenin çok küçük bölümlerindeki kontrol, ameliyatın başarısında kritik olabilir."],
   ["SANAYİ / MALZEMELER","Rulmanların içindeki küçücük bilyeler, ağır makinelerde hareket eden parçalar arasındaki sürtünmeyi ciddi biçimde azaltır. Küçük bir parça, tonlarca yük taşıyan bir sistemin çalışmasını değiştirebilir."],
@@ -2418,9 +2443,79 @@ function victory(){
   setTimeout(() => confetti(w * .5, h * .3, 60, -Math.PI, 0, .7), 350);
   setTimeout(() => { confetti(w * .2, h * .15, 40, 0, Math.PI, .5); confetti(w * .8, h * .15, 40, 0, Math.PI, .5); }, 900);
 }
+
+function playJourneyUnlockAnimation(fromIdx){
+  const nextIdx = fromIdx + 1;
+  if (nextIdx >= LEVELS.length) { showLevels(); return; }
+
+  // Yolculuk ekranını önce tamamlanan bölümün yanında aç.
+  leaveGame();
+  renderModes(false);
+  setView('modes');
+  updateHome();
+
+  requestAnimationFrame(() => {
+    const map = $('jr-map');
+    const wrap = $('jr-wrap');
+    const canvas = wrap.querySelector('.jr-canvas');
+    if (!canvas) return;
+
+    const nodes = wrap.querySelectorAll('.jr-node');
+    const fromNode = nodes[fromIdx];
+    const nextNode = nodes[nextIdx];
+    if (!fromNode || !nextNode) return;
+
+    // Haritayı 1. bölümde tut, sonra 2. bölüme doğru kaydır.
+    const fromTop = Math.max(0, nextNode.parentElement.offsetTop - map.clientHeight * .62);
+    map.scrollTo({top: fromTop, behavior:'auto'});
+
+    const P = LEVELS.map((d, i) => {
+      const groupCounts = GROUPS.map(g => g[2].length);
+      const groupBlocks = groupCounts.map(n => Math.max(330, n * 105 + 150));
+      const H = groupBlocks.reduce((a,b) => a+b, 0) + 80;
+      const before = groupBlocks.slice(0, d.group).reduce((a,b) => a+b, 0);
+      const base = H - 40 - before;
+      return {x:180 + 95 * Math.sin(i * 1.3 + .4), y:base - 45 - d.lv * 105};
+    });
+
+    const runner = document.createElement('div');
+    runner.className = 'jr-runner';
+    runner.style.left = P[fromIdx].x + 'px';
+    runner.style.top = P[fromIdx].y + 'px';
+    canvas.appendChild(runner);
+
+    // Birinci bölümden ikinci bölüme ilerleyen küçük "oyuncu" animasyonu.
+    requestAnimationFrame(() => {
+      runner.style.transform = 'translate(-50%,-50%) scale(1)';
+      runner.style.left = P[nextIdx].x + 'px';
+      runner.style.top = P[nextIdx].y + 'px';
+      map.scrollTo({top: Math.max(0, P[nextIdx].y - map.clientHeight * .60), behavior:'smooth'});
+    });
+
+    setTimeout(() => {
+      nextNode.classList.add('jr-new-open','jr-unlock-pulse');
+      nextNode.animate(
+        [
+          {transform:'scale(1)'},
+          {transform:'scale(1.2)'},
+          {transform:'scale(1)'}
+        ],
+        {duration:900, easing:'ease-in-out', iterations:2}
+      );
+      runner.style.transform = 'translate(-50%,-50%) scale(.72)';
+      setTimeout(() => runner.remove(), 650);
+    }, 920);
+  });
+}
+
 $('btn-next-level').addEventListener('click', () => {
+  const fromIdx = S.levelIndex;
   modal.classList.remove('show');
-  if (S.levelIndex + 1 < LEVELS.length) startLevel(S.levelIndex + 1); else showLevels();
+  if (fromIdx + 1 < LEVELS.length) {
+    playJourneyUnlockAnimation(fromIdx);
+  } else {
+    showLevels();
+  }
 });
 
 /* =====================================================
