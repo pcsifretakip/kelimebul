@@ -1177,8 +1177,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 </style>
 <style>
 /* ===== YOLCULUK: sadece tamamlanan bölüm yeşil, diğerleri yeşil değil ===== */
-#view-modes .jr-cap,
-#view-modes .jr-ban { display:none !important; }
+#view-modes .jr-cap { display:none !important; }
 #view-modes .jr-node { background:#334155; color:#fff; }
 #view-modes .jr-node.open { background:#334155; }
 #view-modes .jr-node.cur { background:#2563eb; box-shadow:0 5px 0 #1d4ed8,0 0 0 0 rgba(37,99,235,.65); }
@@ -1235,6 +1234,30 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 @keyframes mgSpin{to{rotate:360deg}}
 @keyframes mgGlow{from{opacity:.55;transform:scale(.85)}to{opacity:1;transform:scale(1.15)}}
 @keyframes mgRing{0%{transform:scale(.4);opacity:.95}100%{transform:scale(3);opacity:0}}
+</style>
+<style>
+/* ===== BÖLGE HİKAYE EKRANI ===== */
+.story{position:absolute;inset:0;z-index:95;overflow:hidden;background:#04140d;opacity:0;transition:opacity .35s ease}
+.story.on{opacity:1}
+.st-art,.st-art svg{position:absolute;inset:0;width:100%;height:100%}
+.st-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 30%,rgba(2,10,8,.78) 72%,rgba(2,10,8,.92))}
+.st-body{position:absolute;left:0;right:0;bottom:0;padding:0 18px calc(22px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.st-tag{padding:5px 14px;border-radius:999px;background:rgba(251,191,36,.95);color:#3b1d00;font-size:12px;font-weight:1000;letter-spacing:.14em;animation:stUp .6s ease-out .2s both}
+.st-name{margin:0;font-size:clamp(28px,9vw,40px);font-weight:1000;letter-spacing:.06em;color:#fff;line-height:1.05;text-shadow:0 3px 0 rgba(0,0,0,.45),0 0 26px rgba(255,255,255,.35);animation:stUp .6s ease-out .35s both}
+.st-card{width:100%;max-width:420px;padding:14px 16px;border-radius:20px;background:rgba(10,24,20,.72);border:1.5px solid rgba(253,230,138,.55);backdrop-filter:blur(6px);animation:stUp .6s ease-out .55s both}
+.st-card b{display:block;margin-bottom:6px;font-size:13px;letter-spacing:.1em;color:#fde68a}
+.st-card p{margin:0;font-size:16px;font-weight:700;line-height:1.4;color:#fff}
+.st-ok{margin-top:4px;padding:12px 60px;border:0;border-radius:999px;font:inherit;font-size:22px;font-weight:1000;letter-spacing:.06em;color:#fff;background:linear-gradient(180deg,#5cff3a,#22d10f 55%,#17b20a);box-shadow:inset 0 2px 0 rgba(255,255,255,.45),0 6px 0 #0d7a06,0 12px 22px rgba(0,0,0,.4);text-shadow:0 2px 0 rgba(0,0,0,.3);animation:stUp .6s ease-out .75s both}
+.st-ok:active{transform:translateY(4px);box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 2px 0 #0d7a06}
+@keyframes stUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.st-rays{opacity:.14;animation:stRay 4s ease-in-out infinite alternate}
+@keyframes stRay{from{opacity:.07}to{opacity:.2}}
+.st-sway{transform-box:fill-box;transform-origin:0 100%;animation:stSway 4.5s ease-in-out infinite alternate}
+@keyframes stSway{from{rotate:-2.5deg}to{rotate:2.5deg}}
+.st-ff{animation:stFf 2.6s ease-in-out infinite}
+@keyframes stFf{0%,100%{opacity:.1;transform:translateY(0)}50%{opacity:1;transform:translateY(-14px)}}
+.st-snow{animation:stSnow 8s linear infinite}
+@keyframes stSnow{to{transform:translate(-30px,830px)}}
 </style>
 </head>
 <body>
@@ -1639,7 +1662,7 @@ const DIRS = {
   hard:   [[0,1],[1,0],[1,1],[0,-1],[-1,0],[-1,-1],[1,-1],[-1,1]]
 };
 const GROUPS = [
-  ['Amazon Yağmur Ormanları','#16a34a',[
+  ['Yağmur Ormanları','#16a34a',[
     ['ÇİÇEK TÜRLERİ',7,'gül lale papatya orkide menekşe sümbül'],
     ['SANAYİ MALZEMELERİ',7,'rulman civata somun profil zincir conta'],
     ['AMELİYAT MALZEMELERİ',7,'neşter penset makas ekartör dikiş bistüri'],
@@ -1661,6 +1684,25 @@ const GROUPS = [
     ['EL ALETLERİ',10,'çekiç pense tornavida testere anahtar keski'],
     ['BİLİM KURGU FİLMLERİ',11,'avatar matrix dune alien terminator interstellar'],
     ['AKSİYON OYUNLARI',12,'doom halo farcry hitman tekken mortal']
+  ]],
+  ['Himalaya Dağları','#0ea5e9',[
+    ['ASYA ÜLKELERİ',7,'nepal tibet butan çin japon kore','','easy'],
+    ['HİMALAYA HAYVANLARI',7,'yak kartal leopar ayı keçi geyik','','easy'],
+    ['DAĞCILIK EKİPMANLARI',7,'ip kask çadır mont bot kazma','','easy'],
+    ['DÜNYANIN ZİRVELERİ',8,'everest elbrus ağrı fuji erciyes uludağ','','easy'],
+    ['HAVA OLAYLARI',7,'kar yağmur rüzgar sis fırtına çığ','fırtına çığ','easy'],
+    ['TİBET KÜLTÜRÜ',8,'lama manastır dua bayrak budizm mantra','','medium'],
+    ['ŞERPALAR',8,'şerpa taşıyıcı rehber kamp yük zirve','','medium'],
+    ['ASYA NEHİRLERİ',9,'ganj indus mekong yangtze fırat dicle','','medium'],
+    ['DAĞ DOĞASI',9,'orman kaya vadi buzul şelale yayla','','medium'],
+    ['NEPAL MUTFAĞI',8,'momo dal pirinç çay baharat yoğurt','baharat momo','medium'],
+    ['EFSANELER',10,'yeti şambala himalaya tanrı tapınak ejderha','','medium'],
+    ['HİMALAYA ZİRVELERİ',10,'everest lhotse makalu annapurna manaslu dhaulagiri','','medium'],
+    ['ÜNLÜ DAĞCILAR',10,'hillary tenzing messner mallory irvine norgay','','hard'],
+    ['DAĞCILIK TERİMLERİ',11,'irtifa oksijen krampon yamaç bivak tepe','','hard'],
+    ['DAĞ SPORLARI',10,'kayak tırmanış yürüyüş paraşüt snowboard rafting','snowboard tırmanış','hard'],
+    ['HİMALAYA BİTKİLERİ',12,'rododendron edelweiss lavanta çam ladin ardıç orkide','','hard'],
+    ['DÜNYANIN ÇATISI',12,'himalaya karakurum annapurna dhaulagiri everest lhotse makalu manaslu','','hard']
   ]]
 ];
 
@@ -1744,7 +1786,7 @@ const INFO = [
   ["Üç Ülke Sınırı / ARJANTİN","Şelalelerin yakınında Brezilya, Arjantin ve Paraguay sınırları buluşur."]
 ];
 let _n = 0;
-const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => { const hide = l[3] ? l[3].split(' ') : null; return { category:l[0], group:gi, lv:j, info:hide ? undefined : INFO[_n++], size:l[1], dirs: hide ? (j < 8 ? 'easy' : 'medium') : (j < 6 ? 'easy' : (j < 12 ? 'medium' : 'hard')), mode:hide ? 'hidden' : 'classic', hide, subtitle:g[0].toLocaleUpperCase('tr-TR'), words:l[2].split(' ') }; }));
+const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => { const hide = l[3] ? l[3].split(' ') : null; return { category:l[0], group:gi, lv:j, info:(hide || gi > 0) ? undefined : INFO[_n++], size:l[1], dirs: l[4] ? l[4] : hide ? (j < 8 ? 'easy' : 'medium') : (j < 6 ? 'easy' : (j < 12 ? 'medium' : 'hard')), mode:hide ? 'hidden' : 'classic', hide, subtitle:g[0].toLocaleUpperCase('tr-TR'), words:l[2].split(' ') }; }));
 const LEVELS = CLASSIC_LEVELS;
 const MODES = [
   { key:'classic', category:'KLASİK SERBEST', icon:'sprout', color:'#22c55e', subtitle:'Rahatça oyna. Bölümleri seç ve normal kelime bulma modunda ilerle.', available:true }
@@ -2128,13 +2170,87 @@ function setSoundIcon(){
 /* =====================================================
    SEVİYE KURULUMU
    ===================================================== */
+
+/* =====================================================
+   BÖLGE HİKAYE EKRANLARI (başta / ortada / sonda tam ekran resim + ilginç bilgi)
+   ===================================================== */
+const STORIES = [
+  { theme:'jungle', name:'YAĞMUR ORMANLARI',
+    start:{ tag:'YOLCULUK BAŞLIYOR', fact:'Yağmur ormanları yeryüzünün yalnızca yaklaşık %6\'sını kaplar, ama bilinen bütün canlı türlerinin yarısından fazlasına ev sahipliği yapar.' },
+    mid:  { tag:'YOLUN YARISINDASIN', fact:'Zehirli ok kurbağalarının parlak renkleri bir uyarıdır: "Bana dokunma, zehirliyim!" Bazılarının derisindeki zehir yetişkin bir insan için bile tehlikelidir.' },
+    end:  { tag:'SON DURAK', fact:'Amazon Yağmur Ormanı Türkiye\'nin yaklaşık yedi katı büyüklüğündedir. Amazon Nehri ise okyanuslara akan tatlı suyun yaklaşık beşte birini taşır.' } },
+  { theme:'mountain', name:'HİMALAYA DAĞLARI',
+    start:{ tag:'YENİ MACERA', fact:'Himalaya, "karın yurdu" demektir. Dünyanın sekiz bin metreyi aşan 14 zirvesinden 10\'u bu dağ silsilesindedir.' },
+    mid:  { tag:'YOLUN YARISINDASIN', fact:'Himalayalar hâlâ büyüyor! İki kıta levhasının çarpışması yüzünden her yıl yaklaşık 5 milimetre yükseliyorlar.' },
+    end:  { tag:'ZİRVEYE ÇOK AZ KALDI', fact:'Everest\'e ilk kez 1953\'te Edmund Hillary ile Şerpa Tenzing Norgay çıktı. Zirvede hava o kadar seyrektir ki dağcılar çoğunlukla oksijen tüpü taşır.' } }
+];
+function storySVG(theme){
+  if (theme === 'jungle'){
+    let t = '';
+    [[-10,150,.55,'#0b4a2f'],[80,120,.6,'#0d5535'],[170,140,.5,'#0b4a2f'],[260,110,.62,'#0d5535'],[345,150,.55,'#0b4a2f']].forEach(a => {
+      t += '<rect x="'+(a[0]+28)+'" y="260" width="14" height="300" fill="#2b1a0e" opacity="'+a[2]+'"/>' +
+           '<g fill="'+a[3]+'" opacity="'+(a[2]+.25)+'"><ellipse cx="'+(a[0]+35)+'" cy="'+(250)+'" rx="'+(a[1]/1.4)+'" ry="70"/><ellipse cx="'+(a[0]+5)+'" cy="290" rx="70" ry="48"/><ellipse cx="'+(a[0]+70)+'" cy="290" rx="70" ry="48"/></g>';
+    });
+    let f = '';
+    [[-10,740,-35,1.5,'#0f6b3a'],[-10,780,-70,1.4,'#14803f'],[-10,700,-8,1.2,'#0b5a30'],[410,740,215,1.5,'#0f6b3a'],[410,785,250,1.4,'#14803f'],[410,700,188,1.2,'#0b5a30'],[200,820,-100,1.1,'#0b5a30']]
+      .forEach(a => { f += '<g transform="translate('+a[0]+' '+a[1]+') rotate('+a[2]+') scale('+a[3]+')" class="st-sway"><use href="#stf" fill="'+a[4]+'"/><path d="M0 0 Q70 -14 150 8" stroke="#052e1c" stroke-width="2" fill="none" opacity=".6"/></g>'; });
+    let v = '';
+    [[40,0,90,170],[110,0,70,120],[300,0,320,190],[355,0,340,130]].forEach(a => { v += '<path d="M'+a[0]+' 0 Q'+a[2]+' '+(a[3]/2)+' '+(a[0]+10)+' '+a[3]+'" stroke="#0a3d24" stroke-width="5" fill="none"/><circle cx="'+(a[0]+10)+'" cy="'+a[3]+'" r="9" fill="#16a34a"/>'; });
+    let ff = '';
+    for (let i = 0; i < 14; i++) ff += '<circle class="st-ff" cx="'+(30 + (i*53)%350)+'" cy="'+(260 + (i*97)%420)+'" r="2.6" fill="#fde68a" style="animation-delay:'+(i*.37)+'s"/>';
+    return '<svg viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice"><defs>' +
+      '<linearGradient id="jb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#86efac"/><stop offset=".3" stop-color="#1c8a52"/><stop offset="1" stop-color="#03231a"/></linearGradient>' +
+      '<radialGradient id="jl" cx=".5" cy="0" r=".85"><stop offset="0" stop-color="#fef9c3" stop-opacity=".95"/><stop offset="1" stop-color="#fef08a" stop-opacity="0"/></radialGradient>' +
+      '<path id="stf" d="M0 0 C40 -42 120 -40 160 8 C120 -4 50 -4 0 0Z"/></defs>' +
+      '<rect width="400" height="800" fill="url(#jb)"/><rect width="400" height="560" fill="url(#jl)"/>' +
+      '<g class="st-rays" fill="#fff"><path d="M150 0L60 560 170 560Z"/><path d="M215 0L190 560 290 560Z"/><path d="M270 0L330 560 400 560Z"/></g>' + t + v +
+      '<g transform="translate(285 330)"><path d="M-130 64 Q0 40 125 72" stroke="#5b3a1e" stroke-width="11" fill="none" stroke-linecap="round"/>' +
+      '<path d="M-6 30 Q-16 80 -34 96 L-4 86 Z" fill="#111"/><ellipse rx="25" ry="38" fill="#111"/><ellipse cx="5" cy="-4" rx="13" ry="22" fill="#fff"/><ellipse cx="6" cy="30" rx="9" ry="7" fill="#ef4444"/>' +
+      '<circle cx="2" cy="-44" r="17" fill="#111"/><path d="M12 -52 Q64 -62 74 -38 Q44 -32 12 -36Z" fill="#f97316"/><path d="M12 -44 Q50 -48 70 -40 L60 -34 Q36 -34 12 -37Z" fill="#fde047"/><circle cx="9" cy="-49" r="4.5" fill="#fff"/><circle cx="10" cy="-49" r="2" fill="#111"/></g>' +
+      '<path d="M0 560 Q100 530 200 556 T400 548 V800 H0Z" fill="#04261a"/><rect y="520" width="400" height="60" fill="#9be7b8" opacity=".10"/>' +
+      ff + f + '</svg>';
+  }
+  let fl = '';
+  const cols = ['#38bdf8','#f8fafc','#ef4444','#22c55e','#facc15'];
+  for (let i = 0; i < 15; i++){ const u = (i + .5) / 15, x = 400 * u, y = 110 + 160 * u * (1 - u); fl += '<path d="M'+(x-10).toFixed(1)+' '+y.toFixed(1)+'h20v24h-20z" fill="'+cols[i%5]+'" opacity=".95" transform="rotate('+((u-.5)*18).toFixed(1)+' '+x.toFixed(1)+' '+y.toFixed(1)+')"/>'; }
+  let sn = '', st = '';
+  for (let i = 0; i < 26; i++) sn += '<circle class="st-snow" cx="'+((i*47)%400)+'" cy="-10" r="'+(1.6 + (i%3))+'" fill="#fff" style="animation-delay:'+(-i*.55)+'s;animation-duration:'+(7+(i%5))+'s"/>';
+  for (let i = 0; i < 24; i++) st += '<circle class="st-ff" cx="'+((i*71)%400)+'" cy="'+(20+(i*43)%250)+'" r="1.4" fill="#fff" style="animation-delay:'+(i*.3)+'s"/>';
+  return '<svg viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="mb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e1b4b"/><stop offset=".4" stop-color="#7c3aed"/><stop offset=".62" stop-color="#fb923c"/><stop offset="1" stop-color="#fde68a"/></linearGradient></defs>' +
+    '<rect width="400" height="800" fill="url(#mb)"/>' + st + '<circle cx="200" cy="400" r="62" fill="#fff7c2" opacity=".92"/><circle cx="200" cy="400" r="100" fill="#fde68a" opacity=".25"/>' +
+    '<path d="M-20 520 L70 360 L120 430 L210 300 L300 430 L350 370 L420 480 L420 800 L-20 800Z" fill="#5b4aa8"/><path d="M210 300 L180 350 L205 340 L222 360 L240 338 L258 352Z" fill="#fff" opacity=".9"/><path d="M70 360 L48 396 L70 388 L88 402Z" fill="#fff" opacity=".85"/>' +
+    '<path d="M-20 600 L90 450 L150 520 L250 400 L330 520 L380 470 L420 560 L420 800 L-20 800Z" fill="#33297a"/><path d="M250 400 L218 450 L246 438 L264 462 L286 436 L300 452Z" fill="#fff" opacity=".92"/><path d="M90 450 L66 488 L92 478 L112 494Z" fill="#fff" opacity=".9"/>' +
+    '<path d="M-20 700 L110 560 L200 650 L300 540 L420 660 L420 800 L-20 800Z" fill="#1a1450"/><path d="M300 540 L272 580 L298 572 L316 590 L336 568Z" fill="#fff" opacity=".95"/>' +
+    '<path d="M0 110 Q200 190 400 110" stroke="#fde68a" stroke-width="2.5" fill="none" opacity=".8"/>' + fl.replace(/y="/g,'y="') + sn + '</svg>';
+}
+function storyPos(index){
+  const d = LEVELS[index]; if (!d || d.group == null) return null;
+  const n = GROUPS[d.group][2].length;
+  const pos = d.lv === 0 ? 'start' : d.lv === Math.floor(n / 2) ? 'mid' : d.lv === n - 1 ? 'end' : null;
+  return pos ? { g:d.group, pos, key:'kb_story_' + d.group + '_' + pos } : null;
+}
+function showStory(sp, done){
+  const old = document.querySelector('.story'); if (old) old.remove();
+  const st = STORIES[sp.g]; if (!st){ done(); return; }
+  const o = document.createElement('div'); o.className = 'story';
+  o.innerHTML = '<div class="st-art">' + storySVG(st.theme) + '</div><div class="st-shade"></div>' +
+    '<div class="st-body"><div class="st-tag">' + st[sp.pos].tag + '</div><h1 class="st-name">' + st.name + '</h1>' +
+    '<div class="st-card"><b>💡 BİLİYOR MUYDUN?</b><p>' + st[sp.pos].fact + '</p></div>' +
+    '<button class="st-ok" type="button">DEVAM</button></div>';
+  app.appendChild(o);
+  requestAnimationFrame(() => o.classList.add('on'));
+  o.querySelector('.st-ok').addEventListener('click', () => {
+    store.set(sp.key, '1'); o.classList.remove('on'); setTimeout(() => o.remove(), 350); done();
+  });
+}
+
 function startLevel(index, def, seed){
   const review = !def && !!S.done[index];             // tamamlanmış bölüm: bitmiş hali gösterilir, puan/altın yok
   if (!review){ S.games++; store.set('kb_games', S.games); }
   app.classList.toggle('on-review', review);
   $('status-txt').textContent = review ? '✔ Mod tamamlandı • tekrar puan kazanılmaz' : 'Harfleri parmağınla sürükleyip kelimeyi bul!';
   S.token++; stopTimer();
-  { const t = document.querySelector('.hid-tut'); if (t) t.remove(); }
+  { const t = document.querySelector('.hid-tut'); if (t) t.remove(); const q = document.querySelector('.story'); if (q) q.remove(); }
   const tok = S.token;
   S.levelIndex = index;
   S.level = def ? buildLevel(def, seed) : buildLevel(LEVELS[index], index);
@@ -2177,7 +2293,9 @@ function startLevel(index, def, seed){
   requestAnimationFrame(() => requestAnimationFrame(() => {
     if (tok !== S.token) return;
     const go = () => { if (tok !== S.token) return; S.playing = true; startTimer(); measure(); };
-    if (S.level.hidden.length && !store.get('kb_hid_tut')) showHiddenTutorial(go); else go();
+    const next = () => { if (tok !== S.token) return; if (S.level.hidden.length && !store.get('kb_hid_tut')) showHiddenTutorial(go); else go(); };
+    const sp = (!def && !R) ? storyPos(index) : null;
+    if (sp && !store.get(sp.key)) showStory(sp, next); else next();
   }));
 }
 function showHiddenTutorial(go){
@@ -2840,7 +2958,7 @@ let irisBusy = false;
 /* =====================================================
    BÖLÜM SEÇİM EKRANI
    ===================================================== */
-const JR_EMO = ['🌴','🏜️','🏔️','🌊','⛰️','🎈','🐠','🐧','🌲','🌋','🐢','🌵','🏞️','🏺','✨','♨️','🌳','❄️','🦎','💦'];
+const JR_EMO = ['🌴','🏔️','🏜️','🌊','⛰️','🎈','🐠','🐧','🌲','🌋','🐢','🌵','🏞️','🏺','✨','♨️','🌳','❄️','🦎','💦'];
 function renderModes(){ drawMap(true); }
 function drawMap(scroll){
   const map = $('jr-map'), wrap = $('jr-wrap'), keep = map.scrollTop;
@@ -2858,13 +2976,13 @@ function drawMap(scroll){
   });
   let html = '', svg = '';
   GROUPS.forEach((g, gi) => {
-    const below = groupBlocks.slice(gi + 1).reduce((a,b) => a+b, 0);
+    const below = groupBlocks.slice(0, gi).reduce((a,b) => a+b, 0);
     const top = H - 60 - below - groupBlocks[gi];
     const first = groupStarts[gi], unlocked = gi === 0 ? true : first <= S.maxOpen;
     const refPoint = P[Math.min(first, Math.max(0, P.length - 1))] || {x:180};
     const side = refPoint.x > 180 ? 'left:16px' : 'right:16px';
     html += '<div class="jr-band' + (gi % 2 ? ' alt' : '') + (unlocked ? '' : ' lock') + '" style="top:' + top + 'px;height:' + groupBlocks[gi] + 'px;--c:' + g[1] + '"><span class="jr-emo" style="' + side + '">' + JR_EMO[gi] + '</span></div>';
-    html += '<div class="jr-ban' + (unlocked ? '' : ' lock') + '" style="top:' + (top + 12) + 'px;--c:' + g[1] + '">' + g[0].replace(/</g, '') + '</div>';
+    html += '<div class="jr-ban' + (unlocked ? '' : ' lock') + '" style="top:' + (P[first + groupCounts[gi] - 1].y - 150) + 'px;--c:' + g[1] + '">' + g[0].replace(/</g, '') + '</div>';
   });
   let out = '', fill = '';
   for (let i = 1; i < P.length; i++){
