@@ -1291,7 +1291,10 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 </style>
 <style>
 /* ===== YOLCULUK: harita.png arka plan ===== */
-.jr-scenery.jr-img{background:#79bf56 url('harita.png') center bottom / 100% auto repeat-y}
+.jr-tiles{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.jr-tile{position:absolute;left:0;right:0;background:#79bf56 url('harita.png') 0 0 / 100% 100% no-repeat}
+.jr-tile.fade{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 11%);mask-image:linear-gradient(to bottom,transparent 0,#000 11%)}
+.jr-wrap{background:#79bf56}
 </style>
 </head>
 <body>
@@ -2922,14 +2925,7 @@ function playJourneyUnlockAnimation(fromIdx){
     const fromTop = Math.max(0, nextNode.parentElement.offsetTop - map.clientHeight * .62);
     map.scrollTo({top: fromTop, behavior:'auto'});
 
-    const P = LEVELS.map((d, i) => {
-      const groupCounts = GROUPS.map(g => g[2].length);
-      const groupBlocks = groupCounts.map(n => Math.max(330, n * 105 + 150));
-      const H = groupBlocks.reduce((a,b) => a+b, 0) + 80;
-      const before = groupBlocks.slice(0, d.group).reduce((a,b) => a+b, 0);
-      const base = H - 40 - before;
-      return {x:180 + 95 * Math.sin(i * 1.3 + .4), y:base - 45 - d.lv * 105};
-    });
+    const P = JR_P;
 
     const runner = document.createElement('div');
     runner.className = 'jr-runner';
@@ -3019,55 +3015,78 @@ function journeyScenerySVG(H){
 }
 const JR_EMO = ['🌴','🏔️','🏜️','🌊','⛰️','🎈','🐠','🐧','🌲','🌋','🐢','🌵','🏞️','🏺','✨','♨️','🌳','❄️','🦎','💦'];
 function renderModes(){ drawMap(true); }
+/* Harita.png yolu: resim koordinatlarında (940x1672) yol merkez noktaları, alttan üste */
+const JR_IMG = {w:940, h:1672, perTile:10, overlap:.1,
+  wp:[[480,1672],[540,1520],[549,1450],[482,1400],[388,1350],[375,1290],[438,1250],[539,1200],[607,1150],[625,1110],[555,1075],[447,1025],[388,1000],[340,960],[388,900],[458,875],[525,825],[447,775],[353,725],[360,690],[398,675],[540,625],[577,575],[534,550],[557,500],[565,450],[567,400],[502,375],[446,350],[454,325],[471,300],[500,250],[490,200],[493,175],[505,125]]};
+const JR_CURVE = (() => {
+  const wp = JR_IMG.wp, pts = [];
+  const cr = (a,b,c,d,t) => [0,1].map(k => .5*((2*b[k]) + (-a[k]+c[k])*t + (2*a[k]-5*b[k]+4*c[k]-d[k])*t*t + (-a[k]+3*b[k]-3*c[k]+d[k])*t*t*t));
+  for (let i = 0; i < wp.length - 1; i++) for (let k = 0; k < 16; k++) pts.push(cr(wp[Math.max(i-1,0)], wp[i], wp[i+1], wp[Math.min(i+2,wp.length-1)], k/16));
+  pts.push(wp[wp.length-1]);
+  const len = [0]; for (let i = 1; i < pts.length; i++) len.push(len[i-1] + Math.hypot(pts[i][0]-pts[i-1][0], pts[i][1]-pts[i-1][1]));
+  return {pts, len, total: len[len.length-1]};
+})();
+function jrAt(s){          // s: 0 (alt) .. 1 (üst) -> resim koordinatı
+  const C = JR_CURVE, t = Math.max(0, Math.min(1, s)) * C.total;
+  for (let i = 1; i < C.len.length; i++) if (C.len[i] >= t){
+    const f = (t - C.len[i-1]) / ((C.len[i] - C.len[i-1]) || 1), a = C.pts[i-1], b = C.pts[i];
+    return [a[0] + (b[0]-a[0])*f, a[1] + (b[1]-a[1])*f];
+  }
+  return C.pts[C.pts.length-1];
+}
+function jrSlice(s0, s1){  // iki s arasındaki eğri noktaları
+  const C = JR_CURVE, a = s0*C.total, b = s1*C.total, out = [jrAt(s0)];
+  for (let i = 0; i < C.len.length; i++) if (C.len[i] > a && C.len[i] < b) out.push(C.pts[i]);
+  out.push(jrAt(s1)); return out;
+}
+let JR_P = [], JR_W = 0;
 function drawMap(scroll){
   const map = $('jr-map'), wrap = $('jr-wrap'), keep = map.scrollTop;
-  const G = GROUPS.length;
-  const groupCounts = GROUPS.map(g => g[2].length);
-  const groupStarts = groupCounts.map((_, i) => groupCounts.slice(0, i).reduce((a,b) => a+b, 0));
-  const groupBlocks = groupCounts.map(n => Math.max(330, n * 105 + 150));
-  const H = groupBlocks.reduce((a,b) => a+b, 0) + 80;
+  const n = LEVELS.length, PT = JR_IMG.perTile, tiles = Math.max(1, Math.ceil(n / PT));
+  const W = wrap.clientWidth || map.clientWidth || window.innerWidth || 390; JR_W = W;
+  const sc = W / JR_IMG.w, tileH = JR_IMG.h * sc, pitch = tileH * (1 - JR_IMG.overlap);
+  const H = Math.round((tiles - 1) * pitch + tileH);
   let cur = LEVELS.findIndex((_, i) => !S.done[i] && i <= S.maxOpen); if (cur < 0) cur = LEVELS.length - 1;
   $('jr-me').innerHTML = journeyOwlSVG();
-  const P = LEVELS.map((d, i) => {
-    const before = groupBlocks.slice(0, d.group).reduce((a,b) => a+b, 0);
-    const base = H - 40 - before;
-    return { x:180 + 95 * Math.sin(i * 1.3 + .4), y:base - 45 - d.lv * 105 };
-  });
-  let html = '<div class="jr-scenery jr-img"></div>', svg = '';
-  GROUPS.forEach((g, gi) => {
-    const below = groupBlocks.slice(0, gi).reduce((a,b) => a+b, 0);
-    const top = H - 60 - below - groupBlocks[gi];
-    const first = groupStarts[gi], unlocked = gi === 0 ? true : first <= S.maxOpen;
-    const refPoint = P[Math.min(first, Math.max(0, P.length - 1))] || {x:180};
-    const side = refPoint.x > 180 ? 'left:16px' : 'right:16px';
-    html += '<div class="jr-band' + (gi % 2 ? ' alt' : '') + (unlocked ? '' : ' lock') + '" style="top:' + top + 'px;height:' + groupBlocks[gi] + 'px;--c:' + g[1] + '"><span class="jr-emo" style="' + side + '">' + JR_EMO[gi] + '</span></div>';
-    html += '<div class="jr-ban' + (unlocked ? '' : ' lock') + '" style="top:' + (P[first + groupCounts[gi] - 1].y - 150) + 'px;--c:' + g[1] + '">' + g[0].replace(/</g, '') + '</div>';
-  });
-  let out = '', fill = '';
-  for (let i = 1; i < P.length; i++){
-    const a = P[i - 1], b = P[i], ym = (a.y + b.y) / 2;
-    const d = 'M' + a.x + ' ' + a.y + ' C' + a.x + ' ' + ym + ' ' + b.x + ' ' + ym + ' ' + b.x + ' ' + b.y;
-    out += '<path d="' + d + '" stroke="#2a1a0a" stroke-width="24"/>';
-    fill += '<path d="' + d + '" stroke="' + (S.done[i - 1] ? '#fbbf24' : '#eadbb4') + '" stroke-width="16"/>';
+  const sOf = j => .02 + .93 * j / (PT - 1);
+  const place = (t, s) => { const q = jrAt(s); return {x:q[0]*sc, y:(tiles-1-t)*pitch + q[1]*sc}; };
+  const P = LEVELS.map((d, i) => place(Math.floor(i / PT), sOf(i % PT)));
+  JR_P = P;
+  /* arka plan: her resim bir döşeme; üstteki döşemeye yumuşak geçiş */
+  let html = '<div class="jr-tiles">';
+  for (let t = tiles - 1; t >= 0; t--) html += '<div class="jr-tile' + (t < tiles - 1 ? ' fade' : '') + '" style="top:' + ((tiles-1-t)*pitch).toFixed(1) + 'px;height:' + tileH.toFixed(1) + 'px"></div>';
+  html += '</div>';
+  /* biten bölümler arasındaki altın yol */
+  let road = '';
+  for (let i = 1; i < n; i++){
+    if (!S.done[i-1]) continue;
+    const t0 = Math.floor((i-1) / PT), t1 = Math.floor(i / PT);
+    if (t0 !== t1) continue;
+    const pts = jrSlice(sOf((i-1) % PT), sOf(i % PT)).map(q => (q[0]*sc).toFixed(1) + ',' + ((tiles-1-t0)*pitch + q[1]*sc).toFixed(1)).join(' ');
+    road += '<polyline points="' + pts + '" stroke="rgba(60,35,5,.55)" stroke-width="20" />' + '<polyline points="' + pts + '" stroke="#fbbf24" stroke-width="12" />';
   }
-  svg = '<svg class="jr-road" width="360" height="' + H + '" viewBox="0 0 360 ' + H + '" fill="none" stroke-linecap="round">' + out + fill + '</svg>';
+  const svg = '<svg class="jr-road" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" fill="none" stroke-linecap="round" stroke-linejoin="round">' + road + '</svg>';
   let nodes = '';
   LEVELS.forEach((d, i) => {
     const p = P[i], dn = S.done[i], ok = d.group === 0 ? true : i <= S.maxOpen, isCur = i === cur && ok && !dn;
-    const st = dn ? '<span class="jr-stars">' + [1, 2, 3].map(n => '<svg class="i st' + (n <= dn.stars ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>' : '';
-    nodes += '<div class="jr-nw" style="left:' + p.x + 'px;top:' + p.y + 'px;--c:' + GROUPS[d.group][1] + '">' +
+    const st = dn ? '<span class="jr-stars">' + [1, 2, 3].map(k => '<svg class="i st' + (k <= dn.stars ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>' : '';
+    nodes += '<div class="jr-nw" style="left:' + p.x.toFixed(1) + 'px;top:' + p.y.toFixed(1) + 'px;--c:' + GROUPS[d.group][1] + '">' +
       (isCur ? '<div class="jr-pin"><span>' + journeyOwlSVG() + '</span></div>' : '') +
       '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '">' + (ok ? (i + 1) : iconSVG('lock')) + '</button>' + st +
       '</div>';
   });
   wrap.style.height = H + 'px';
-  wrap.innerHTML = html + '<div class="jr-canvas" style="height:' + H + 'px">' + svg + nodes + '</div>';
+  wrap.innerHTML = html + '<div class="jr-canvas" style="height:' + H + 'px;left:0;margin-left:0;width:' + W + 'px">' + svg + nodes + '</div>';
   wrap.querySelectorAll('.jr-node').forEach(b => b.addEventListener('click', () => {
     const i = +b.dataset.i;
     if (i <= S.maxOpen) showGame(i); else toast('Önce önceki bölümü tamamla.');
   }));
   if (scroll) requestAnimationFrame(() => { map.scrollTop = Math.max(0, P[cur].y - map.clientHeight * .6); }); else map.scrollTop = keep;
 }
+if ('ResizeObserver' in window) new ResizeObserver(() => {
+  const w = $('jr-wrap').clientWidth;
+  if (w > 0 && JR_W && Math.abs(w - JR_W) > 2 && typeof LEVELS !== 'undefined') drawMap(false);
+}).observe($('jr-wrap'));
 $('jr-back').addEventListener('click', () => { audio(); showHome(); });
 $('jr-me').addEventListener('click', () => { audio(); openProfile(); });
 
