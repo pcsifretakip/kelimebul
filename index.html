@@ -1181,7 +1181,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #view-modes .jr-node { background:#334155; color:#fff; }
 #view-modes .jr-node.open { background:#334155; }
 #view-modes .jr-node.cur { background:#2563eb; box-shadow:0 5px 0 #1d4ed8,0 0 0 0 rgba(37,99,235,.65); }
-#view-modes .jr-node.done { background:#16a34a; border-color:#fff; box-shadow:0 5px 0 #15803d; }
+#view-modes .jr-node.done { background:#475569; border-color:#fff; box-shadow:0 5px 0 #334155; }
 
 /* ===== YOLCULUK: masalsı çizimli harita ===== */
 #view-modes { background:transparent !important; }
@@ -1203,7 +1203,9 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #view-modes .jr-node.open { background:linear-gradient(180deg,#64748b 0%,#34445f 58%,#24324b 100%); }
 #view-modes .jr-node.lk { background:linear-gradient(180deg,#59677c,#27354d);border-color:#dce7f4;color:#e8eef8;box-shadow:0 7px 0 rgba(15,23,42,.38),inset 0 3px 0 rgba(255,255,255,.24); }
 #view-modes .jr-node.cur { background:linear-gradient(180deg,#45a6ff 0%,#2877f4 48%,#1557db 100%); box-shadow:0 8px 0 #1748a7,0 0 0 9px rgba(255,202,85,.25),0 0 28px rgba(255,220,119,.6),inset 0 3px 0 rgba(255,255,255,.48); animation:jrPulse 1.8s infinite; }
-#view-modes .jr-node.done { background:linear-gradient(180deg,#5be76e 0%,#20bb4f 52%,#079344 100%);border-color:#f8fff8;box-shadow:0 7px 0 #08763a,inset 0 3px 0 rgba(255,255,255,.42),0 0 14px rgba(47,224,92,.22); }
+#view-modes .jr-node.done { background:linear-gradient(180deg,#60728a 0%,#41536c 52%,#2d3f58 100%);border-color:#eaf2fb;color:#fff;box-shadow:0 7px 0 #26364c,inset 0 3px 0 rgba(255,255,255,.34),0 0 12px rgba(255,213,62,.10); }
+#view-modes .jr-node.cur::before{content:"";position:absolute;inset:-18px;border-radius:50%;background:radial-gradient(circle,rgba(255,227,135,.58) 0 38%,rgba(255,196,67,.22) 54%,transparent 72%);z-index:-1;animation:jrAura 1.8s ease-in-out infinite}
+@keyframes jrAura{0%,100%{transform:scale(.94);opacity:.72}50%{transform:scale(1.08);opacity:1}}
 .jr-stars { top:38px;left:-35px;width:70px;gap:1px; }
 .jr-stars .st { width:22px;height:22px;color:#6b7280;filter:drop-shadow(0 2px 0 #995d0b) drop-shadow(0 0 4px rgba(255,221,72,.55)); }
 .jr-stars .st.on { color:#ffd53e; }
@@ -1288,13 +1290,6 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 @keyframes stFf{0%,100%{opacity:.1;transform:translateY(0)}50%{opacity:1;transform:translateY(-14px)}}
 .st-snow{animation:stSnow 8s linear infinite}
 @keyframes stSnow{to{transform:translate(-30px,830px)}}
-</style>
-<style>
-/* ===== YOLCULUK: harita.png arka plan ===== */
-.jr-tiles{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.jr-tile{position:absolute;left:0;right:0;background:#79bf56 url('harita.png') 0 0 / 100% 100% no-repeat}
-.jr-tile.fade{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 11%);mask-image:linear-gradient(to bottom,transparent 0,#000 11%)}
-.jr-wrap{background:#79bf56}
 </style>
 </head>
 <body>
@@ -2925,7 +2920,14 @@ function playJourneyUnlockAnimation(fromIdx){
     const fromTop = Math.max(0, nextNode.parentElement.offsetTop - map.clientHeight * .62);
     map.scrollTo({top: fromTop, behavior:'auto'});
 
-    const P = JR_P;
+    const P = LEVELS.map((d, i) => {
+      const groupCounts = GROUPS.map(g => g[2].length);
+      const groupBlocks = groupCounts.map(n => Math.max(330, n * 105 + 150));
+      const H = groupBlocks.reduce((a,b) => a+b, 0) + 80;
+      const before = groupBlocks.slice(0, d.group).reduce((a,b) => a+b, 0);
+      const base = H - 40 - before;
+      return {x:180 + 95 * Math.sin(i * 1.3 + .4), y:base - 45 - d.lv * 105};
+    });
 
     const runner = document.createElement('div');
     runner.className = 'jr-runner';
@@ -2992,101 +2994,91 @@ function journeyOwlSVG(){
   return '<svg viewBox="0 0 64 64" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="owlBody" x2="0" y2="1"><stop stop-color="#f8c17b"/><stop offset="1" stop-color="#a85a2d"/></linearGradient><linearGradient id="owlBook" x2="0" y2="1"><stop stop-color="#f87171"/><stop offset="1" stop-color="#991b1b"/></linearGradient></defs><path d="M9 18 4 7 21 14M55 18 60 7 43 14" fill="#8b5a3b" stroke="#5d351f" stroke-width="2" stroke-linejoin="round"/><ellipse cx="32" cy="31" rx="23" ry="24" fill="url(#owlBody)" stroke="#6b3e25" stroke-width="2"/><ellipse cx="32" cy="34" rx="17" ry="17" fill="#f6dfb5"/><circle cx="23" cy="26" r="8" fill="#fff" stroke="#754a2a" stroke-width="1.5"/><circle cx="41" cy="26" r="8" fill="#fff" stroke="#754a2a" stroke-width="1.5"/><circle cx="24" cy="27" r="3.5" fill="#35251c"/><circle cx="40" cy="27" r="3.5" fill="#35251c"/><circle cx="25" cy="26" r="1.2" fill="#fff"/><circle cx="41" cy="26" r="1.2" fill="#fff"/><path d="m29 32 3 5 4-5z" fill="#f59e0b" stroke="#a16207" stroke-width="1"/><path d="M14 42Q22 38 30 47L32 54Q21 51 14 42M50 42Q42 38 34 47L32 54Q43 51 50 42" fill="#b87943" stroke="#754a2a" stroke-width="1.5"/><path d="M19 44Q32 39 45 44L45 57Q32 52 19 57Z" fill="url(#owlBook)" stroke="#713f27" stroke-width="1.5"/><path d="M32 43V54" stroke="#f8d8a4" stroke-width="1.5"/><path d="M22 47l7 1M22 50l7 1M36 47l6-1M36 50l6-1" stroke="#ffe8bd" stroke-width="1"/><path d="M23 58l-4 3 8-1M41 58l4 3-8-1" fill="#fbbf24" stroke="#92400e" stroke-width="1"/></svg>';
 }
 function journeyScenerySVG(H){
-  const top = Math.max(0,H-1450), y1=Math.max(0,H-1120), y2=Math.max(0,H-850), y3=Math.max(0,H-600), y4=Math.max(0,H-330);
-  const tree=(x,y,scale=1)=>'<g transform="translate('+x+' '+y+') scale('+scale+')"><path d="M-5 12h10v34H-5z" fill="#79512f"/><path d="M0 -38 -23 2h14L-27 20H27L9 2h14z" fill="#267647" stroke="#155e3a" stroke-width="2"/><path d="M0 -38 -8 -12 0 -4 8 -16z" fill="#51a75a" opacity=".9"/></g>';
-  const cloud=(x,y,sc=1)=>'<g transform="translate('+x+' '+y+') scale('+sc+')" fill="#f7fcff" opacity=".96"><ellipse cx="0" cy="12" rx="44" ry="15"/><circle cx="-20" cy="6" r="19"/><circle cx="2" cy="-5" r="25"/><circle cx="25" cy="6" r="18"/></g>';
-  return '<div class="jr-scenery"><svg viewBox="0 0 390 '+H+'" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#44a8ed"/><stop offset=".48" stop-color="#9ce3fa"/><stop offset="1" stop-color="#c9edcc"/></linearGradient><linearGradient id="grassGrad" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8bcf5b"/><stop offset=".55" stop-color="#5caa42"/><stop offset="1" stop-color="#2d7b42"/></linearGradient><linearGradient id="roadGlow" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff1a8"/><stop offset="1" stop-color="#f5bd39"/></linearGradient><linearGradient id="stone" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff0bd"/><stop offset="1" stop-color="#b99c67"/></linearGradient></defs>'+
-  '<rect width="390" height="'+H+'" fill="#79bf56"/><rect x="0" y="'+top+'" width="390" height="'+(H-top)+'" fill="url(#skyGrad)"/>'+
-  '<circle cx="322" cy="'+(top+95)+'" r="31" fill="#fff4b4" opacity=".9"/><circle cx="322" cy="'+(top+95)+'" r="47" fill="#fff2b1" opacity=".18"/>'+
-  cloud(66,top+150,.9)+cloud(296,top+215,.75)+cloud(195,y1+35,.72)+
-  '<path d="M0 '+(y1+140)+' 0 '+(y1+80)+' 28 '+(y1+18)+' 52 '+(y1+72)+' 85 '+(y1+4)+' 121 '+(y1+72)+' 151 '+(y1+38)+' 183 '+(y1+106)+' 214 '+(y1+36)+' 249 '+(y1+88)+' 285 '+(y1+8)+' 323 '+(y1+80)+' 354 '+(y1+26)+' 390 '+(y1+78)+' 390 '+(y1+180)+'Z" fill="#6d9eb2" opacity=".72"/>'+
-  '<path d="M0 '+(y1+150)+' 34 '+(y1+84)+' 57 '+(y1+119)+' 89 '+(y1+57)+' 120 '+(y1+130)+' 155 '+(y1+93)+' 193 '+(y1+145)+' 230 '+(y1+83)+' 265 '+(y1+136)+' 300 '+(y1+73)+' 337 '+(y1+129)+' 368 '+(y1+84)+' 390 '+(y1+121)+'V'+(y1+220)+'H0Z" fill="#eef7fa" opacity=".94"/>'+
-  '<path d="M0 '+(y2+20)+' Q70 '+(y2-50)+' 140 '+(y2+20)+' T280 '+(y2+15)+' T390 '+(y2+8)+' V'+(H)+'H0Z" fill="url(#grassGrad)"/>'+
-  /* fairy-tale castle */+
-  '<g transform="translate(24 '+(y1-80)+')"><path d="M8 78V26H30V78M30 78V9H55V78M55 78V28H77V78M0 78H85V91H0Z" fill="url(#stone)" stroke="#8c754e" stroke-width="2"/><path d="M6 26 19 9 32 26ZM28 9 42 -10 57 9ZM53 28 66 10 80 28Z" fill="#b4c3d4" stroke="#657b94" stroke-width="2"/><path d="M35 91V59Q42 42 49 59V91" fill="#75492e" stroke="#8c754e" stroke-width="2"/><g fill="#7c5635"><rect x="14" y="39" width="5" height="13" rx="2"/><rect x="39" y="25" width="5" height="13" rx="2"/><rect x="64" y="40" width="5" height="13" rx="2"/></g><path d="M-7 91H92" stroke="#fff4cc" stroke-width="5" stroke-linecap="round"/></g>'+
-  /* ancient columns on the left */
-  '<g transform="translate(20 '+(y3+40)+')" stroke="#8d784e" stroke-width="2"><path d="M0 0H94L86 -10H8Z" fill="#e8d7a5"/><rect x="10" y="0" width="11" height="85" fill="url(#stone)"/><rect x="37" y="0" width="11" height="85" fill="url(#stone)"/><rect x="64" y="0" width="11" height="85" fill="url(#stone)"/><path d="M3 85H82L90 96H-5Z" fill="#c1aa78"/><path d="M4 -10H89" stroke="#fff2c6" stroke-width="4"/></g>'+
-  /* small temple on the right */
-  '<g transform="translate(292 '+(y3+12)+')" stroke="#8c754e" stroke-width="2"><path d="M0 25 39 0 78 25Z" fill="#f5e5b3"/><path d="M8 25H70V34H8Z" fill="#c8b17b"/><rect x="12" y="34" width="8" height="43" fill="#f0dfb0"/><rect x="34" y="34" width="8" height="43" fill="#f0dfb0"/><rect x="56" y="34" width="8" height="43" fill="#f0dfb0"/><path d="M2 77H74V86H2Z" fill="#b99b64"/><circle cx="39" cy="19" r="4" fill="#fff5ce"/></g>'+
-  tree(25,y4+35,1.25)+tree(74,y4+65,.85)+tree(365,y4+15,1.35)+tree(330,y4+80,.9)+tree(126,H-70,.72)+tree(268,H-42,.85)+
-  '<path d="M0 '+(H-210)+'Q52 '+(H-270)+' 103 '+(H-205)+'T210 '+(H-220)+'T310 '+(H-210)+'T390 '+(H-235)+'V'+H+'H0Z" fill="#4a9c3e" opacity=".8"/>'+
-  '<g fill="#c5e86c" opacity=".9"><circle cx="38" cy="'+(H-140)+'" r="3"/><circle cx="82" cy="'+(H-85)+'" r="2.5"/><circle cx="298" cy="'+(H-180)+'" r="3"/><circle cx="350" cy="'+(H-110)+'" r="2.5"/><circle cx="146" cy="'+(H-60)+'" r="2.5"/></g>'+
+  const top = Math.max(0,H-1500), y1=Math.max(0,H-1180), y2=Math.max(0,H-900), y3=Math.max(0,H-620), y4=Math.max(0,H-350);
+  const tree=(x,y,scale=1)=>'<g transform="translate('+x+' '+y+') scale('+scale+')"><path d="M-5 12h10v38H-5z" fill="#76502f"/><path d="M0 -43 -25 0h15L-30 22H30L10 0h15z" fill="#2f7e49" stroke="#185f3a" stroke-width="2"/><path d="M0 -43 -9 -13 0 -4 9 -17z" fill="#62b765" opacity=".92"/></g>';
+  const bush=(x,y,sc=1)=>'<g transform="translate('+x+' '+y+') scale('+sc+')" fill="#3f9349"><circle cx="0" cy="0" r="16"/><circle cx="18" cy="2" r="14"/><circle cx="9" cy="-12" r="15"/></g>';
+  const cloud=(x,y,sc=1)=>'<g transform="translate('+x+' '+y+') scale('+sc+')" fill="#fbfdff" opacity=".97"><ellipse cx="0" cy="12" rx="45" ry="15"/><circle cx="-22" cy="6" r="19"/><circle cx="2" cy="-7" r="26"/><circle cx="26" cy="6" r="18"/></g>';
+  return '<div class="jr-scenery"><svg viewBox="0 0 390 '+H+'" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><defs>'+ 
+  '<linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#54b4ef"/><stop offset=".43" stop-color="#9cdbf6"/><stop offset=".72" stop-color="#cae6e4"/><stop offset="1" stop-color="#9bd071"/></linearGradient>'+ 
+  '<linearGradient id="grassGrad" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#86c95c"/><stop offset=".5" stop-color="#63ae48"/><stop offset="1" stop-color="#397c40"/></linearGradient>'+ 
+  '<linearGradient id="stone" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff0bc"/><stop offset="1" stop-color="#b89b66"/></linearGradient>'+ 
+  '<linearGradient id="castle" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#edd9bc"/><stop offset="1" stop-color="#b7977f"/></linearGradient>'+ 
+  '<filter id="softShadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#20364d" flood-opacity=".28"/></filter>'+ 
+  '<filter id="goldGlow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+ 
+  '</defs>'+ 
+  '<rect width="390" height="'+H+'" fill="#6db64e"/><rect x="0" y="'+top+'" width="390" height="'+(H-top)+'" fill="url(#skyGrad)"/>'+ 
+  cloud(65,top+120,.92)+cloud(315,top+210,.76)+cloud(205,top+360,.62)+
+  '<path d="M0 '+(y1+155)+' 0 '+(y1+100)+' 30 '+(y1+30)+' 55 '+(y1+82)+' 88 '+(y1+9)+' 121 '+(y1+80)+' 155 '+(y1+40)+' 190 '+(y1+112)+' 225 '+(y1+38)+' 257 '+(y1+92)+' 292 '+(y1+12)+' 326 '+(y1+84)+' 357 '+(y1+34)+' 390 '+(y1+82)+' 390 '+(y1+190)+'Z" fill="#718fa1" opacity=".72"/>'+ 
+  '<path d="M0 '+(y1+164)+' 31 '+(y1+96)+' 56 '+(y1+124)+' 89 '+(y1+61)+' 120 '+(y1+135)+' 155 '+(y1+98)+' 191 '+(y1+151)+' 230 '+(y1+89)+' 267 '+(y1+142)+' 301 '+(y1+78)+' 338 '+(y1+133)+' 369 '+(y1+91)+' 390 '+(y1+126)+'V'+(y1+226)+'H0Z" fill="#f1f6f8" opacity=".96"/>'+ 
+  '<path d="M0 '+(y2+24)+' Q70 '+(y2-45)+' 145 '+(y2+19)+' T285 '+(y2+15)+' T390 '+(y2+8)+' V'+H+'H0Z" fill="url(#grassGrad)"/>'+ 
+  '<path d="M0 '+(y2+126)+'Q72 '+(y2+55)+' 148 '+(y2+112)+'T300 '+(y2+108)+'T390 '+(y2+90)+'" fill="none" stroke="#4a9650" stroke-width="45" opacity=".22"/>'+ 
+  /* castle */
+  '<g transform="translate(30 '+(top+245)+')" filter="url(#softShadow)"><path d="M4 78V29H26V78M27 78V10H55V78M56 78V31H79V78M-2 78H86V91H-2Z" fill="url(#castle)" stroke="#9f7d67" stroke-width="2"/><path d="M2 29 15 10 29 29ZM25 10 41 -12 58 10ZM54 31 68 12 83 31Z" fill="#b56753" stroke="#82493f" stroke-width="2"/><path d="M34 91V60Q41 42 49 60V91" fill="#6f4938"/><g fill="#6d788b"><rect x="11" y="41" width="5" height="13" rx="2"/><rect x="39" y="26" width="5" height="13" rx="2"/><rect x="65" y="42" width="5" height="13" rx="2"/></g></g>'+ 
+  /* left columns */
+  '<g transform="translate(20 '+(y3+22)+')" filter="url(#softShadow)" stroke="#927a50" stroke-width="2"><path d="M0 0H92L85 -10H8Z" fill="#eee0b4"/><rect x="11" y="0" width="11" height="86" fill="url(#stone)"/><rect x="39" y="0" width="11" height="86" fill="url(#stone)"/><rect x="67" y="0" width="11" height="86" fill="url(#stone)"/><path d="M4 86H83L91 97H-5Z" fill="#c6ad77"/><path d="M5 -10H88" stroke="#fff5cd" stroke-width="4"/></g>'+ 
+  /* right temple */
+  '<g transform="translate(294 '+(y3-5)+')" filter="url(#softShadow)" stroke="#927a50" stroke-width="2"><path d="M0 26 39 0 78 26Z" fill="#f4e4b3"/><path d="M8 26H70V35H8Z" fill="#ccb57d"/><rect x="12" y="35" width="8" height="44" fill="#f1dfae"/><rect x="35" y="35" width="8" height="44" fill="#f1dfae"/><rect x="58" y="35" width="8" height="44" fill="#f1dfae"/><path d="M3 79H75V88H3Z" fill="#b99b65"/><circle cx="39" cy="19" r="4" fill="#fff6ce"/></g>'+ 
+  /* foreground ruins */
+  '<g transform="translate(72 '+(H-515)+')" opacity=".98" filter="url(#softShadow)" stroke="#8f7850" stroke-width="2"><path d="M0 48 28 14 70 28 88 10 120 31 108 56 18 62Z" fill="#c8b17c"/><path d="M17 57V10H28V57M55 57V22H65V57M91 57V18H101V57" fill="url(#stone)"/><path d="M10 8H35M49 20H72M84 16H108" stroke="#f7e8bc" stroke-width="7"/></g>'+ 
+  tree(26,y4+40,1.3)+tree(72,y4+72,.86)+tree(363,y4+20,1.35)+tree(329,y4+86,.92)+tree(108,H-92,.72)+tree(280,H-65,.82)+
+  bush(20,H-320,1.2)+bush(338,H-300,1.05)+
+  '<g fill="#d9ef83" opacity=".95"><circle cx="39" cy="'+(H-145)+'" r="3"/><circle cx="83" cy="'+(H-91)+'" r="2.5"/><circle cx="297" cy="'+(H-188)+'" r="3"/><circle cx="351" cy="'+(H-118)+'" r="2.5"/><circle cx="146" cy="'+(H-64)+'" r="2.5"/></g>'+ 
+  '<g fill="#fff6a3" filter="url(#goldGlow)" opacity=".9"><circle cx="160" cy="'+(H-430)+'" r="2"/><circle cx="244" cy="'+(H-690)+'" r="1.8"/><circle cx="122" cy="'+(H-870)+'" r="1.7"/><circle cx="275" cy="'+(H-1030)+'" r="2"/></g>'+ 
   '</svg></div>';
 }
 const JR_EMO = ['🌴','🏔️','🏜️','🌊','⛰️','🎈','🐠','🐧','🌲','🌋','🐢','🌵','🏞️','🏺','✨','♨️','🌳','❄️','🦎','💦'];
 function renderModes(){ drawMap(true); }
-/* Harita.png yolu: resim koordinatlarında (940x1672) yol merkez noktaları, alttan üste */
-const JR_IMG = {w:940, h:1672, perTile:10, overlap:.1,
-  wp:[[480,1672],[540,1520],[549,1450],[482,1400],[388,1350],[375,1290],[438,1250],[539,1200],[607,1150],[625,1110],[555,1075],[447,1025],[388,1000],[340,960],[388,900],[458,875],[525,825],[447,775],[353,725],[360,690],[398,675],[540,625],[577,575],[534,550],[557,500],[565,450],[567,400],[502,375],[446,350],[454,325],[471,300],[500,250],[490,200],[493,175],[505,125]]};
-const JR_CURVE = (() => {
-  const wp = JR_IMG.wp, pts = [];
-  const cr = (a,b,c,d,t) => [0,1].map(k => .5*((2*b[k]) + (-a[k]+c[k])*t + (2*a[k]-5*b[k]+4*c[k]-d[k])*t*t + (-a[k]+3*b[k]-3*c[k]+d[k])*t*t*t));
-  for (let i = 0; i < wp.length - 1; i++) for (let k = 0; k < 16; k++) pts.push(cr(wp[Math.max(i-1,0)], wp[i], wp[i+1], wp[Math.min(i+2,wp.length-1)], k/16));
-  pts.push(wp[wp.length-1]);
-  const len = [0]; for (let i = 1; i < pts.length; i++) len.push(len[i-1] + Math.hypot(pts[i][0]-pts[i-1][0], pts[i][1]-pts[i-1][1]));
-  return {pts, len, total: len[len.length-1]};
-})();
-function jrAt(s){          // s: 0 (alt) .. 1 (üst) -> resim koordinatı
-  const C = JR_CURVE, t = Math.max(0, Math.min(1, s)) * C.total;
-  for (let i = 1; i < C.len.length; i++) if (C.len[i] >= t){
-    const f = (t - C.len[i-1]) / ((C.len[i] - C.len[i-1]) || 1), a = C.pts[i-1], b = C.pts[i];
-    return [a[0] + (b[0]-a[0])*f, a[1] + (b[1]-a[1])*f];
-  }
-  return C.pts[C.pts.length-1];
-}
-function jrSlice(s0, s1){  // iki s arasındaki eğri noktaları
-  const C = JR_CURVE, a = s0*C.total, b = s1*C.total, out = [jrAt(s0)];
-  for (let i = 0; i < C.len.length; i++) if (C.len[i] > a && C.len[i] < b) out.push(C.pts[i]);
-  out.push(jrAt(s1)); return out;
-}
-let JR_P = [], JR_W = 0;
 function drawMap(scroll){
   const map = $('jr-map'), wrap = $('jr-wrap'), keep = map.scrollTop;
-  const n = LEVELS.length, PT = JR_IMG.perTile, tiles = Math.max(1, Math.ceil(n / PT));
-  const W = wrap.clientWidth || map.clientWidth || window.innerWidth || 390; JR_W = W;
-  const sc = W / JR_IMG.w, tileH = JR_IMG.h * sc, pitch = tileH * (1 - JR_IMG.overlap);
-  const H = Math.round((tiles - 1) * pitch + tileH);
+  const G = GROUPS.length;
+  const groupCounts = GROUPS.map(g => g[2].length);
+  const groupStarts = groupCounts.map((_, i) => groupCounts.slice(0, i).reduce((a,b) => a+b, 0));
+  const groupBlocks = groupCounts.map(n => Math.max(330, n * 105 + 150));
+  const H = groupBlocks.reduce((a,b) => a+b, 0) + 80;
   let cur = LEVELS.findIndex((_, i) => !S.done[i] && i <= S.maxOpen); if (cur < 0) cur = LEVELS.length - 1;
   $('jr-me').innerHTML = journeyOwlSVG();
-  const sOf = j => .02 + .93 * j / (PT - 1);
-  const place = (t, s) => { const q = jrAt(s); return {x:q[0]*sc, y:(tiles-1-t)*pitch + q[1]*sc}; };
-  const P = LEVELS.map((d, i) => place(Math.floor(i / PT), sOf(i % PT)));
-  JR_P = P;
-  /* arka plan: her resim bir döşeme; üstteki döşemeye yumuşak geçiş */
-  let html = '<div class="jr-tiles">';
-  for (let t = tiles - 1; t >= 0; t--) html += '<div class="jr-tile' + (t < tiles - 1 ? ' fade' : '') + '" style="top:' + ((tiles-1-t)*pitch).toFixed(1) + 'px;height:' + tileH.toFixed(1) + 'px"></div>';
-  html += '</div>';
-  /* biten bölümler arasındaki altın yol */
-  let road = '';
-  for (let i = 1; i < n; i++){
-    if (!S.done[i-1]) continue;
-    const t0 = Math.floor((i-1) / PT), t1 = Math.floor(i / PT);
-    if (t0 !== t1) continue;
-    const pts = jrSlice(sOf((i-1) % PT), sOf(i % PT)).map(q => (q[0]*sc).toFixed(1) + ',' + ((tiles-1-t0)*pitch + q[1]*sc).toFixed(1)).join(' ');
-    road += '<polyline points="' + pts + '" stroke="rgba(60,35,5,.55)" stroke-width="20" />' + '<polyline points="' + pts + '" stroke="#fbbf24" stroke-width="12" />';
+  const P = LEVELS.map((d, i) => {
+    const before = groupBlocks.slice(0, d.group).reduce((a,b) => a+b, 0);
+    const base = H - 40 - before;
+    return { x:180 + 95 * Math.sin(i * 1.3 + .4), y:base - 45 - d.lv * 105 };
+  });
+  let html = journeyScenerySVG(H), svg = '';
+  GROUPS.forEach((g, gi) => {
+    const below = groupBlocks.slice(0, gi).reduce((a,b) => a+b, 0);
+    const top = H - 60 - below - groupBlocks[gi];
+    const first = groupStarts[gi], unlocked = gi === 0 ? true : first <= S.maxOpen;
+    const refPoint = P[Math.min(first, Math.max(0, P.length - 1))] || {x:180};
+    const side = refPoint.x > 180 ? 'left:16px' : 'right:16px';
+    html += '<div class="jr-band' + (gi % 2 ? ' alt' : '') + (unlocked ? '' : ' lock') + '" style="top:' + top + 'px;height:' + groupBlocks[gi] + 'px;--c:' + g[1] + '"><span class="jr-emo" style="' + side + '">' + JR_EMO[gi] + '</span></div>';
+    html += '<div class="jr-ban' + (unlocked ? '' : ' lock') + '" style="top:' + (P[first + groupCounts[gi] - 1].y - 150) + 'px;--c:' + g[1] + '">' + g[0].replace(/</g, '') + '</div>';
+  });
+  let out = '', fill = '', seams = '', spark = '';
+  for (let i = 1; i < P.length; i++){
+    const a = P[i - 1], b = P[i], ym = (a.y + b.y) / 2;
+    const d = 'M' + a.x + ' ' + a.y + ' C' + a.x + ' ' + ym + ' ' + b.x + ' ' + ym + ' ' + b.x + ' ' + b.y;
+    out += '<path d="' + d + '" stroke="#66523f" stroke-width="38" opacity=".92"/>';
+    fill += '<path d="' + d + '" stroke="#b6a58b" stroke-width="31"/><path d="' + d + '" stroke="#d2c3a6" stroke-width="25"/>';
+    seams += '<path d="' + d + '" stroke="rgba(102,82,63,.45)" stroke-width="1.6" stroke-dasharray="9 13"/>';
+    if (S.done[i - 1]) spark += '<path d="' + d + '" stroke="#ffd044" stroke-width="5" opacity=".88" stroke-dasharray="2 18"/>';
   }
-  const svg = '<svg class="jr-road" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" fill="none" stroke-linecap="round" stroke-linejoin="round">' + road + '</svg>';
+  svg = '<svg class="jr-road" width="360" height="' + H + '" viewBox="0 0 360 ' + H + '" fill="none" stroke-linecap="round">' + out + fill + seams + spark + '</svg>';
   let nodes = '';
   LEVELS.forEach((d, i) => {
     const p = P[i], dn = S.done[i], ok = d.group === 0 ? true : i <= S.maxOpen, isCur = i === cur && ok && !dn;
-    const st = dn ? '<span class="jr-stars">' + [1, 2, 3].map(k => '<svg class="i st' + (k <= dn.stars ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>' : '';
-    nodes += '<div class="jr-nw" style="left:' + p.x.toFixed(1) + 'px;top:' + p.y.toFixed(1) + 'px;--c:' + GROUPS[d.group][1] + '">' +
+    const st = dn ? '<span class="jr-stars">' + [1, 2, 3].map(n => '<svg class="i st' + (n <= dn.stars ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>' : '';
+    nodes += '<div class="jr-nw" style="left:' + p.x + 'px;top:' + p.y + 'px;--c:' + GROUPS[d.group][1] + '">' +
       (isCur ? '<div class="jr-pin"><span>' + journeyOwlSVG() + '</span></div>' : '') +
       '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '">' + (ok ? (i + 1) : iconSVG('lock')) + '</button>' + st +
       '</div>';
   });
   wrap.style.height = H + 'px';
-  wrap.innerHTML = html + '<div class="jr-canvas" style="height:' + H + 'px;left:0;margin-left:0;width:' + W + 'px">' + svg + nodes + '</div>';
+  wrap.innerHTML = html + '<div class="jr-canvas" style="height:' + H + 'px">' + svg + nodes + '</div>';
   wrap.querySelectorAll('.jr-node').forEach(b => b.addEventListener('click', () => {
     const i = +b.dataset.i;
     if (i <= S.maxOpen) showGame(i); else toast('Önce önceki bölümü tamamla.');
   }));
   if (scroll) requestAnimationFrame(() => { map.scrollTop = Math.max(0, P[cur].y - map.clientHeight * .6); }); else map.scrollTop = keep;
 }
-if ('ResizeObserver' in window) new ResizeObserver(() => {
-  const w = $('jr-wrap').clientWidth;
-  if (w > 0 && JR_W && Math.abs(w - JR_W) > 2 && typeof LEVELS !== 'undefined') drawMap(false);
-}).observe($('jr-wrap'));
 $('jr-back').addEventListener('click', () => { audio(); showHome(); });
 $('jr-me').addEventListener('click', () => { audio(); openProfile(); });
 
