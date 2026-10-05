@@ -29,7 +29,7 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 
 /* ================= APP SHELL ================= */
 .app{
-  position:relative;width:100%;max-width:480px;height:100vh;height:100dvh;
+  position:relative;width:100%;max-width:480px;height:100vh;min-height:100vh;
   overflow:hidden;display:flex;flex-direction:column;
   background:
     radial-gradient(120% 55% at 50% -8%, #5233c4 0%, rgba(82,51,196,0) 62%),
@@ -1015,13 +1015,13 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 
 /* ===== YOLCULUK (harita) ===== */
 .app.on-journey .topbar{display:none}
-.jr{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;overflow:hidden;background:#0f1a2e}
-.jr-hud{flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 10px) 14px 10px;background:linear-gradient(180deg,#0a0f1d,#142038);border-bottom:2px solid rgba(255,255,255,.1);z-index:3}
-.jr-hud h2{margin:0;font-size:18px;font-weight:900;letter-spacing:.12em;color:#fff}
-.jr-me{width:42px;height:42px;border-radius:50%;border:3px solid #b8641f;background:#0b3d91;overflow:hidden;display:grid;place-items:center;font-size:22px;color:#fff;padding:0}
-.jr-me img{width:100%;height:100%;object-fit:cover}.jr-me svg{width:22px;height:22px}
-.jr-x{width:42px;height:42px;border-radius:50%;border:0;background:linear-gradient(180deg,#4aa0ff,#2563eb);color:#fff;font-size:18px;font-weight:900;box-shadow:0 3px 0 #1d4ed8}
-.jr-map{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;-webkit-overflow-scrolling:touch}
+.jr{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;overflow:hidden;background:#79bf56}
+.jr-hud{position:absolute;left:0;right:0;top:0;height:72px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px;background:transparent;border:0;box-shadow:none;z-index:20;pointer-events:none}
+.jr-hud h2{display:none}
+.jr-me{width:40px;height:40px;flex:0 0 40px;border-radius:50%;border:3px solid rgba(255,255,255,.92);background:rgba(20,60,90,.72);overflow:hidden;display:grid;place-items:center;font-size:21px;color:#fff;padding:0;box-shadow:0 3px 8px rgba(0,0,0,.3);pointer-events:auto}
+.jr-me img{width:100%;height:100%;object-fit:cover}.jr-me svg{width:22px;height:22px}.jr-me .i{width:22px;height:22px}
+.jr-x{width:36px;height:36px;flex:0 0 36px;border-radius:50%;border:2px solid rgba(255,255,255,.88);background:rgba(35,75,105,.62);color:#fff;font-size:22px;line-height:1;font-weight:900;box-shadow:0 3px 8px rgba(0,0,0,.3);pointer-events:auto}
+.jr-map{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;position:relative;-webkit-overflow-scrolling:touch;background:#79bf56}
 .jr-wrap{position:relative;width:100%}
 .jr-band{position:absolute;left:0;right:0;border-top:2px solid color-mix(in srgb,var(--c) 60%,transparent);background:linear-gradient(180deg,color-mix(in srgb,var(--c) 34%,#0f1a2e),color-mix(in srgb,var(--c) 14%,#0f1a2e))}
 .jr-band.alt{background:linear-gradient(180deg,color-mix(in srgb,var(--c) 26%,#0f1a2e),color-mix(in srgb,var(--c) 10%,#0f1a2e))}
@@ -1220,11 +1220,11 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 /* ===== YOLCULUK: masalsı çizimli harita ===== */
 #view-modes { background:transparent !important; }
 .jr { background:#79c8f4; }
-.jr-hud { min-height:76px; padding:calc(env(safe-area-inset-top,0px) + 10px) 18px 12px; background:linear-gradient(180deg,#101a37 0%,#142342 100%); border-bottom:3px solid rgba(255,255,255,.12); box-shadow:0 5px 18px rgba(2,8,23,.22); }
-.jr-hud h2 { font-size:clamp(17px,4.8vw,25px); letter-spacing:.055em; font-weight:1000; text-shadow:0 2px 0 rgba(0,0,0,.28); }
-.jr-me { width:58px;height:58px;flex:0 0 58px;border-radius:50%;border:4px solid #c8792c;background:linear-gradient(180deg,#2b8cf4,#0753bb);box-shadow:0 4px 0 #7a431f, inset 0 2px 0 rgba(255,255,255,.45); }
-.jr-me svg { width:48px;height:48px; }
-.jr-x { width:70px;height:70px;flex:0 0 70px;border-radius:50%;font-size:34px;background:linear-gradient(180deg,#48a7ff 0%,#2877f2 55%,#1456d7 100%);border:2px solid rgba(255,255,255,.12);box-shadow:0 5px 0 #1648a6, inset 0 2px 0 rgba(255,255,255,.4); }
+.jr-hud { min-height:0; height:72px; padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px; background:transparent; border:0; box-shadow:none; }
+.jr-hud h2 { display:none !important; }
+.jr-me { width:40px;height:40px;flex:0 0 40px;border-radius:50%;border:3px solid rgba(255,255,255,.92);background:rgba(20,60,90,.72);box-shadow:0 3px 8px rgba(0,0,0,.3); }
+.jr-me svg { width:22px;height:22px; }
+.jr-x { width:36px;height:36px;flex:0 0 36px;border-radius:50%;font-size:22px;background:rgba(35,75,105,.62);border:2px solid rgba(255,255,255,.88);box-shadow:0 3px 8px rgba(0,0,0,.3); }
 .jr-map { background:linear-gradient(180deg,#77d1f7 0%,#9ce4fb 22%,#bde6c2 56%,#76bc55 100%); }
 .jr-wrap { min-height:100%; isolation:isolate; }
 .jr-scenery { position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden; }
@@ -1245,7 +1245,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .jr-pin span { width:56px;height:56px;border:4px solid #d18a36;background:linear-gradient(180deg,#2379e8,#0845a6);box-shadow:0 4px 0 #8b5525,inset 0 2px 0 rgba(255,255,255,.35); }
 .jr-pin span svg { width:52px;height:52px; }
 .jr-pin::after { left:20px;bottom:-10px;border-width:10px;border-top-color:#fff; }
-@media(max-width:420px){.jr-hud{gap:8px;padding-left:14px;padding-right:14px}.jr-me{width:54px;height:54px;flex-basis:54px}.jr-x{width:66px;height:66px;flex-basis:66px}}
+@media(max-width:420px){.jr-hud{gap:8px;padding-left:12px;padding-right:12px}.jr-me{width:40px;height:40px;flex-basis:40px}.jr-x{width:36px;height:36px;flex-basis:36px}}
 </style>
 </style>
 <style>
@@ -1505,7 +1505,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 
     <!-- MOD SEÇİMİ (kaydırmalı sahne) -->
     <section id="view-modes" class="view off modes jr">
-      <div class="jr-hud"><button class="jr-me" id="jr-me" aria-label="Profil"></button><h2>YOLCULUK</h2><button class="jr-x" id="jr-back" aria-label="Kapat">✕</button></div>
+      <div class="jr-hud"><button class="jr-me" id="jr-me" aria-label="Profil"></button><button class="jr-x" id="jr-back" aria-label="Kapat">✕</button></div>
       <div class="jr-map" id="jr-map"><div class="jr-wrap" id="jr-wrap"></div></div>
     </section>
 
@@ -3081,7 +3081,7 @@ function drawMap(scroll){
   const sc = W / JR_IMG.w, scY = sc * 1.48, tileH = JR_IMG.h * scY, pitch = tileH * (1 - JR_IMG.overlap);
   const H = Math.round((tiles - 1) * pitch + tileH);
   let cur = LEVELS.findIndex((_, i) => !S.done[i] && i <= S.maxOpen); if (cur < 0) cur = LEVELS.length - 1;
-  $('jr-me').innerHTML = journeyOwlSVG();
+  $('jr-me').innerHTML = avatarHTML();
   const sOf = j => .02 + .93 * j / (PT - 1);
   const place = (t, s) => { const q = jrAt(s); return {x:q[0]*sc, y:(tiles-1-t)*pitch + q[1]*sc}; };
   const P = LEVELS.map((d, i) => place(Math.floor(i / PT), sOf(i % PT)));
