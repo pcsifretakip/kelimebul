@@ -1210,6 +1210,32 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   background:linear-gradient(180deg,#5cff3a,#22d10f 55%,#17b20a);box-shadow:inset 0 2px 0 rgba(255,255,255,.45),0 6px 0 #0d7a06,0 12px 22px rgba(0,0,0,.4);text-shadow:0 2px 0 rgba(0,0,0,.3)}
 .hid-tut .ht-ok:active{transform:translateY(4px);box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 2px 0 #0d7a06}
 </style>
+<style>
+/* seçilen kelime etiketi artık yer kaplamaz; tablonun üstüne biner, boşluk tabloya gider */
+#view-game .live-selection{position:relative;z-index:6;height:0;min-height:0;margin:0;overflow:visible}
+#view-game .live-selection span{position:absolute;left:50%;top:0;margin:0;transform:translate(-50%,-50%);white-space:nowrap}
+</style>
+<style>
+/* ===== MIKNATIS: ortada belirir, ışın yayar, olmayan harfler solar ===== */
+.cell.dim{color:rgba(243,241,255,.16);text-shadow:none;background:rgba(255,255,255,.025);transition:color 1.8s ease,background 1.8s ease,text-shadow 1.8s ease}
+.cell.dim.sel{color:#fff}
+.mag-fx{position:absolute;inset:0;z-index:30;pointer-events:none;display:flex;align-items:center;justify-content:center;overflow:visible;transition:opacity .45s ease,transform .45s ease}
+.mag-fx.out{opacity:0;transform:scale(.6)}
+.mag-fx .mg-rays{position:absolute;width:min(92%,420px);aspect-ratio:1;transform-origin:center;border-radius:50%;
+  background:repeating-conic-gradient(from 0deg,rgba(251,191,36,.6) 0 7deg,transparent 7deg 22deg);
+  -webkit-mask-image:radial-gradient(circle,#000 6%,transparent 66%);mask-image:radial-gradient(circle,#000 6%,transparent 66%);
+  animation:mgRaysIn .6s ease-out .25s both,mgSpin 5s linear infinite}
+.mag-fx .mg-glow{position:absolute;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(251,191,36,.75),rgba(251,191,36,0) 68%);animation:mgGlow 1s ease-in-out infinite alternate}
+.mag-fx .mg-ring{position:absolute;width:110px;height:110px;border-radius:50%;border:3px solid rgba(34,211,238,.9);box-shadow:0 0 14px rgba(34,211,238,.7);opacity:0;animation:mgRing 1.5s ease-out .5s infinite}
+.mag-fx .mg-magnet{position:relative;width:88px;height:88px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.55)) drop-shadow(0 0 14px rgba(251,191,36,.9));animation:mgIn .6s cubic-bezier(.2,1.6,.4,1) both,mgWob 1.1s ease-in-out .6s infinite}
+.mag-fx .mg-dot{position:absolute;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,#fff,#fde68a 45%,rgba(251,191,36,0) 72%);box-shadow:0 0 12px 3px rgba(251,191,36,.8)}
+@keyframes mgIn{0%{transform:scale(0) rotate(-50deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes mgWob{0%,100%{transform:scale(1) rotate(-5deg)}50%{transform:scale(1.1) rotate(5deg)}}
+@keyframes mgRaysIn{from{opacity:0;scale:.3}to{opacity:1;scale:1}}
+@keyframes mgSpin{to{rotate:360deg}}
+@keyframes mgGlow{from{opacity:.55;transform:scale(.85)}to{opacity:1;transform:scale(1.15)}}
+@keyframes mgRing{0%{transform:scale(.4);opacity:.95}100%{transform:scale(3);opacity:0}}
+</style>
 </head>
 <body>
 
@@ -1304,7 +1330,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 
       <div class="home-actions">
         <button id="lb" class="btn-sq gold" aria-label="Liderlik tablosu"><span>🏆</span><span>LİDERLİK TABLOSU</span></button>
-        <button id="btn-levels" class="btn-sq" aria-label="Yolculuk"><svg class="i"><use href="#i-grid"/></svg><span>YOLCULUK</span></button>
+        <button id="btn-levels" class="btn-sq" aria-label="Yolculuğa Başla"><svg class="i"><use href="#i-grid"/></svg><span>YOLCULUĞA BAŞLA</span></button>
         <button id="btn-online" class="btn-sq pink"><svg class="i"><use href="#i-user"/></svg><span>ONLİNE MOD</span></button>
         <button id="btn-settings-home" class="btn-sq home-settings" aria-label="Ayarlar"><svg class="i"><use href="#i-gear"/></svg><span>AYARLAR</span></button>
               </div>
@@ -2164,6 +2190,7 @@ function renderWords(){
 }
 
 function renderGrid(){
+  gridEl.querySelectorAll('.mag-fx').forEach(e => e.remove()); S.magBusy = false;
   gridEl.querySelectorAll('.cell').forEach(c => c.remove());
   capLayer.innerHTML = '';
   const n = S.level.size;
@@ -2480,7 +2507,7 @@ function shuffleBoard(){
     L.grid = g; Object.assign(L.placements, pls);
     S.cells.forEach((el, i) => {
       const r = Math.floor(i / n), c = i % n; if (fixed[r][c]) return;
-      el.textContent = g[r][c]; el.classList.remove('hint');
+      el.textContent = g[r][c]; el.classList.remove('hint'); el.classList.remove('dim');
       el.style.setProperty('--d', ((r + c) * 25) + 'ms');
       el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
     });
@@ -2495,13 +2522,53 @@ function useMagnet(){
   audio();
   if (!S.playing) return;
   if (R){ toast('Online modda kullanılamaz'); return; }
-  const left = S.level.words.filter(w => !S.found.has(w));
-  if (!left.length) return;
+  if (S.magBusy) return;
+  const L = S.level, n = L.size;
+  if (S.found.size >= L.words.length) return;
+  // hiçbir kelimeye ait olmayan, henüz solmamış harfler
+  const used = new Set();
+  Object.values(L.placements).forEach(pl => { for (let i = 0; i < pl.len; i++) used.add((pl.r + pl.dr * i) * n + (pl.c + pl.dc * i)); });
+  const cand = [];
+  S.cells.forEach((el, i) => { if (!used.has(i) && !el.classList.contains('dim')) cand.push(i); });
+  if (!cand.length){ toast('Solacak harf kalmadı'); return; }
   if (S.coins < MAGNET_COST){ toast('Yeterli altının yok!'); SND.miss(); return; }
-  const w = left[Math.floor(Math.random() * left.length)], pl = S.level.placements[w];
   S.coins -= MAGNET_COST; updateCoins(); SND.hint();
-  const path = Array.from({ length: pl.len }, (_, k) => ({ r: pl.r + pl.dr * k, c: pl.c + pl.dc * k }));
-  onFound(w, path);
+  for (let i = cand.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [cand[i], cand[j]] = [cand[j], cand[i]]; }
+  const targets = cand.slice(0, 5);
+  S.magBusy = true;
+  const tok = S.token;
+
+  // mıknatıs ortada belirir, ışın yayar
+  const fx = document.createElement('div'); fx.className = 'mag-fx';
+  fx.innerHTML = '<div class="mg-rays"></div><div class="mg-glow"></div><i class="mg-ring"></i><i class="mg-ring" style="animation-delay:.45s"></i><i class="mg-ring" style="animation-delay:.9s"></i>' +
+    '<svg class="mg-magnet" viewBox="0 0 24 24"><path d="M4 3h5v9a3 3 0 0 0 6 0V3h5v9a8 8 0 0 1-16 0V3z" fill="#ef4444" stroke="#7f1d1d" stroke-width=".6" stroke-linejoin="round"/><rect x="4" y="3" width="5" height="5" fill="#f1f5f9"/><rect x="15" y="3" width="5" height="5" fill="#f1f5f9"/></svg>';
+  gridEl.appendChild(fx);
+  const W = gridEl.clientWidth, H = gridEl.clientHeight;
+  const mx = W / 2, my = H / 2;
+
+  targets.forEach((idx, k) => {
+    const el = S.cells[idx];
+    setTimeout(() => {
+      if (tok !== S.token) return;
+      el.classList.add('dim');                       // yavaş yavaş solar (CSS geçişi 1.8 sn)
+      const cx = el.offsetLeft + el.offsetWidth / 2, cy = el.offsetTop + el.offsetHeight / 2;
+      const dot = document.createElement('i'); dot.className = 'mg-dot';
+      dot.style.left = cx + 'px'; dot.style.top = cy + 'px';
+      fx.appendChild(dot);
+      dot.animate([
+        { transform: 'translate(-50%,-50%) scale(1.2)', opacity: 0 },
+        { transform: 'translate(-50%,-50%) scale(1.2)', opacity: 1, offset: .15 },
+        { transform: 'translate(calc(-50% + ' + (mx - cx) + 'px),calc(-50% + ' + (my - cy) + 'px)) scale(.3)', opacity: .2 }
+      ], { duration: 1100, easing: 'cubic-bezier(.5,0,.8,.5)', fill: 'forwards' }).onfinish = () => dot.remove();
+    }, 900 + k * 450);
+  });
+
+  const total = 900 + targets.length * 450 + 1200;
+  setTimeout(() => {
+    if (tok !== S.token){ fx.remove(); return; }
+    fx.classList.add('out');
+    setTimeout(() => { fx.remove(); if (tok === S.token) S.magBusy = false; }, 500);
+  }, total);
 }
 $('jk-magnet').addEventListener('click', useMagnet);
 
