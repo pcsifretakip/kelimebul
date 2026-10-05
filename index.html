@@ -1174,6 +1174,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #view-modes .level-subtitle,
 #view-modes .mode-sub,
 #view-modes .mode-level-name { display:none !important; }
+</style>
 <style>
 /* ===== YOLCULUK: sadece tamamlanan bölüm yeşil, diğerleri yeşil değil ===== */
 #view-modes .jr-cap,
@@ -1183,6 +1184,31 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #view-modes .jr-node.cur { background:#2563eb; box-shadow:0 5px 0 #1d4ed8,0 0 0 0 rgba(37,99,235,.65); }
 #view-modes .jr-node.done { background:#16a34a; border-color:#fff; box-shadow:0 5px 0 #15803d; }
 </style>
+</style>
+<style>
+/* ===== OYUN EKRANI: daha ferah boşluklar ===== */
+#view-game:not(.off){padding:10px 10px calc(10px + env(safe-area-inset-bottom));gap:8px}
+#view-game .banner{padding:9px 12px;border-radius:15px}
+#view-game .words-panel{padding:9px 8px;border-radius:18px}
+#view-game .word-list{gap:6px}
+#view-game .word-list.n-md,#view-game .word-list.n-sm,#view-game .word-list.n-xs{gap:5px}
+#view-game .live-selection{min-height:22px;margin:0 12px}
+#view-game .board-wrap{padding:2px 0}
+#view-game .jokers{padding:4px 8px 14px}
+</style>
+<style>
+/* ===== GİZLİ KELİME bölümü ===== */
+.chip.masked{color:#fde68a;border:1.5px dashed rgba(253,230,138,.7);background:rgba(251,191,36,.1);letter-spacing:.18em}
+.hid-tut{position:absolute;inset:0;z-index:90;background:rgba(3,2,16,.72);display:flex;align-items:center;justify-content:center;padding:0 16px}
+.hid-tut .ht-arrow{position:absolute;left:50%;width:46px;height:54px;margin-left:-23px;animation:htBob 1s ease-in-out infinite}
+.hid-tut .ht-arrow svg{width:100%;height:100%;fill:#2f9bff;stroke:#1d6fd8;stroke-width:3;stroke-linejoin:round;filter:drop-shadow(0 4px 0 #1456a8)}
+@keyframes htBob{50%{transform:translateY(7px)}}
+.hid-tut .ht-box{display:flex;flex-direction:column;align-items:center;gap:26px;width:100%;max-width:420px}
+.hid-tut .ht-bub{width:100%;padding:20px 18px;border-radius:26px;text-align:center;font-size:20px;font-weight:900;line-height:1.35;color:#fff;
+  background:linear-gradient(180deg,#4aa3ff,#2a7bff 55%,#1d6af0);box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 6px 0 #1550b8,0 14px 26px rgba(0,0,0,.4);text-shadow:0 2px 0 rgba(0,0,0,.25)}
+.hid-tut .ht-ok{padding:12px 54px;border:0;border-radius:999px;font-size:24px;font-weight:1000;letter-spacing:.04em;color:#fff;font-family:inherit;
+  background:linear-gradient(180deg,#5cff3a,#22d10f 55%,#17b20a);box-shadow:inset 0 2px 0 rgba(255,255,255,.45),0 6px 0 #0d7a06,0 12px 22px rgba(0,0,0,.4);text-shadow:0 2px 0 rgba(0,0,0,.3)}
+.hid-tut .ht-ok:active{transform:translateY(4px);box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 2px 0 #0d7a06}
 </style>
 </head>
 <body>
@@ -1592,16 +1618,19 @@ const GROUPS = [
     ['SANAYİ MALZEMELERİ',7,'rulman civata somun profil zincir conta'],
     ['AMELİYAT MALZEMELERİ',7,'neşter penset makas ekartör dikiş bistüri'],
     ['DÜNYA ŞEHİRLERİ',7,'istanbul paris londra tokyo roma madrid'],
+    ['AYLAR',6,'mart nisan eylül şubat ocak mayıs','ocak'],
     ['KÖPEK IRKLARI',8,'labrador golden husky beagle boxer bulldog'],
     ['MÜZİK ENSTRÜMANLARI',8,'piyano gitar keman davul flüt bağlama'],
     ['YÖRESEL YEMEKLER',8,'mantı kebap pide lahmacun keşkek tantuni'],
     ['BAŞKENTLER',8,'ankara paris berlin tokyo madrid lizbon'],
     ['OTOMOBİL MARKALARI',8,'toyota ford bmw mercedes audi renault'],
+    ['RENKLER',7,'mavi yeşil sarı turuncu mor siyah','turuncu mor'],
     ['SÜPER KAHRAMANLAR',8,'batman superman thor hulk flash aquaman'],
     ['TÜRKİYE İLLERİ',9,'sakarya istanbul ankara izmir bursa antalya'],
     ['MEYVE VE SEBZELER',9,'elma armut kiraz domates biber patlıcan'],
     ['TARİHİ ŞAHSİYETLER',9,'atatürk fatih kanuni napolyon iskender sezar'],
     ['HASTANE ALETLERİ',10,'stetoskop termometre tansiyon oksimetre şırınga neşter'],
+    ['GEZEGENLER',8,'merkür venüs dünya mars jüpiter satürn','jüpiter mars'],
     ['ÜNLÜ FUTBOLCULAR',10,'messi ronaldo mbappe neymar zidane ronaldinho'],
     ['EL ALETLERİ',10,'çekiç pense tornavida testere anahtar keski'],
     ['BİLİM KURGU FİLMLERİ',11,'avatar matrix dune alien terminator interstellar'],
@@ -1689,7 +1718,7 @@ const INFO = [
   ["Üç Ülke Sınırı / ARJANTİN","Şelalelerin yakınında Brezilya, Arjantin ve Paraguay sınırları buluşur."]
 ];
 let _n = 0;
-const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => ({ category:l[0], group:gi, lv:j, info:INFO[_n++], size:l[1], dirs: j < 6 ? 'easy' : (j < 12 ? 'medium' : 'hard'), mode:'classic', subtitle:g[0].toLocaleUpperCase('tr-TR'), words:l[2].split(' ') })));
+const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => { const hide = l[3] ? l[3].split(' ') : null; return { category:l[0], group:gi, lv:j, info:hide ? undefined : INFO[_n++], size:l[1], dirs: hide ? (j < 8 ? 'easy' : 'medium') : (j < 6 ? 'easy' : (j < 12 ? 'medium' : 'hard')), mode:hide ? 'hidden' : 'classic', hide, subtitle:g[0].toLocaleUpperCase('tr-TR'), words:l[2].split(' ') }; }));
 const LEVELS = CLASSIC_LEVELS;
 const MODES = [
   { key:'classic', category:'KLASİK SERBEST', icon:'sprout', color:'#22c55e', subtitle:'Rahatça oyna. Bölümleri seç ve normal kelime bulma modunda ilerle.', available:true }
@@ -1738,7 +1767,7 @@ function buildLevel(def, index){
       for (let c = 0; c < size; c++)
         if (grid[r][c] === '') grid[r][c] = FILLER[Math.floor(rnd() * FILLER.length)];
 
-    return { id:index + 1, category:def.category, size, words, grid, placements };
+    return { id:index + 1, category:def.category, size, words, grid, placements, hidden:(def.hide || []).map(TR) };
   }
   throw new Error('Izgara üretilemedi: ' + def.category);
 }
@@ -1830,6 +1859,16 @@ const S = {
   S.levelIndex = S.maxOpen;
   if (TEST_UNLOCK_ALL) S.maxOpen = last;   // TEST: tüm bölümler açık
   try { S.done = JSON.parse(store.get('cidahl_doga_done') || '{}') || {}; } catch(e) { S.done = {}; }
+  if (!store.get('kb_hid_v1')){            // eski kayıtları, araya eklenen gizli kelime bölümlerine göre kaydır
+    const mv = i => i + (i >= 4 ? 1 : 0) + (i >= 9 ? 1 : 0) + (i >= 14 ? 1 : 0);
+    const mp = o => { const r = {}; Object.keys(o || {}).forEach(k => { r[mv(+k)] = o[k]; }); return r; };
+    S.done = mp(S.done);
+    try { store.set('cidahl_doga_partial', JSON.stringify(mp(JSON.parse(store.get('cidahl_doga_partial') || '{}')))); } catch(e) {}
+    S.maxOpen = Math.min(last, mv(S.maxOpen)); S.levelIndex = S.maxOpen;
+    store.set('kb_hid_v1', '1');
+    store.set('cidahl_doga_max', S.maxOpen); store.set('cidahl_doga_level', S.maxOpen); store.set('cidahl_doga_done', JSON.stringify(S.done));
+    if (TEST_UNLOCK_ALL) S.maxOpen = last;
+  }
   try { S.partial = JSON.parse(store.get('cidahl_doga_partial') || '{}') || {}; } catch(e) { S.partial = {}; }
   // Açılmış bölümler tamamlanmış sayılmaz; yıldız yalnızca bölüm gerçekten bitirilince verilir.
   // Böylece yeni/ilk kullanıcıya otomatik 1 yıldız yazılmaz.
@@ -2015,6 +2054,7 @@ function startLevel(index, def, seed){
   app.classList.toggle('on-review', review);
   $('status-txt').textContent = review ? '✔ Mod tamamlandı • tekrar puan kazanılmaz' : 'Harfleri parmağınla sürükleyip kelimeyi bul!';
   S.token++; stopTimer();
+  { const t = document.querySelector('.hid-tut'); if (t) t.remove(); }
   const tok = S.token;
   S.levelIndex = index;
   S.level = def ? buildLevel(def, seed) : buildLevel(LEVELS[index], index);
@@ -2031,7 +2071,7 @@ function startLevel(index, def, seed){
     const n = S.level.size;
     S.found.forEach(w => {
       const chip = S.chips[w];
-      if (chip) chip.classList.add('found');
+      if (chip){ revealChip(w); chip.classList.add('found'); }
       const pl = S.level.placements[w];
       if (!pl) return;
       const path = Array.from({ length: pl.len }, (_, k) => ({ r: pl.r + pl.dr * k, c: pl.c + pl.dc * k }));
@@ -2056,8 +2096,18 @@ function startLevel(index, def, seed){
   // tanıtım/açıklama ekranı kaldırıldı: oyun doğrudan başlar
   requestAnimationFrame(() => requestAnimationFrame(() => {
     if (tok !== S.token) return;
-    S.playing = true; startTimer(); measure();
+    const go = () => { if (tok !== S.token) return; S.playing = true; startTimer(); measure(); };
+    if (S.level.hidden.length && !store.get('kb_hid_tut')) showHiddenTutorial(go); else go();
   }));
+}
+function showHiddenTutorial(go){
+  const old = document.querySelector('.hid-tut'); if (old) old.remove();
+  const ar = app.getBoundingClientRect(), lr = wordListEl.getBoundingClientRect();
+  const o = document.createElement('div'); o.className = 'hid-tut';
+  o.innerHTML = '<div class="ht-arrow" style="top:' + (lr.bottom - ar.top + 6) + 'px"><svg viewBox="0 0 60 70"><path d="M30 4 L56 32 H40 V66 H20 V32 H4 Z"/></svg></div>' +
+    '<div class="ht-box"><div class="ht-bub">Listedeki Gizli Kelimeleri bulup ortaya çıkar.</div><button class="ht-ok" type="button">TAMAM</button></div>';
+  app.appendChild(o);
+  o.querySelector('.ht-ok').addEventListener('click', () => { store.set('kb_hid_tut', '1'); o.remove(); go(); });
 }
 
 /* =====================================================
@@ -2098,6 +2148,7 @@ function closeIntro(){
 function cancelIntro(){ clearTimeout(introTimer); introDone = null; introEl.classList.remove('show'); }
 introEl.addEventListener('pointerdown', () => { if (Date.now() >= introReady) closeIntro(); });
 
+function revealChip(w){ const c = S.chips[w]; if (c && c.classList.contains('masked')){ c.classList.remove('masked'); c.lastChild.textContent = w; } }
 function renderWords(){
   wordListEl.innerHTML = ''; S.chips = {};
   { const n = S.level.words.length; wordListEl.className = 'word-list' + (n >= 13 ? ' n-xs' : n >= 9 ? ' n-sm' : n >= 7 ? ' n-md' : ''); }
@@ -2107,6 +2158,7 @@ function renderWords(){
     chip.style.setProperty('--c', S.colorOf[w]);
     chip.innerHTML = '<svg class="i"><use href="#i-check"/></svg><span></span>';
     chip.lastChild.textContent = w;
+    if (S.level.hidden.includes(w)){ chip.lastChild.textContent = w[0] + '*'.repeat([...w].length - 1); chip.classList.add('masked'); }
     wordListEl.appendChild(chip); S.chips[w] = chip;
   });
 }
@@ -2357,7 +2409,7 @@ function flyLabel(word, color, from, tok){
   anim.onfinish = () => {
     el.remove();
     if (tok !== S.token) return;
-    chip.classList.add('found');
+    revealChip(word); chip.classList.add('found');
     sparkBurst(to.x, to.y, color, 9, .8);
     ring(to.x, to.y, color, 34);
   };
@@ -2709,7 +2761,7 @@ function drawMap(scroll){
     nodes += '<div class="jr-nw" style="left:' + p.x + 'px;top:' + p.y + 'px;--c:' + GROUPS[d.group][1] + '">' +
       (isCur ? '<div class="jr-pin"><span>' + avatarHTML() + '</span></div>' : '') +
       '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '">' + (ok ? (i + 1) : iconSVG('lock')) + '</button>' + st +
-      '<div class="jr-cap">' + d.category + '</div></div>';
+      '</div>';
   });
   wrap.style.height = H + 'px';
   wrap.innerHTML = html + '<div class="jr-canvas" style="height:' + H + 'px">' + svg + nodes + '</div>';
