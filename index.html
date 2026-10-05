@@ -1939,6 +1939,7 @@ function tone(freq, t0, dur, type = 'sine', vol = .14, endFreq){
 }
 const SND = {
   tick(n){ tone(330 + n * 38, 0, .07, 'sine', .08); },
+  boom(){ tone(130, 0, .2, 'sine', .06, 45); tone(2400 + Math.random() * 1200, .03, .12, 'triangle', .02, 900); },
   tling(n){         // parmakla harf seçerken: her harfte yükselen "tling" (pentatonik zil sesi)
     const sc = [0, 2, 4, 7, 9], k = Math.max(0, Math.min(n, 14));
     const f = 523.25 * Math.pow(2, (sc[k % 5] + 12 * Math.floor(k / 5)) / 12);
@@ -1998,7 +1999,16 @@ function fxTick(now){
     }
     p.vy += p.g * dt; p.vx *= (1 - p.drag * dt); p.vy *= (1 - p.drag * dt);
     p.x += p.vx * dt; p.y += p.vy * dt; p.rot += p.vr * dt;
-    if (p.kind === 'conf'){
+    if (p.kind === 'fw'){          // havai fişek parçacığı: iz bırakan çizgi + parlak uç, sonda parıldar
+      const tw = k > .55 ? .55 + .45 * Math.sin(p.t * 46 + p.rot) : 1;
+      fxCtx.save(); fxCtx.globalCompositeOperation = 'lighter'; fxCtx.lineCap = 'round';
+      fxCtx.globalAlpha = Math.max(0, (1 - k * k)) * tw;
+      fxCtx.strokeStyle = p.color; fxCtx.lineWidth = p.s * (1 - k * .5);
+      fxCtx.beginPath(); fxCtx.moveTo(p.x - p.vx * .07, p.y - p.vy * .07); fxCtx.lineTo(p.x, p.y); fxCtx.stroke();
+      fxCtx.fillStyle = '#fff'; fxCtx.globalAlpha *= .9;
+      fxCtx.beginPath(); fxCtx.arc(p.x, p.y, p.s * .55, 0, Math.PI * 2); fxCtx.fill();
+      fxCtx.restore();
+    } else if (p.kind === 'conf'){
       fxCtx.save(); fxCtx.translate(p.x, p.y); fxCtx.rotate(p.rot); fxCtx.scale(1, Math.cos(p.t * p.flip));
       fxCtx.globalAlpha = k > .8 ? (1 - k) * 5 : 1; fxCtx.fillStyle = p.color;
       fxCtx.fillRect(-p.s / 2, -p.s / 3, p.s, p.s * .6); fxCtx.restore();
@@ -2022,6 +2032,36 @@ function sparkBurst(x, y, color, n = 7, power = 1){
     fxAdd({ kind: Math.random() < .5 ? 'star' : 'dot', x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 20,
             g: 220, drag: 2.2, s: 3 + Math.random() * 4, rot: Math.random() * 6, vr: (Math.random() - .5) * 8,
             life: .5 + Math.random() * .45, t: 0, color: Math.random() < .55 ? color : '#fde68a', core: '#fff' });
+  }
+}
+function firework(x, y, color, type){
+  const pal = ['#fbbf24','#ef4b6c','#22d3ee','#a78bfa','#4ade80','#f97316','#f472b6','#60a5fa'];
+  const c1 = color || pal[Math.floor(Math.random() * pal.length)], c2 = pal[Math.floor(Math.random() * pal.length)];
+  type = type || ['sphere', 'ring', 'double'][Math.floor(Math.random() * 3)];
+  const add = (n, speed, col, spread, life) => {
+    for (let i = 0; i < n; i++){
+      const a = (type === 'sphere' || spread) ? Math.random() * Math.PI * 2 : (i / n) * Math.PI * 2;
+      const sp = spread ? speed * (.25 + Math.random() * .75) : speed * (type === 'sphere' ? (.35 + Math.random() * .65) : 1);
+      fxAdd({ kind:'fw', x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, g: 150, drag: 1.7, s: 2.4 + Math.random() * 1.8,
+              rot: Math.random() * 6, vr: 0, life: life + Math.random() * .5, t: 0, color: col });
+    }
+  };
+  if (type === 'sphere') add(95, 380, c1, true, 1.3);
+  else if (type === 'ring') add(64, 340, c1, false, 1.3);
+  else { add(56, 360, c1, false, 1.35); add(40, 190, c2, false, 1.15); }
+  fxAdd({ kind:'ring', x, y, r0: 8, r1: 120, life: .45, t: 0, color: '#fff' });
+  sparkBurst(x, y, c1, 10, 1.1);
+  SND.boom();
+}
+function fireworkShow(){
+  const w = fxW, h = fxH, n = 14;
+  for (let i = 0; i < n; i++){
+    setTimeout(() => {
+      if (!modal.classList.contains('show')) return;
+      const x = w * (.14 + Math.random() * .72), y = h * (.1 + Math.random() * .42);
+      firework(x, y);
+      if (i % 3 === 0) setTimeout(() => { if (modal.classList.contains('show')) firework(w * (.14 + Math.random() * .72), h * (.12 + Math.random() * .4)); }, 140);
+    }, i * 330 + (i === 0 ? 0 : Math.random() * 120));
   }
 }
 function ring(x, y, color, r1 = 60){ fxAdd({ kind:'ring', x, y, r0: 6, r1, life: .55, t: 0, color }); }
@@ -2702,10 +2742,7 @@ function victory(){
   $('reward-coins').textContent = '+' + reward;
   modal.classList.add('show'); vicFx(stars, reward, elapsed);
   const w = fxW, h = fxH;
-  confetti(w * .08, h * .85, 70, -Math.PI * .45, -Math.PI * .1);
-  confetti(w * .92, h * .85, 70, -Math.PI * .9, -Math.PI * .55);
-  setTimeout(() => confetti(w * .5, h * .3, 60, -Math.PI, 0, .7), 350);
-  setTimeout(() => { confetti(w * .2, h * .15, 40, 0, Math.PI, .5); confetti(w * .8, h * .15, 40, 0, Math.PI, .5); }, 900);
+  fireworkShow();                     // büyük havai fişek gösterisi (~4,5 sn)
 }
 
 function playJourneyUnlockAnimation(fromIdx){
