@@ -1570,6 +1570,16 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .jm-node.done{background-image:url('bitti.png')!important}
 .jm-node.cur{background-image:url('simdiki.png')!important;width:96px!important;height:96px!important;font-size:24px!important}
 .jm-node:active{transform:translate(-50%,-50%) scale(.94)!important}
+/* ===== Harita ekranı: sol üst ilerleme, sağ üst ayarlar, sol alt ana sayfa (başlık yok) ===== */
+.jm-head{display:flex!important;align-items:center;justify-content:space-between;grid-template-columns:none!important;pointer-events:none}
+.jm-score{pointer-events:auto;display:flex;align-items:center;gap:8px;height:48px;padding:0 20px 0 10px;border-radius:999px;color:#fff;font-weight:900;font-size:22px;letter-spacing:.02em;font-variant-numeric:tabular-nums;background:linear-gradient(180deg,rgba(34,34,40,.94),rgba(10,10,13,.94));border:2px solid rgba(255,214,90,.55);box-shadow:0 3px 10px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.12)}
+.jm-score .i{width:34px;height:34px;fill:#ffc61a;filter:drop-shadow(0 2px 0 #9a5a00) drop-shadow(0 0 6px rgba(255,200,40,.6))}
+.jm-set,.journey-map-screen .jm-home{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;padding:0;pointer-events:auto;color:#ffd54a;background:radial-gradient(circle at 50% 30%,#3d3f46,#111215);border:2.5px solid rgba(255,214,90,.65);box-shadow:0 3px 10px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.15)}
+.jm-set .i,.journey-map-screen .jm-home .i{width:28px;height:28px;fill:currentColor}
+.journey-map-screen .jm-home{position:absolute;left:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);z-index:6;font-size:0}
+.jm-set:active,.journey-map-screen .jm-home:active{transform:translateY(2px)}
+.app.on-journey .smenu{z-index:200}
+
 </style>
 </head>
 <body>
@@ -4662,14 +4672,14 @@ function ensureJourneyMap(){
     <div class="jm-bg"><video class="jm-bg-video" src="harita.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto"></video></div>
     <div class="jm-vignette"></div>
     <header class="jm-head">
-      <button type="button" class="jm-back" aria-label="Bölümlere dön">‹</button>
-      <div class="jm-title"><small id="jm-kicker">BÖLÜM</small><b id="jm-title-text">AMAZON YAĞMUR ORMANLARI</b></div>
-      <button type="button" class="jm-home" aria-label="Ana sayfa">⌂</button>
+      <div class="jm-score" aria-label="İlerleme"><svg class="i"><use href="#i-star"/></svg><b id="jm-score-v">0/30</b></div>
+      <button type="button" class="jm-set" aria-label="Ayarlar"><svg class="i"><use href="#i-gear"/></svg></button>
     </header>
+    <button type="button" class="jm-home" aria-label="Ana sayfa"><svg class="i"><use href="#i-home"/></svg></button>
     <div class="jm-map-area"><div id="jm-nodes"></div></div>
   `;
   document.querySelector('.app')?.appendChild(journeyMapEl);
-  journeyMapEl.querySelector('.jm-back').addEventListener('click', () => { audio(); journeyMapEl.classList.remove('show'); showLevels(); });
+  journeyMapEl.querySelector('.jm-set').addEventListener('click', e => { e.stopPropagation(); audio(); refreshSettings(); menuEl.classList.toggle('show'); });
   journeyMapEl.querySelector('.jm-home').addEventListener('click', () => { audio(); journeyMapEl.classList.remove('show'); showHome(); });
   return journeyMapEl;
 }
@@ -4679,8 +4689,7 @@ function showJourneyMap(chapterIndex){
   leaveGame();
   const el = ensureJourneyMap();
   const def = LEVELS[idx] || LEVELS[0];
-  el.querySelector('#jm-title-text').textContent = def.category;
-  el.querySelector('#jm-kicker').textContent = 'BÖLÜM ' + (idx + 1);
+  { let tot = 0; for (const k in S.done) if (S.done[k]) tot += (S.done[k].stars || 0); const sv = el.querySelector('#jm-score-v'); if (sv) sv.textContent = tot + '/' + (LEVELS.length * 3); }
   const bg = el.querySelector('.jm-bg');
   const vid = el.querySelector('.jm-bg-video');
   if (vid) { vid.muted = true; vid.loop = true; vid.playsInline = true; const play = () => { const pr = vid.play(); if (pr && pr.catch) pr.catch(() => {}); }; play(); }
