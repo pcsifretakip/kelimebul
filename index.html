@@ -1326,7 +1326,6 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 <style>
 /* ===== YOLCULUK: harita.png arka plan ===== */
 .jr-tiles{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.jr-tile{position:absolute;left:0;right:0;background:#79bf56 url('harita.png') 0 0 / 100% 100% no-repeat}
 .jr-tile.fade{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 11%);mask-image:linear-gradient(to bottom,transparent 0,#000 11%)}
 .jr-wrap{background:#79bf56}
 /* ===== YOLCULUK: düzeltmeler ===== */
@@ -1451,6 +1450,13 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 #view-modes .jr-nw .jr-node.lk::after{opacity:.68}
 #view-modes .jr-nw .jr-node.cur{animation:jrRingPulse 1.6s ease-in-out infinite!important}
 .jr-nw .jr-stars{left:-22px!important;top:29px!important;width:44px!important}
+</style>
+<style>
+/* ===== YOLCULUK: harita.mp4 arka plan (harita.png kullanılmıyor) ===== */
+.jr-vbg{position:sticky;top:0;left:0;width:100%;z-index:0;pointer-events:none;overflow:hidden;background:#1d5a2b}
+.jr-vbg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.jr-map,.jr-wrap,#view-modes{background:transparent!important}
+.jr-map{background:#1d5a2b!important}
 </style>
 </head>
 <body>
@@ -1628,7 +1634,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
     <!-- MOD SEÇİMİ (kaydırmalı sahne) -->
     <section id="view-modes" class="view off modes jr">
       <div class="jr-hud"><div class="jr-score" id="jr-score"><svg class="i"><use href="#i-star"/></svg><span id="jr-score-v">0/0</span></div><button class="jr-set" id="jr-set" aria-label="Ayarlar"><svg class="i"><use href="#i-gear"/></svg></button></div>
-      <div class="jr-map" id="jr-map"><div class="jr-wrap" id="jr-wrap"></div></div>
+      <div class="jr-map" id="jr-map"><div class="jr-vbg" id="jr-vbg"><video src="harita.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto"></video></div><div class="jr-wrap" id="jr-wrap"></div></div>
     </section>
 
     <!-- LEVEL SELECT -->
@@ -3228,28 +3234,6 @@ function renderModes(){ drawMap(true); }
 let JR_ART_H = 1672; // resmin gerçekten dolu olan yüksekliği (altı boş/siyah)
 const JR_IMG = {w:940, h:1672, perTile:8, overlap:.1,
   wp:[[490,1672],[492,1560],[492,1455],[545,1385],[610,1320],[635,1240],[640,1160],[615,1085],[585,1015],[650,960],[705,925],[640,880],[560,850],[537,835],[520,780],[540,725],[553,665],[500,610],[447,555],[470,500],[503,445],[530,385],[558,328],[560,270],[540,215]]};
-/* harita.png'nin altındaki siyah/boş kısmı otomatik algıla ve kes */
-(function(){
-  const im = new Image();
-  im.onload = () => { try {
-    const cw = 94, ch = Math.max(20, Math.round(cw * im.naturalHeight / im.naturalWidth));
-    const c = document.createElement('canvas'); c.width = cw; c.height = ch;
-    const x = c.getContext('2d', {willReadFrequently:true}); x.drawImage(im, 0, 0, cw, ch);
-    let last = ch - 1;
-    for (; last > 0; last--){
-      const d = x.getImageData(0, last, cw, 1).data; let sum = 0, sq = 0;
-      for (let k = 0; k < d.length; k += 4){ const l = (d[k] + d[k+1] + d[k+2]) / 3; sum += l; sq += l * l; }
-      const m = sum / cw, sd = Math.sqrt(Math.max(0, sq / cw - m * m));
-      if (m > 40 && sd > 14) break;   /* siyah ve düz renkli (yeşil) şeritler içerik sayılmaz */
-    }
-    const filled = Math.round((last + 1) / ch * JR_IMG.h) - 3;
-    if (filled < JR_IMG.h - 8 && filled > JR_IMG.h * .5){
-      JR_ART_H = filled;
-      if (typeof drawMap === 'function' && typeof LEVELS !== 'undefined') drawMap(false);
-    }
-  } catch(e){} };
-  im.src = 'harita.png';
-})();
 const JR_CURVE = (() => {
   const wp = JR_IMG.wp, pts = [];
   const cr = (a,b,c,d,t) => [0,1].map(k => .5*((2*b[k]) + (-a[k]+c[k])*t + (2*a[k]-5*b[k]+4*c[k]-d[k])*t*t + (-a[k]+3*b[k]-3*c[k]+d[k])*t*t*t));
@@ -3286,9 +3270,7 @@ function drawMap(scroll){
   JR_P = P;
   { let tot = 0; for (const k in S.done) if (S.done[k]) tot += (S.done[k].stars || 0); const sv = $('jr-score-v'); if (sv) sv.textContent = tot + '/' + (LEVELS.length * 3); }
   /* arka plan: her resim bir döşeme; üstteki döşemeye yumuşak geçiş */
-  let html = '<div class="jr-tiles">';
-  for (let t = tiles - 1; t >= 0; t--) html += '<div class="jr-tile' + (t < tiles - 1 ? ' fade' : '') + '" style="top:' + ((tiles-1-t)*pitch).toFixed(1) + 'px;height:' + tileH.toFixed(1) + 'px;background-size:100% ' + bgH.toFixed(1) + 'px"></div>';
-  html += '</div>';
+  let html = '';
   /* biten bölümler arasındaki altın yol */
   let road = '';
   for (let i = 1; i < n; i++){
@@ -4540,6 +4522,20 @@ document.addEventListener('pointerdown', e => {
 window.addEventListener('resize', () => { fxResize(); measure(); });
 if ('ResizeObserver' in window) new ResizeObserver(() => { fxResize(); measure(); }).observe(gridEl);
 fxResize(); updateCoins(); updateHome(); refreshSettings(); setView(USER ? 'home' : 'login');
+})();
+</script>
+<script>
+(function(){
+  const map=document.getElementById('jr-map'), bg=document.getElementById('jr-vbg');
+  if(!map||!bg) return;
+  const v=bg.querySelector('video');
+  function fit(){ const h=map.clientHeight; if(h>0){ bg.style.height=h+'px'; bg.style.marginBottom=(-h)+'px'; } }
+  fit(); addEventListener('resize',fit);
+  if('ResizeObserver' in window) new ResizeObserver(fit).observe(map);
+  const play=()=>{ const p=v.play(); if(p&&p.catch) p.catch(()=>{}); };
+  v.muted=true; play();
+  addEventListener('touchstart',play,{once:true,passive:true});
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) play(); });
 })();
 </script>
 </body>
