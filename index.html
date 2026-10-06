@@ -1579,6 +1579,11 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .journey-map-screen .jm-home{position:absolute;left:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);z-index:6;font-size:0}
 .jm-set:active,.journey-map-screen .jm-home:active{transform:translateY(2px)}
 .app.on-journey .smenu{z-index:200}
+.jm-loading{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:radial-gradient(circle at 50% 40%,#1f6a31,#0d2a14);color:#ffe36b;letter-spacing:.2em;font-size:18px;transition:opacity .35s,visibility .35s}
+.jm-loading.hide{opacity:0;visibility:hidden;pointer-events:none}
+.jm-spin{width:54px;height:54px;border-radius:50%;border:5px solid rgba(255,227,107,.25);border-top-color:#ffd54a;animation:jmSpin .9s linear infinite}
+@keyframes jmSpin{to{transform:rotate(360deg)}}
+
 
 </style>
 </head>
@@ -3209,7 +3214,7 @@ function victory(){
   const rc = $('reward-chapter');
   if (rc) rc.textContent = 'BÖLÜM ' + (idx + 1) + ' • ' + S.level.category;
   const nextBtn = $('btn-next-level');
-  if (nextBtn) nextBtn.textContent = isLast ? 'HARİTAYA DÖN' : 'SONRAKİ BÖLÜM';
+  if (nextBtn) nextBtn.textContent = 'HARİTAYA DÖN';
   vicScene(idx);
   modal.classList.add('show');
   vicFx(stars, reward, elapsed);
@@ -3281,7 +3286,7 @@ $('btn-next-level').addEventListener('click', () => {
     iris.className = 'iris in';
     setTimeout(() => {
       modal.classList.remove('show','leave');
-      if (fromIdx + 1 < LEVELS.length) playJourneyUnlockAnimation(fromIdx); else showLevels();
+      try { showJourneyMap(0); } catch(e){ showLevels(); }
       requestAnimationFrame(() => { iris.className = 'iris out'; });
       setTimeout(() => { iris.className = 'iris'; irisBusy = false; }, 600);
     }, 520);
@@ -3355,11 +3360,13 @@ function renderModes(){
     b.type = 'button';
     b.className = 'journey-card ' + (done ? 'done' : current ? 'current' : unlocked ? 'open' : 'locked');
     b.style.setProperty('--neon', th.color);
+    const soon = i > 0;
     const stars = done ? '<div class="journey-stars">' + [1,2,3].map(n => '<svg class="i ' + (n <= done.stars ? 'on' : '') + '"><use href="#i-star"/></svg>').join('') + '</div>' : '';
     let state = '';
     if (!unlocked) state = '<span class="lock-label2"><svg class="i"><use href="#i-lock"/></svg>KİLİTLİ</span>';
     else if (done) state = '<span class="done-label">✓ TAMAMLANDI</span>' + stars;
     else state = '<span class="play">OYNA</span>';
+    if (soon) { b.className = 'journey-card locked'; b.innerHTML = '<span class="journey-num">🔒</span><span class="journey-info"><span class="journey-name">' + d.category + '</span></span><span class="journey-state"><span class="lock-label2">YAKINDA</span></span>'; b.setAttribute('aria-disabled','true'); list.appendChild(b); return; }
     b.innerHTML = '<span class="journey-num">' + (unlocked ? (done ? '✓' : i + 1) : '🔒') + '</span>' +
       '<span class="journey-info"><span class="journey-name">' + d.category + '</span><span class="journey-sub">' + (d.subtitle || ('BÖLÜM ' + (i+1))) + '</span>' + (done ? stars : '') + '</span>' +
       '<span class="journey-state">' + state + '</span>';
@@ -3493,6 +3500,7 @@ function setView(name){
   viewLogin.classList.remove('enter'); if (name === 'login'){ void viewLogin.offsetWidth; viewLogin.classList.add('enter'); }
   app.classList.toggle('on-login', name === 'login');
   app.classList.toggle('on-journey', false);
+  try { if (journeyMapEl) journeyMapEl.classList.remove('show'); } catch(_){}
   app.classList.toggle('on-game', name === 'game');
   closeMenu();
 }
@@ -4677,6 +4685,7 @@ function ensureJourneyMap(){
     </header>
     <button type="button" class="jm-home" aria-label="Ana sayfa"><svg class="i"><use href="#i-home"/></svg></button>
     <div class="jm-map-area"><div id="jm-nodes"></div></div>
+    <div class="jm-loading" id="jm-loading"><div class="jm-spin"></div><b>YÜKLENİYOR</b></div>
   `;
   document.querySelector('.app')?.appendChild(journeyMapEl);
   journeyMapEl.querySelector('.jm-set').addEventListener('click', e => { e.stopPropagation(); audio(); refreshSettings(); menuEl.classList.toggle('show'); });
@@ -4693,6 +4702,12 @@ function showJourneyMap(chapterIndex){
   const bg = el.querySelector('.jm-bg');
   const vid = el.querySelector('.jm-bg-video');
   if (vid) { vid.muted = true; vid.loop = true; vid.playsInline = true; const play = () => { const pr = vid.play(); if (pr && pr.catch) pr.catch(() => {}); }; play(); }
+  { const ld = el.querySelector('#jm-loading'); if (ld && vid) {
+      ld.classList.remove('hide');
+      const hideLd = () => { ld.classList.add('hide'); };
+      if (vid.readyState >= 3) hideLd();
+      else { ['canplay','playing','loadeddata'].forEach(ev => vid.addEventListener(ev, hideLd, {once:true})); setTimeout(hideLd, 9000); }
+  } }
   const nodes = el.querySelector('#jm-nodes');
   nodes.innerHTML = '';
   const positions = [
