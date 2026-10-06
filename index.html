@@ -1413,6 +1413,19 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .jr-nw .jr-stars .st.on{color:#ffc61a!important;opacity:1;filter:drop-shadow(0 1.5px 0 #9a5a00) drop-shadow(0 0 4px rgba(255,200,40,.7))!important}
 .jr-nw:has(.jr-node.lk) .jr-stars{opacity:.45}
 .jr-road{filter:none!important}
+
+/* ===== küçük düğme + sarı neon + koyu zemin ===== */
+html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-wrap,.jr-tile,#view-modes{background-color:#1d5a2b!important}
+#view-modes .jr-nw .jr-node,#view-modes .jr-nw .jr-node.open,#view-modes .jr-nw .jr-node.done,#view-modes .jr-nw .jr-node.cur,#view-modes .jr-nw .jr-node.lk{
+  left:-20px!important;top:-20px!important;width:40px!important;height:40px!important;
+  border:3px solid #ffe14d!important;font-size:18px!important;filter:none;
+  background:radial-gradient(circle at 50% 26%,#4d5058 0%,#25272c 55%,#111215 100%)!important;
+  box-shadow:0 0 5px 1px #fff3a0,0 0 12px 4px rgba(255,214,40,.9),0 0 24px 8px rgba(255,180,0,.45),0 4px 0 2px #8d877b,0 6px 0 2px #4f4a42,inset 0 2px 4px rgba(255,255,255,.18),inset 0 -4px 7px rgba(0,0,0,.45)!important}
+#view-modes .jr-nw .jr-node.lk{border-color:#e6c23a!important;color:#c9ccd6;
+  box-shadow:0 0 4px 1px rgba(255,230,110,.7),0 0 10px 3px rgba(255,200,30,.55),0 0 20px 6px rgba(255,170,0,.28),0 4px 0 2px #7a756b,0 6px 0 2px #47433c,inset 0 2px 4px rgba(255,255,255,.1),inset 0 -4px 7px rgba(0,0,0,.5)!important}
+#view-modes .jr-nw .jr-node::before{left:22%;right:22%;top:8%;height:30%}
+.jr-nw .jr-stars{left:-22px!important;top:29px!important;width:44px!important}
+.jr-nw .jr-stars .st{width:14px!important;height:14px!important}
 </style>
 </head>
 <body>
@@ -3187,9 +3200,30 @@ function journeyScenerySVG(H){
 const JR_EMO = ['🌴','🏔️','🏜️','🌊','⛰️','🎈','🐠','🐧','🌲','🌋','🐢','🌵','🏞️','🏺','✨','♨️','🌳','❄️','🦎','💦'];
 function renderModes(){ drawMap(true); }
 /* Harita.png yolu: resim koordinatlarında (940x1672) yol merkez noktaları, alttan üste */
-const JR_ART_H = 1672; // resmin gerçekten dolu olan yüksekliği (altı boş/siyah)
+let JR_ART_H = 1672; // resmin gerçekten dolu olan yüksekliği (altı boş/siyah)
 const JR_IMG = {w:940, h:1672, perTile:8, overlap:.1,
   wp:[[490,1672],[492,1560],[492,1455],[545,1385],[610,1320],[635,1240],[640,1160],[615,1085],[585,1015],[650,960],[705,925],[640,880],[560,850],[537,835],[520,780],[540,725],[553,665],[500,610],[447,555],[470,500],[503,445],[530,385],[558,328],[560,270],[540,215]]};
+/* harita.png'nin altındaki siyah/boş kısmı otomatik algıla ve kes */
+(function(){
+  const im = new Image();
+  im.onload = () => { try {
+    const cw = 94, ch = Math.max(20, Math.round(cw * im.naturalHeight / im.naturalWidth));
+    const c = document.createElement('canvas'); c.width = cw; c.height = ch;
+    const x = c.getContext('2d', {willReadFrequently:true}); x.drawImage(im, 0, 0, cw, ch);
+    let last = ch - 1;
+    for (; last > 0; last--){
+      const d = x.getImageData(0, last, cw, 1).data; let b = 0;
+      for (let k = 0; k < d.length; k += 4) if (d[k] + d[k+1] + d[k+2] > 90) b++;
+      if (b > cw * .3) break;
+    }
+    const filled = Math.round((last + 1) / ch * JR_IMG.h);
+    if (filled < JR_IMG.h - 8 && filled > JR_IMG.h * .5){
+      JR_ART_H = filled;
+      if (typeof drawMap === 'function' && typeof LEVELS !== 'undefined') drawMap(false);
+    }
+  } catch(e){} };
+  im.src = 'harita.png';
+})();
 const JR_CURVE = (() => {
   const wp = JR_IMG.wp, pts = [];
   const cr = (a,b,c,d,t) => [0,1].map(k => .5*((2*b[k]) + (-a[k]+c[k])*t + (2*a[k]-5*b[k]+4*c[k]-d[k])*t*t + (-a[k]+3*b[k]-3*c[k]+d[k])*t*t*t));
