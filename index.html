@@ -1040,7 +1040,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 @keyframes jrPulse{0%{box-shadow:0 5px 0 #15803d,0 0 0 0 rgba(34,197,94,.7)}70%{box-shadow:0 5px 0 #15803d,0 0 0 16px rgba(34,197,94,0)}100%{box-shadow:0 5px 0 #15803d,0 0 0 0 rgba(34,197,94,0)}}
 .jr-stars{position:absolute;left:-24px;top:20px;width:48px;display:flex;justify-content:center;gap:0;pointer-events:none}
 .jr-stars .st{width:16px;height:16px;color:#4b5563;filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}.jr-stars .st.on{color:#fbbf24}
-.jr-cap{position:absolute;left:-55px;top:42px;width:110px;text-align:center;font-size:11px;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.9);line-height:1.1;pointer-events:none}
+.jr-cap{position:absolute;left:-72px;top:36px;width:144px;text-align:center;font-size:10px;font-weight:900;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.9);line-height:1.15;pointer-events:none}.jr-cap b{display:block;font-size:10px}.jr-cap span{display:block;margin-top:2px;font-size:9px;opacity:.9}
 .jr-nw:has(.cur) .jr-cap{top:46px}
 .jr-pin{position:absolute;left:-19px;top:-82px;width:38px;height:38px;animation:jrBob 1.2s ease-in-out infinite;pointer-events:none}
 .jr-pin span{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:3px solid #fff;background:#0b3d91;overflow:hidden;color:#fff;font-size:20px}
@@ -1262,6 +1262,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 <style>
 /* ===== GİZLİ KELİME bölümü ===== */
 .chip.masked{color:#fde68a;border:1.5px dashed rgba(253,230,138,.7);background:rgba(251,191,36,.1);letter-spacing:.18em}
+.journey-tut{position:absolute;inset:0;z-index:120;display:grid;place-items:center;padding:22px;background:rgba(5,2,26,.76);backdrop-filter:blur(8px);opacity:0;transition:opacity .22s}.journey-tut.on{opacity:1}.jt-card{width:min(340px,88vw);padding:24px 20px;border-radius:24px;background:linear-gradient(160deg,rgba(41,27,108,.98),rgba(12,7,42,.98));border:1px solid rgba(255,255,255,.18);box-shadow:0 20px 70px rgba(0,0,0,.55),0 0 35px rgba(34,197,94,.18);text-align:center;color:#fff;transform:translateY(12px) scale(.96);transition:transform .3s}.journey-tut.on .jt-card{transform:none}.jt-badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(34,197,94,.16);border:1px solid rgba(74,222,128,.35);color:#86efac;font-size:11px;font-weight:1000}.jt-card h2{margin:13px 0 8px;font-size:27px}.jt-card p{margin:8px 0;color:rgba(255,255,255,.8);font-size:14px;line-height:1.45}.jt-small{font-size:12px!important;color:rgba(255,255,255,.58)!important}.jt-demo{display:flex;justify-content:center;gap:7px;margin:18px 0}.jt-demo span{width:42px;height:42px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(145deg,#fff,#dbeafe);color:#172554;font-size:19px;font-weight:1000;box-shadow:0 4px 0 #93a4c4}.jt-demo span:nth-child(2){transform:translateY(-6px);background:linear-gradient(145deg,#bbf7d0,#4ade80);color:#064e3b}.jt-ok{margin-top:10px;width:100%;border:0;border-radius:15px;padding:13px 16px;background:linear-gradient(180deg,#4ade80,#16a34a);color:#062e16;font-weight:1000;font-size:14px;box-shadow:0 5px 0 #166534}.jt-ok:active{transform:translateY(3px);box-shadow:0 2px 0 #166534}
 .hid-tut{position:absolute;inset:0;z-index:90;background:rgba(3,2,16,.72);display:flex;align-items:center;justify-content:center;padding:0 16px}
 .hid-tut .ht-arrow{position:absolute;left:50%;width:46px;height:54px;margin-left:-23px;animation:htBob 1s ease-in-out infinite}
 .hid-tut .ht-arrow svg{width:100%;height:100%;fill:#2f9bff;stroke:#1d6fd8;stroke-width:3;stroke-linejoin:round;filter:drop-shadow(0 4px 0 #1456a8)}
@@ -2022,7 +2023,22 @@ const INFO = [
   ["Üç Ülke Sınırı / ARJANTİN","Şelalelerin yakınında Brezilya, Arjantin ve Paraguay sınırları buluşur."]
 ];
 let _n = 0;
-const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => { const hide = l[3] ? l[3].split(' ') : null; return { category:l[0], group:gi, lv:j, info:(hide || gi > 0) ? undefined : INFO[_n++], size:l[1], dirs: l[4] ? l[4] : hide ? (j < 8 ? 'easy' : 'medium') : (j < 6 ? 'easy' : (j < 12 ? 'medium' : 'hard')), mode:hide ? 'hidden' : 'classic', hide, subtitle:g[0].toLocaleUpperCase('tr-TR'), words:l[2].split(' ') }; }));
+/* =====================================================
+   YENİ YOLCULUK: 10 ANA BÖLÜM
+   ===================================================== */
+const JOURNEY_LEVELS = [
+  {category:'Amazon Yağmur Ormanları', subtitle:'EĞİTİM • OYUNU ÖĞREN', size:5, dirs:'easy', words:'orman yaprak nehir maymun papağan', mode:'classic', group:null, themeColor:'#22c55e', icon:'sprout'},
+  {category:'Dünyanın 7 Harikası', subtitle:'KOLAY • BİRAZ DAHA HIZLI', size:6, dirs:'easy', words:'piramit tapınak heykel bahçe deniz fener', mode:'classic', group:null, themeColor:'#f59e0b', icon:'sun'},
+  {category:'Mariana Çukuru', subtitle:'ORTA • YÖNLER ÇOĞALIYOR', size:7, dirs:'medium', words:'okyanus derinlik basınç dalga keşif denizaltı', mode:'classic', group:null, themeColor:'#0ea5e9', icon:'water'},
+  {category:'Mısır Piramitleri', subtitle:'ORTA • UZUN KELİMELER', size:8, dirs:'medium', words:'firavun hiyeroglif mumya tapınak sfenks mezar', mode:'classic', group:null, themeColor:'#eab308', icon:'sun'},
+  {category:'Kuzey Işıkları (Aurora)', subtitle:'ZOR • GİZLİ KELİMELER BAŞLIYOR', size:8, dirs:'medium', words:'aurora kutup gökyüzü manyetik ışık parçacık kuzey', hide:'aurora parçacık', mode:'hidden', group:null, themeColor:'#8b5cf6', icon:'spark'},
+  {category:'Sahra Çölü', subtitle:'ZOR • DAHA UZUN KELİMELER', size:9, dirs:'hard', words:'çöl kum fırtına kervan vaha sıcaklık susuzluk serap', hide:'sıcaklık susuzluk', mode:'hidden', group:null, themeColor:'#f97316', icon:'sun'},
+  {category:'Büyük Set Resifi', subtitle:'ÇOK ZOR • GİZLİ KELİMELER', size:9, dirs:'hard', words:'mercan okyanus resif kaplumbağa balık deniz biyoloji ekosistem', hide:'kaplumbağa ekosistem', mode:'hidden', group:null, themeColor:'#14b8a6', icon:'water'},
+  {category:'Everest Tepesi', subtitle:'ÇOK ZOR • UZUN VE ÇAPRAZ KELİMELER', size:10, dirs:'hard', words:'everest zirve dağcı oksijen buzul tırmanış kamp dayanıklılık', hide:'dayanıklılık tırmanış', mode:'hidden', group:null, themeColor:'#38bdf8', icon:'mountain'},
+  {category:'Bermuda Şeytan Üçgeni', subtitle:'UZMAN • KARIŞIK YÖNLER', size:10, dirs:'hard', words:'bermuda pusula okyanus gemi uçak gizem fırtına manyetik', hide:'manyetik gizem', mode:'hidden', group:null, themeColor:'#6366f1', icon:'compass'},
+  {category:'Antarktika Kıtası', subtitle:'SON BÖLÜM • EN ZOR', size:11, dirs:'hard', words:'antarktika penguen buzdağı kutup araştırma istasyon sıcaklık keşif dayanıklılık', hide:'antarktika dayanıklılık araştırma', mode:'hidden', group:null, themeColor:'#06b6d4', icon:'snow'}
+];
+const CLASSIC_LEVELS = JOURNEY_LEVELS;
 const LEVELS = CLASSIC_LEVELS;
 const MODES = [
   { key:'classic', category:'KLASİK SERBEST', icon:'sprout', color:'#22c55e', subtitle:'Rahatça oyna. Bölümleri seç ve normal kelime bulma modunda ilerle.', available:true }
@@ -2125,7 +2141,7 @@ const THEME = {
   'NOKTASIZ HARFLER (ÖZEL MOD)': { icon:'pencil',    color:'#06b6d4' },
   'NOSTALJİ & DEYİMLER': { icon:'flower', color:'#f59e0b' }
 };
-const themeOf = d => (d.group != null && GROUPS[d.group]) ? { icon:'sprout', color:GROUPS[d.group][1] } : THEME[d.category] || { icon:'sprout', color:'#a78bfa' };
+const themeOf = d => d && d.themeColor ? { icon:d.icon || 'sprout', color:d.themeColor } : ((d.group != null && GROUPS[d.group]) ? { icon:'sprout', color:GROUPS[d.group][1] } : THEME[d.category] || { icon:'sprout', color:'#a78bfa' });
 const iconSVG = name => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="overflow:visible">' + (ICONS[name] || '') + '</svg>';
 function hexA(hex, a){ const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')'; }
 
@@ -2157,6 +2173,12 @@ const S = {
   const c = parseInt(store.get('wow_search_coins'), 10);
   if (!isNaN(c)) S.coins = c;
   const last = LEVELS.length - 1;
+  if (store.get('cidahl_journey_v2') !== '1'){
+    S.maxOpen = 0; S.levelIndex = 0; S.done = {}; S.partial = {};
+    store.set('cidahl_doga_max','0'); store.set('cidahl_doga_level','0');
+    store.set('cidahl_doga_done','{}'); store.set('cidahl_doga_partial','{}');
+    store.set('cidahl_journey_v2','1');
+  }
   const l = parseInt(store.get('cidahl_doga_level'), 10);
   const m = parseInt(store.get('cidahl_doga_max'), 10);
   S.maxOpen = Math.min(last, Math.max(isNaN(l) ? 0 : l, isNaN(m) ? 0 : m));
@@ -2529,10 +2551,18 @@ function startLevel(index, def, seed){
   requestAnimationFrame(() => requestAnimationFrame(() => {
     if (tok !== S.token) return;
     const go = () => { if (tok !== S.token) return; S.playing = true; startTimer(); measure(); };
-    const next = () => { if (tok !== S.token) return; if (S.level.hidden.length && !store.get('kb_hid_tut')) showHiddenTutorial(go); else go(); };
+    const next = () => { if (tok !== S.token) return; if (index === 0 && !store.get('kb_journey_tut')) { store.set('kb_journey_tut','1'); showJourneyTutorial(go); } else if (S.level.hidden.length && !store.get('kb_hid_tut')) showHiddenTutorial(go); else go(); };
     const sp = (!def && !R) ? storyPos(index) : null;
     if (sp && !store.get(sp.key)) showStory(sp, next); else next();
   }));
+}
+function showJourneyTutorial(go){
+  const old = document.querySelector('.journey-tut'); if (old) old.remove();
+  const o = document.createElement('div'); o.className = 'journey-tut';
+  o.innerHTML = '<div class="jt-card"><div class="jt-badge">BÖLÜM 1 • EĞİTİM</div><h2>Kelimeyi Bul!</h2><p>Harflerin üzerinden parmağını sürükleyerek listedeki kelimeyi bul.</p><div class="jt-demo"><span>H</span><span>A</span><span>R</span><span>F</span></div><p class="jt-small">Kelimeyi doğru bulduğunda işaretlenir. Tüm kelimeleri bulunca bölüm tamamlanır.</p><button class="jt-ok" type="button">OYUNA BAŞLA</button></div>';
+  app.appendChild(o);
+  requestAnimationFrame(() => o.classList.add('on'));
+  o.querySelector('.jt-ok').addEventListener('click', () => { o.classList.remove('on'); setTimeout(() => o.remove(), 250); go(); });
 }
 function showHiddenTutorial(go){
   const old = document.querySelector('.hid-tut'); if (old) old.remove();
@@ -3243,7 +3273,7 @@ const JR_EMO = ['🌴','🏔️','🏜️','🌊','⛰️','🎈','🐠','🐧',
 function renderModes(){ drawMap(); }
 /* Harita.png yolu: resim koordinatlarında (940x1672) yol merkez noktaları, alttan üste */
 let JR_ART_H = 1672; // resmin gerçekten dolu olan yüksekliği (altı boş/siyah)
-const JR_IMG = {w:940, h:1672, perTile:8, overlap:.1,
+const JR_IMG = {w:940, h:1672, perTile:10, overlap:.1,
   wp:[[490,1672],[492,1560],[492,1455],[545,1385],[610,1320],[635,1240],[640,1160],[615,1085],[585,1015],[650,960],[705,925],[640,880],[560,850],[537,835],[520,780],[540,725],[553,665],[500,610],[447,555],[470,500],[503,445],[530,385],[558,328],[560,270],[540,215]]};
 const JR_CURVE = (() => {
   const wp = JR_IMG.wp, pts = [];
@@ -3299,8 +3329,10 @@ function drawMap(page){
     const d = LEVELS[i], p = JR_P[i], dn = S.done[i], ok = i <= S.maxOpen, isCur = i === cur && ok && !dn;
     const got = dn ? dn.stars : 0;
     const st = !dn ? '' : '<span class="jr-stars">' + [1, 2, 3].map(q => '<svg class="i st' + (q <= got ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>';
-    nodes += '<div class="jr-nw" style="left:' + p.x.toFixed(1) + 'px;top:' + p.y.toFixed(1) + 'px;--c:' + GROUPS[d.group][1] + '">' +
-            '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '"></button>' + st +
+    const tc = themeOf(d).color;
+    nodes += '<div class="jr-nw" style="left:' + p.x.toFixed(1) + 'px;top:' + p.y.toFixed(1) + 'px;--c:' + tc + '">' +
+            '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '">' +
+            '<span class="jr-node-num">' + (i + 1) + '</span></button><div class="jr-cap"><b>Bölüm ' + (i + 1) + '</b><span>' + d.category + '</span></div>' + st +
       '</div>';
   }
   wrap.style.height = H + 'px';
