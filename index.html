@@ -1454,9 +1454,27 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 <style>
 /* ===== YOLCULUK: harita.mp4 arka plan (harita.png kullanılmıyor) ===== */
 .jr-vbg{position:sticky;top:0;left:0;width:100%;z-index:0;pointer-events:none;overflow:hidden;background:#1d5a2b}
-.jr-vbg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:opacity .6s linear}
+.jr-vbg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .jr-map,.jr-wrap,#view-modes{background:transparent!important}
 .jr-map{background:#1d5a2b!important}
+
+/* ===== YOLCULUK: özel düğme resimleri ===== */
+#view-modes .jr-nw .jr-node,#view-modes .jr-nw .jr-node.open,#view-modes .jr-nw .jr-node.lk,#view-modes .jr-nw .jr-node.cur,#view-modes .jr-nw .jr-node.done{
+  left:-39px!important;top:-42px!important;width:78px!important;height:78px!important;border:0!important;border-radius:0!important;
+  background-color:transparent!important;background-repeat:no-repeat!important;background-position:center!important;background-size:contain!important;
+  box-shadow:none!important;animation:none!important;display:flex!important;align-items:center;justify-content:center;
+  padding:0 0 4px 0!important;font-size:19px!important;font-weight:900;color:#fff!important;
+  text-shadow:0 2px 3px #000,0 0 6px rgba(0,0,0,.8)!important;-webkit-tap-highlight-color:transparent}
+#view-modes .jr-nw .jr-node::before,#view-modes .jr-nw .jr-node::after{display:none!important}
+#view-modes .jr-nw .jr-node.lk{background-image:url('kilitli.png')!important;font-size:0!important;color:transparent!important;text-shadow:none!important}
+#view-modes .jr-nw .jr-node.open{background-image:url('acik.png')!important}
+#view-modes .jr-nw .jr-node.done{background-image:url('bitti.png')!important}
+#view-modes .jr-nw .jr-node.cur{background-image:url('simdiki.png')!important;left:-48px!important;top:-52px!important;width:96px!important;height:96px!important;font-size:24px!important}
+#view-modes .jr-nw .jr-node:active{transform:scale(.94)!important}
+#view-modes .jr-nw .jr-node.jr-glow{filter:drop-shadow(0 0 10px rgba(255,220,100,.95))}
+#view-modes .jr-nw .jr-stars{top:24px!important;left:-33px!important;width:66px!important}
+#view-modes .jr-nw:has(.cur) .jr-stars{top:32px!important}
+#view-modes .jr-nw .jr-stars .st{width:17px!important;height:17px!important}
 </style>
 </head>
 <body>
@@ -1634,7 +1652,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
     <!-- MOD SEÇİMİ (kaydırmalı sahne) -->
     <section id="view-modes" class="view off modes jr">
       <div class="jr-hud"><div class="jr-score" id="jr-score"><svg class="i"><use href="#i-star"/></svg><span id="jr-score-v">0/0</span></div><button class="jr-set" id="jr-set" aria-label="Ayarlar"><svg class="i"><use href="#i-gear"/></svg></button></div>
-      <div class="jr-map" id="jr-map"><div class="jr-vbg" id="jr-vbg"><video src="harita.mp4" autoplay muted playsinline webkit-playsinline preload="auto"></video><video src="harita.mp4" muted playsinline webkit-playsinline preload="auto" style="opacity:0"></video></div><div class="jr-wrap" id="jr-wrap"></div></div>
+      <div class="jr-map" id="jr-map"><div class="jr-vbg" id="jr-vbg"><video src="harita.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto"></video></div><div class="jr-wrap" id="jr-wrap"></div></div>
     </section>
 
     <!-- LEVEL SELECT -->
@@ -4528,26 +4546,14 @@ fxResize(); updateCoins(); updateHome(); refreshSettings(); setView(USER ? 'home
 (function(){
   const map=document.getElementById('jr-map'), bg=document.getElementById('jr-vbg');
   if(!map||!bg) return;
-  const vs=bg.querySelectorAll('video'); let cur=0; const X=0.7; // X: geçiş süresi (sn)
-  const play=v=>{ const p=v.play(); if(p&&p.catch) p.catch(()=>{}); };
+  const v=bg.querySelector('video');
   function fit(){ const h=map.clientHeight; if(h>0){ bg.style.height=h+'px'; bg.style.marginBottom=(-h)+'px'; } }
   fit(); addEventListener('resize',fit);
   if('ResizeObserver' in window) new ResizeObserver(fit).observe(map);
-  vs.forEach(v=>{ v.muted=true; v.loop=false; });
-  function swap(){
-    const a=vs[cur], b=vs[1-cur]; b.currentTime=0; play(b);
-    b.style.opacity=1; a.style.opacity=0; cur=1-cur;
-    setTimeout(()=>{ try{a.pause();}catch(e){} },700);
-  }
-  function tick(){
-    const a=vs[cur];
-    if(a.duration && !a.paused && a.duration-a.currentTime<=X+0.15) swap();
-    requestAnimationFrame(tick);
-  }
-  vs.forEach(v=>v.addEventListener('ended',()=>{ if(vs[cur]===v) swap(); }));
-  play(vs[0]); requestAnimationFrame(tick);
-  addEventListener('touchstart',()=>{ if(vs[cur].paused) play(vs[cur]); },{once:true,passive:true});
-  document.addEventListener('visibilitychange',()=>{ if(!document.hidden && vs[cur].paused) play(vs[cur]); });
+  const play=()=>{ const p=v.play(); if(p&&p.catch) p.catch(()=>{}); };
+  v.muted=true; v.loop=true; play();
+  addEventListener('touchstart',()=>{ if(v.paused) play(); },{once:true,passive:true});
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) play(); });
 })();
 </script>
 </body>
