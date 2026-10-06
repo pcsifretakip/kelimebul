@@ -1533,6 +1533,29 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .jr-home svg{width:26px;height:26px;fill:currentColor}
 .jr-home:active{transform:translateY(2px)}
 </style>
+
+<style>
+/* ===== BÖLÜM HARİTASI ===== */
+.journey-map-screen{position:absolute;inset:0;z-index:120;display:none;overflow:hidden;background:#143b1d}
+.journey-map-screen.show{display:block}
+.jm-bg{position:absolute;inset:0;background-position:center;background-size:cover;background-repeat:no-repeat;transform:scale(1.01)}
+.jm-vignette{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.38),transparent 18%,transparent 78%,rgba(0,0,0,.3)),radial-gradient(circle,transparent 45%,rgba(0,0,0,.35) 100%);pointer-events:none}
+.jm-head{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:12px;right:12px;z-index:5;display:grid;grid-template-columns:48px 1fr 48px;align-items:center;gap:8px}
+.jm-back,.jm-home{width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,221,86,.75);background:rgba(20,22,27,.82);color:#ffd83d;font-size:32px;font-weight:900;display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.45),0 0 16px rgba(255,207,47,.28)}
+.jm-back:active,.jm-home:active{transform:scale(.92)}
+.jm-title{text-align:center;color:#fff;text-shadow:0 3px 7px #000}
+.jm-title small{display:block;font-size:10px;letter-spacing:.25em;color:#ffe36b;font-weight:1000}
+.jm-title b{display:block;font-size:16px;line-height:1.15;font-weight:1000}
+.jm-map-area{position:absolute;inset:0;z-index:2}
+.jm-path{position:absolute;left:50%;top:10%;bottom:6%;width:24%;transform:translateX(-50%);border-radius:50%;border:8px dashed rgba(255,224,133,.7);filter:drop-shadow(0 0 5px rgba(255,195,44,.35));opacity:.65;transform-origin:center;clip-path:polygon(40% 0,70% 15%,35% 28%,72% 43%,38% 57%,67% 72%,38% 87%,58% 100%,20% 100%,0 0)}
+#jm-nodes{position:absolute;inset:0}
+.jm-node{position:absolute;transform:translate(-50%,-50%);width:66px;height:66px;border-radius:50%;border:4px solid #ffe14d;background:radial-gradient(circle at 50% 25%,#555a63,#292c32 58%,#111216 100%);color:#fff;font-size:23px;font-weight:1000;box-shadow:0 0 5px #fff2a0,0 0 16px rgba(255,214,40,.85),0 0 30px rgba(255,180,0,.35),0 7px 0 #504c45,inset 0 4px 6px rgba(255,255,255,.3),inset 0 -7px 9px rgba(0,0,0,.5);text-shadow:0 2px 2px #000}
+.jm-node::before{content:"";position:absolute;left:18%;right:18%;top:8%;height:30%;border-radius:50%;background:rgba(255,255,255,.2);pointer-events:none}
+.jm-node.locked{filter:saturate(.25) brightness(.7);box-shadow:0 0 4px rgba(255,255,255,.25),0 4px 0 #48443f,inset 0 3px 6px rgba(255,255,255,.12)}
+.jm-node.open{animation:jmPulse 1.8s ease-in-out infinite}
+.jm-node.done{border-color:#fff;background:radial-gradient(circle at 50% 25%,#6cf58b,#1ba947 58%,#08742d);box-shadow:0 0 7px #c9ffd2,0 0 20px rgba(43,255,95,.75),0 7px 0 #075a25,inset 0 3px 5px rgba(255,255,255,.4)}
+@keyframes jmPulse{0%,100%{box-shadow:0 0 5px #fff2a0,0 0 13px rgba(255,214,40,.7),0 0 25px rgba(255,180,0,.25),0 7px 0 #504c45,inset 0 4px 6px rgba(255,255,255,.3)}50%{box-shadow:0 0 7px #fff,0 0 24px rgba(255,224,65,1),0 0 40px rgba(255,180,0,.55),0 7px 0 #504c45,inset 0 4px 6px rgba(255,255,255,.3)}}
+</style>
 </head>
 <body>
 
@@ -3315,7 +3338,7 @@ function renderModes(){
     b.innerHTML = '<span class="journey-num">' + (unlocked ? (done ? '✓' : i + 1) : '🔒') + '</span>' +
       '<span class="journey-info"><span class="journey-name">' + d.category + '</span><span class="journey-sub">' + (d.subtitle || ('BÖLÜM ' + (i+1))) + '</span>' + (done ? stars : '') + '</span>' +
       '<span class="journey-state">' + state + '</span>';
-    if (unlocked) b.addEventListener('click', () => { audio(); showGame(i); });
+    if (unlocked) b.addEventListener('click', () => { audio(); showJourneyMap(i); });
     else b.setAttribute('aria-disabled','true');
     list.appendChild(b);
   });
@@ -3391,13 +3414,17 @@ function drawMap(page){
     if (i <= S.maxOpen) showGame(i); else toast('Önce önceki bölümü tamamla.');
   }));
 }
-if ('ResizeObserver' in window) new ResizeObserver(() => {
-  const m = $('jr-map'), w = m.clientWidth, h = m.clientHeight;
+/* Eski harita DOM'u kaldırıldı; observer yalnızca harita gerçekten varsa çalışsın. */
+if ('ResizeObserver' in window && $('jr-map')) new ResizeObserver(() => {
+  const m = $('jr-map'); if (!m) return;
+  const w = m.clientWidth, h = m.clientHeight;
   if (w > 0 && h > 0 && (Math.abs(w - JR_W) > 2 || Math.abs(h - JR_H) > 2) && typeof LEVELS !== 'undefined') drawMap(JR_PAGE);
 }).observe($('jr-map'));
-{ const vv = document.querySelector('#jr-vbg video'); if (vv) vv.addEventListener('loadedmetadata', () => { if (typeof LEVELS !== 'undefined') drawMap(JR_PAGE); }); }
-$('jr-home').addEventListener('click', () => { audio(); showHome(); });
-$('jr-set').addEventListener('click', e => { e.stopPropagation(); audio(); refreshSettings(); menuEl.classList.toggle('show'); });
+{ const vv = document.querySelector('#jr-vbg video'); if (vv) vv.addEventListener('loadedmetadata', () => { if (typeof LEVELS !== 'undefined' && $('jr-map')) drawMap(JR_PAGE); }); }
+const jrHomeBtn = $('jr-home');
+if (jrHomeBtn) jrHomeBtn.addEventListener('click', () => { audio(); showHome(); });
+const jrSetBtn = $('jr-set');
+if (jrSetBtn) jrSetBtn.addEventListener('click', e => { e.stopPropagation(); audio(); refreshSettings(); menuEl.classList.toggle('show'); });
 
 function renderLevels(){
   const grid = $('lv-grid'); grid.innerHTML = '';
@@ -4605,6 +4632,80 @@ document.addEventListener('pointerdown', e => { if (e.target.closest && e.target
   $('lg-bg').innerHTML = '<svg viewBox="0 0 ' + COLS * CELL + ' ' + ROWS * CELL + '" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">' + t + '</svg>';
 })();
 
+
+/* =====================================================
+   YOLCULUK AKIŞI: LİSTE -> BÖLÜM HARİTASI
+   Liste ekranı ana seçimdir. Açık bölüme basılınca harita açılır.
+   ===================================================== */
+let journeyMapEl = null;
+function ensureJourneyMap(){
+  if (journeyMapEl) return journeyMapEl;
+  journeyMapEl = document.createElement('section');
+  journeyMapEl.id = 'journey-map-screen';
+  journeyMapEl.className = 'journey-map-screen';
+  journeyMapEl.innerHTML = `
+    <div class="jm-bg"></div>
+    <div class="jm-vignette"></div>
+    <header class="jm-head">
+      <button type="button" class="jm-back" aria-label="Bölümlere dön">‹</button>
+      <div class="jm-title"><small id="jm-kicker">BÖLÜM</small><b id="jm-title-text">AMAZON YAĞMUR ORMANLARI</b></div>
+      <button type="button" class="jm-home" aria-label="Ana sayfa">⌂</button>
+    </header>
+    <div class="jm-map-area"><div class="jm-path"></div><div id="jm-nodes"></div></div>
+  `;
+  document.querySelector('.app')?.appendChild(journeyMapEl);
+  journeyMapEl.querySelector('.jm-back').addEventListener('click', () => { audio(); journeyMapEl.classList.remove('show'); showLevels(); });
+  journeyMapEl.querySelector('.jm-home').addEventListener('click', () => { audio(); journeyMapEl.classList.remove('show'); showHome(); });
+  return journeyMapEl;
+}
+function showJourneyMap(chapterIndex){
+  const idx = Number(chapterIndex) || 0;
+  if (idx > S.maxOpen) { toast('Önceki bölümü tamamla.'); return; }
+  leaveGame();
+  const el = ensureJourneyMap();
+  const def = LEVELS[idx] || LEVELS[0];
+  el.querySelector('#jm-title-text').textContent = def.category;
+  el.querySelector('#jm-kicker').textContent = 'BÖLÜM ' + (idx + 1);
+  const bg = el.querySelector('.jm-bg');
+  bg.style.backgroundImage = "url('Harita.png'), url('harita.png')";
+  const nodes = el.querySelector('#jm-nodes');
+  nodes.innerHTML = '';
+  const positions = [
+    [51,89],[63,78],[47,68],[58,57],[43,47],[61,37],[46,28],[58,19],[44,11],[56,4]
+  ];
+  const levelCount = Math.min(10, LEVELS.length);
+  for (let i=0;i<levelCount;i++){
+    const done = !!S.done[i];
+    const unlocked = i <= S.maxOpen;
+    const b = document.createElement('button');
+    b.type='button';
+    b.className='jm-node ' + (done?'done':unlocked?'open':'locked');
+    b.style.left=positions[i][0]+'%'; b.style.top=positions[i][1]+'%';
+    b.innerHTML = done ? '✓' : (unlocked ? String(i+1) : '🔒');
+    const d=LEVELS[i];
+    b.setAttribute('aria-label', d.category + ' seviye ' + (i+1));
+    if (unlocked) b.addEventListener('click',()=>{ audio(); showGame(i); });
+    nodes.appendChild(b);
+  }
+  setView('home');
+  viewHome.classList.add('off');
+  viewGame.classList.add('off');
+  viewLevels.classList.add('off');
+  $('view-modes').classList.add('off');
+  $('view-login').classList.add('off');
+  app.classList.add('on-journey');
+  el.classList.add('show');
+}
+/* Mobil tarayıcılarda ses oluşturma veya eski harita kodu bir hata verse bile
+   ana ekran butonları çalışmaya devam etsin. */
+document.addEventListener('click', function(e){
+  const t=e.target.closest && e.target.closest('#btn-levels,#lb,#btn-online,#btn-settings-home');
+  if(!t) return;
+  if(t.id==='btn-levels'){ e.preventDefault(); e.stopPropagation(); try{audio();}catch(_){} showLevels(); }
+  else if(t.id==='lb'){ try{audio();}catch(_){} if (typeof lbErr!=='undefined' && lbErr) lbStart(); lbRender(); $('lbbox').classList.add('show'); }
+  else if(t.id==='btn-online'){ e.preventDefault(); e.stopPropagation(); try{audio();}catch(_){} openOnline(); }
+  else if(t.id==='btn-settings-home'){ e.preventDefault(); e.stopPropagation(); try{audio();}catch(_){} refreshSettings(); menuEl.classList.toggle('show'); }
+}, true);
 /* ===== başlangıç ===== */
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('pointerdown', e => {
