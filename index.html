@@ -1486,6 +1486,13 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 #view-modes .jr-nw .jr-node{
   -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 74%,rgba(0,0,0,.55) 84%,transparent 94%);
   mask-image:linear-gradient(to bottom,#000 0,#000 74%,rgba(0,0,0,.55) 84%,transparent 94%)}
+<style>
+/* ===== YOLCULUK: kaydırmasız sabit sahne + ana sayfa butonu ===== */
+#view-modes .jr-map{overflow:hidden!important;overscroll-behavior:none;touch-action:none}
+#view-modes .jr-wrap{height:100%}
+.jr-home{position:absolute;left:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);z-index:25;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;padding:0;color:#ffd54a;background:radial-gradient(circle at 50% 30%,#3d3f46,#111215);border:2px solid rgba(255,214,90,.6);box-shadow:0 3px 10px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.15)}
+.jr-home svg{width:26px;height:26px;fill:currentColor}
+.jr-home:active{transform:translateY(2px)}
 </style>
 </head>
 <body>
@@ -1663,6 +1670,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
     <!-- MOD SEÇİMİ (kaydırmalı sahne) -->
     <section id="view-modes" class="view off modes jr">
       <div class="jr-hud"><div class="jr-score" id="jr-score"><svg class="i"><use href="#i-star"/></svg><span id="jr-score-v">0/0</span></div><button class="jr-set" id="jr-set" aria-label="Ayarlar"><svg class="i"><use href="#i-gear"/></svg></button></div>
+      <button class="jr-home" id="jr-home" aria-label="Ana sayfa"><svg class="i"><use href="#i-home"/></svg></button>
       <div class="jr-map" id="jr-map"><div class="jr-vbg" id="jr-vbg"><video src="harita.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto"></video></div><div class="jr-wrap" id="jr-wrap"></div></div>
     </section>
 
@@ -3114,55 +3122,29 @@ function playJourneyUnlockAnimation(fromIdx){
   const nextIdx = fromIdx + 1;
   if (nextIdx >= LEVELS.length) { showLevels(); return; }
   leaveGame();
-  renderModes(false);
   setView('modes');
   updateHome();
-
-  const map = $('jr-map'), wrap = $('jr-wrap');
-  const canvas = wrap.querySelector('.jr-canvas'), sq = $('jr-sq');
-  const nodes = wrap.querySelectorAll('.jr-node');
-  const nextNode = nodes[nextIdx];
-  if (!canvas || !nextNode) return;
-  const P = JR_P, W = JR_W;
-
-  /* 2. bölüm başta kilitli görünsün */
-  nextNode.className = 'jr-node lk';
-  nextNode.textContent = nextIdx + 1;
-
-  if (!sq){
-    map.scrollTop = Math.max(0, P[fromIdx].y - map.clientHeight * .62);
+  const PT = JR_IMG.perTile, wrap = $('jr-wrap');
+  const cross = Math.floor(fromIdx / PT) !== Math.floor(nextIdx / PT);
+  let canvas = null, P = null, nextNode = null;
+  const grab = () => { canvas = wrap.querySelector('.jr-canvas'); P = JR_P; nextNode = wrap.querySelector('.jr-node[data-i="' + nextIdx + '"]'); return !!(canvas && nextNode); };
+  drawMap(Math.floor(fromIdx / PT));
+  if (!cross){
+    if (!grab()) return;
+    nextNode.className = 'jr-node lk';
+    setTimeout(unlockNext, 650);
+  } else {
+    /* 8. bölüm bitti: yeni haritaya geç */
     setTimeout(() => {
-      map.scrollTo({top: Math.max(0, P[nextIdx].y - map.clientHeight * .6), behavior:'smooth'});
-      setTimeout(unlockNext, 650);
-    }, 450);
-    return;
+      drawMap(Math.floor(nextIdx / PT));
+      if (!grab()) return;
+      nextNode.className = 'jr-node lk';
+      setTimeout(unlockNext, 500);
+    }, 1000);
   }
-  /* sincap önce 1. bölümün yanında dursun */
-  const a0 = jrSqPos(P[fromIdx], W), a1 = jrSqPos(P[nextIdx], W);
-  const inner = sq.firstElementChild;
-  sq.style.left = a0.x + 'px'; sq.style.top = a0.y + 'px';
-  inner.style.transform = 'scaleX(' + (a0.side > 0 ? -1 : 1) + ')';
-  map.scrollTop = Math.max(0, P[fromIdx].y - map.clientHeight * .62);
-
-  setTimeout(() => {
-    map.scrollTo({top: Math.max(0, P[nextIdx].y - map.clientHeight * .6), behavior:'smooth'});
-    const dx = a1.x - a0.x, dy = a1.y - a0.y, h = 120 + Math.hypot(dx, dy) * .45;
-    inner.style.transform = 'scaleX(' + (dx >= 0 ? 1 : -1) + ')';
-    const kf = [];
-    for (let i = 0; i <= 16; i++){ const t = i / 16; kf.push({transform:'translate(' + (dx*t).toFixed(1) + 'px,' + (dy*t - 4*h*t*(1-t)).toFixed(1) + 'px) rotate(' + ((dx >= 0 ? 1 : -1) * 360 * Math.min(1, Math.max(0, (t - .2) / .6))).toFixed(0) + 'deg)'}); }
-    inner.animate([{transform:'scaleX(' + (dx >= 0 ? 1 : -1) + ') scaleY(.8)'},{transform:'scaleX(' + (dx >= 0 ? 1 : -1) + ') scaleY(1.08)'}], {duration:220, easing:'ease-out'});
-    const anim = sq.animate(kf, {duration:1350, easing:'linear', fill:'forwards'});
-    anim.onfinish = () => {
-      sq.style.left = a1.x + 'px'; sq.style.top = a1.y + 'px'; anim.cancel();
-      inner.style.transform = 'scaleX(' + (a1.side > 0 ? -1 : 1) + ')';
-      inner.animate([{transform:'scaleX(' + (a1.side > 0 ? -1 : 1) + ') scaleY(.78)'},{transform:'scaleX(' + (a1.side > 0 ? -1 : 1) + ') scaleY(1)'}], {duration:260, easing:'ease-out'});
-      unlockNext();
-    };
-  }, 650);
 
   function unlockNext(){
     nextNode.className = 'jr-node cur';
-    nextNode.textContent = nextIdx + 1;
     nextNode.animate([{transform:'scale(.6)'},{transform:'scale(1.3)'},{transform:'scale(1)'}], {duration:700, easing:'cubic-bezier(.2,1.4,.4,1)'});
     /* parıltı: yıldız patlaması */
     const cols = ['#fde047','#fff','#fbbf24','#a7f3d0'];
@@ -3258,7 +3240,7 @@ function journeyScenerySVG(H){
   '</svg></div>';
 }
 const JR_EMO = ['🌴','🏔️','🏜️','🌊','⛰️','🎈','🐠','🐧','🌲','🌋','🐢','🌵','🏞️','🏺','✨','♨️','🌳','❄️','🦎','💦'];
-function renderModes(){ drawMap(true); }
+function renderModes(){ drawMap(); }
 /* Harita.png yolu: resim koordinatlarında (940x1672) yol merkez noktaları, alttan üste */
 let JR_ART_H = 1672; // resmin gerçekten dolu olan yüksekliği (altı boş/siyah)
 const JR_IMG = {w:940, h:1672, perTile:8, overlap:.1,
@@ -3284,55 +3266,56 @@ function jrSlice(s0, s1){  // iki s arasındaki eğri noktaları
   for (let i = 0; i < C.len.length; i++) if (C.len[i] > a && C.len[i] < b) out.push(C.pts[i]);
   out.push(jrAt(s1)); return out;
 }
-let JR_P = [], JR_W = 0;
-function drawMap(scroll){
-  const map = $('jr-map'), wrap = $('jr-wrap'), keep = map.scrollTop;
-  const n = LEVELS.length, PT = JR_IMG.perTile, tiles = Math.max(1, Math.ceil(n / PT));
-  const W = wrap.clientWidth || map.clientWidth || window.innerWidth || 390; JR_W = W;
-  const sc = W / JR_IMG.w, scY = sc * 1.25, bgH = JR_IMG.h * scY, tileH = JR_ART_H * scY, pitch = tileH * (1 - JR_IMG.overlap);
-  const H = Math.round((tiles - 1) * pitch + tileH);
-  let cur = LEVELS.findIndex((_, i) => !S.done[i] && i <= S.maxOpen); if (cur < 0) cur = LEVELS.length - 1;
-  const S0 = (() => { for (let v = 0; v < 1; v += .002) if (jrAt(v)[1] <= JR_ART_H - 62) return v; return .04; })();
-  const sOf = j => S0 + (.95 - S0) * j / (PT - 1);
-  const place = (t, s) => { const q = jrAt(s); return {x:q[0]*sc, y:(tiles-1-t)*pitch + q[1]*scY}; };
-  const P = LEVELS.map((d, i) => place(Math.floor(i / PT), sOf(i % PT)));
-  JR_P = P;
-  { let tot = 0; for (const k in S.done) if (S.done[k]) tot += (S.done[k].stars || 0); const sv = $('jr-score-v'); if (sv) sv.textContent = tot + '/' + (LEVELS.length * 3); }
-  /* arka plan: her resim bir döşeme; üstteki döşemeye yumuşak geçiş */
-  let html = '';
-  /* biten bölümler arasındaki altın yol */
+let JR_P = [], JR_W = 0, JR_H = 0, JR_PAGE = 0;
+function drawMap(page){
+  const map = $('jr-map'), wrap = $('jr-wrap');
+  const n = LEVELS.length, PT = JR_IMG.perTile, pages = Math.max(1, Math.ceil(n / PT));
+  const W = map.clientWidth || window.innerWidth || 390, H = map.clientHeight || window.innerHeight || 700;
+  JR_W = W; JR_H = H;
+  let cur = LEVELS.findIndex((_, i) => !S.done[i] && i <= S.maxOpen); if (cur < 0) cur = n - 1;
+  if (page == null) page = Math.floor(cur / PT);
+  page = Math.max(0, Math.min(page, pages - 1)); JR_PAGE = page;
+  /* sabit sahne: arka plan "cover" ile ekrana oturur, yol aynı dönüşümle ekrana taşınır -> kaydırma yok */
+  const v = document.querySelector('#jr-vbg video');
+  const vw = (v && v.videoWidth) || JR_IMG.w, vh = (v && v.videoHeight) || JR_IMG.h;
+  const sc = Math.max(W / vw, H / vh), ox = (W - vw * sc) / 2, oy = (H - vh * sc) / 2, k = sc * vw / JR_IMG.w;
+  const X = q => q[0] * k + ox, Y = q => q[1] * k + oy;
+  let s0 = .04; for (let t = 0; t < 1; t += .002) if (Y(jrAt(t)) <= H * .86){ s0 = t; break; }   /* 1. bölüm altta */
+  let s1 = .9;  for (let t = s0; t < 1; t += .002) if (Y(jrAt(t)) <= H * .22){ s1 = t; break; }   /* 8. bölüm üstten biraz aşağıda */
+  const sOf = j => s0 + (s1 - s0) * j / (PT - 1);
+  const from = page * PT, to = Math.min(n, from + PT);
+  JR_P = new Array(n);
+  for (let i = from; i < to; i++){ const q = jrAt(sOf(i - from)); JR_P[i] = {x: X(q), y: Y(q)}; }
+  { let tot = 0; for (const key in S.done) if (S.done[key]) tot += (S.done[key].stars || 0); const sv = $('jr-score-v'); if (sv) sv.textContent = tot + '/' + (n * 3); }
   let road = '';
-  for (let i = 1; i < n; i++){
+  for (let i = from + 1; i < to; i++){
     const lit = !!S.done[i-1];
-    const t0 = Math.floor((i-1) / PT), t1 = Math.floor(i / PT);
-    if (t0 !== t1) continue;
-    const pts = jrSlice(sOf((i-1) % PT), sOf(i % PT)).map(q => (q[0]*sc).toFixed(1) + ',' + ((tiles-1-t0)*pitch + q[1]*scY).toFixed(1)).join(' ');
+    const pts = jrSlice(sOf(i - 1 - from), sOf(i - from)).map(q => X(q).toFixed(1) + ',' + Y(q).toFixed(1)).join(' ');
     road += '<polyline points="' + pts + '" stroke="' + (lit ? '#ffe27a' : 'rgba(255,255,255,.5)') + '" stroke-width="' + (lit ? 5 : 4) + '" stroke-dasharray="6 16"' + (lit ? ' style="filter:drop-shadow(0 0 4px #ffb300)"' : '') + ' />';
   }
   const svg = '<svg class="jr-road" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" fill="none" stroke-linecap="round" stroke-linejoin="round">' + road + '</svg>';
   let nodes = '';
-  LEVELS.forEach((d, i) => {
-    const p = P[i], dn = S.done[i], ok = i <= S.maxOpen, isCur = i === cur && ok && !dn;
+  for (let i = from; i < to; i++){
+    const d = LEVELS[i], p = JR_P[i], dn = S.done[i], ok = i <= S.maxOpen, isCur = i === cur && ok && !dn;
     const got = dn ? dn.stars : 0;
-    const st = !dn ? '' : '<span class="jr-stars">' + [1, 2, 3].map(k => '<svg class="i st' + (k <= got ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>';
+    const st = !dn ? '' : '<span class="jr-stars">' + [1, 2, 3].map(q => '<svg class="i st' + (q <= got ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>';
     nodes += '<div class="jr-nw" style="left:' + p.x.toFixed(1) + 'px;top:' + p.y.toFixed(1) + 'px;--c:' + GROUPS[d.group][1] + '">' +
-            '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '">' + (i + 1) + '</button>' + st +
+            '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '"></button>' + st +
       '</div>';
-  });
+  }
   wrap.style.height = H + 'px';
-  const sqp = jrSqPos(P[cur], W);
-  const sqHTML = '';
-  wrap.innerHTML = html + '<div class="jr-canvas" style="height:' + H + 'px;left:0;margin-left:0;width:' + W + 'px">' + svg + nodes + sqHTML + '</div>';
+  wrap.innerHTML = '<div class="jr-canvas" style="height:' + H + 'px;left:0;margin-left:0;width:' + W + 'px">' + svg + nodes + '</div>';
   wrap.querySelectorAll('.jr-node').forEach(b => b.addEventListener('click', () => {
     const i = +b.dataset.i;
     if (i <= S.maxOpen) showGame(i); else toast('Önce önceki bölümü tamamla.');
   }));
-  if (scroll) requestAnimationFrame(() => { map.scrollTop = Math.max(0, P[cur].y - map.clientHeight * .6); }); else map.scrollTop = keep;
 }
 if ('ResizeObserver' in window) new ResizeObserver(() => {
-  const w = $('jr-wrap').clientWidth;
-  if (w > 0 && JR_W && Math.abs(w - JR_W) > 2 && typeof LEVELS !== 'undefined') drawMap(false);
-}).observe($('jr-wrap'));
+  const m = $('jr-map'), w = m.clientWidth, h = m.clientHeight;
+  if (w > 0 && h > 0 && (Math.abs(w - JR_W) > 2 || Math.abs(h - JR_H) > 2) && typeof LEVELS !== 'undefined') drawMap(JR_PAGE);
+}).observe($('jr-map'));
+{ const vv = document.querySelector('#jr-vbg video'); if (vv) vv.addEventListener('loadedmetadata', () => { if (typeof LEVELS !== 'undefined') drawMap(JR_PAGE); }); }
+$('jr-home').addEventListener('click', () => { audio(); showHome(); });
 $('jr-set').addEventListener('click', e => { e.stopPropagation(); audio(); refreshSettings(); menuEl.classList.toggle('show'); });
 
 function renderLevels(){
