@@ -1555,6 +1555,21 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .jm-node.open{animation:jmPulse 1.8s ease-in-out infinite}
 .jm-node.done{border-color:#fff;background:radial-gradient(circle at 50% 25%,#6cf58b,#1ba947 58%,#08742d);box-shadow:0 0 7px #c9ffd2,0 0 20px rgba(43,255,95,.75),0 7px 0 #075a25,inset 0 3px 5px rgba(255,255,255,.4)}
 @keyframes jmPulse{0%,100%{box-shadow:0 0 5px #fff2a0,0 0 13px rgba(255,214,40,.7),0 0 25px rgba(255,180,0,.25),0 7px 0 #504c45,inset 0 4px 6px rgba(255,255,255,.3)}50%{box-shadow:0 0 7px #fff,0 0 24px rgba(255,224,65,1),0 0 40px rgba(255,180,0,.55),0 7px 0 #504c45,inset 0 4px 6px rgba(255,255,255,.3)}}
+
+/* ===== BÖLÜM HARİTASI: GitHub'daki düğme resimleri (kilitli/acik/bitti/simdiki.png) ===== */
+.jm-node,.jm-node.locked,.jm-node.open,.jm-node.done,.jm-node.cur{
+  width:78px!important;height:78px!important;border:0!important;border-radius:0!important;
+  background-color:transparent!important;background-repeat:no-repeat!important;background-position:center!important;background-size:contain!important;
+  box-shadow:none!important;animation:none!important;filter:none!important;
+  display:flex;align-items:center;justify-content:center;padding:0 0 4px 0!important;
+  font-size:19px!important;font-weight:900;color:#fff!important;
+  text-shadow:0 2px 3px #000,0 0 6px rgba(0,0,0,.8)!important;-webkit-tap-highlight-color:transparent}
+.jm-node::before,.jm-node::after{display:none!important}
+.jm-node.locked{background-image:url('kilitli.png')!important;font-size:0!important;color:transparent!important;text-shadow:none!important}
+.jm-node.open{background-image:url('acik.png')!important}
+.jm-node.done{background-image:url('bitti.png')!important}
+.jm-node.cur{background-image:url('simdiki.png')!important;width:96px!important;height:96px!important;font-size:24px!important}
+.jm-node:active{transform:translate(-50%,-50%) scale(.94)!important}
 </style>
 </head>
 <body>
@@ -4651,7 +4666,7 @@ function ensureJourneyMap(){
       <div class="jm-title"><small id="jm-kicker">BÖLÜM</small><b id="jm-title-text">AMAZON YAĞMUR ORMANLARI</b></div>
       <button type="button" class="jm-home" aria-label="Ana sayfa">⌂</button>
     </header>
-    <div class="jm-map-area"><div class="jm-path"></div><div id="jm-nodes"></div></div>
+    <div class="jm-map-area"><div id="jm-nodes"></div></div>
   `;
   document.querySelector('.app')?.appendChild(journeyMapEl);
   journeyMapEl.querySelector('.jm-back').addEventListener('click', () => { audio(); journeyMapEl.classList.remove('show'); showLevels(); });
@@ -4680,7 +4695,8 @@ function showJourneyMap(chapterIndex){
     const unlocked = i <= S.maxOpen;
     const b = document.createElement('button');
     b.type='button';
-    b.className='jm-node ' + (done?'done':unlocked?'open':'locked');
+    const isCur = unlocked && !done && i === S.maxOpen;
+    b.className='jm-node ' + (done?'done':isCur?'cur':unlocked?'open':'locked');
     b.style.left=positions[i][0]+'%'; b.style.top=positions[i][1]+'%';
     b.innerHTML = done ? '✓' : (unlocked ? String(i+1) : '🔒');
     const d=LEVELS[i];
