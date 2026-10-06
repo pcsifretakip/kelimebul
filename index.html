@@ -1538,7 +1538,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 /* ===== BÖLÜM HARİTASI ===== */
 .journey-map-screen{position:absolute;inset:0;z-index:120;display:none;overflow:hidden;background:#143b1d}
 .journey-map-screen.show{display:block}
-.jm-bg{position:absolute;inset:0;background-position:center;background-size:cover;background-repeat:no-repeat;transform:scale(1.01)}
+.jm-bg{position:absolute;inset:0;overflow:hidden;background:#143b1d;transform:scale(1.01);z-index:0}.jm-bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.01)}
 .jm-vignette{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.38),transparent 18%,transparent 78%,rgba(0,0,0,.3)),radial-gradient(circle,transparent 45%,rgba(0,0,0,.35) 100%);pointer-events:none}
 .jm-head{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:12px;right:12px;z-index:5;display:grid;grid-template-columns:48px 1fr 48px;align-items:center;gap:8px}
 .jm-back,.jm-home{width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,221,86,.75);background:rgba(20,22,27,.82);color:#ffd83d;font-size:32px;font-weight:900;display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.45),0 0 16px rgba(255,207,47,.28)}
@@ -4644,7 +4644,7 @@ function ensureJourneyMap(){
   journeyMapEl.id = 'journey-map-screen';
   journeyMapEl.className = 'journey-map-screen';
   journeyMapEl.innerHTML = `
-    <div class="jm-bg"></div>
+    <div class="jm-bg"><video class="jm-bg-video" src="harita.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto"></video></div>
     <div class="jm-vignette"></div>
     <header class="jm-head">
       <button type="button" class="jm-back" aria-label="Bölümlere dön">‹</button>
@@ -4667,7 +4667,8 @@ function showJourneyMap(chapterIndex){
   el.querySelector('#jm-title-text').textContent = def.category;
   el.querySelector('#jm-kicker').textContent = 'BÖLÜM ' + (idx + 1);
   const bg = el.querySelector('.jm-bg');
-  bg.style.backgroundImage = "url('Harita.png'), url('harita.png')";
+  const vid = el.querySelector('.jm-bg-video');
+  if (vid) { vid.muted = true; vid.loop = true; vid.playsInline = true; const play = () => { const pr = vid.play(); if (pr && pr.catch) pr.catch(() => {}); }; play(); }
   const nodes = el.querySelector('#jm-nodes');
   nodes.innerHTML = '';
   const positions = [
@@ -4695,6 +4696,7 @@ function showJourneyMap(chapterIndex){
   $('view-login').classList.add('off');
   app.classList.add('on-journey');
   el.classList.add('show');
+  if (vid) { const playVisible = () => { if (el.classList.contains('show')) { const pr = vid.play(); if (pr && pr.catch) pr.catch(() => {}); } }; if (!vid.dataset.bound) { vid.dataset.bound = '1'; vid.addEventListener('loadedmetadata', playVisible); document.addEventListener('visibilitychange', () => { if (!document.hidden) playVisible(); }); el.addEventListener('touchstart', playVisible, {passive:true}); } playVisible(); }
 }
 /* Mobil tarayıcılarda ses oluşturma veya eski harita kodu bir hata verse bile
    ana ekran butonları çalışmaya devam etsin. */
@@ -4718,19 +4720,6 @@ if ('ResizeObserver' in window) new ResizeObserver(() => { fxResize(); measure()
 fxResize(); updateCoins(); updateHome(); refreshSettings(); setView(USER ? 'home' : 'login');
 })();
 </script>
-<script>
-(function(){
-  const map=document.getElementById('jr-map'), bg=document.getElementById('jr-vbg');
-  if(!map||!bg) return;
-  const v=bg.querySelector('video');
-  function fit(){ const h=map.clientHeight; if(h>0){ bg.style.height=h+'px'; bg.style.marginBottom=(-h)+'px'; } }
-  fit(); addEventListener('resize',fit);
-  if('ResizeObserver' in window) new ResizeObserver(fit).observe(map);
-  const play=()=>{ const p=v.play(); if(p&&p.catch) p.catch(()=>{}); };
-  v.muted=true; v.loop=true; play();
-  addEventListener('touchstart',()=>{ if(v.paused) play(); },{once:true,passive:true});
-  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) play(); });
-})();
-</script>
+
 </body>
 </html>
