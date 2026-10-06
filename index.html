@@ -1426,6 +1426,31 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 #view-modes .jr-nw .jr-node::before{left:22%;right:22%;top:8%;height:30%}
 .jr-nw .jr-stars{left:-22px!important;top:29px!important;width:44px!important}
 .jr-nw .jr-stars .st{width:14px!important;height:14px!important}
+
+/* ===== NEON HALKA + TAŞ KAİDE (referans görsel gibi) ===== */
+.jr-nw::before{content:"";position:absolute;left:-35px;top:-17px;width:70px;height:54px;border-radius:50%;pointer-events:none;
+  background:
+    linear-gradient(115deg,transparent 44%,rgba(0,0,0,.38) 45.5%,transparent 47.5%),
+    linear-gradient(68deg,transparent 62%,rgba(0,0,0,.32) 63.5%,transparent 65.5%),
+    repeating-linear-gradient(90deg,transparent 0 12px,rgba(0,0,0,.2) 12px 13.5px),
+    repeating-linear-gradient(0deg,transparent 0 8px,rgba(255,255,255,.07) 8px 9px),
+    radial-gradient(ellipse at 50% 28%,#b9b2a1 0%,#948e7e 52%,#6a655a 100%);
+  box-shadow:0 4px 0 #4d483f,0 8px 9px rgba(0,0,0,.55),inset 0 3px 5px rgba(255,255,255,.28),inset 0 -9px 11px rgba(0,0,0,.38)}
+.jr-nw:has(.jr-node.lk)::before{filter:brightness(.72) saturate(.7)}
+#view-modes .jr-nw .jr-node,#view-modes .jr-nw .jr-node.open,#view-modes .jr-nw .jr-node.done,#view-modes .jr-nw .jr-node.cur,#view-modes .jr-nw .jr-node.lk{
+  border:2px solid #34353b!important;color:#f1e8d2!important;font-size:18px!important;filter:none;
+  text-shadow:0 2px 2px rgba(0,0,0,.8)!important;
+  background:radial-gradient(circle at 50% 24%,#4b4e56 0%,#26282d 58%,#141518 100%)!important;
+  box-shadow:0 2px 0 #0e0f11,inset 0 2px 3px rgba(255,255,255,.2),inset 0 -6px 9px rgba(255,190,30,.3)!important}
+#view-modes .jr-nw .jr-node.lk{color:#cfc8b6!important;
+  box-shadow:0 2px 0 #0e0f11,inset 0 2px 3px rgba(255,255,255,.12),inset 0 -6px 9px rgba(255,190,30,.18)!important}
+#view-modes .jr-nw .jr-node::before{left:22%;right:22%;top:7%;height:26%}
+#view-modes .jr-nw .jr-node::after{display:block!important;content:"";position:absolute;z-index:-1;left:-7px;right:-7px;top:-7px;bottom:-7px;width:auto;height:auto;border-radius:50%;
+  border:2.5px solid #fffbd2;background:none;
+  box-shadow:0 0 3px 1px #fff7b8,0 0 9px 3px #ffd21f,0 0 20px 7px rgba(255,170,0,.55),inset 0 0 6px 2px rgba(255,205,50,.95),inset 0 -5px 9px rgba(255,170,0,.65)}
+#view-modes .jr-nw .jr-node.lk::after{opacity:.68}
+#view-modes .jr-nw .jr-node.cur{animation:jrRingPulse 1.6s ease-in-out infinite!important}
+.jr-nw .jr-stars{left:-22px!important;top:29px!important;width:44px!important}
 </style>
 </head>
 <body>
@@ -3212,11 +3237,12 @@ const JR_IMG = {w:940, h:1672, perTile:8, overlap:.1,
     const x = c.getContext('2d', {willReadFrequently:true}); x.drawImage(im, 0, 0, cw, ch);
     let last = ch - 1;
     for (; last > 0; last--){
-      const d = x.getImageData(0, last, cw, 1).data; let b = 0;
-      for (let k = 0; k < d.length; k += 4) if (d[k] + d[k+1] + d[k+2] > 90) b++;
-      if (b > cw * .3) break;
+      const d = x.getImageData(0, last, cw, 1).data; let sum = 0, sq = 0;
+      for (let k = 0; k < d.length; k += 4){ const l = (d[k] + d[k+1] + d[k+2]) / 3; sum += l; sq += l * l; }
+      const m = sum / cw, sd = Math.sqrt(Math.max(0, sq / cw - m * m));
+      if (m > 40 && sd > 14) break;   /* siyah ve düz renkli (yeşil) şeritler içerik sayılmaz */
     }
-    const filled = Math.round((last + 1) / ch * JR_IMG.h);
+    const filled = Math.round((last + 1) / ch * JR_IMG.h) - 3;
     if (filled < JR_IMG.h - 8 && filled > JR_IMG.h * .5){
       JR_ART_H = filled;
       if (typeof drawMap === 'function' && typeof LEVELS !== 'undefined') drawMap(false);
@@ -3270,7 +3296,7 @@ function drawMap(scroll){
     const t0 = Math.floor((i-1) / PT), t1 = Math.floor(i / PT);
     if (t0 !== t1) continue;
     const pts = jrSlice(sOf((i-1) % PT), sOf(i % PT)).map(q => (q[0]*sc).toFixed(1) + ',' + ((tiles-1-t0)*pitch + q[1]*scY).toFixed(1)).join(' ');
-    road += '<polyline points="' + pts + '" stroke="' + (lit ? '#ffd54a' : 'rgba(255,255,255,.55)') + '" stroke-width="' + (lit ? 7 : 5) + '" stroke-dasharray="0 15"' + (lit ? ' style="filter:drop-shadow(0 0 4px #ffb300)"' : '') + ' />';
+    road += '<polyline points="' + pts + '" stroke="' + (lit ? '#ffe27a' : 'rgba(255,255,255,.5)') + '" stroke-width="' + (lit ? 5 : 4) + '" stroke-dasharray="6 16"' + (lit ? ' style="filter:drop-shadow(0 0 4px #ffb300)"' : '') + ' />';
   }
   const svg = '<svg class="jr-road" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" fill="none" stroke-linecap="round" stroke-linejoin="round">' + road + '</svg>';
   let nodes = '';
