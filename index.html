@@ -1007,6 +1007,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 }
 #modal-victory .vcard{background:none;border:0;box-shadow:none;padding:0;max-width:340px;display:flex;flex-direction:column;align-items:center;--neon:#fbbf24;--glow:rgba(251,191,36,.3)}
 #modal-victory .vtitle{font-size:40px;font-weight:1000;letter-spacing:.05em;color:#fde68a;text-shadow:0 4px 0 #b45309,0 10px 22px rgba(0,0,0,.5);margin-bottom:12px}
+.reward-chapter{margin:-4px 0 10px;font-size:14px;font-weight:900;letter-spacing:.06em;color:#fff;text-shadow:0 2px 5px rgba(0,0,0,.45);opacity:.95}
 #modal-victory .vstars{position:static;transform:none;justify-content:center;margin-bottom:14px}
 .v-ring{width:170px;margin:0 0 16px;pointer-events:none}
 .v-ring .md-in b{font-size:38px}
@@ -1222,7 +1223,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 </style>
 <style>
 /* ===== YOLCULUK: sadece tamamlanan bölüm yeşil, diğerleri yeşil değil ===== */
-#view-modes .jr-cap { display:none !important; }
+#view-modes .jr-cap { display:block !important; }
 #view-modes .jr-node { background:#334155; color:#fff; }
 #view-modes .jr-node.open { background:#334155; }
 #view-modes .jr-node.cur { background:#2563eb; box-shadow:0 5px 0 #1d4ed8,0 0 0 0 rgba(37,99,235,.65); }
@@ -1868,6 +1869,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
     <div class="vorbs" id="vorbs"></div>
     <div class="vcard" id="victory-card">
       <h3 class="vtitle">TEBRİKLER!</h3>
+      <div class="reward-chapter" id="reward-chapter">BÖLÜM TAMAMLANDI</div>
       <div class="vstars">
         <svg class="i vstar" style="--i:0"><use href="#i-star"/></svg>
         <svg class="i vstar" style="--i:1"><use href="#i-star"/></svg>
@@ -3118,29 +3120,19 @@ function victory(){
   const oldMax = S.maxOpen;
   S.maxOpen = Math.max(S.maxOpen, Math.min(idx + 1, LEVELS.length - 1));
   saveProgress(); syncLevelPoints();
-  if (!isLast){
-    /* normal bölüm: ses yok, patlama yok -> doğrudan haritaya, sincap sonraki bölüme zıplar */
-    try { toast('+' + reward + ' altın'); } catch(e){}
-    if (irisBusy) return;
-    irisBusy = true;
-    const iris = $('iris'), opens = idx + 1 > oldMax;
-    setTimeout(() => {
-      iris.className = 'iris in';
-      setTimeout(() => {
-        if (opens) playJourneyUnlockAnimation(idx); else showLevels();
-        requestAnimationFrame(() => { iris.className = 'iris out'; });
-        setTimeout(() => { iris.className = 'iris'; irisBusy = false; }, 600);
-      }, 520);
-    }, 450);
-    return;
-  }
-  document.querySelectorAll('.vstar').forEach((s, i) => s.classList.toggle('on', i < stars));
+  /* HER BÖLÜMDE bitiş kutusu + yıldız + havai fişek göster */
+  document.querySelectorAll('.vstar').forEach((el, i) => el.classList.toggle('on', i < stars));
   $('reward-time').textContent = fmt(elapsed);
-  vicScene(idx);
   $('reward-coins').textContent = '+' + reward;
-  modal.classList.add('show'); vicFx(stars, reward, elapsed);
-  const w = fxW, h = fxH;
-  fireworkShow();                     // büyük havai fişek gösterisi (~4,5 sn)
+  const rc = $('reward-chapter');
+  if (rc) rc.textContent = 'BÖLÜM ' + (idx + 1) + ' • ' + S.level.category;
+  const nextBtn = $('btn-next-level');
+  if (nextBtn) nextBtn.textContent = isLast ? 'HARİTAYA DÖN' : 'SONRAKİ BÖLÜM';
+  vicScene(idx);
+  modal.classList.add('show');
+  vicFx(stars, reward, elapsed);
+  fireworkShow();                     // her bölüm bitişinde kutlama efekti
+  try { toast('+' + reward + ' ALTIN'); } catch(e){}
 }
 
 function playJourneyUnlockAnimation(fromIdx){
