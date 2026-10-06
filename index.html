@@ -223,6 +223,7 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 .board-wrap{flex:1;min-height:0;container-type:size;display:flex;align-items:center;justify-content:center}
 .grid{
   position:relative;touch-action:none;container-type:size;
+  display:grid;visibility:visible;opacity:1;
   width:100%;width:100cqw;height:100%;height:min(100cqh,calc(100cqw * 1.32));
   display:grid;gap:3px;padding:9px;border-radius:24px;
   background:
@@ -1040,7 +1041,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 @keyframes jrPulse{0%{box-shadow:0 5px 0 #15803d,0 0 0 0 rgba(34,197,94,.7)}70%{box-shadow:0 5px 0 #15803d,0 0 0 16px rgba(34,197,94,0)}100%{box-shadow:0 5px 0 #15803d,0 0 0 0 rgba(34,197,94,0)}}
 .jr-stars{position:absolute;left:-24px;top:20px;width:48px;display:flex;justify-content:center;gap:0;pointer-events:none}
 .jr-stars .st{width:16px;height:16px;color:#4b5563;filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}.jr-stars .st.on{color:#fbbf24}
-.jr-cap{position:absolute;left:-72px;top:36px;width:144px;text-align:center;font-size:10px;font-weight:900;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.9);line-height:1.15;pointer-events:none}.jr-cap b{display:block;font-size:10px}.jr-cap span{display:block;margin-top:2px;font-size:9px;opacity:.9}
+.jr-cap{position:absolute;left:-55px;top:42px;width:110px;text-align:center;font-size:11px;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.9);line-height:1.1;pointer-events:none}
 .jr-nw:has(.cur) .jr-cap{top:46px}
 .jr-pin{position:absolute;left:-19px;top:-82px;width:38px;height:38px;animation:jrBob 1.2s ease-in-out infinite;pointer-events:none}
 .jr-pin span{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:3px solid #fff;background:#0b3d91;overflow:hidden;color:#fff;font-size:20px}
@@ -1198,6 +1199,16 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   background:linear-gradient(145deg,#aeb8c8 0%,#707d91 48%,#4a5668 100%)!important;
   box-shadow:inset 0 4px 3px rgba(255,255,255,.42),inset 0 -7px 7px rgba(0,0,0,.2),0 5px 0 #394250,0 9px 13px rgba(0,0,0,.25)!important;
 }
+
+/* ===== GÜVENLİ OYUN TAHTASI ===== */
+#view-game:not(.off) .board-wrap{display:flex!important;visibility:visible!important;opacity:1!important;min-height:220px!important}
+#view-game:not(.off) #grid-container{display:grid!important;visibility:visible!important;opacity:1!important}
+#view-game:not(.off) #word-list{visibility:visible!important;opacity:1!important}
+
+.journey-tutorial{position:absolute;inset:0;z-index:80;display:grid;place-items:center;padding:24px;background:rgba(5,3,20,.58);backdrop-filter:blur(7px)}
+.jt-card{width:min(92%,360px);padding:24px;border-radius:24px;background:linear-gradient(145deg,rgba(34,197,94,.18),rgba(15,10,45,.96));border:1px solid rgba(255,255,255,.22);box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 30px rgba(34,197,94,.18);text-align:center;color:#fff}
+.jt-kicker{font-size:11px;font-weight:1000;letter-spacing:.14em;color:#86efac;margin-bottom:7px}
+.jt-card h2{margin:0 0 8px;font-size:27px}.jt-card p{margin:0 auto 18px;line-height:1.45;color:#e8e5ff;font-size:14px}.jt-card button{border:0;border-radius:14px;padding:12px 24px;font-weight:1000;color:#07120b;background:#4ade80;box-shadow:0 4px 0 #15803d}
 </style>
 
 <style>
@@ -1262,7 +1273,6 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 <style>
 /* ===== GİZLİ KELİME bölümü ===== */
 .chip.masked{color:#fde68a;border:1.5px dashed rgba(253,230,138,.7);background:rgba(251,191,36,.1);letter-spacing:.18em}
-.journey-tut{position:absolute;inset:0;z-index:120;display:grid;place-items:center;padding:22px;background:rgba(5,2,26,.76);backdrop-filter:blur(8px);opacity:0;transition:opacity .22s}.journey-tut.on{opacity:1}.jt-card{width:min(340px,88vw);padding:24px 20px;border-radius:24px;background:linear-gradient(160deg,rgba(41,27,108,.98),rgba(12,7,42,.98));border:1px solid rgba(255,255,255,.18);box-shadow:0 20px 70px rgba(0,0,0,.55),0 0 35px rgba(34,197,94,.18);text-align:center;color:#fff;transform:translateY(12px) scale(.96);transition:transform .3s}.journey-tut.on .jt-card{transform:none}.jt-badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(34,197,94,.16);border:1px solid rgba(74,222,128,.35);color:#86efac;font-size:11px;font-weight:1000}.jt-card h2{margin:13px 0 8px;font-size:27px}.jt-card p{margin:8px 0;color:rgba(255,255,255,.8);font-size:14px;line-height:1.45}.jt-small{font-size:12px!important;color:rgba(255,255,255,.58)!important}.jt-demo{display:flex;justify-content:center;gap:7px;margin:18px 0}.jt-demo span{width:42px;height:42px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(145deg,#fff,#dbeafe);color:#172554;font-size:19px;font-weight:1000;box-shadow:0 4px 0 #93a4c4}.jt-demo span:nth-child(2){transform:translateY(-6px);background:linear-gradient(145deg,#bbf7d0,#4ade80);color:#064e3b}.jt-ok{margin-top:10px;width:100%;border:0;border-radius:15px;padding:13px 16px;background:linear-gradient(180deg,#4ade80,#16a34a);color:#062e16;font-weight:1000;font-size:14px;box-shadow:0 5px 0 #166534}.jt-ok:active{transform:translateY(3px);box-shadow:0 2px 0 #166534}
 .hid-tut{position:absolute;inset:0;z-index:90;background:rgba(3,2,16,.72);display:flex;align-items:center;justify-content:center;padding:0 16px}
 .hid-tut .ht-arrow{position:absolute;left:50%;width:46px;height:54px;margin-left:-23px;animation:htBob 1s ease-in-out infinite}
 .hid-tut .ht-arrow svg{width:100%;height:100%;fill:#2f9bff;stroke:#1d6fd8;stroke-width:3;stroke-linejoin:round;filter:drop-shadow(0 4px 0 #1456a8)}
@@ -1899,50 +1909,19 @@ const DIRS = {
   hard:   [[0,1],[1,0],[1,1],[0,-1],[-1,0],[-1,-1],[1,-1],[-1,1]]
 };
 const GROUPS = [
-  ['Yağmur Ormanları','#16a34a',[
-    ['ÇİÇEK TÜRLERİ',7,'gül lale papatya orkide menekşe sümbül'],
-    ['SANAYİ MALZEMELERİ',7,'rulman civata somun profil zincir conta'],
-    ['AMELİYAT MALZEMELERİ',7,'neşter penset makas ekartör dikiş bistüri'],
-    ['DÜNYA ŞEHİRLERİ',7,'istanbul paris londra tokyo roma madrid'],
-    ['AYLAR',6,'mart nisan eylül şubat ocak mayıs','ocak'],
-    ['KÖPEK IRKLARI',8,'labrador golden husky beagle boxer bulldog'],
-    ['MÜZİK ENSTRÜMANLARI',8,'piyano gitar keman davul flüt bağlama'],
-    ['YÖRESEL YEMEKLER',8,'mantı kebap pide lahmacun keşkek tantuni'],
-    ['BAŞKENTLER',8,'ankara paris berlin tokyo madrid lizbon'],
-    ['OTOMOBİL MARKALARI',8,'toyota ford bmw mercedes audi renault'],
-    ['RENKLER',7,'mavi yeşil sarı turuncu mor siyah','turuncu mor'],
-    ['SÜPER KAHRAMANLAR',8,'batman superman thor hulk flash aquaman'],
-    ['TÜRKİYE İLLERİ',9,'sakarya istanbul ankara izmir bursa antalya'],
-    ['MEYVE VE SEBZELER',9,'elma armut kiraz domates biber patlıcan'],
-    ['TARİHİ ŞAHSİYETLER',9,'atatürk fatih kanuni napolyon iskender sezar'],
-    ['HASTANE ALETLERİ',10,'stetoskop termometre tansiyon oksimetre şırınga neşter'],
-    ['GEZEGENLER',8,'merkür venüs dünya mars jüpiter satürn','jüpiter mars'],
-    ['ÜNLÜ FUTBOLCULAR',10,'messi ronaldo mbappe neymar zidane ronaldinho'],
-    ['EL ALETLERİ',10,'çekiç pense tornavida testere anahtar keski'],
-    ['BİLİM KURGU FİLMLERİ',11,'avatar matrix dune alien terminator interstellar'],
-    ['AKSİYON OYUNLARI',12,'doom halo farcry hitman tekken mortal']
-  ]],
-  ['Himalaya Dağları','#0ea5e9',[
-    ['ASYA ÜLKELERİ',7,'nepal tibet butan çin japon kore','','easy'],
-    ['HİMALAYA HAYVANLARI',7,'yak kartal leopar ayı keçi geyik','','easy'],
-    ['DAĞCILIK EKİPMANLARI',7,'ip kask çadır mont bot kazma','','easy'],
-    ['DÜNYANIN ZİRVELERİ',8,'everest elbrus ağrı fuji erciyes uludağ','','easy'],
-    ['HAVA OLAYLARI',7,'kar yağmur rüzgar sis fırtına çığ','fırtına çığ','easy'],
-    ['TİBET KÜLTÜRÜ',8,'lama manastır dua bayrak budizm mantra','','medium'],
-    ['ŞERPALAR',8,'şerpa taşıyıcı rehber kamp yük zirve','','medium'],
-    ['ASYA NEHİRLERİ',9,'ganj indus mekong yangtze fırat dicle','','medium'],
-    ['DAĞ DOĞASI',9,'orman kaya vadi buzul şelale yayla','','medium'],
-    ['NEPAL MUTFAĞI',8,'momo dal pirinç çay baharat yoğurt','baharat momo','medium'],
-    ['EFSANELER',10,'yeti şambala himalaya tanrı tapınak ejderha','','medium'],
-    ['HİMALAYA ZİRVELERİ',10,'everest lhotse makalu annapurna manaslu dhaulagiri','','medium'],
-    ['ÜNLÜ DAĞCILAR',10,'hillary tenzing messner mallory irvine norgay','','hard'],
-    ['DAĞCILIK TERİMLERİ',11,'irtifa oksijen krampon yamaç bivak tepe','','hard'],
-    ['DAĞ SPORLARI',10,'kayak tırmanış yürüyüş paraşüt snowboard rafting','snowboard tırmanış','hard'],
-    ['HİMALAYA BİTKİLERİ',12,'rododendron edelweiss lavanta çam ladin ardıç orkide','','hard'],
-    ['DÜNYANIN ÇATISI',12,'himalaya karakurum annapurna dhaulagiri everest lhotse makalu manaslu','','hard']
+  ['YOLCULUK','#22c55e',[
+    ['Amazon Yağmur Ormanları',5,'orman yaprak nehir maymun papağan','','easy'],
+    ['Dünyanın 7 Harikası',6,'piramit tapınak heykel bahçe deniz fener','','easy'],
+    ['Mariana Çukuru',7,'okyanus derinlik basınç dalga keşif denizaltı','','medium'],
+    ['Mısır Piramitleri',8,'firavun hiyeroglif mumya tapınak sfenks mezar','','medium'],
+    ['Kuzey Işıkları (Aurora)',8,'aurora kutup gökyüzü manyetik ışık parçacık kuzey','aurora parçacık','medium'],
+    ['Sahra Çölü',9,'çöl kum fırtına kervan vaha sıcaklık susuzluk serap','sıcaklık susuzluk','hard'],
+    ['Büyük Set Resifi',9,'mercan okyanus resif kaplumbağa balık deniz biyoloji ekosistem','kaplumbağa ekosistem','hard'],
+    ['Everest Tepesi',10,'everest zirve dağcı oksijen buzul tırmanış kamp dayanıklılık','tırmanış dayanıklılık','hard'],
+    ['Bermuda Şeytan Üçgeni',10,'bermuda pusula okyanus gemi uçak gizem fırtına manyetik','gizem manyetik','hard'],
+    ['Antarktika Kıtası',11,'antarktika penguen buzdağı kutup araştırma istasyon sıcaklık keşif dayanıklılık','araştırma dayanıklılık','hard']
   ]]
 ];
-
 const INFO = [
   ["DÜNYA / EL ALETLERİ","Ameliyat aletlerinin bazıları, cerrahın el hareketini çok küçük ve hassas hareketlere dönüştürecek şekilde tasarlanır. Milimetrenin çok küçük bölümlerindeki kontrol, ameliyatın başarısında kritik olabilir."],
   ["SANAYİ / MALZEMELER","Rulmanların içindeki küçücük bilyeler, ağır makinelerde hareket eden parçalar arasındaki sürtünmeyi ciddi biçimde azaltır. Küçük bir parça, tonlarca yük taşıyan bir sistemin çalışmasını değiştirebilir."],
@@ -2022,23 +2001,29 @@ const INFO = [
   ["Güney Amerika / BREZİLYA","Jaguar, tukan ve koati şelalelerin çevresindeki ormanda yaşar."],
   ["Üç Ülke Sınırı / ARJANTİN","Şelalelerin yakınında Brezilya, Arjantin ve Paraguay sınırları buluşur."]
 ];
-let _n = 0;
-/* =====================================================
-   YENİ YOLCULUK: 10 ANA BÖLÜM
-   ===================================================== */
-const JOURNEY_LEVELS = [
-  {category:'Amazon Yağmur Ormanları', subtitle:'EĞİTİM • OYUNU ÖĞREN', size:5, dirs:'easy', words:["orman","yaprak","nehir","maymun","papağan"], mode:'classic', group:null, themeColor:'#22c55e', icon:'sprout'},
-  {category:'Dünyanın 7 Harikası', subtitle:'KOLAY • BİRAZ DAHA HIZLI', size:6, dirs:'easy', words:["piramit","tapınak","heykel","bahçe","deniz","fener"], mode:'classic', group:null, themeColor:'#f59e0b', icon:'sun'},
-  {category:'Mariana Çukuru', subtitle:'ORTA • YÖNLER ÇOĞALIYOR', size:7, dirs:'medium', words:["okyanus","derinlik","basınç","dalga","keşif","denizaltı"], mode:'classic', group:null, themeColor:'#0ea5e9', icon:'water'},
-  {category:'Mısır Piramitleri', subtitle:'ORTA • UZUN KELİMELER', size:8, dirs:'medium', words:["firavun","hiyeroglif","mumya","tapınak","sfenks","mezar"], mode:'classic', group:null, themeColor:'#eab308', icon:'sun'},
-  {category:'Kuzey Işıkları (Aurora)', subtitle:'ZOR • GİZLİ KELİMELER BAŞLIYOR', size:8, dirs:'medium', words:["aurora","kutup","gökyüzü","manyetik","ışık","parçacık","kuzey"], hide:["aurora","parçacık"], mode:'hidden', group:null, themeColor:'#8b5cf6', icon:'spark'},
-  {category:'Sahra Çölü', subtitle:'ZOR • DAHA UZUN KELİMELER', size:9, dirs:'hard', words:["çöl","kum","fırtına","kervan","vaha","sıcaklık","susuzluk","serap"], hide:["sıcaklık","susuzluk"], mode:'hidden', group:null, themeColor:'#f97316', icon:'sun'},
-  {category:'Büyük Set Resifi', subtitle:'ÇOK ZOR • GİZLİ KELİMELER', size:9, dirs:'hard', words:["mercan","okyanus","resif","kaplumbağa","balık","deniz","biyoloji","ekosistem"], hide:["kaplumbağa","ekosistem"], mode:'hidden', group:null, themeColor:'#14b8a6', icon:'water'},
-  {category:'Everest Tepesi', subtitle:'ÇOK ZOR • UZUN VE ÇAPRAZ KELİMELER', size:10, dirs:'hard', words:["everest","zirve","dağcı","oksijen","buzul","tırmanış","kamp","dayanıklılık"], hide:["dayanıklılık","tırmanış"], mode:'hidden', group:null, themeColor:'#38bdf8', icon:'mountain'},
-  {category:'Bermuda Şeytan Üçgeni', subtitle:'UZMAN • KARIŞIK YÖNLER', size:10, dirs:'hard', words:["bermuda","pusula","okyanus","gemi","uçak","gizem","fırtına","manyetik"], hide:["manyetik","gizem"], mode:'hidden', group:null, themeColor:'#6366f1', icon:'compass'},
-  {category:'Antarktika Kıtası', subtitle:'SON BÖLÜM • EN ZOR', size:11, dirs:'hard', words:["antarktika","penguen","buzdağı","kutup","araştırma","istasyon","sıcaklık","keşif","dayanıklılık"], hide:["antarktika","dayanıklılık","araştırma"], mode:'hidden', group:null, themeColor:'#06b6d4', icon:'snow'}
-];
-const CLASSIC_LEVELS = JOURNEY_LEVELS;
+const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => {
+  const hide = l[3] ? l[3].split(' ') : null;
+  const dirs = l[4] || (hide ? (j < 5 ? 'medium' : 'hard') : (j < 2 ? 'easy' : (j < 4 ? 'medium' : 'hard')));
+  const subtitles = [
+    'EĞİTİM • OYUNU ÖĞREN',
+    'KOLAY • BİRAZ DAHA HIZLI',
+    'ORTA • YÖNLER ÇOĞALIYOR',
+    'ORTA • UZUN KELİMELER',
+    'ZOR • GİZLİ KELİMELER BAŞLIYOR',
+    'ZOR • DAHA UZUN KELİMELER',
+    'ÇOK ZOR • GİZLİ KELİMELER',
+    'ÇOK ZOR • UZUN VE ÇAPRAZ KELİMELER',
+    'UZMAN • KARIŞIK YÖNLER',
+    'SON BÖLÜM • EN ZOR'
+  ];
+  return {
+    category:l[0], group:gi, lv:j,
+    info:INFO[j] || undefined,
+    size:l[1], dirs, mode:hide ? 'hidden' : 'classic', hide,
+    subtitle:subtitles[j],
+    words:l[2].split(' ')
+  };
+}));
 const LEVELS = CLASSIC_LEVELS;
 const MODES = [
   { key:'classic', category:'KLASİK SERBEST', icon:'sprout', color:'#22c55e', subtitle:'Rahatça oyna. Bölümleri seç ve normal kelime bulma modunda ilerle.', available:true }
@@ -2052,7 +2037,7 @@ function buildLevel(def, index){
   const words = (Array.isArray(def.words) ? def.words : String(def.words || '').split(/\s+/).filter(Boolean)).map(TR);
   const requestedSize = Number(def.size) || 1;
   const size = Math.max(requestedSize, ...words.map(w => [...w].length));
-  const dirs = DIRS[def.dirs];
+  const dirs = DIRS[def.dirs] || DIRS.medium;
   const order = [...words].sort((a,b) => b.length - a.length);
 
   for (let attempt = 0; attempt < 400; attempt++){
@@ -2141,7 +2126,7 @@ const THEME = {
   'NOKTASIZ HARFLER (ÖZEL MOD)': { icon:'pencil',    color:'#06b6d4' },
   'NOSTALJİ & DEYİMLER': { icon:'flower', color:'#f59e0b' }
 };
-const themeOf = d => d && d.themeColor ? { icon:d.icon || 'sprout', color:d.themeColor } : ((d.group != null && GROUPS[d.group]) ? { icon:'sprout', color:GROUPS[d.group][1] } : THEME[d.category] || { icon:'sprout', color:'#a78bfa' });
+const themeOf = d => (d.group != null && GROUPS[d.group]) ? { icon:'sprout', color:GROUPS[d.group][1] } : THEME[d.category] || { icon:'sprout', color:'#a78bfa' };
 const iconSVG = name => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="overflow:visible">' + (ICONS[name] || '') + '</svg>';
 function hexA(hex, a){ const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')'; }
 
@@ -2173,21 +2158,35 @@ const S = {
   const c = parseInt(store.get('wow_search_coins'), 10);
   if (!isNaN(c)) S.coins = c;
   const last = LEVELS.length - 1;
-  if (store.get('cidahl_journey_v3') !== '1'){
-    S.maxOpen = 0; S.levelIndex = 0; S.done = {}; S.partial = {};
-    store.set('cidahl_doga_max','0'); store.set('cidahl_doga_level','0');
-    store.set('cidahl_doga_done','{}'); store.set('cidahl_doga_partial','{}');
-    store.set('cidahl_journey_v3','1');
+  /* Yeni 10 bölümlük yolculuk sistemi: eski harita ilerlemesini karıştırma. */
+  if (store.get('cidahl_journey_10_v1') !== '1'){
+    S.maxOpen = 0;
+    S.levelIndex = 0;
+    S.done = {};
+    S.partial = {};
+    store.set('cidahl_doga_max', '0');
+    store.set('cidahl_doga_level', '0');
+    store.set('cidahl_doga_done', '{}');
+    store.set('cidahl_doga_partial', '{}');
+    store.set('cidahl_journey_10_v1', '1');
+  } else {
+    const l = parseInt(store.get('cidahl_doga_level'), 10);
+    const m = parseInt(store.get('cidahl_doga_max'), 10);
+    S.maxOpen = Math.min(last, Math.max(isNaN(l) ? 0 : l, isNaN(m) ? 0 : m));
+    S.levelIndex = S.maxOpen;
+    try { S.done = JSON.parse(store.get('cidahl_doga_done') || '{}') || {}; } catch(e) { S.done = {}; }
   }
-  const l = parseInt(store.get('cidahl_doga_level'), 10);
-  const m = parseInt(store.get('cidahl_doga_max'), 10);
-  S.maxOpen = Math.min(last, Math.max(isNaN(l) ? 0 : l, isNaN(m) ? 0 : m));
-  S.levelIndex = S.maxOpen;
-  if (TEST_UNLOCK_ALL) S.maxOpen = last;   // TEST: tüm bölümler açık
-  try { S.done = JSON.parse(store.get('cidahl_doga_done') || '{}') || {}; } catch(e) { S.done = {}; }
-  // Yeni 10 bölümlü yolculuk sistemi eski bölüm indeksleriyle karışmasın.
-  // v3 geçişinde kayıtlar temizlenir; yalnızca 1. bölüm açık başlar.
-  if (!store.get('kb_hid_v2')) store.set('kb_hid_v2','1');
+  if (TEST_UNLOCK_ALL) S.maxOpen = last;
+  if (!store.get('kb_hid_v1')){            // eski kayıtları, araya eklenen gizli kelime bölümlerine göre kaydır
+    const mv = i => i + (i >= 4 ? 1 : 0) + (i >= 9 ? 1 : 0) + (i >= 14 ? 1 : 0);
+    const mp = o => { const r = {}; Object.keys(o || {}).forEach(k => { r[mv(+k)] = o[k]; }); return r; };
+    S.done = mp(S.done);
+    try { store.set('cidahl_doga_partial', JSON.stringify(mp(JSON.parse(store.get('cidahl_doga_partial') || '{}')))); } catch(e) {}
+    S.maxOpen = Math.min(last, mv(S.maxOpen)); S.levelIndex = S.maxOpen;
+    store.set('kb_hid_v1', '1');
+    store.set('cidahl_doga_max', S.maxOpen); store.set('cidahl_doga_level', S.maxOpen); store.set('cidahl_doga_done', JSON.stringify(S.done));
+    if (TEST_UNLOCK_ALL) S.maxOpen = last;
+  }
   try { S.partial = JSON.parse(store.get('cidahl_doga_partial') || '{}') || {}; } catch(e) { S.partial = {}; }
   // Açılmış bölümler tamamlanmış sayılmaz; yıldız yalnızca bölüm gerçekten bitirilince verilir.
   // Böylece yeni/ilk kullanıcıya otomatik 1 yıldız yazılmaz.
@@ -2544,18 +2543,21 @@ function startLevel(index, def, seed){
   requestAnimationFrame(() => requestAnimationFrame(() => {
     if (tok !== S.token) return;
     const go = () => { if (tok !== S.token) return; S.playing = true; startTimer(); measure(); };
-    const next = () => { if (tok !== S.token) return; if (index === 0 && !store.get('kb_journey_tut')) { store.set('kb_journey_tut','1'); showJourneyTutorial(go); } else if (S.level.hidden.length && !store.get('kb_hid_tut')) showHiddenTutorial(go); else go(); };
+    const next = () => {
+      if (tok !== S.token) return;
+      if (index === 0 && !store.get('cidahl_ch1_tut')) {
+        const o = document.createElement('div');
+        o.className = 'journey-tutorial';
+        o.innerHTML = '<div class="jt-card"><div class="jt-kicker">BÖLÜM 1 • EĞİTİM</div><h2>Kelimeyi Bul</h2><p>Izgaradaki harfleri parmağınla sırayla sürükle. Doğru kelimeyi bulduğunda boya izi belirir ve kelime tamamlanır.</p><button type="button">BAŞLA</button></div>';
+        app.appendChild(o);
+        o.querySelector('button').addEventListener('click', () => { store.set('cidahl_ch1_tut','1'); o.remove(); go(); });
+      } else if (S.level.hidden.length && !store.get('kb_hid_tut')) {
+        showHiddenTutorial(go);
+      } else go();
+    };
     const sp = (!def && !R) ? storyPos(index) : null;
     if (sp && !store.get(sp.key)) showStory(sp, next); else next();
   }));
-}
-function showJourneyTutorial(go){
-  const old = document.querySelector('.journey-tut'); if (old) old.remove();
-  const o = document.createElement('div'); o.className = 'journey-tut';
-  o.innerHTML = '<div class="jt-card"><div class="jt-badge">BÖLÜM 1 • EĞİTİM</div><h2>Kelimeyi Bul!</h2><p>Harflerin üzerinden parmağını sürükleyerek listedeki kelimeyi bul.</p><div class="jt-demo"><span>H</span><span>A</span><span>R</span><span>F</span></div><p class="jt-small">Kelimeyi doğru bulduğunda işaretlenir. Tüm kelimeleri bulunca bölüm tamamlanır.</p><button class="jt-ok" type="button">OYUNA BAŞLA</button></div>';
-  app.appendChild(o);
-  requestAnimationFrame(() => o.classList.add('on'));
-  o.querySelector('.jt-ok').addEventListener('click', () => { o.classList.remove('on'); setTimeout(() => o.remove(), 250); go(); });
 }
 function showHiddenTutorial(go){
   const old = document.querySelector('.hid-tut'); if (old) old.remove();
@@ -3263,11 +3265,15 @@ function journeyScenerySVG(H){
   '</svg></div>';
 }
 const JR_EMO = ['🌴','🏔️','🏜️','🌊','⛰️','🎈','🐠','🐧','🌲','🌋','🐢','🌵','🏞️','🏺','✨','♨️','🌳','❄️','🦎','💦'];
-function renderModes(){ drawMap(); }
+function renderModes(){
+  drawMap();
+  const title = document.querySelector('#view-modes .jr-title, #view-modes h1, #view-modes h2');
+  if (title && !title.dataset.fixed) { title.textContent = 'YOLCULUK'; title.dataset.fixed = '1'; }
+}
 /* Harita.png yolu: resim koordinatlarında (940x1672) yol merkez noktaları, alttan üste */
 let JR_ART_H = 1672; // resmin gerçekten dolu olan yüksekliği (altı boş/siyah)
 const JR_IMG = {w:940, h:1672, perTile:10, overlap:.1,
-  wp:[[490,1672],[492,1560],[492,1455],[545,1385],[610,1320],[635,1240],[640,1160],[615,1085],[585,1015],[650,960],[705,925],[640,880],[560,850],[537,835],[520,780],[540,725],[553,665],[500,610],[447,555],[470,500],[503,445],[530,385],[558,328],[560,270],[540,215]]};
+  wp:[[490,1660],[570,1490],[430,1330],[610,1170],[445,1010],[610,850],[430,700],[590,555],[455,395],[545,235]]};
 const JR_CURVE = (() => {
   const wp = JR_IMG.wp, pts = [];
   const cr = (a,b,c,d,t) => [0,1].map(k => .5*((2*b[k]) + (-a[k]+c[k])*t + (2*a[k]-5*b[k]+4*c[k]-d[k])*t*t + (-a[k]+3*b[k]-3*c[k]+d[k])*t*t*t));
@@ -3292,7 +3298,7 @@ function jrSlice(s0, s1){  // iki s arasındaki eğri noktaları
 let JR_P = [], JR_W = 0, JR_H = 0, JR_PAGE = 0;
 function drawMap(page){
   const map = $('jr-map'), wrap = $('jr-wrap');
-  const n = LEVELS.length, PT = JR_IMG.perTile, pages = Math.max(1, Math.ceil(n / PT));
+  const n = LEVELS.length, PT = Math.min(JR_IMG.perTile, n), pages = 1;
   const W = map.clientWidth || window.innerWidth || 390, H = map.clientHeight || window.innerHeight || 700;
   JR_W = W; JR_H = H;
   let cur = LEVELS.findIndex((_, i) => !S.done[i] && i <= S.maxOpen); if (cur < 0) cur = n - 1;
@@ -3322,10 +3328,10 @@ function drawMap(page){
     const d = LEVELS[i], p = JR_P[i], dn = S.done[i], ok = i <= S.maxOpen, isCur = i === cur && ok && !dn;
     const got = dn ? dn.stars : 0;
     const st = !dn ? '' : '<span class="jr-stars">' + [1, 2, 3].map(q => '<svg class="i st' + (q <= got ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>';
-    const tc = themeOf(d).color;
-    nodes += '<div class="jr-nw" style="left:' + p.x.toFixed(1) + 'px;top:' + p.y.toFixed(1) + 'px;--c:' + tc + '">' +
+    nodes += '<div class="jr-nw" style="left:' + p.x.toFixed(1) + 'px;top:' + p.y.toFixed(1) + 'px;--c:' + GROUPS[d.group][1] + '">' +
             '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '">' +
-            '<span class="jr-node-num">' + (i + 1) + '</span></button><div class="jr-cap"><b>Bölüm ' + (i + 1) + '</b><span>' + d.category + '</span></div>' + st +
+            (dn ? '✓' : (ok ? String(i + 1) : '🔒')) + '</button>' + st +
+            '<div class="jr-cap">' + d.category + '</div>' +
       '</div>';
   }
   wrap.style.height = H + 'px';
