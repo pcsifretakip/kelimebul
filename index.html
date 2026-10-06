@@ -1329,6 +1329,30 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .jr-tile{position:absolute;left:0;right:0;background:#79bf56 url('harita.png') 0 0 / 100% 100% no-repeat}
 .jr-tile.fade{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 11%);mask-image:linear-gradient(to bottom,transparent 0,#000 11%)}
 .jr-wrap{background:#79bf56}
+/* ===== YOLCULUK: düzeltmeler ===== */
+.jr-pin{display:none!important}
+#view-modes .jr-node.cur{left:-29px;top:-29px;width:58px;height:58px;font-size:22px;box-shadow:0 6px 0 #1748a7,0 0 0 6px rgba(255,202,85,.25),0 0 18px rgba(255,220,119,.55),inset 0 3px 0 rgba(255,255,255,.48)}
+.app{height:100vh;height:100dvh;min-height:100vh;min-height:100dvh}
+html:has(.app.on-journey),body:has(.app.on-journey){background:#76bc55}
+.app.on-journey{background:#76bc55}
+
+/* ===== YOLCULUK: 3D kabarık düğmeler ===== */
+#view-modes .jr-node{
+  --a:#9fb0cf;--b:#5d708f;--d:#2f3d58;--e:#1e2a40;
+  isolation:isolate;border:4px solid #fff;
+  background:radial-gradient(circle at 50% 28%,var(--a) 0%,var(--b) 55%,var(--d) 100%)!important;
+  box-shadow:0 7px 0 var(--e),0 12px 12px rgba(0,0,0,.38),inset 0 -7px 10px rgba(0,0,0,.28),inset 0 5px 7px rgba(255,255,255,.55),0 0 0 1px rgba(0,0,0,.18)!important;
+  color:#fff;font-weight:900;text-shadow:0 2px 0 rgba(0,0,0,.35),0 0 6px rgba(0,0,0,.25);
+  transition:transform .12s,box-shadow .12s}
+#view-modes .jr-node::before{content:"";position:absolute;z-index:-1;left:14%;right:14%;top:5%;height:44%;border-radius:50% 50% 46% 46%/70% 70% 30% 30%;
+  background:linear-gradient(180deg,rgba(255,255,255,.85) 0%,rgba(255,255,255,.18) 100%);pointer-events:none}
+#view-modes .jr-node::after{content:"";position:absolute;z-index:-1;left:24%;right:24%;bottom:6%;height:14%;border-radius:50%;
+  background:radial-gradient(ellipse at 50% 0,rgba(255,255,255,.38),rgba(255,255,255,0) 70%);pointer-events:none}
+#view-modes .jr-node:active{transform:translateY(4px);box-shadow:0 3px 0 var(--e),0 6px 8px rgba(0,0,0,.35),inset 0 -7px 10px rgba(0,0,0,.28),inset 0 5px 7px rgba(255,255,255,.55)!important}
+#view-modes .jr-node.cur{--a:#8fd0ff;--b:#2f86f0;--d:#134cb8;--e:#0e3585;animation:none!important}
+#view-modes .jr-node.done{--a:#a8f5a0;--b:#2fc556;--d:#0b8a3c;--e:#07672c}
+#view-modes .jr-node.open{--a:#aebdd8;--b:#66799a;--d:#34425e;--e:#222d44}
+#view-modes .jr-node.lk{--a:#8f9bb0;--b:#566277;--d:#2b3446;--e:#1a2130;color:#e6ebf5}
 </style>
 </head>
 <body>
@@ -3082,8 +3106,8 @@ function drawMap(scroll){
   const H = Math.round((tiles - 1) * pitch + tileH);
   let cur = LEVELS.findIndex((_, i) => !S.done[i] && i <= S.maxOpen); if (cur < 0) cur = LEVELS.length - 1;
   $('jr-me').innerHTML = avatarHTML();
-  const sOf = j => .02 + .93 * j / (PT - 1);
-  const place = (t, s) => { const q = jrAt(s); return {x:q[0]*sc, y:(tiles-1-t)*pitch + q[1]*sc}; };
+  const sOf = j => .04 + .91 * j / (PT - 1);
+  const place = (t, s) => { const q = jrAt(s); return {x:q[0]*sc, y:(tiles-1-t)*pitch + q[1]*scY}; };
   const P = LEVELS.map((d, i) => place(Math.floor(i / PT), sOf(i % PT)));
   JR_P = P;
   /* arka plan: her resim bir döşeme; üstteki döşemeye yumuşak geçiş */
@@ -3105,8 +3129,7 @@ function drawMap(scroll){
     const p = P[i], dn = S.done[i], ok = d.group === 0 ? true : i <= S.maxOpen, isCur = i === cur && ok && !dn;
     const st = dn ? '<span class="jr-stars">' + [1, 2, 3].map(k => '<svg class="i st' + (k <= dn.stars ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>' : '';
     nodes += '<div class="jr-nw" style="left:' + p.x.toFixed(1) + 'px;top:' + p.y.toFixed(1) + 'px;--c:' + GROUPS[d.group][1] + '">' +
-      (isCur ? '<div class="jr-pin"><span>' + journeyOwlSVG() + '</span></div>' : '') +
-      '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '">' + (ok ? (i + 1) : iconSVG('lock')) + '</button>' + st +
+            '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '">' + (ok ? (i + 1) : iconSVG('lock')) + '</button>' + st +
       '</div>';
   });
   wrap.style.height = H + 'px';
