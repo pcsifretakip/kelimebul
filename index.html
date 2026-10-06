@@ -1331,7 +1331,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .jr-wrap{background:#79bf56}
 /* ===== YOLCULUK: düzeltmeler ===== */
 .jr-pin{display:none!important}
-#view-modes .jr-node.cur{left:-29px;top:-29px;width:58px;height:58px;font-size:22px;box-shadow:0 6px 0 #1748a7,0 0 0 6px rgba(255,202,85,.25),0 0 18px rgba(255,220,119,.55),inset 0 3px 0 rgba(255,255,255,.48)}
+#view-modes .jr-node.cur{left:-23px;top:-23px;width:46px;height:46px;font-size:18px;box-shadow:0 6px 0 #1748a7,0 0 0 6px rgba(255,202,85,.25),0 0 18px rgba(255,220,119,.55),inset 0 3px 0 rgba(255,255,255,.48)}
 .app{height:100vh;height:100dvh;min-height:100vh;min-height:100dvh}
 html:has(.app.on-journey),body:has(.app.on-journey){background:#76bc55}
 .app.on-journey{background:#76bc55}
@@ -1353,6 +1353,22 @@ html:has(.app.on-journey),body:has(.app.on-journey){background:#76bc55}
 #view-modes .jr-node.done{--a:#a8f5a0;--b:#2fc556;--d:#0b8a3c;--e:#07672c}
 #view-modes .jr-node.open{--a:#aebdd8;--b:#66799a;--d:#34425e;--e:#222d44}
 #view-modes .jr-node.lk{--a:#8f9bb0;--b:#566277;--d:#2b3446;--e:#1a2130;color:#e6ebf5}
+
+/* ===== küçük düğmeler ===== */
+#view-modes .jr-node:not(.cur){left:-20px;top:-20px;width:40px;height:40px;font-size:16px;border-width:3px}
+#view-modes .jr-node.cur{border-width:3px}
+#view-modes .jr-node{box-shadow:0 5px 0 var(--e),0 8px 9px rgba(0,0,0,.35),inset 0 -5px 7px rgba(0,0,0,.28),inset 0 4px 5px rgba(255,255,255,.55)!important}
+#view-modes .jr-node svg{width:16px;height:16px}
+
+/* ===== sincap + parıltı ===== */
+.jr-sq{position:absolute;width:46px;height:46px;margin:-46px 0 0 -23px;z-index:6;pointer-events:none;filter:drop-shadow(0 4px 3px rgba(0,0,0,.35))}
+.jr-sq-in{width:100%;height:100%;transform-origin:50% 100%}
+.jr-sq-in svg{width:100%;height:100%;display:block}
+.jr-sq:not(.moving) .jr-sq-in svg{animation:jrSqIdle 2.2s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes jrSqIdle{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.94) translateY(1px)}}
+.jr-spk{position:absolute;z-index:8;pointer-events:none;text-shadow:0 0 8px rgba(255,230,120,.95);line-height:1}
+#view-modes .jr-node.jr-glow{box-shadow:0 5px 0 var(--e),0 0 0 6px rgba(255,236,130,.45),0 0 26px 8px rgba(255,226,100,.85),inset 0 4px 5px rgba(255,255,255,.55)!important;animation:jrGlowPulse .9s ease-in-out 3}
+@keyframes jrGlowPulse{50%{filter:brightness(1.35)}}
 </style>
 </head>
 <body>
@@ -2003,7 +2019,7 @@ const store = {
   set(k,v){ try { localStorage.setItem(k, v); } catch(e){} }
 };
 
-const TEST_UNLOCK_ALL = true;   // test bitince false yap
+const TEST_UNLOCK_ALL = false;   // test bitince false yap
 const SHOW_NOTICES = false;     // bilgilendirme toast'ları kapalı
 const S = {
   levelIndex: 0, maxOpen: 0, done: {}, partial: {}, coins: 150, sound: true,
@@ -2961,69 +2977,67 @@ function victory(){
 function playJourneyUnlockAnimation(fromIdx){
   const nextIdx = fromIdx + 1;
   if (nextIdx >= LEVELS.length) { showLevels(); return; }
-
-  // Yolculuk ekranını önce tamamlanan bölümün yanında aç.
   leaveGame();
   renderModes(false);
   setView('modes');
   updateHome();
 
+  const map = $('jr-map'), wrap = $('jr-wrap');
+  const canvas = wrap.querySelector('.jr-canvas'), sq = $('jr-sq');
+  const nodes = wrap.querySelectorAll('.jr-node');
+  const nextNode = nodes[nextIdx];
+  if (!canvas || !sq || !nextNode) return;
+  const P = JR_P, W = JR_W;
+
+  /* 2. bölüm başta kilitli görünsün */
+  nextNode.className = 'jr-node lk';
+  nextNode.innerHTML = iconSVG('lock');
+
+  /* sincap önce 1. bölümün yanında dursun */
+  const a0 = jrSqPos(P[fromIdx], W), a1 = jrSqPos(P[nextIdx], W);
+  const inner = sq.firstElementChild;
+  sq.style.left = a0.x + 'px'; sq.style.top = a0.y + 'px';
+  inner.style.transform = 'scaleX(' + (a0.side > 0 ? -1 : 1) + ')';
+  map.scrollTop = Math.max(0, P[fromIdx].y - map.clientHeight * .62);
+
   setTimeout(() => {
-    const map = $('jr-map');
-    const wrap = $('jr-wrap');
-    const canvas = wrap.querySelector('.jr-canvas');
-    if (!canvas) return;
+    map.scrollTo({top: Math.max(0, P[nextIdx].y - map.clientHeight * .6), behavior:'smooth'});
+    const dx = a1.x - a0.x, dy = a1.y - a0.y, h = Math.max(46, Math.hypot(dx, dy) * .32);
+    inner.style.transform = 'scaleX(' + (dx >= 0 ? 1 : -1) + ')';
+    const kf = [];
+    for (let i = 0; i <= 16; i++){ const t = i / 16; kf.push({transform:'translate(' + (dx*t).toFixed(1) + 'px,' + (dy*t - 4*h*t*(1-t)).toFixed(1) + 'px)'}); }
+    inner.animate([{transform:'scaleX(' + (dx >= 0 ? 1 : -1) + ') scaleY(.8)'},{transform:'scaleX(' + (dx >= 0 ? 1 : -1) + ') scaleY(1.08)'}], {duration:220, easing:'ease-out'});
+    const anim = sq.animate(kf, {duration:950, easing:'linear', fill:'forwards'});
+    anim.onfinish = () => {
+      sq.style.left = a1.x + 'px'; sq.style.top = a1.y + 'px'; anim.cancel();
+      inner.style.transform = 'scaleX(' + (a1.side > 0 ? -1 : 1) + ')';
+      inner.animate([{transform:'scaleX(' + (a1.side > 0 ? -1 : 1) + ') scaleY(.78)'},{transform:'scaleX(' + (a1.side > 0 ? -1 : 1) + ') scaleY(1)'}], {duration:260, easing:'ease-out'});
+      unlockNext();
+    };
+  }, 650);
 
-    const nodes = wrap.querySelectorAll('.jr-node');
-    const fromNode = nodes[fromIdx];
-    const nextNode = nodes[nextIdx];
-    if (!fromNode || !nextNode) return;
-
-    // Haritayı 1. bölümde tut, sonra 2. bölüme doğru kaydır.
-    const fromTop = Math.max(0, nextNode.parentElement.offsetTop - map.clientHeight * .62);
-    map.scrollTo({top: fromTop, behavior:'auto'});
-
-    const P = JR_P;
-
-    const runner = document.createElement('div');
-    runner.className = 'jr-runner';
-    runner.style.left = P[fromIdx].x + 'px';
-    runner.style.top = P[fromIdx].y + 'px';
-    canvas.appendChild(runner);
-
-    // Birinci bölümden ikinci bölüme ilerleyen küçük "oyuncu" animasyonu.
-    requestAnimationFrame(() => {
-      runner.style.transform = 'translate(-50%,-50%) scale(1)';
-      runner.style.left = P[nextIdx].x + 'px';
-      runner.style.top = P[nextIdx].y + 'px';
-      const tr = setInterval(() => {
-        const d = document.createElement('i'); d.className = 'jr-trail';
-        d.style.left = runner.offsetLeft + 'px'; d.style.top = runner.offsetTop + 'px';
-        canvas.appendChild(d); setTimeout(() => d.remove(), 950);
-      }, 55);
-      setTimeout(() => clearInterval(tr), 900);
-      map.scrollTo({top: Math.max(0, P[nextIdx].y - map.clientHeight * .60), behavior:'smooth'});
-    });
-
-    setTimeout(() => {
-      nextNode.classList.add('jr-new-open','jr-unlock-pulse');
-      nextNode.animate(
-        [
-          {transform:'scale(1)'},
-          {transform:'scale(1.2)'},
-          {transform:'scale(1)'}
-        ],
-        {duration:900, easing:'ease-in-out', iterations:2}
-      );
-      try {
-        const r = nextNode.getBoundingClientRect(), ar = app.getBoundingClientRect(), q = { x: r.left + r.width / 2 - ar.left, y: r.top + r.height / 2 - ar.top };
-        ring(q.x, q.y, '#4ade80', 90); setTimeout(() => ring(q.x, q.y, '#fde047', 130), 160);
-        sparkBurst(q.x, q.y, '#4ade80', 14, 1.4); SND.win && buzz([30, 40, 30]);
-      } catch(e){}
-      runner.style.transform = 'translate(-50%,-50%) scale(.72)';
-      setTimeout(() => runner.remove(), 650);
-    }, 920);
-  }, 500);
+  function unlockNext(){
+    nextNode.className = 'jr-node cur';
+    nextNode.textContent = nextIdx + 1;
+    nextNode.animate([{transform:'scale(.6)'},{transform:'scale(1.3)'},{transform:'scale(1)'}], {duration:700, easing:'cubic-bezier(.2,1.4,.4,1)'});
+    /* parıltı: yıldız patlaması */
+    const cols = ['#fde047','#fff','#fbbf24','#a7f3d0'];
+    for (let i = 0; i < 14; i++){
+      const st = document.createElement('i'); st.className = 'jr-spk'; st.textContent = '✦';
+      st.style.left = P[nextIdx].x + 'px'; st.style.top = P[nextIdx].y + 'px';
+      st.style.color = cols[i % cols.length]; st.style.fontSize = (12 + Math.random()*12) + 'px';
+      canvas.appendChild(st);
+      const ang = i / 14 * Math.PI * 2, d = 38 + Math.random() * 30;
+      st.animate([{transform:'translate(-50%,-50%) scale(.2)',opacity:1},{transform:'translate(calc(-50% + ' + (Math.cos(ang)*d) + 'px),calc(-50% + ' + (Math.sin(ang)*d) + 'px)) scale(1.2) rotate(120deg)',opacity:0}], {duration:900 + Math.random()*400, easing:'ease-out'}).onfinish = () => st.remove();
+    }
+    try {
+      const r = nextNode.getBoundingClientRect(), ar = app.getBoundingClientRect(), q = { x: r.left + r.width / 2 - ar.left, y: r.top + r.height / 2 - ar.top };
+      ring(q.x, q.y, '#fde047', 90); setTimeout(() => ring(q.x, q.y, '#fff', 130), 160);
+      sparkBurst(q.x, q.y, '#fde047', 14, 1.4); SND.win && buzz([30, 40, 30]);
+    } catch(e){}
+    nextNode.classList.add('jr-glow');
+    setTimeout(() => nextNode.classList.remove('jr-glow'), 2600);
+  }
 }
 
 $('btn-next-level').addEventListener('click', () => {
@@ -3046,6 +3060,27 @@ let irisBusy = false;
 /* =====================================================
    BÖLÜM SEÇİM EKRANI
    ===================================================== */
+
+function journeySquirrelSVG(){
+  return '<svg viewBox="0 0 64 64" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">'+
+  '<path d="M26 56C3 60-2 30 11 16c2 11 11 13 20 21z" fill="#d9772e" stroke="#8a4416" stroke-width="2" stroke-linejoin="round"/>'+
+  '<path d="M9 31c-1-6 1-11 4-14" stroke="#f6b073" stroke-width="3" fill="none" stroke-linecap="round"/>'+
+  '<ellipse cx="34" cy="45" rx="14" ry="13" fill="#e0833a" stroke="#8a4416" stroke-width="2"/>'+
+  '<ellipse cx="39" cy="48" rx="8" ry="9" fill="#ffe2bd"/>'+
+  '<ellipse cx="31" cy="58" rx="7" ry="3.5" fill="#b4651f" stroke="#8a4416" stroke-width="1.5"/>'+
+  '<ellipse cx="44" cy="58" rx="6" ry="3.3" fill="#b4651f" stroke="#8a4416" stroke-width="1.5"/>'+
+  '<path d="M32 21 33 7l9 8z" fill="#e0833a" stroke="#8a4416" stroke-width="2" stroke-linejoin="round"/>'+
+  '<path d="M44 14 51 5l2 14z" fill="#e0833a" stroke="#8a4416" stroke-width="2" stroke-linejoin="round"/>'+
+  '<circle cx="42" cy="27" r="13" fill="#e8924a" stroke="#8a4416" stroke-width="2"/>'+
+  '<ellipse cx="48" cy="31" rx="6.5" ry="5" fill="#ffe2bd"/>'+
+  '<circle cx="53" cy="29" r="2.2" fill="#3b2314"/>'+
+  '<circle cx="45" cy="25" r="3" fill="#2a1a10"/><circle cx="46" cy="24" r="1" fill="#fff"/>'+
+  '<circle cx="40" cy="31" r="2.6" fill="#f59aa0" opacity=".7"/>'+
+  '<path d="M48 36q3 2 6 0" stroke="#8a4416" stroke-width="1.5" fill="none" stroke-linecap="round"/>'+
+  '</svg>';
+}
+const JR_SQ = 46;
+function jrSqPos(p, W){ const side = p.x < W / 2 ? 1 : -1; return {x: p.x + side * 40, y: p.y + 22, side}; }
 function journeyOwlSVG(){
   return '<svg viewBox="0 0 64 64" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="owlBody" x2="0" y2="1"><stop stop-color="#f8c17b"/><stop offset="1" stop-color="#a85a2d"/></linearGradient><linearGradient id="owlBook" x2="0" y2="1"><stop stop-color="#f87171"/><stop offset="1" stop-color="#991b1b"/></linearGradient></defs><path d="M9 18 4 7 21 14M55 18 60 7 43 14" fill="#8b5a3b" stroke="#5d351f" stroke-width="2" stroke-linejoin="round"/><ellipse cx="32" cy="31" rx="23" ry="24" fill="url(#owlBody)" stroke="#6b3e25" stroke-width="2"/><ellipse cx="32" cy="34" rx="17" ry="17" fill="#f6dfb5"/><circle cx="23" cy="26" r="8" fill="#fff" stroke="#754a2a" stroke-width="1.5"/><circle cx="41" cy="26" r="8" fill="#fff" stroke="#754a2a" stroke-width="1.5"/><circle cx="24" cy="27" r="3.5" fill="#35251c"/><circle cx="40" cy="27" r="3.5" fill="#35251c"/><circle cx="25" cy="26" r="1.2" fill="#fff"/><circle cx="41" cy="26" r="1.2" fill="#fff"/><path d="m29 32 3 5 4-5z" fill="#f59e0b" stroke="#a16207" stroke-width="1"/><path d="M14 42Q22 38 30 47L32 54Q21 51 14 42M50 42Q42 38 34 47L32 54Q43 51 50 42" fill="#b87943" stroke="#754a2a" stroke-width="1.5"/><path d="M19 44Q32 39 45 44L45 57Q32 52 19 57Z" fill="url(#owlBook)" stroke="#713f27" stroke-width="1.5"/><path d="M32 43V54" stroke="#f8d8a4" stroke-width="1.5"/><path d="M22 47l7 1M22 50l7 1M36 47l6-1M36 50l6-1" stroke="#ffe8bd" stroke-width="1"/><path d="M23 58l-4 3 8-1M41 58l4 3-8-1" fill="#fbbf24" stroke="#92400e" stroke-width="1"/></svg>';
 }
@@ -3074,6 +3109,7 @@ function journeyScenerySVG(H){
 const JR_EMO = ['🌴','🏔️','🏜️','🌊','⛰️','🎈','🐠','🐧','🌲','🌋','🐢','🌵','🏞️','🏺','✨','♨️','🌳','❄️','🦎','💦'];
 function renderModes(){ drawMap(true); }
 /* Harita.png yolu: resim koordinatlarında (940x1672) yol merkez noktaları, alttan üste */
+const JR_ART_H = 1500; // resmin gerçekten dolu olan yüksekliği (altı boş/siyah)
 const JR_IMG = {w:940, h:1672, perTile:10, overlap:.1,
   wp:[[480,1672],[540,1520],[549,1450],[482,1400],[388,1350],[375,1290],[438,1250],[539,1200],[607,1150],[625,1110],[555,1075],[447,1025],[388,1000],[340,960],[388,900],[458,875],[525,825],[447,775],[353,725],[360,690],[398,675],[540,625],[577,575],[534,550],[557,500],[565,450],[567,400],[502,375],[446,350],[454,325],[471,300],[500,250],[490,200],[493,175],[505,125]]};
 const JR_CURVE = (() => {
@@ -3102,17 +3138,18 @@ function drawMap(scroll){
   const map = $('jr-map'), wrap = $('jr-wrap'), keep = map.scrollTop;
   const n = LEVELS.length, PT = JR_IMG.perTile, tiles = Math.max(1, Math.ceil(n / PT));
   const W = wrap.clientWidth || map.clientWidth || window.innerWidth || 390; JR_W = W;
-  const sc = W / JR_IMG.w, scY = sc * 1.48, tileH = JR_IMG.h * scY, pitch = tileH * (1 - JR_IMG.overlap);
+  const sc = W / JR_IMG.w, scY = sc * 1.48, bgH = JR_IMG.h * scY, tileH = JR_ART_H * scY, pitch = tileH * (1 - JR_IMG.overlap);
   const H = Math.round((tiles - 1) * pitch + tileH);
   let cur = LEVELS.findIndex((_, i) => !S.done[i] && i <= S.maxOpen); if (cur < 0) cur = LEVELS.length - 1;
   $('jr-me').innerHTML = avatarHTML();
-  const sOf = j => .04 + .91 * j / (PT - 1);
+  const S0 = (() => { for (let v = 0; v < 1; v += .002) if (jrAt(v)[1] <= JR_ART_H - 62) return v; return .04; })();
+  const sOf = j => S0 + (.95 - S0) * j / (PT - 1);
   const place = (t, s) => { const q = jrAt(s); return {x:q[0]*sc, y:(tiles-1-t)*pitch + q[1]*scY}; };
   const P = LEVELS.map((d, i) => place(Math.floor(i / PT), sOf(i % PT)));
   JR_P = P;
   /* arka plan: her resim bir döşeme; üstteki döşemeye yumuşak geçiş */
   let html = '<div class="jr-tiles">';
-  for (let t = tiles - 1; t >= 0; t--) html += '<div class="jr-tile' + (t < tiles - 1 ? ' fade' : '') + '" style="top:' + ((tiles-1-t)*pitch).toFixed(1) + 'px;height:' + tileH.toFixed(1) + 'px"></div>';
+  for (let t = tiles - 1; t >= 0; t--) html += '<div class="jr-tile' + (t < tiles - 1 ? ' fade' : '') + '" style="top:' + ((tiles-1-t)*pitch).toFixed(1) + 'px;height:' + tileH.toFixed(1) + 'px;background-size:100% ' + bgH.toFixed(1) + 'px"></div>';
   html += '</div>';
   /* biten bölümler arasındaki altın yol */
   let road = '';
@@ -3126,14 +3163,16 @@ function drawMap(scroll){
   const svg = '<svg class="jr-road" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" fill="none" stroke-linecap="round" stroke-linejoin="round">' + road + '</svg>';
   let nodes = '';
   LEVELS.forEach((d, i) => {
-    const p = P[i], dn = S.done[i], ok = d.group === 0 ? true : i <= S.maxOpen, isCur = i === cur && ok && !dn;
+    const p = P[i], dn = S.done[i], ok = i <= S.maxOpen, isCur = i === cur && ok && !dn;
     const st = dn ? '<span class="jr-stars">' + [1, 2, 3].map(k => '<svg class="i st' + (k <= dn.stars ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>' : '';
     nodes += '<div class="jr-nw" style="left:' + p.x.toFixed(1) + 'px;top:' + p.y.toFixed(1) + 'px;--c:' + GROUPS[d.group][1] + '">' +
             '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '">' + (ok ? (i + 1) : iconSVG('lock')) + '</button>' + st +
       '</div>';
   });
   wrap.style.height = H + 'px';
-  wrap.innerHTML = html + '<div class="jr-canvas" style="height:' + H + 'px;left:0;margin-left:0;width:' + W + 'px">' + svg + nodes + '</div>';
+  const sqp = jrSqPos(P[cur], W);
+  const sqHTML = '<div class="jr-sq" id="jr-sq" style="left:' + sqp.x.toFixed(1) + 'px;top:' + sqp.y.toFixed(1) + 'px"><div class="jr-sq-in" style="transform:scaleX(' + (sqp.side > 0 ? -1 : 1) + ')">' + journeySquirrelSVG() + '</div></div>';
+  wrap.innerHTML = html + '<div class="jr-canvas" style="height:' + H + 'px;left:0;margin-left:0;width:' + W + 'px">' + svg + nodes + sqHTML + '</div>';
   wrap.querySelectorAll('.jr-node').forEach(b => b.addEventListener('click', () => {
     const i = +b.dataset.i;
     if (i <= S.maxOpen) showGame(i); else toast('Önce önceki bölümü tamamla.');
