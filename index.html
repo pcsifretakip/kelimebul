@@ -1369,6 +1369,21 @@ html:has(.app.on-journey),body:has(.app.on-journey){background:#76bc55}
 .jr-spk{position:absolute;z-index:8;pointer-events:none;text-shadow:0 0 8px rgba(255,230,120,.95);line-height:1}
 #view-modes .jr-node.jr-glow{box-shadow:0 5px 0 var(--e),0 0 0 6px rgba(255,236,130,.45),0 0 26px 8px rgba(255,226,100,.85),inset 0 4px 5px rgba(255,255,255,.55)!important;animation:jrGlowPulse .9s ease-in-out 3}
 @keyframes jrGlowPulse{50%{filter:brightness(1.35)}}
+
+/* ===== ışık huzmesi ===== */
+.jr-beam{position:absolute;z-index:7;width:0;height:0;pointer-events:none}
+.jr-beam i{position:absolute;display:block}
+.jr-beam .b-core{left:-13px;bottom:0;width:26px;height:230px;transform-origin:50% 100%;border-radius:13px 13px 0 0;
+  background:linear-gradient(0deg,rgba(255,252,220,.98) 0%,rgba(255,240,150,.8) 35%,rgba(255,230,120,0) 100%);
+  filter:blur(1.5px);animation:jrBeam 2.4s ease-out forwards}
+.jr-beam .b-halo{left:-34px;bottom:0;width:68px;height:200px;transform-origin:50% 100%;border-radius:34px 34px 0 0;
+  background:linear-gradient(0deg,rgba(255,226,110,.55) 0%,rgba(255,210,80,.22) 45%,rgba(255,210,80,0) 100%);
+  filter:blur(8px);animation:jrBeam 2.4s ease-out forwards}
+.jr-beam .b-base{left:-34px;bottom:-9px;width:68px;height:18px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(255,250,200,.95),rgba(255,220,100,.0) 70%);animation:jrBeamBase 2.4s ease-out forwards}
+@keyframes jrBeam{0%{transform:scaleY(0);opacity:0}12%{transform:scaleY(1);opacity:1}70%{opacity:.85}100%{transform:scaleY(1.05);opacity:0}}
+@keyframes jrBeamBase{0%{transform:scale(.2);opacity:0}15%{transform:scale(1.2);opacity:1}100%{transform:scale(1.6);opacity:0}}
+.jr-mote{position:absolute;z-index:8;width:6px;height:6px;border-radius:50%;background:#fff6c4;box-shadow:0 0 8px 2px rgba(255,226,110,.9);pointer-events:none}
 </style>
 </head>
 <body>
@@ -2950,7 +2965,9 @@ function vicFx(stars, reward, elapsed){
 }
 function victory(){
   if (R){ raceFinish(); return; }
-  S.playing = false; stopTimer(); SND.level(); buzz([40, 60, 40, 60, 120]);
+  S.playing = false; stopTimer();
+  const isLast = S.levelIndex >= LEVELS.length - 1;
+  if (isLast){ SND.level(); buzz([40, 60, 40, 60, 120]); }
   S.wins++; store.set('kb_wins', S.wins);
   const idx = S.levelIndex, prev = S.done[idx];
   const reward = prev ? 5 : 25;               // ilk bitirişte 25, tekrar oynayınca 5 altın
@@ -2963,8 +2980,25 @@ function victory(){
     time: prev && prev.time ? Math.min(prev.time, elapsed) : elapsed
   };
   delete S.partial[idx];
+  const oldMax = S.maxOpen;
   S.maxOpen = Math.max(S.maxOpen, Math.min(idx + 1, LEVELS.length - 1));
   saveProgress(); syncLevelPoints();
+  if (!isLast){
+    /* normal bölüm: ses yok, patlama yok -> doğrudan haritaya, sincap sonraki bölüme zıplar */
+    try { toast('+' + reward + ' altın'); } catch(e){}
+    if (irisBusy) return;
+    irisBusy = true;
+    const iris = $('iris'), opens = idx + 1 > oldMax;
+    setTimeout(() => {
+      iris.className = 'iris in';
+      setTimeout(() => {
+        if (opens) playJourneyUnlockAnimation(idx); else showLevels();
+        requestAnimationFrame(() => { iris.className = 'iris out'; });
+        setTimeout(() => { iris.className = 'iris'; irisBusy = false; }, 600);
+      }, 520);
+    }, 450);
+    return;
+  }
   document.querySelectorAll('.vstar').forEach((s, i) => s.classList.toggle('on', i < stars));
   $('reward-time').textContent = fmt(elapsed);
   vicScene(idx);
@@ -2991,7 +3025,7 @@ function playJourneyUnlockAnimation(fromIdx){
 
   /* 2. bölüm başta kilitli görünsün */
   nextNode.className = 'jr-node lk';
-  nextNode.innerHTML = iconSVG('lock');
+  nextNode.textContent = nextIdx + 1;
 
   /* sincap önce 1. bölümün yanında dursun */
   const a0 = jrSqPos(P[fromIdx], W), a1 = jrSqPos(P[nextIdx], W);
@@ -3002,12 +3036,12 @@ function playJourneyUnlockAnimation(fromIdx){
 
   setTimeout(() => {
     map.scrollTo({top: Math.max(0, P[nextIdx].y - map.clientHeight * .6), behavior:'smooth'});
-    const dx = a1.x - a0.x, dy = a1.y - a0.y, h = Math.max(46, Math.hypot(dx, dy) * .32);
+    const dx = a1.x - a0.x, dy = a1.y - a0.y, h = 120 + Math.hypot(dx, dy) * .45;
     inner.style.transform = 'scaleX(' + (dx >= 0 ? 1 : -1) + ')';
     const kf = [];
-    for (let i = 0; i <= 16; i++){ const t = i / 16; kf.push({transform:'translate(' + (dx*t).toFixed(1) + 'px,' + (dy*t - 4*h*t*(1-t)).toFixed(1) + 'px)'}); }
+    for (let i = 0; i <= 16; i++){ const t = i / 16; kf.push({transform:'translate(' + (dx*t).toFixed(1) + 'px,' + (dy*t - 4*h*t*(1-t)).toFixed(1) + 'px) rotate(' + ((dx >= 0 ? 1 : -1) * 360 * Math.min(1, Math.max(0, (t - .2) / .6))).toFixed(0) + 'deg)'}); }
     inner.animate([{transform:'scaleX(' + (dx >= 0 ? 1 : -1) + ') scaleY(.8)'},{transform:'scaleX(' + (dx >= 0 ? 1 : -1) + ') scaleY(1.08)'}], {duration:220, easing:'ease-out'});
-    const anim = sq.animate(kf, {duration:950, easing:'linear', fill:'forwards'});
+    const anim = sq.animate(kf, {duration:1350, easing:'linear', fill:'forwards'});
     anim.onfinish = () => {
       sq.style.left = a1.x + 'px'; sq.style.top = a1.y + 'px'; anim.cancel();
       inner.style.transform = 'scaleX(' + (a1.side > 0 ? -1 : 1) + ')';
@@ -3030,11 +3064,18 @@ function playJourneyUnlockAnimation(fromIdx){
       const ang = i / 14 * Math.PI * 2, d = 38 + Math.random() * 30;
       st.animate([{transform:'translate(-50%,-50%) scale(.2)',opacity:1},{transform:'translate(calc(-50% + ' + (Math.cos(ang)*d) + 'px),calc(-50% + ' + (Math.sin(ang)*d) + 'px)) scale(1.2) rotate(120deg)',opacity:0}], {duration:900 + Math.random()*400, easing:'ease-out'}).onfinish = () => st.remove();
     }
-    try {
-      const r = nextNode.getBoundingClientRect(), ar = app.getBoundingClientRect(), q = { x: r.left + r.width / 2 - ar.left, y: r.top + r.height / 2 - ar.top };
-      ring(q.x, q.y, '#fde047', 90); setTimeout(() => ring(q.x, q.y, '#fff', 130), 160);
-      sparkBurst(q.x, q.y, '#fde047', 14, 1.4); SND.win && buzz([30, 40, 30]);
-    } catch(e){}
+    /* ışık huzmesi */
+    const beam = document.createElement('div'); beam.className = 'jr-beam';
+    beam.style.left = P[nextIdx].x + 'px'; beam.style.top = P[nextIdx].y + 'px';
+    beam.innerHTML = '<i class="b-core"></i><i class="b-halo"></i><i class="b-base"></i>';
+    canvas.appendChild(beam);
+    for (let k = 0; k < 10; k++){
+      const m = document.createElement('i'); m.className = 'jr-mote';
+      m.style.left = (P[nextIdx].x + (Math.random() - .5) * 34) + 'px'; m.style.top = P[nextIdx].y + 'px';
+      canvas.appendChild(m);
+      m.animate([{transform:'translate(-50%,0) scale(1)',opacity:0},{opacity:1,offset:.2},{transform:'translate(-50%,' + (-90 - Math.random()*110) + 'px) scale(.3)',opacity:0}], {duration:1300 + Math.random()*900, delay:Math.random()*500, easing:'ease-out', fill:'backwards'}).onfinish = () => m.remove();
+    }
+    setTimeout(() => beam.remove(), 2600);
     nextNode.classList.add('jr-glow');
     setTimeout(() => nextNode.classList.remove('jr-glow'), 2600);
   }
@@ -3166,7 +3207,7 @@ function drawMap(scroll){
     const p = P[i], dn = S.done[i], ok = i <= S.maxOpen, isCur = i === cur && ok && !dn;
     const st = dn ? '<span class="jr-stars">' + [1, 2, 3].map(k => '<svg class="i st' + (k <= dn.stars ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>' : '';
     nodes += '<div class="jr-nw" style="left:' + p.x.toFixed(1) + 'px;top:' + p.y.toFixed(1) + 'px;--c:' + GROUPS[d.group][1] + '">' +
-            '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '">' + (ok ? (i + 1) : iconSVG('lock')) + '</button>' + st +
+            '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '">' + (i + 1) + '</button>' + st +
       '</div>';
   });
   wrap.style.height = H + 'px';
