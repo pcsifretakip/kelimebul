@@ -1015,6 +1015,33 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #modal-victory .btn-main{width:100%}
 
 
+/* ===== YOLCULUK: neon bölüm listesi ===== */
+.journey-list-view{
+  position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;overflow:hidden;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(124,58,237,.32),transparent 36%),
+    radial-gradient(circle at 0 55%,rgba(14,165,233,.13),transparent 35%),
+    radial-gradient(circle at 100% 78%,rgba(34,197,94,.12),transparent 34%),
+    linear-gradient(180deg,#090716 0%,#100b25 48%,#070611 100%);
+}
+.journey-list-view::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.38;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,black,transparent 92%)}
+.journey-list-head{position:relative;z-index:2;display:grid;grid-template-columns:48px 1fr 64px;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 12px}
+.journey-list-back,.journey-list-score{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:rgba(18,14,39,.88);border:1px solid rgba(255,255,255,.16);box-shadow:0 0 16px rgba(124,58,237,.18),inset 0 1px 0 rgba(255,255,255,.12)}
+.journey-list-back{color:#fbbf24;cursor:pointer}.journey-list-back .i{width:24px;height:24px;fill:currentColor}.journey-list-back:active{transform:scale(.94)}
+.journey-list-score{width:58px;justify-self:end;display:flex;gap:5px;color:#fde68a;font-size:14px}.journey-list-score .i{width:21px;height:21px;fill:#fbbf24;filter:drop-shadow(0 0 6px #f59e0b)}
+.journey-list-title-wrap{text-align:center;min-width:0}.journey-list-kicker{font-size:10px;font-weight:1000;letter-spacing:.24em;color:#a78bfa;text-shadow:0 0 10px rgba(167,139,250,.75);margin-bottom:2px}.journey-list-title-wrap h2{margin:0;color:#fff;font-size:23px;font-weight:1000;letter-spacing:.08em;text-shadow:0 0 8px rgba(255,255,255,.18),0 0 24px rgba(139,92,246,.45)}.journey-list-title-wrap span{display:block;margin-top:3px;color:rgba(255,255,255,.48);font-size:10px;font-weight:700}
+.journey-list{position:relative;z-index:2;flex:1;min-height:0;overflow-y:auto;padding:5px 14px calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:11px;scrollbar-width:none}.journey-list::-webkit-scrollbar{display:none}
+.journey-card{--neon:#8b5cf6;position:relative;width:100%;min-height:76px;box-sizing:border-box;border-radius:20px;padding:9px 12px;display:grid;grid-template-columns:48px minmax(0,1fr) auto;align-items:center;gap:11px;text-align:left;color:#fff;overflow:hidden;cursor:pointer;background:linear-gradient(105deg,rgba(27,20,58,.96),rgba(12,10,27,.96));border:1.5px solid color-mix(in srgb,var(--neon) 72%,white 8%);box-shadow:0 0 8px color-mix(in srgb,var(--neon) 24%,transparent),0 0 22px color-mix(in srgb,var(--neon) 12%,transparent),inset 0 0 18px color-mix(in srgb,var(--neon) 7%,transparent);transition:transform .15s,filter .15s,box-shadow .2s}
+.journey-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--neon);box-shadow:0 0 9px var(--neon),0 0 22px var(--neon);opacity:.95}.journey-card::after{content:"";position:absolute;top:-40%;left:-25%;width:32%;height:180%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.13),transparent);transform:rotate(18deg);animation:journeyShine 4.6s ease-in-out infinite;pointer-events:none}@keyframes journeyShine{0%,65%{left:-35%;opacity:0}72%{opacity:1}100%{left:125%;opacity:0}}
+.journey-card:active:not(.locked){transform:scale(.975)}.journey-card.current{box-shadow:0 0 12px color-mix(in srgb,var(--neon) 55%,transparent),0 0 32px color-mix(in srgb,var(--neon) 26%,transparent),inset 0 0 22px color-mix(in srgb,var(--neon) 10%,transparent);animation:journeyCurrent 1.9s ease-in-out infinite}@keyframes journeyCurrent{0%,100%{filter:brightness(1)}50%{filter:brightness(1.16)}}
+.journey-card.done{border-color:#fbbf24;--neon:#fbbf24;box-shadow:0 0 12px rgba(251,191,36,.42),0 0 25px rgba(251,191,36,.18),inset 0 0 20px rgba(251,191,36,.08)}
+.journey-card.locked{cursor:not-allowed;opacity:.48;filter:grayscale(.72);border-color:rgba(255,255,255,.13);box-shadow:none}.journey-card.locked::before{background:#687080;box-shadow:none}.journey-card.locked::after{display:none}
+.journey-num{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:17px;font-weight:1000;color:#fff;background:radial-gradient(circle at 35% 25%,color-mix(in srgb,var(--neon) 70%,white 8%),color-mix(in srgb,var(--neon) 55%,#111 45%));border:1px solid rgba(255,255,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 0 12px color-mix(in srgb,var(--neon) 38%,transparent);text-shadow:0 2px 3px #000}.journey-card.locked .journey-num{background:#252936;border-color:#555b68;color:#8a91a0;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.journey-info{min-width:0}.journey-name{font-size:15px;font-weight:1000;line-height:1.12;letter-spacing:.015em;white-space:normal}.journey-sub{margin-top:4px;font-size:9px;font-weight:800;letter-spacing:.06em;color:color-mix(in srgb,var(--neon) 72%,white 28%);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.journey-card.locked .journey-sub{color:#777d8d}
+.journey-state{min-width:58px;text-align:right;font-size:9px;font-weight:1000;letter-spacing:.08em}.journey-state .play{color:#fff;background:var(--neon);border-radius:999px;padding:7px 9px;box-shadow:0 0 12px color-mix(in srgb,var(--neon) 50%,transparent)}.journey-state .done-label{color:#fbbf24}.journey-state .lock-label2{color:#777d8d;display:flex;align-items:center;justify-content:flex-end;gap:4px}.journey-state .lock-label2 .i{width:17px;height:17px}
+.journey-stars{display:flex;gap:1px;margin-top:4px}.journey-stars .i{width:14px;height:14px;fill:rgba(255,255,255,.15);color:rgba(255,255,255,.15)}.journey-stars .on{fill:#fbbf24;color:#fbbf24;filter:drop-shadow(0 0 5px rgba(251,191,36,.8))}
+@media(max-width:380px){.journey-list{padding-left:10px;padding-right:10px}.journey-card{grid-template-columns:43px minmax(0,1fr) auto;gap:9px}.journey-num{width:41px;height:41px}.journey-name{font-size:14px}.journey-list-title-wrap h2{font-size:20px}}
+
 /* ===== YOLCULUK (harita) ===== */
 .app.on-journey .topbar{display:none}
 .jr{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;overflow:hidden;background:#79bf56}
@@ -1680,10 +1707,17 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
     </section>
 
     <!-- MOD SEÇİMİ (kaydırmalı sahne) -->
-    <section id="view-modes" class="view off modes jr">
-      <div class="jr-hud"><div class="jr-score" id="jr-score"><svg class="i"><use href="#i-star"/></svg><span id="jr-score-v">0/0</span></div><button class="jr-set" id="jr-set" aria-label="Ayarlar"><svg class="i"><use href="#i-gear"/></svg></button></div>
-      <button class="jr-home" id="jr-home" aria-label="Ana sayfa"><svg class="i"><use href="#i-home"/></svg></button>
-      <div class="jr-map" id="jr-map"><div class="jr-vbg" id="jr-vbg"><video src="harita.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto"></video></div><div class="jr-wrap" id="jr-wrap"></div></div>
+    <section id="view-modes" class="view off modes journey-list-view">
+      <div class="journey-list-head">
+        <button class="journey-list-back" id="jr-home" aria-label="Ana sayfa"><svg class="i"><use href="#i-home"/></svg></button>
+        <div class="journey-list-title-wrap">
+          <div class="journey-list-kicker">YOLCULUK</div>
+          <h2>MACERANI SEÇ</h2>
+          <span>İlerledikçe yeni bölümlerin kilidi açılır</span>
+        </div>
+        <div class="journey-list-score"><svg class="i"><use href="#i-star"/></svg><b id="jr-score-v">0</b></div>
+      </div>
+      <div class="journey-list" id="journey-list"></div>
     </section>
 
     <!-- LEVEL SELECT -->
@@ -3258,9 +3292,33 @@ function journeyScenerySVG(H){
 }
 const JR_EMO = ['🌴','🏔️','🏜️','🌊','⛰️','🎈','🐠','🐧','🌲','🌋','🐢','🌵','🏞️','🏺','✨','♨️','🌳','❄️','🦎','💦'];
 function renderModes(){
-  drawMap();
-  const title = document.querySelector('#view-modes .jr-title, #view-modes h1, #view-modes h2');
-  if (title && !title.dataset.fixed) { title.textContent = 'YOLCULUK'; title.dataset.fixed = '1'; }
+  const list = $('journey-list');
+  if (!list) return;
+  let totalStars = 0;
+  Object.keys(S.done || {}).forEach(k => { if (S.done[k]) totalStars += Number(S.done[k].stars || 0); });
+  const score = $('jr-score-v'); if (score) score.textContent = totalStars;
+  list.innerHTML = '';
+  LEVELS.forEach((d, i) => {
+    const th = themeOf(d);
+    const done = S.done[i];
+    const unlocked = i <= S.maxOpen;
+    const current = unlocked && !done && i === S.maxOpen;
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'journey-card ' + (done ? 'done' : current ? 'current' : unlocked ? 'open' : 'locked');
+    b.style.setProperty('--neon', th.color);
+    const stars = done ? '<div class="journey-stars">' + [1,2,3].map(n => '<svg class="i ' + (n <= done.stars ? 'on' : '') + '"><use href="#i-star"/></svg>').join('') + '</div>' : '';
+    let state = '';
+    if (!unlocked) state = '<span class="lock-label2"><svg class="i"><use href="#i-lock"/></svg>KİLİTLİ</span>';
+    else if (done) state = '<span class="done-label">✓ TAMAMLANDI</span>' + stars;
+    else state = '<span class="play">OYNA</span>';
+    b.innerHTML = '<span class="journey-num">' + (unlocked ? (done ? '✓' : i + 1) : '🔒') + '</span>' +
+      '<span class="journey-info"><span class="journey-name">' + d.category + '</span><span class="journey-sub">' + (d.subtitle || ('BÖLÜM ' + (i+1))) + '</span>' + (done ? stars : '') + '</span>' +
+      '<span class="journey-state">' + state + '</span>';
+    if (unlocked) b.addEventListener('click', () => { audio(); showGame(i); });
+    else b.setAttribute('aria-disabled','true');
+    list.appendChild(b);
+  });
 }
 /* Harita.png yolu: resim koordinatlarında (940x1672) yol merkez noktaları, alttan üste */
 let JR_ART_H = 1672; // resmin gerçekten dolu olan yüksekliği (altı boş/siyah)
@@ -3382,7 +3440,7 @@ function setView(name){
   viewLogin.classList.toggle('off', name !== 'login');
   viewLogin.classList.remove('enter'); if (name === 'login'){ void viewLogin.offsetWidth; viewLogin.classList.add('enter'); }
   app.classList.toggle('on-login', name === 'login');
-  app.classList.toggle('on-journey', name === 'modes');
+  app.classList.toggle('on-journey', false);
   app.classList.toggle('on-game', name === 'game');
   closeMenu();
 }
