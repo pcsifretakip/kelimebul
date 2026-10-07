@@ -1578,11 +1578,48 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .jm-set .i,.journey-map-screen .jm-home .i{width:28px;height:28px;fill:currentColor}
 .journey-map-screen .jm-home{position:absolute;left:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);z-index:6;font-size:0}
 .jm-set:active,.journey-map-screen .jm-home:active{transform:translateY(2px)}
+.jm-right{display:flex;gap:10px;align-items:center;pointer-events:none}.jm-right .jm-set{pointer-events:auto}
 .app.on-journey .smenu{z-index:200}
 .jm-loading{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:radial-gradient(circle at 50% 40%,#1f6a31,#0d2a14);color:#ffe36b;letter-spacing:.2em;font-size:18px;transition:opacity .35s,visibility .35s}
 .jm-loading.hide{opacity:0;visibility:hidden;pointer-events:none}
 .jm-spin{width:54px;height:54px;border-radius:50%;border:5px solid rgba(255,227,107,.25);border-top-color:#ffd54a;animation:jmSpin .9s linear infinite}
 @keyframes jmSpin{to{transform:rotate(360deg)}}
+/* ===== Yükleniyor ekranı (yeni) ===== */
+.jm-loading{background:radial-gradient(ellipse at 50% 110%,#ff9d2e 0%,rgba(255,120,40,.0) 45%),radial-gradient(ellipse at 20% 0%,#3a1a78 0%,rgba(58,26,120,0) 55%),linear-gradient(180deg,#0a1230 0%,#0c2c4a 45%,#103f3c 100%)!important;overflow:hidden;gap:0!important;letter-spacing:0!important}
+.jm-ld-rays{position:absolute;left:50%;top:46%;width:230vmax;height:230vmax;margin:-115vmax 0 0 -115vmax;background:repeating-conic-gradient(from 0deg,rgba(255,226,120,.12) 0deg 8deg,rgba(255,226,120,0) 8deg 24deg);-webkit-mask-image:radial-gradient(circle,#000 0,transparent 22%);mask-image:radial-gradient(circle,#000 0,transparent 22%);animation:jmRays 24s linear infinite}
+@keyframes jmRays{to{transform:rotate(360deg)}}
+.jm-ld-orbs{position:absolute;inset:0;pointer-events:none}
+.jm-ld-orbs span{position:absolute;left:var(--x);bottom:-20px;width:var(--s);height:var(--s);border-radius:50%;background:hsl(var(--h),100%,70%);box-shadow:0 0 10px 3px hsla(var(--h),100%,65%,.75);opacity:0;animation:jmOrb var(--d) linear var(--dl) infinite}
+@keyframes jmOrb{0%{transform:translate(0,0);opacity:0}15%{opacity:.95}50%{transform:translate(24px,-45vh)}100%{transform:translate(-18px,-105vh);opacity:0}}
+.jm-ld-center{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:16px;width:min(78vw,340px)}
+.jm-ld-ring{position:relative;width:112px;height:112px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(from 0deg,#ffe14d,#ff7ab8,#5ee6ff,#7dff6a,#ffe14d);animation:jmSpin 2.4s linear infinite;box-shadow:0 0 28px rgba(255,214,90,.65),0 0 60px rgba(94,230,255,.3)}
+.jm-ld-ring::before{content:"";position:absolute;inset:7px;border-radius:50%;background:#0b1b33}
+.jm-ld-core{position:absolute;inset:0;display:grid;place-items:center;animation:jmSpinRev 2.4s linear infinite}
+.jm-ld-core .i{width:52px;height:52px;fill:#ffd23f;filter:drop-shadow(0 0 10px rgba(255,210,63,.9));animation:jmBeat 1.2s ease-in-out infinite}
+@keyframes jmSpinRev{to{transform:rotate(-360deg)}}
+@keyframes jmBeat{50%{transform:scale(1.18)}}
+.jm-ld-text{display:flex;gap:2px;font-size:26px;font-weight:1000;color:#fff7c9;text-shadow:0 2px 0 #7a4a00,0 0 14px rgba(255,214,90,.7)}
+.jm-ld-text span{display:inline-block;animation:jmWave 1.3s ease-in-out infinite;animation-delay:calc(var(--i)*.09s)}
+@keyframes jmWave{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-9px);color:#fff}}
+.jm-ld-sub{font-size:13px;font-weight:800;letter-spacing:.14em;color:#bfe9ff;text-transform:uppercase;opacity:.9}
+.jm-ld-sub em{font-style:normal;animation:jmDot 1.2s infinite}.jm-ld-sub em:nth-child(2){animation-delay:.2s}.jm-ld-sub em:nth-child(3){animation-delay:.4s}
+@keyframes jmDot{0%,100%{opacity:.2}50%{opacity:1}}
+.jm-bar{width:100%;height:12px;border-radius:99px;background:rgba(255,255,255,.14);border:2px solid rgba(255,226,120,.55);overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,.4)}
+.jm-bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#ffb300,#ffe14d,#7dff6a);box-shadow:0 0 12px rgba(255,225,77,.9)}
+.jm-loading:not(.hide) .jm-bar i{animation:jmBar 2s cubic-bezier(.3,.7,.3,1) forwards}
+@keyframes jmBar{to{width:92%}}
+/* ===== Bölüm açılış efekti: ışık huzmesi + renkli noktalar ===== */
+.jm-fx{position:absolute;width:0;height:0;z-index:3;pointer-events:none}
+.jm-beam{position:absolute;left:-34px;bottom:0;width:68px;height:min(78vh,560px);transform-origin:50% 100%;background:linear-gradient(to top,rgba(255,250,200,.98),rgba(255,226,110,.6) 38%,rgba(255,226,110,0));-webkit-mask-image:linear-gradient(to right,transparent,#000 32%,#000 68%,transparent);mask-image:linear-gradient(to right,transparent,#000 32%,#000 68%,transparent);filter:blur(1.5px);animation:jmBeam 3s ease-out forwards}
+.jm-beam.b2{left:-12px;width:24px;background:linear-gradient(to top,#fff,rgba(255,255,255,.55) 45%,rgba(255,255,255,0));animation-delay:.1s}
+@keyframes jmBeam{0%{transform:scaleY(0);opacity:0}12%{opacity:1}35%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
+.jm-ring{position:absolute;left:-20px;top:-20px;width:40px;height:40px;border-radius:50%;border:4px solid #fff3a0;box-shadow:0 0 18px #ffe14d;opacity:0;animation:jmRing 1.4s ease-out .1s forwards}
+@keyframes jmRing{0%{transform:scale(.3);opacity:1}100%{transform:scale(4.2);opacity:0}}
+.jm-fx i{position:absolute;left:0;top:0;width:var(--sz);height:var(--sz);margin:calc(var(--sz)/-2);border-radius:50%;background:var(--c);box-shadow:0 0 8px 2px var(--c);opacity:0;animation:jmSpark 2.2s ease-out var(--dl) forwards}
+@keyframes jmSpark{0%{transform:translate(0,0) scale(.3);opacity:0}12%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.5);opacity:0}}
+.jm-node.jm-pop{animation:jmPopIn .7s cubic-bezier(.2,1.6,.4,1)}
+@keyframes jmPopIn{0%{transform:translate(-50%,-50%) scale(.4);filter:brightness(2.5)}60%{transform:translate(-50%,-50%) scale(1.25)}100%{transform:translate(-50%,-50%) scale(1);filter:none}}
+
 
 
 </style>
@@ -3286,7 +3323,7 @@ $('btn-next-level').addEventListener('click', () => {
     iris.className = 'iris in';
     setTimeout(() => {
       modal.classList.remove('show','leave');
-      try { showJourneyMap(0); } catch(e){ showLevels(); }
+      try { const nx = fromIdx + 1; showJourneyMap(0, { unlock: (nx < Math.min(10, LEVELS.length) && !S.done[nx]) ? nx : -1 }); } catch(e){ showLevels(); }
       requestAnimationFrame(() => { iris.className = 'iris out'; });
       setTimeout(() => { iris.className = 'iris'; irisBusy = false; }, 600);
     }, 520);
@@ -3466,7 +3503,8 @@ function renderLevels(){
   LEVELS.forEach((d, i) => {
     const th = themeOf(d), done = S.done[i];
     if (done) doneCount++;
-    const unlocked = i <= S.maxOpen;
+    const pendingUnlock = (i === unlockIdx);
+    const unlocked = i <= S.maxOpen && !pendingUnlock;
     const b = document.createElement('button');
     b.className = 'lv-card ' + (done ? 'done' : (unlocked ? 'cur' : 'lock'));
     b.style.setProperty('--neon', th.color);
@@ -4681,28 +4719,36 @@ function ensureJourneyMap(){
     <div class="jm-vignette"></div>
     <header class="jm-head">
       <div class="jm-score" aria-label="İlerleme"><svg class="i"><use href="#i-star"/></svg><b id="jm-score-v">0/30</b></div>
-      <button type="button" class="jm-set jm-backbtn" aria-label="Geri"><svg class="i" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></button>
+      <div class="jm-right"><button type="button" class="jm-set jm-gear" aria-label="Ayarlar"><svg class="i"><use href="#i-gear"/></svg></button>
+      <button type="button" class="jm-set jm-backbtn" aria-label="Geri"><svg class="i" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></button></div>
     </header>
     <div class="jm-map-area"><div id="jm-nodes"></div></div>
-    <div class="jm-loading" id="jm-loading"><div class="jm-spin"></div><b>YÜKLENİYOR</b></div>
+    <div class="jm-loading" id="jm-loading">
+      <div class="jm-ld-rays"></div>
+      <div class="jm-ld-orbs">${Array.from({length:18},(_,i)=>`<span style="--x:${(i*53)%100}%;--s:${4+(i*7)%9}px;--d:${5+(i*3)%6}s;--dl:${-(i*0.7).toFixed(1)}s;--h:${[48,160,300,42,190,330][i%6]}"></span>`).join('')}</div>
+      <div class="jm-ld-center">
+        <div class="jm-ld-ring"><div class="jm-ld-core"><svg class="i"><use href="#i-star"/></svg></div></div>
+        <div class="jm-ld-text">${'YÜKLENİYOR'.split('').map((c,i)=>`<span style="--i:${i}">${c}</span>`).join('')}</div>
+        <div class="jm-ld-sub">Macera hazırlanıyor<em>.</em><em>.</em><em>.</em></div>
+        <div class="jm-bar"><i></i></div>
+      </div>
+    </div>
   `;
   document.querySelector('.app')?.appendChild(journeyMapEl);
-  let jmLeaving = false;
   journeyMapEl.querySelector('.jm-backbtn').addEventListener('click', () => {
-    if (jmLeaving) return; jmLeaving = true;
     audio();
-    const ld = journeyMapEl.querySelector('#jm-loading');
-    if (ld) ld.classList.remove('hide');
-    setTimeout(() => {
-      journeyMapEl.classList.remove('show');
-      showLevels();
-      if (ld) ld.classList.add('hide');
-      jmLeaving = false;
-    }, 2000);
+    journeyMapEl.classList.remove('show');
+    showLevels();
+  });
+  journeyMapEl.querySelector('.jm-gear').addEventListener('click', e => {
+    e.stopPropagation(); audio(); refreshSettings(); menuEl.classList.toggle('show');
   });
   return journeyMapEl;
 }
-function showJourneyMap(chapterIndex){
+function showJourneyMap(chapterIndex, opts){
+  opts = opts || {};
+  const unlockIdx = (opts.unlock === undefined) ? -1 : opts.unlock;
+  let afterLoad = null;
   const idx = Number(chapterIndex) || 0;
   if (idx > S.maxOpen) { toast('Önceki bölümü tamamla.'); return; }
   leaveGame();
@@ -4715,7 +4761,7 @@ function showJourneyMap(chapterIndex){
   { const ld = el.querySelector('#jm-loading'); if (ld) {
       ld.classList.remove('hide');
       let minDone = false, vidDone = !vid || vid.readyState >= 3, closed = false;
-      const tryHide = () => { if (!closed && minDone && vidDone) { closed = true; ld.classList.add('hide'); } };
+      const tryHide = () => { if (!closed && minDone && vidDone) { closed = true; ld.classList.add('hide'); if (afterLoad) setTimeout(afterLoad, 500); } };
       setTimeout(() => { minDone = true; tryHide(); }, 2000);
       if (!vidDone) {
         const ok = () => { vidDone = true; tryHide(); };
@@ -4731,7 +4777,8 @@ function showJourneyMap(chapterIndex){
   const levelCount = Math.min(10, LEVELS.length);
   for (let i=0;i<levelCount;i++){
     const done = !!S.done[i];
-    const unlocked = i <= S.maxOpen;
+    const pendingUnlock = (i === unlockIdx);
+    const unlocked = i <= S.maxOpen && !pendingUnlock;
     const b = document.createElement('button');
     b.type='button';
     const isCur = unlocked && !done && i === S.maxOpen;
@@ -4742,6 +4789,29 @@ function showJourneyMap(chapterIndex){
     b.setAttribute('aria-label', d.category + ' seviye ' + (i+1));
     if (unlocked) b.addEventListener('click',()=>{ audio(); showGame(i); });
     nodes.appendChild(b);
+    if (pendingUnlock) {
+      afterLoad = () => {
+        const fx = document.createElement('div');
+        fx.className = 'jm-fx';
+        fx.style.left = positions[i][0] + '%'; fx.style.top = positions[i][1] + '%';
+        const cols = ['#ffe14d','#ff5fa2','#5ee6ff','#7dff6a','#ff9a3c','#c78bff','#ffffff'];
+        let h = '<div class="jm-ring"></div><div class="jm-beam"></div><div class="jm-beam b2"></div>';
+        for (let k = 0; k < 34; k++) {
+          const side = (Math.random() - .5) * 190, up = 50 + Math.random() * 300, sz = 4 + Math.random() * 7;
+          h += '<i style="--dx:' + side.toFixed(0) + 'px;--dy:-' + up.toFixed(0) + 'px;--sz:' + sz.toFixed(1) + 'px;--c:' + cols[k % cols.length] + ';--dl:' + (Math.random() * 1.1).toFixed(2) + 's"></i>';
+        }
+        fx.innerHTML = h;
+        nodes.appendChild(fx);
+        try { SND.win && SND.win(); } catch(_){}
+        buzz && buzz(30);
+        setTimeout(() => {
+          b.className = 'jm-node cur jm-pop';
+          b.innerHTML = String(i + 1);
+          b.addEventListener('click', () => { audio(); showGame(i); });
+        }, 650);
+        setTimeout(() => fx.remove(), 3600);
+      };
+    }
   }
   setView('home');
   viewHome.classList.add('off');
