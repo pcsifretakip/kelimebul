@@ -232,7 +232,7 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
     linear-gradient(160deg,#3a2299,#170e4c 55%,#0f0838);
   box-shadow:0 0 0 2px rgba(251,191,36,.75),0 0 0 6px rgba(124,92,255,.45),0 0 34px rgba(124,92,255,.5),0 24px 50px rgba(0,0,0,.55),inset 0 0 46px rgba(124,92,255,.25);
 }
-.cap-layer{position:absolute;inset:0;z-index:1;pointer-events:none}
+.cap-layer{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:visible}
 .cell{
   position:relative;z-index:2;display:flex;align-items:center;justify-content:center;
   border-radius:12px;background:rgba(255,255,255,.075);
@@ -240,26 +240,35 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
   font-size:clamp(14px,5.6vw,28px);font-size:calc(min(100cqw - 18px, 100cqh - 18px) / var(--n) * .56);
   transition:color .15s,transform .12s;
 }
-.cell.sel{color:#fff;transform:scale(1.14)}
+.cell.sel{color:#fff;transform:scale(1.13);text-shadow:0 0 8px #fff,0 0 16px #22d3ee,0 2px 0 rgba(0,0,0,.35);filter:drop-shadow(0 0 7px rgba(34,211,238,.75));}
+.cell.sel::after{content:"";position:absolute;inset:5%;border-radius:inherit;border:2px solid rgba(103,232,249,.7);box-shadow:0 0 12px rgba(34,211,238,.75),inset 0 0 10px rgba(34,211,238,.22);animation:selPulse .65s ease-in-out infinite alternate;pointer-events:none}
+@keyframes selPulse{from{opacity:.55;transform:scale(.94)}to{opacity:1;transform:scale(1.06)}}
 .cell.found{color:#fff}
 .cell.pop{animation:letterPop .5s cubic-bezier(.3,1.4,.5,1) both;animation-delay:var(--d)}
 @keyframes letterPop{0%{transform:scale(1)}35%{transform:scale(1.6) rotate(-7deg)}65%{transform:scale(.9)}100%{transform:scale(1)}}
 .cell.hint::after{content:"";position:absolute;inset:-3px;border-radius:14px;border:3px solid var(--gold);animation:hintRing .8s ease-out 3}
 @keyframes hintRing{0%{transform:scale(.7);opacity:1;box-shadow:0 0 0 0 rgba(251,191,36,.7)}100%{transform:scale(1.25);opacity:0;box-shadow:0 0 0 12px rgba(251,191,36,0)}}
 
-/* gerçek fırça darbesi: kıllı uçlu, kuru fırça izli boya (maske JS ile üretilir) */
-.cap{position:absolute;overflow:visible;background-color:var(--c);
-  background-image:repeating-linear-gradient(177deg,rgba(0,0,0,.16) 0 1px,transparent 1px 5px),repeating-linear-gradient(183deg,rgba(255,255,255,.16) 0 1px,transparent 1px 7px);
-  -webkit-mask-image:var(--m);mask-image:var(--m);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
-  filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.4));transform-origin:center}
-.cap::before,.cap::after{display:none}
-.cap:not(.drag):not(.bad){opacity:.88}
-.cap.new{animation:capWipe .38s ease-out backwards}
-@keyframes capWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
-.cap.drag{--c:#22d3ee;opacity:.9}
-.cap.bad{--c:#ef4444;animation:capBad .38s ease-out forwards}
-@keyframes capBad{0%,100%{translate:0 0}20%{translate:-4px 0}40%{translate:4px 0}60%{translate:-3px 0}80%{translate:2px 0}}
+/* ===== ELEKTRİK BAĞLANTISI EFEKTİ ===== */
+.cap{position:absolute;inset:0;width:100%!important;height:100%!important;overflow:visible;pointer-events:none;transform:none!important}
+.cap svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.cap .ec-glow{fill:none;stroke:var(--c);stroke-width:18;stroke-linecap:round;stroke-linejoin:round;opacity:.20;filter:blur(7px);}
+.cap .ec-aura{fill:none;stroke:var(--c);stroke-width:9;stroke-linecap:round;stroke-linejoin:round;opacity:.72;filter:drop-shadow(0 0 7px var(--c));}
+.cap .ec-core{fill:none;stroke:#eaffff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;opacity:.98;stroke-dasharray:8 10;animation:ecFlow .55s linear infinite;}
+.cap .ec-node{fill:var(--c);stroke:#eaffff;stroke-width:2;filter:drop-shadow(0 0 7px var(--c));}
+.cap .ec-ring{fill:none;stroke:var(--c);stroke-width:2;opacity:.9;transform-box:fill-box;transform-origin:center;animation:ecRing .7s ease-out infinite;}
+.cap .ec-spark{fill:#fff;filter:drop-shadow(0 0 5px var(--c));animation:ecSpark .55s ease-out infinite alternate;}
+.cap .ec-burst{fill:var(--c);opacity:.8;filter:drop-shadow(0 0 5px var(--c));animation:ecBurst .7s ease-out infinite;}
+.cap.drag{--c:#22d3ee;opacity:1}
+.cap.new{animation:ecAppear .28s cubic-bezier(.2,1.5,.4,1) both}
+.cap.bad{--c:#ef4444;animation:ecBad .38s ease-out forwards}
 .cap.bad.out{opacity:0;transition:opacity .22s}
+@keyframes ecFlow{to{stroke-dashoffset:-36}}
+@keyframes ecRing{0%{transform:scale(.55);opacity:.95}100%{transform:scale(1.5);opacity:0}}
+@keyframes ecSpark{from{opacity:.25;transform:scale(.65)}to{opacity:1;transform:scale(1.35)}}
+@keyframes ecBurst{0%{opacity:.9;transform:scale(.4)}100%{opacity:0;transform:scale(1.8)}}
+@keyframes ecAppear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+@keyframes ecBad{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
 
 .status{
   display:none;align-items:center;gap:10px;padding:9px 14px;border-radius:16px;
@@ -1767,6 +1776,15 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
   background:url('vic-buton.png?v=1') center/100% 100% no-repeat;display:flex;align-items:center;justify-content:center;
   font-size:clamp(17px,5.6vw,22px);letter-spacing:.05em;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.45)}
 #modal-victory .btn-main:active{transform:translateY(3px) scale(.985)!important;box-shadow:none}
+
+/* HOME UI SIZE ADJUSTMENTS */
+.app.on-home #btn-avatar.icon-btn { width:54px !important; height:54px !important; padding:7px !important; }
+.app.on-home .topbar .coin { width:154px !important; height:49px !important; padding:0 10px 0 46px !important; background-size:100% 100% !important; }
+.app.on-home .topbar .coin b, .app.on-home .topbar .coin span { font-size:14px !important; }
+#view-home .home-actions { width:100% !important; max-width:360px !important; gap:8px !important; }
+#view-home .home-img-btn { width:84% !important; max-width:350px !important; }
+#view-home .home-img-btn img { width:100% !important; height:auto !important; }
+@media (max-width:380px) { #view-home .home-img-btn { width:88% !important; } #view-home .home-actions { max-width:340px !important; } }
 </style>
 </head>
 <body>
@@ -2920,48 +2938,74 @@ function measure(){
 const center = (r, c) => ({ x: S.geo.x0 + c * S.geo.px, y: S.geo.y0 + r * S.geo.py });
 
 function placeCap(el, a, b){
-  const A = center(a.r, a.c), B = center(b.r, b.c), h = S.geo.cell * .86;
-  const dx = B.x - A.x, dy = B.y - A.y;
-  el.style.width = (Math.hypot(dx, dy) + h) + 'px';
-  el.style.height = h + 'px';
-  el.style.left = (A.x - h / 2) + 'px';
-  el.style.top = (A.y - h / 2) + 'px';
-  el.style.transformOrigin = (h / 2) + 'px 50%';
-  el.style.transform = 'rotate(' + Math.atan2(dy, dx) + 'rad)';
+  if (!el) return;
+  const path = el._path || [a, b];
+  renderElectricCap(el, path);
 }
-/* fırça darbesi maskeleri: kıllı uçlu, aralarında kuru fırça boşlukları olan şeritler */
-const BRUSH_MASKS = (function(){
-  return [11, 29, 47, 83].map(seed => {
-    const rnd = mulberry32(seed * 977);
-    let d = '';
-    const n = 11, h = 6.4;
-    for (let i = 0; i < n; i++){
-      const y0 = 2 + i * (56 / n), ym = y0 + h / 2, edge = (i === 0 || i === n - 1);
-      const xs = (rnd() < .5 ? rnd() * 8 : rnd() * 30) + (edge ? 14 : 0);
-      const xe = 300 - (rnd() < .5 ? rnd() * 8 : rnd() * 30) - (edge ? 14 : 0);
-      const j = rnd() * 1.4;
-      const seg = (x1, x2) => 'M' + x1.toFixed(1) + ' ' + ym.toFixed(1) + 'L' + (x1 + 9).toFixed(1) + ' ' + y0.toFixed(1) +
-        'L' + (x2 - 9).toFixed(1) + ' ' + (y0 + j).toFixed(1) + 'L' + x2.toFixed(1) + ' ' + ym.toFixed(1) +
-        'L' + (x2 - 9).toFixed(1) + ' ' + (y0 + h).toFixed(1) + 'L' + (x1 + 9).toFixed(1) + ' ' + (y0 + h - j).toFixed(1) + 'Z';
-      if (rnd() < .4){
-        const g = 70 + rnd() * 160, gw = 2 + rnd() * 7;
-        d += seg(xs, g) + seg(g + gw, xe);
-      } else d += seg(xs, xe);
+
+function electricPathD(path){
+  if (!path || !path.length) return '';
+  const pts = path.map(p => center(p.r, p.c));
+  if (pts.length === 1) return `M ${pts[0].x} ${pts[0].y}`;
+  let d = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+  for (let i = 0; i < pts.length - 1; i++){
+    const A = pts[i], B = pts[i + 1];
+    const dx = B.x - A.x, dy = B.y - A.y, len = Math.hypot(dx, dy) || 1;
+    const nx = -dy / len, ny = dx / len;
+    const amp = Math.min(S.geo.cell * .18, len * .13) * (i % 2 ? -1 : 1);
+    const mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2;
+    const bend = {x: mx + nx * amp, y: my + ny * amp};
+    const c1 = {x: A.x + (B.x-A.x)*.34 + nx*amp*.45, y: A.y + (B.y-A.y)*.34 + ny*amp*.45};
+    const c2 = {x: B.x - (B.x-A.x)*.34 + nx*amp*.45, y: B.y - (B.y-A.y)*.34 + ny*amp*.45};
+    d += ` C ${c1.x.toFixed(1)} ${c1.y.toFixed(1)}, ${c2.x.toFixed(1)} ${c2.y.toFixed(1)}, ${bend.x.toFixed(1)} ${bend.y.toFixed(1)}`;
+    const c3 = {x: B.x - (B.x-A.x)*.16 - nx*amp*.2, y: B.y - (B.y-A.y)*.16 - ny*amp*.2};
+    d += ` C ${B.x-(B.x-A.x)*.16+nx*amp*.15} ${B.y-(B.y-A.y)*.16+ny*amp*.15}, ${c3.x.toFixed(1)} ${c3.y.toFixed(1)}, ${B.x.toFixed(1)} ${B.y.toFixed(1)}`;
+  }
+  return d;
+}
+
+function renderElectricCap(el, path){
+  if (!S.geo || !path || !path.length) return;
+  el._path = path;
+  const d = electricPathD(path);
+  const svg = el.querySelector('svg');
+  if (!svg) return;
+  const paths = svg.querySelectorAll('.ec-line');
+  paths.forEach(p => p.setAttribute('d', d));
+  svg.querySelectorAll('.ec-node,.ec-ring,.ec-spark,.ec-burst').forEach(n => n.remove());
+  path.forEach((p, i) => {
+    const c = center(p.r, p.c);
+    const node = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    node.setAttribute('cx', c.x); node.setAttribute('cy', c.y); node.setAttribute('r', Math.max(5, S.geo.cell*.12)); node.setAttribute('class','ec-node');
+    svg.appendChild(node);
+    const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    ring.setAttribute('cx', c.x); ring.setAttribute('cy', c.y); ring.setAttribute('r', Math.max(9, S.geo.cell*.22)); ring.setAttribute('class','ec-ring');
+    ring.style.animationDelay = (i * .08) + 's'; svg.appendChild(ring);
+    if (i < path.length - 1){
+      const A = c, B = center(path[i+1].r, path[i+1].c), dx=B.x-A.x, dy=B.y-A.y, len=Math.hypot(dx,dy)||1;
+      const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
+      for(let k=0;k<2;k++){
+        const sp = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        sp.setAttribute('cx', mx + (-dy/len)*(k?7:-7)); sp.setAttribute('cy', my + (dx/len)*(k?7:-7));
+        sp.setAttribute('r', k ? 2.2 : 1.7); sp.setAttribute('class','ec-spark'); sp.style.animationDelay=(i*.08+k*.13)+'s'; svg.appendChild(sp);
+      }
     }
-    const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60" preserveAspectRatio="none"><path d="' + d + '"/></svg>';
-    return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
   });
-})();
+}
+
 function makeCap(path, cls, color){
   const el = document.createElement('div');
   el.className = 'cap ' + cls;
-  const a0 = path[0], z = path[path.length - 1];
-  el.style.setProperty('--m', BRUSH_MASKS[(a0.r * 7 + a0.c * 3 + z.r * 5 + z.c) % BRUSH_MASKS.length]);
-  if (color) el.style.setProperty('--c', color);
+  el._path = path.map(p => ({r:p.r,c:p.c}));
+  el.style.setProperty('--c', color || (cls === 'drag' ? '#22d3ee' : '#22d3ee'));
+  el.innerHTML = `<svg viewBox="0 0 ${Math.max(1, gridEl.clientWidth)} ${Math.max(1, gridEl.clientHeight)}" preserveAspectRatio="none" aria-hidden="true">
+    <path class="ec-line ec-glow"></path><path class="ec-line ec-aura"></path><path class="ec-line ec-core"></path>
+  </svg>`;
   capLayer.appendChild(el);
-  placeCap(el, path[0], path[path.length - 1]);
+  renderElectricCap(el, path);
   return el;
 }
+
 // ızgara koordinatından uygulama koordinatına
 function toApp(x, y){
   const ar = app.getBoundingClientRect(), gr = gridEl.getBoundingClientRect();
@@ -3046,7 +3090,8 @@ gridEl.addEventListener('pointermove', e => {
   S.sel.path = path;
   updateLiveSelection(path);
   SND.tling(path.length - 1);
-  placeCap(S.dragCap, path[0], path[path.length - 1]);
+  S.dragCap._path = path.map(p => ({r:p.r,c:p.c}));
+  renderElectricCap(S.dragCap, S.dragCap._path);
 
 });
 const endSel = e => {
