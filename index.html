@@ -1718,6 +1718,9 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
   100%{opacity:0;transform:translate(calc(-50% + cos(var(--a))*var(--d)),calc(-50% + sin(var(--a))*var(--d))) scale(1.3)}
 }
 
+/* Kalıcı harita maymunu */
+.jm-monkey{position:absolute;width:84px;height:84px;margin:-30px 0 0 -118px;background:center/contain no-repeat;z-index:6;pointer-events:none;filter:drop-shadow(0 6px 6px rgba(0,0,0,.35));animation:jmMonkeyBob 1.7s ease-in-out infinite}
+@keyframes jmMonkeyBob{0%,100%{translate:0 0}50%{translate:0 -5px}}
 .jm-fx{position:absolute;width:0;height:0;z-index:3;pointer-events:none}
 .jm-beam{position:absolute;left:-34px;bottom:0;width:68px;height:min(78vh,560px);transform-origin:50% 100%;background:linear-gradient(to top,rgba(255,250,200,.98),rgba(255,226,110,.6) 38%,rgba(255,226,110,0));-webkit-mask-image:linear-gradient(to right,transparent,#000 32%,#000 68%,transparent);mask-image:linear-gradient(to right,transparent,#000 32%,#000 68%,transparent);filter:blur(1.5px);animation:jmBeam 3s ease-out forwards}
 .jm-beam.b2{left:-12px;width:24px;background:linear-gradient(to top,#fff,rgba(255,255,255,.55) 45%,rgba(255,255,255,0));animation-delay:.1s}
@@ -3506,59 +3509,6 @@ function playJourneyUnlockAnimation(fromIdx){
     return;
   }
 
-  /* Yeni bölüm açılış animasyonu */
-  setTimeout(() => {
-    const area = document.querySelector('#journey-map-screen.show .jm-map-area');
-    const node = area && (area.querySelector('.jm-node[data-i="' + nextIdx + '"]') || area.querySelectorAll('.jm-node')[nextIdx]);
-    if (!area || !node) return;
-
-    const old = area.querySelector('.jm-monkey-launch');
-    if (old) old.remove();
-
-    const monkey = document.createElement('div');
-    monkey.className = 'jm-monkey-launch jm-monkey-wait';
-    monkey.style.left = node.style.left;
-    monkey.style.top = node.style.top;
-    monkey.style.backgroundImage = "url('monkey-back.png?v=1')";
-    area.appendChild(monkey);
-
-    /* 1) Donuk bekle */
-    setTimeout(() => {
-      if (!monkey.isConnected) return;
-
-      /* 2-3) Ekrana doğru sıçra */
-      monkey.classList.remove('jm-monkey-wait');
-      monkey.classList.add('jm-monkey-fly');
-
-      /* 4) Önden görün */
-      setTimeout(() => {
-        if (monkey.isConnected) {
-          monkey.style.backgroundImage = "url('monkey-front.png?v=1')";
-        }
-      }, 360);
-
-      /* 5-7) Zafer parıltıları */
-      const r = node.getBoundingClientRect();
-      const ar = area.getBoundingClientRect();
-      for (let i = 0; i < 18; i++) {
-        const sp = document.createElement('i');
-        sp.className = 'jm-monkey-spark';
-        sp.style.left = (r.left - ar.left + r.width/2) + 'px';
-        sp.style.top = (r.top - ar.top + r.height/2) + 'px';
-        sp.style.setProperty('--a', (i / 18 * 360) + 'deg');
-        sp.style.setProperty('--d', (35 + Math.random()*65) + 'px');
-        area.appendChild(sp);
-        setTimeout(() => sp.remove(), 1000);
-      }
-
-      /* 8) Bölüm açık kalır */
-      setTimeout(() => {
-        if (monkey.isConnected) monkey.remove();
-        node.classList.add('jm-pop');
-        setTimeout(() => node.classList.remove('jm-pop'), 800);
-      }, 1050);
-    }, 500);
-  }, 650);
 }
 $('btn-next-level').addEventListener('click', () => {
   if (irisBusy) return;
@@ -5061,6 +5011,23 @@ function ensureJourneyMap(){
   });
   return journeyMapEl;
 }
+const JM_MK_FRONT="url('monkey-front.png?v=1')", JM_MK_BACK="url('monkey-back.png?v=1')";
+function jmMonkeyJump(m, from, to, done){
+  const box=m.parentNode, W=box.clientWidth, H=box.clientHeight;
+  const dx=(to[0]-from[0])/100*W, dy=(to[1]-from[1])/100*H;
+  m.style.left=to[0]+'%'; m.style.top=to[1]+'%';
+  m.style.backgroundImage=JM_MK_BACK;
+  if(!m.animate){ m.style.backgroundImage=JM_MK_FRONT; done&&done(); return; }
+  const a=m.animate([
+    {transform:'translate('+(-dx)+'px,'+(-dy)+'px) scale(1)'},
+    {transform:'translate('+(-dx/2)+'px,'+(-dy/2-90)+'px) scale(1.3) rotate(-8deg)',offset:.5},
+    {transform:'translate(0,0) scale(1)'}
+  ],{duration:950,easing:'cubic-bezier(.3,.1,.3,1)'});
+  setTimeout(()=>{ m.style.backgroundImage=JM_MK_FRONT; },520);
+  a.onfinish=()=>{ m.style.backgroundImage=JM_MK_FRONT;
+    m.animate([{transform:'scale(1.15,.85)'},{transform:'scale(1)'}],{duration:260});
+    done&&done(); };
+}
 function showJourneyMap(chapterIndex, opts){
   opts = opts || {};
   const unlockIdx = (opts.unlock === undefined) ? -1 : opts.unlock;
@@ -5144,6 +5111,11 @@ function showJourneyMap(chapterIndex, opts){
       };
     }
   }
+  { const mk=document.createElement('div'); mk.className='jm-monkey'; mk.style.backgroundImage=JM_MK_FRONT;
+    const start=(unlockIdx>0)?unlockIdx-1:Math.min(S.maxOpen,levelCount-1);
+    mk.style.left=positions[start][0]+'%'; mk.style.top=positions[start][1]+'%';
+    nodes.appendChild(mk);
+    if (afterLoad && unlockIdx>0) { const fx0=afterLoad; afterLoad=()=>jmMonkeyJump(mk,positions[unlockIdx-1],positions[unlockIdx],fx0); } }
   if (opts.noLoading && afterLoad) setTimeout(afterLoad, 550);
   setView('home');
   viewHome.classList.add('off');
