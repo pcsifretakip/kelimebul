@@ -4681,15 +4681,25 @@ function ensureJourneyMap(){
     <div class="jm-vignette"></div>
     <header class="jm-head">
       <div class="jm-score" aria-label="İlerleme"><svg class="i"><use href="#i-star"/></svg><b id="jm-score-v">0/30</b></div>
-      <button type="button" class="jm-set" aria-label="Ayarlar"><svg class="i"><use href="#i-gear"/></svg></button>
+      <button type="button" class="jm-set jm-backbtn" aria-label="Geri"><svg class="i" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></button>
     </header>
-    <button type="button" class="jm-home" aria-label="Ana sayfa"><svg class="i"><use href="#i-home"/></svg></button>
     <div class="jm-map-area"><div id="jm-nodes"></div></div>
     <div class="jm-loading" id="jm-loading"><div class="jm-spin"></div><b>YÜKLENİYOR</b></div>
   `;
   document.querySelector('.app')?.appendChild(journeyMapEl);
-  journeyMapEl.querySelector('.jm-set').addEventListener('click', e => { e.stopPropagation(); audio(); refreshSettings(); menuEl.classList.toggle('show'); });
-  journeyMapEl.querySelector('.jm-home').addEventListener('click', () => { audio(); journeyMapEl.classList.remove('show'); showHome(); });
+  let jmLeaving = false;
+  journeyMapEl.querySelector('.jm-backbtn').addEventListener('click', () => {
+    if (jmLeaving) return; jmLeaving = true;
+    audio();
+    const ld = journeyMapEl.querySelector('#jm-loading');
+    if (ld) ld.classList.remove('hide');
+    setTimeout(() => {
+      journeyMapEl.classList.remove('show');
+      showLevels();
+      if (ld) ld.classList.add('hide');
+      jmLeaving = false;
+    }, 2000);
+  });
   return journeyMapEl;
 }
 function showJourneyMap(chapterIndex){
@@ -4702,11 +4712,16 @@ function showJourneyMap(chapterIndex){
   const bg = el.querySelector('.jm-bg');
   const vid = el.querySelector('.jm-bg-video');
   if (vid) { vid.muted = true; vid.loop = true; vid.playsInline = true; const play = () => { const pr = vid.play(); if (pr && pr.catch) pr.catch(() => {}); }; play(); }
-  { const ld = el.querySelector('#jm-loading'); if (ld && vid) {
+  { const ld = el.querySelector('#jm-loading'); if (ld) {
       ld.classList.remove('hide');
-      const hideLd = () => { ld.classList.add('hide'); };
-      if (vid.readyState >= 3) hideLd();
-      else { ['canplay','playing','loadeddata'].forEach(ev => vid.addEventListener(ev, hideLd, {once:true})); setTimeout(hideLd, 9000); }
+      let minDone = false, vidDone = !vid || vid.readyState >= 3, closed = false;
+      const tryHide = () => { if (!closed && minDone && vidDone) { closed = true; ld.classList.add('hide'); } };
+      setTimeout(() => { minDone = true; tryHide(); }, 2000);
+      if (!vidDone) {
+        const ok = () => { vidDone = true; tryHide(); };
+        ['canplay','playing','loadeddata'].forEach(ev => vid.addEventListener(ev, ok, {once:true}));
+        setTimeout(ok, 9000);
+      }
   } }
   const nodes = el.querySelector('#jm-nodes');
   nodes.innerHTML = '';
