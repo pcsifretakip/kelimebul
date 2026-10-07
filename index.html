@@ -2069,20 +2069,23 @@ const TR = s => s.replace(/i/g, 'İ').replace(/ı/g, 'I').toUpperCase();
 const DIRS = {
   easy:   [[0,1],[1,0],[1,1]],
   medium: [[0,1],[1,0],[1,1],[0,-1],[-1,0]],
-  hard:   [[0,1],[1,0],[1,1],[0,-1],[-1,0],[-1,-1],[1,-1],[-1,1]]
+  hard:   [[0,1],[1,0],[1,1],[0,-1],[-1,0],[-1,-1],[1,-1],[-1,1]],
+  hv:     [[0,1],[1,0]],
+  hvr:    [[0,1],[1,0],[0,-1],[-1,0]],
+  hvr1:   [[0,1],[1,0],[0,-1],[-1,0]]   /* + tam 1 kelime çapraz */
 };
 const GROUPS = [
   ['YOLCULUK','#22c55e',[
-    ['Amazon Yağmur Ormanları',5,'orman yaprak nehir maymun papağan','','easy'],
-    ['Dünyanın 7 Harikası',6,'piramit tapınak heykel bahçe deniz fener','','easy'],
-    ['Mariana Çukuru',7,'okyanus derinlik basınç dalga keşif denizaltı','','medium'],
-    ['Mısır Piramitleri',8,'firavun hiyeroglif mumya tapınak sfenks mezar','','medium'],
-    ['Kuzey Işıkları (Aurora)',8,'aurora kutup gökyüzü manyetik ışık parçacık kuzey','aurora parçacık','medium'],
-    ['Sahra Çölü',9,'çöl kum fırtına kervan vaha sıcaklık susuzluk serap','sıcaklık susuzluk','hard'],
-    ['Büyük Set Resifi',9,'mercan okyanus resif kaplumbağa balık deniz biyoloji ekosistem','kaplumbağa ekosistem','hard'],
-    ['Everest Tepesi',10,'everest zirve dağcı oksijen buzul tırmanış kamp dayanıklılık','tırmanış dayanıklılık','hard'],
-    ['Bermuda Şeytan Üçgeni',10,'bermuda pusula okyanus gemi uçak gizem fırtına manyetik','gizem manyetik','hard'],
-    ['Antarktika Kıtası',11,'antarktika penguen buzdağı kutup araştırma istasyon sıcaklık keşif dayanıklılık','araştırma dayanıklılık','hard']
+    ['Doğanın Unsurları',5,'KUŞ DERE AĞAÇ','','hv'],
+    ['Orman Yaşamı',6,'DOĞA YEŞİL YAĞMUR MAYMUN','','hv'],
+    ['Nehir Ekosistemi',7,'NEHİR YAPRAK PAPAĞAN ORMAN ORKİDE','','hvr'],
+    ['Vahşi Sakinler',8,'TUKAN SARMAŞIK TİMSAH PİRANA KAPLAN BİTKİ','','hvr1'],
+    ['Tropikal Zenginlik',9,'TROPİKAL PANTER BAMBU ŞELALE NEMLİ TOPRAK YABANİ','','hard'],
+    ['Yırtıcılar ve Kuşlar',9,'JAGUAR AMAZON PİRANA MAKAV YABANİ KANOPİ BALTA','PİRANA MAKAV YABANİ','hard'],
+    ['Orman Canlıları',10,'EKOSİSTEM TAPİR ANAKONDA SARMAL KABİLE ŞAMAN FLORA','TAPİR ANAKONDA SARMAL KABİLE','hard'],
+    ['Sürüngenler ve Doğa',10,'AMAZONİT BUMERANG İGUANA TARANTULA KAYMAN AKARSU MANGO','AMAZONİT BUMERANG İGUANA TARANTULA KAYMAN','hard'],
+    ['Biyolojik Çeşitlilik',10,'ENDEMİK KAMUFLAJ BİYOSFER ZEHİRLİ OKSİJEN FLORA FAUNA','ENDEMİK KAMUFLAJ BİYOSFER ZEHİRLİ OKSİJEN FLORA','hard'],
+    ['Amazon Efsaneleri',11,'ANAKONDA JAGUAR KAMUFLAJ TARANTULA TROPİKAL VEJETASYON BİYODERM','ANAKONDA JAGUAR KAMUFLAJ TARANTULA TROPİKAL VEJETASYON BİYODERM','hard']
   ]]
 ];
 const INFO = [
@@ -2208,12 +2211,13 @@ function buildLevel(def, index){
     const grid = Array.from({length:size}, () => Array(size).fill(''));
     const placements = {};
     let ok = true;
+    const diagWord = def.dirs === 'hvr1' ? order[Math.floor(rnd() * order.length)] : null;
 
     for (const w of order){
       const L = [...w];
       let placed = false;
       for (let t = 0; t < 400 && !placed; t++){
-        const [dr, dc] = dirs[Math.floor(rnd() * dirs.length)];
+        const [dr, dc] = (w === diagWord) ? [[1,1],[-1,-1],[1,-1],[-1,1]][Math.floor(rnd() * 4)] : dirs[Math.floor(rnd() * dirs.length)];
         const r0 = Math.floor(rnd() * size), c0 = Math.floor(rnd() * size);
         const r1 = r0 + dr * (L.length - 1), c1 = c0 + dc * (L.length - 1);
         if (r1 < 0 || r1 >= size || c1 < 0 || c1 >= size) continue;
@@ -2760,7 +2764,7 @@ function renderWords(){
     chip.style.setProperty('--c', S.colorOf[w]);
     chip.innerHTML = '<svg class="i"><use href="#i-check"/></svg><span></span>';
     chip.lastChild.textContent = w;
-    if (S.level.hidden.includes(w)){ chip.lastChild.textContent = w[0] + '*'.repeat([...w].length - 1); chip.classList.add('masked'); }
+    if (S.level.hidden.includes(w)){ chip.lastChild.textContent = [...w][0] + '.'.repeat([...w].length - 1); chip.classList.add('masked'); }
     wordListEl.appendChild(chip); S.chips[w] = chip;
   });
 }
@@ -3438,7 +3442,7 @@ function renderModes(){
       b.setAttribute('aria-disabled','true'); list.appendChild(b); return;
     }
     b.innerHTML = '<span class="journey-num">' + (unlocked ? (done ? '✓' : i + 1) : '🔒') + '</span>' +
-      '<span class="journey-info"><span class="journey-name">' + d.category + '</span>' + (done ? stars : '') + '</span>' +
+      '<span class="journey-info"><span class="journey-name">' + (i === 0 ? jc.name : d.category) + '</span>' + (done ? stars : '') + '</span>' +
       '<span class="journey-state">' + state + '</span>';
     if (i === 0) b.classList.add('has-banner');
     if (unlocked) b.addEventListener('click', () => { audio(); if (i === 0) showAmazonIntro(() => showJourneyMap(i)); else showJourneyMap(i); });
