@@ -1016,7 +1016,9 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 }
 .journey-list-view::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.38;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,black,transparent 92%)}
 .journey-list-title-wrap{display:flex;align-items:center;justify-content:center;min-width:0}
-.journey-title-img{display:block;width:min(72vw,430px);height:auto;max-height:82px;object-fit:contain;pointer-events:none;user-select:none;-webkit-user-drag:none}
+.journey-title-img{display:block;width:min(54vw,310px);height:auto;max-height:62px;object-fit:contain;pointer-events:none;user-select:none;-webkit-user-drag:none}
+.journey-list-head{min-height:76px;box-sizing:border-box}
+@media(max-width:430px){.journey-title-img{width:min(52vw,290px);max-height:58px}.journey-list-head{grid-template-columns:46px minmax(0,1fr) 58px;gap:5px;padding-left:10px;padding-right:10px}.journey-list-back{width:44px;height:44px}.journey-list-score{width:54px;height:44px;justify-content:center}.journey-list-title-wrap{overflow:hidden}.journey-title-img{margin:0 auto}}
 .journey-list-head{position:relative;z-index:2;display:grid;grid-template-columns:48px 1fr 64px;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 12px}
 .journey-list-back,.journey-list-score{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:rgba(18,14,39,.88);border:1px solid rgba(255,255,255,.16);box-shadow:0 0 16px rgba(124,58,237,.18),inset 0 1px 0 rgba(255,255,255,.12)}
 .journey-list-back{color:#fbbf24;cursor:pointer}.journey-list-back .i{width:24px;height:24px;fill:currentColor}.journey-list-back:active{transform:scale(.94)}
@@ -2519,10 +2521,10 @@ const SND = {
   hint(){ tone(880, 0, .12, 'sine', .12); tone(1318.5, .09, .2, 'sine', .1); },
   invite(){ [880, 1174.66, 880, 1174.66].forEach((f, i) => { tone(f, i * .16, .14, 'triangle', .15); tone(f * 2, i * .16, .1, 'sine', .04); }); },
   win(){ [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5, 1318.5].forEach((f,i) => tone(f, i * .11, .3, 'triangle', .17)); },
-  level(){          // bölüm geçince bolum.mp3 çalar (dosya yoksa/çalmazsa eski melodi)
+  level(){          // bölüm geçince bolumgecme.mp3 çalar (dosya yoksa/çalmazsa eski melodi)
     if (!S.sound) return;
     try{
-      if (!SND._lv){ SND._lv = new Audio('bolum.mp3'); SND._lv.preload = 'auto'; }
+      if (!SND._lv){ SND._lv = new Audio('bolumgecme.mp3'); SND._lv.preload = 'auto'; }
       SND._lv.currentTime = 0;
       const pr = SND._lv.play();
       if (pr && pr.catch) pr.catch(() => SND.win());
