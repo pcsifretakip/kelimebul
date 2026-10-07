@@ -68,6 +68,13 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 .app.on-game .game-top-title{display:block}
 .app.on-game .topbar .grp:not(.r){gap:7px}
 .app.on-game .topbar .grp.r{min-width:84px;gap:6px}
+.app.on-game .topbar .grp:not(.r) .coin{display:flex}
+.app.on-game .topbar .grp:not(.r){flex:0 0 auto;min-width:0}
+.app.on-game .game-top-title{display:none}
+.app.on-game .topbar .grp.r{flex:0 0 auto;min-width:0;gap:6px}
+.app.on-game .top-timer{margin-left:auto;white-space:nowrap}
+.app.on-game .banner{display:flex}
+
 .app.on-game .topbar .grp.r #btn-home{order:1}
 .app.on-game .topbar .grp.r #btn-settings{order:2}
 .app.on-game .topbar .grp.r #btn-sound{display:none}
@@ -1827,7 +1834,6 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
     <div class="grp">
       <button class="icon-btn av" id="btn-avatar" aria-label="Profil"></button>
       <div class="coin"><svg class="i coin-ic"><use href="#i-coin"/></svg><span id="coin-count">150</span></div>
-      <div class="game-top-title" id="game-top-title"></div>
     </div>
     <div class="level-box"><small>BÖLÜM</small><b id="header-level-num">1</b></div>
     <div class="grp r">
@@ -1888,9 +1894,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 
     <!-- GAME -->
     <section id="view-game" class="view off">
-      <div class="banner">
-        <div class="timer"><svg class="i"><use href="#i-clock"/></svg><span id="time-val">00:00</span></div>
-      </div>
+      <div class="banner" aria-hidden="true"><h2 class="game-top-title" id="game-top-title"></h2><div class="timer top-timer"><svg class="i"><use href="#i-clock"/></svg><span id="time-val">00:00</span></div></div>
 
       <div class="words-panel"><div id="word-list" class="word-list"></div></div>
       <div id="live-selection" class="live-selection" aria-live="polite">
