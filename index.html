@@ -255,9 +255,9 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 /* ===== ELEKTRİK BAĞLANTISI EFEKTİ ===== */
 .cap{position:absolute;inset:0;width:100%!important;height:100%!important;overflow:visible;pointer-events:none;transform:none!important}
 .cap svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.cap .ec-glow{fill:none;stroke:var(--c);stroke-width:13;stroke-linecap:round;stroke-linejoin:round;opacity:.24;filter:blur(5px);}
-.cap .ec-aura{fill:none;stroke:var(--c);stroke-width:7;stroke-linecap:round;stroke-linejoin:round;opacity:.55;filter:drop-shadow(0 0 5px var(--c));}
-.cap .ec-core{fill:none;stroke:#f3ffff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;opacity:.98;stroke-dasharray:none;animation:none;}
+.cap .ec-glow{fill:none;stroke:var(--c);stroke-width:18;stroke-linecap:round;stroke-linejoin:round;opacity:.42;filter:blur(6px);}
+.cap .ec-aura{fill:none;stroke:var(--c);stroke-width:10;stroke-linecap:round;stroke-linejoin:round;opacity:.92;filter:drop-shadow(0 0 7px var(--c)) drop-shadow(0 0 12px var(--c));}
+.cap .ec-core{fill:none;stroke:#ffffff;stroke-width:4.2;stroke-linecap:round;stroke-linejoin:round;opacity:1;stroke-dasharray:none;animation:none;}
 .cap .ec-node{fill:rgba(34,211,238,.72);stroke:#eaffff;stroke-width:1;filter:drop-shadow(0 0 3px var(--c));}
 .cap .ec-ring{fill:none;stroke:var(--c);stroke-width:1.2;opacity:.42;transform-box:fill-box;transform-origin:center;animation:ecRing .9s ease-out infinite;}
 .cap .ec-spark,.cap .ec-burst{display:none !important;}
@@ -1194,7 +1194,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 
 /* ===== Yeni zafer ekranı ===== */
 #modal-victory .vcard{position:relative;transform:none!important}
-#modal-victory .vcard::before{content:"";position:absolute;left:50%;top:-65px;width:520px;height:520px;margin-left:-260px;z-index:-1;pointer-events:none;opacity:0;
+#modal-victory .vcard::before{content:"";position:absolute;left:50%;top:-30px;width:520px;height:520px;margin-left:-260px;z-index:-1;pointer-events:none;opacity:0;
   background:repeating-conic-gradient(from 0deg,rgba(251,191,36,.30) 0 7deg,transparent 7deg 20deg);
   -webkit-mask-image:radial-gradient(circle,#000 0,transparent 68%);mask-image:radial-gradient(circle,#000 0,transparent 68%)}
 #modal-victory.show .vcard::before{animation:vRays 22s linear infinite,vFade .8s .2s forwards}
@@ -1775,12 +1775,12 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 #modal-victory .reward-chapter{display:flex;align-items:center;gap:10px;margin:2px 0 8px;font-size:16px;letter-spacing:.08em;color:#f3f0ff;text-shadow:0 2px 0 rgba(0,0,0,.5)}
 #modal-victory .reward-chapter::before,#modal-victory .reward-chapter::after{content:"";width:34px;height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,#818cf8)}
 #modal-victory .reward-chapter::after{background:linear-gradient(90deg,#38bdf8,transparent)}
-#modal-victory .vstats{width:100%;box-sizing:border-box;aspect-ratio:760/137;margin:0 0 10px;padding:0 10%;border:0;border-radius:0;
+#modal-victory .vstats{width:100%;box-sizing:border-box;aspect-ratio:760/137;margin:0 0 10px;padding:0 7%;border:0;border-radius:0;
   background:url('vic-panel.png?v=1') center/100% 100% no-repeat;box-shadow:none;display:flex;align-items:center;justify-content:space-around}
-.vs-item{display:flex;align-items:center;gap:6px;min-width:0}
+.vs-item{display:flex;align-items:center;gap:8px}
 .vs-ic{width:clamp(34px,11vw,46px);height:auto;flex:none;filter:drop-shadow(0 3px 3px rgba(0,0,0,.45))}
 #modal-victory .vstats small{font-size:12px;color:#b9b4f5;text-align:left}
-#modal-victory .vstats b{justify-content:flex-start;margin-top:0;font-size:clamp(21px,7vw,27px);line-height:1.05}
+#modal-victory .vstats b{justify-content:flex-start;margin-top:0;font-size:clamp(24px,8vw,30px);line-height:1.05}
 #modal-victory .vstats .g{color:#fbbf24;text-shadow:0 2px 0 #92400e}
 #modal-victory .vstats .t{color:#22d3ee;text-shadow:0 2px 0 #0e4f63}
 #modal-victory .vstats .sep{height:46px;background:rgba(165,180,252,.3)}
@@ -1797,6 +1797,11 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 #view-home .home-img-btn { width:84% !important; max-width:350px !important; }
 #view-home .home-img-btn img { width:100% !important; height:auto !important; }
 @media (max-width:380px) { #view-home .home-img-btn { width:88% !important; } #view-home .home-actions { max-width:340px !important; } }
+</style>
+
+<style>
+.journey-list-title-wrap{display:flex;align-items:center;justify-content:center;}
+.journey-title-img{display:block;width:min(78vw,430px);height:auto;max-height:82px;object-fit:contain;}
 </style>
 </head>
 <body>
@@ -1976,7 +1981,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
       <div class="journey-list-head">
         <button class="journey-list-back" id="jr-home" aria-label="Ana sayfa"><svg class="i"><use href="#i-home"/></svg></button>
         <div class="journey-list-title-wrap">
-          <h2>MACERAYA BAŞLA</h2>
+          <img class="journey-title-img" src="maceraya-basla.png" alt="Maceraya Başla" draggable="false">
         </div>
         <div class="journey-list-score"><svg class="i"><use href="#i-star"/></svg><b id="jr-score-v">0</b></div>
       </div>
