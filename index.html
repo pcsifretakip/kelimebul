@@ -1719,7 +1719,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 }
 
 /* Kalıcı harita maymunu */
-.jm-monkey{position:absolute;width:78px;height:104px;margin:-74px 0 0 -119px;transform-origin:50% 100%;background:center/contain no-repeat;z-index:6;pointer-events:none;filter:drop-shadow(0 6px 6px rgba(0,0,0,.35));animation:jmMonkeyBob 1.7s ease-in-out infinite}
+.jm-monkey{position:absolute;width:78px;height:104px;margin:-74px 0 0 33px;transform-origin:50% 100%;background:center/contain no-repeat;z-index:6;pointer-events:none;filter:drop-shadow(0 6px 6px rgba(0,0,0,.35));animation:jmMonkeyBob 1.7s ease-in-out infinite}
 @keyframes jmMonkeyBob{0%,100%{translate:0 0}50%{translate:0 -5px}}
 .jm-fx{position:absolute;width:0;height:0;z-index:3;pointer-events:none}
 .jm-beam{position:absolute;left:-34px;bottom:0;width:68px;height:min(78vh,560px);transform-origin:50% 100%;background:linear-gradient(to top,rgba(255,250,200,.98),rgba(255,226,110,.6) 38%,rgba(255,226,110,0));-webkit-mask-image:linear-gradient(to right,transparent,#000 32%,#000 68%,transparent);mask-image:linear-gradient(to right,transparent,#000 32%,#000 68%,transparent);filter:blur(1.5px);animation:jmBeam 3s ease-out forwards}
@@ -5019,7 +5019,9 @@ function jmMonkeyJump(m, from, to, done){
   m.style.left=to[0]+'%'; m.style.top=to[1]+'%';
   m.style.backgroundImage=JM_MK_BACK;            /* gidiş: sırtı dönük */
   m.style.animation='none';                       /* uçarken bekleme sallanması kapalı */
-  const finish=()=>{ m.style.backgroundImage=JM_MK_FRONT; m.style.animation=''; };
+  const finish=()=>{ m.style.backgroundImage=JM_MK_BACK; m.style.animation=''; };
+  const turnBack=()=>{ const a=m.animate([{transform:'scaleX(1)'},{transform:'scaleX(0)'}],{duration:130,easing:'ease-in'});
+    a.onfinish=()=>{ m.style.backgroundImage=JM_MK_BACK; const b=m.animate([{transform:'scaleX(0)'},{transform:'scaleX(1)'}],{duration:130,easing:'ease-out'}); b.onfinish=()=>{ m.style.animation=''; }; }; };
   if(!m.animate){ finish(); done&&done(); return; }
   const run=(kf,o,next)=>{ const a=m.animate(kf,o); a.onfinish=()=>{ next&&next(); }; };
   /* 1) zıplayarak yeni bölüme git (arkası dönük) */
@@ -5042,7 +5044,7 @@ function jmMonkeyJump(m, from, to, done){
             {transform:'translateY(0) rotate(0deg)',offset:.5},
             {transform:'translateY(-18px) rotate(6deg)',filter:'drop-shadow(0 0 14px rgba(255,220,80,.85))',offset:.75},
             {transform:'translateY(0) rotate(0deg)',filter:'drop-shadow(0 0 0 rgba(255,220,80,0))'}
-          ],{duration:900,easing:'ease-in-out'},finish);
+          ],{duration:900,easing:'ease-in-out'},turnBack);
         });
       });
     });
@@ -5131,7 +5133,7 @@ function showJourneyMap(chapterIndex, opts){
       };
     }
   }
-  { const mk=document.createElement('div'); mk.className='jm-monkey'; mk.style.backgroundImage=JM_MK_FRONT;
+  { const mk=document.createElement('div'); mk.className='jm-monkey'; mk.style.backgroundImage=JM_MK_BACK;
     const start=(unlockIdx>0)?unlockIdx-1:Math.min(S.maxOpen,levelCount-1);
     mk.style.left=positions[start][0]+'%'; mk.style.top=positions[start][1]+'%';
     nodes.appendChild(mk);
