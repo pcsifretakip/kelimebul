@@ -2232,7 +2232,7 @@ const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => {
   };
 }));
 const LEVELS = CLASSIC_LEVELS;
-const LOCKED_LAST = 5;                                   // son 5 bölüm kapalı (açmak için 0 yap)
+const LOCKED_LAST = 0;                                   // son 5 bölüm kapalı (açmak için 0 yap)
 const MAX_PLAY = Math.max(0, LEVELS.length - 1 - LOCKED_LAST);   // oynanabilir son bölüm indeksi
 const MODES = [
   { key:'classic', category:'KLASİK SERBEST', icon:'sprout', color:'#22c55e', subtitle:'Rahatça oyna. Bölümleri seç ve normal kelime bulma modunda ilerle.', available:true }
