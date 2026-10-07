@@ -1032,7 +1032,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .journey-list-title-wrap{text-align:center;min-width:0}.journey-list-kicker{font-size:10px;font-weight:1000;letter-spacing:.24em;color:#a78bfa;text-shadow:0 0 10px rgba(167,139,250,.75);margin-bottom:2px}.journey-list-title-wrap h2{margin:0;color:#fff;font-size:23px;font-weight:1000;letter-spacing:.08em;text-shadow:0 0 8px rgba(255,255,255,.18),0 0 24px rgba(139,92,246,.45)}.journey-list-title-wrap span{display:block;margin-top:3px;color:rgba(255,255,255,.48);font-size:10px;font-weight:700}
 .journey-list{position:relative;z-index:2;flex:1;min-height:0;overflow-y:auto;padding:5px 14px calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:11px;scrollbar-width:none}.journey-list::-webkit-scrollbar{display:none}
 .journey-card{--neon:#8b5cf6;position:relative;width:100%;min-height:76px;box-sizing:border-box;border-radius:20px;padding:9px 12px;display:grid;grid-template-columns:48px minmax(0,1fr) auto;align-items:center;gap:11px;text-align:left;color:#fff;overflow:hidden;cursor:pointer;background:linear-gradient(105deg,rgba(27,20,58,.96),rgba(12,10,27,.96));border:1.5px solid color-mix(in srgb,var(--neon) 72%,white 8%);box-shadow:0 0 8px color-mix(in srgb,var(--neon) 24%,transparent),0 0 22px color-mix(in srgb,var(--neon) 12%,transparent),inset 0 0 18px color-mix(in srgb,var(--neon) 7%,transparent);transition:transform .15s,filter .15s,box-shadow .2s}
-.journey-card.has-banner{background:linear-gradient(90deg,rgba(2,18,9,.84) 0%,rgba(2,18,9,.5) 55%,rgba(2,18,9,.16) 100%),url('banneramazon.png') 50% 48%/106% auto no-repeat,#04140a!important;min-height:100px}
+.journey-card.has-banner{background:linear-gradient(90deg,rgba(2,18,9,.84) 0%,rgba(2,18,9,.5) 55%,rgba(2,18,9,.16) 100%),url('banneramazon.png?v=2') 50% 48.2%/auto 212% no-repeat,#04140a!important;min-height:84px}
 .journey-card.has-banner .journey-name{text-shadow:0 2px 7px rgba(0,0,0,.95),0 0 3px rgba(0,0,0,.8)}
 .journey-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--neon);box-shadow:0 0 9px var(--neon),0 0 22px var(--neon);opacity:.95}.journey-card::after{content:"";position:absolute;top:-40%;left:-25%;width:32%;height:180%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.13),transparent);transform:rotate(18deg);animation:journeyShine 4.6s ease-in-out infinite;pointer-events:none}@keyframes journeyShine{0%,65%{left:-35%;opacity:0}72%{opacity:1}100%{left:125%;opacity:0}}
 .journey-card:active:not(.locked){transform:scale(.975)}.journey-card.current{box-shadow:0 0 12px color-mix(in srgb,var(--neon) 55%,transparent),0 0 32px color-mix(in srgb,var(--neon) 26%,transparent),inset 0 0 22px color-mix(in srgb,var(--neon) 10%,transparent);animation:journeyCurrent 1.9s ease-in-out infinite}@keyframes journeyCurrent{0%,100%{filter:brightness(1)}50%{filter:brightness(1.16)}}
@@ -3371,8 +3371,8 @@ const JR_EMO = ['🌴','🏔️','🏜️','🌊','⛰️','🎈','🐠','🐧',
 function showAmazonIntro(cb){
   if (document.querySelector('.am-intro')) return;
   const o = document.createElement('div'); o.className = 'am-intro';
-  o.innerHTML = '<div class="am-bg"></div><img class="am-img" src="amazon.png" alt=""><button type="button" class="am-skip"><i class="am-ring"></i><i class="am-ring"></i><i class="am-ring"></i><span>GEÇ</span></button>';
-  o.querySelector('.am-bg').style.backgroundImage = "url('amazon.png')";
+  o.innerHTML = '<div class="am-bg"></div><img class="am-img" src="amazon.png?v=2" alt=""><button type="button" class="am-skip"><i class="am-ring"></i><i class="am-ring"></i><i class="am-ring"></i><span>GEÇ</span></button>';
+  o.querySelector('.am-bg').style.backgroundImage = "url('amazon.png?v=2')";
   let t = 0, done = false;
   const finish = () => {
     if (done) return; done = true; clearTimeout(t);
@@ -4731,7 +4731,7 @@ function ambFadeTo(target, play){
 function ambSync(){
   const want = !!(journeyMapEl && journeyMapEl.classList.contains('show') && S.sound && !document.hidden);
   if (want){
-    if (!ambAudio){ ambAudio = new Audio('amazon.mp3'); ambAudio.loop = true; ambAudio.preload = 'auto'; ambAudio.volume = 0; }
+    if (!ambAudio){ ambAudio = new Audio('amazon.mp3?v=2'); ambAudio.loop = true; ambAudio.preload = 'auto'; ambAudio.volume = 0; }
     ambFadeTo(.45, true);
   } else if (ambAudio) ambFadeTo(0, false);
 }
