@@ -1719,8 +1719,13 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 }
 
 /* Kalıcı harita maymunu */
-.jm-monkey{position:absolute;width:78px;height:104px;margin:-74px 0 0 33px;transform-origin:50% 100%;background:center/contain no-repeat;z-index:6;pointer-events:none;filter:drop-shadow(0 6px 6px rgba(0,0,0,.35));animation:jmMonkeyBob 1.7s ease-in-out infinite}
-@keyframes jmMonkeyBob{0%,100%{translate:0 0}50%{translate:0 -5px}}
+.jm-monkey{position:absolute;width:78px;height:104px;margin:-74px 0 0 33px;z-index:6;pointer-events:none}
+.jm-monkey .jm-bd{position:absolute;left:0;top:0;width:100%;height:100%;display:block;background:center bottom/contain no-repeat;transform-origin:50% 100%}
+.jm-monkey .jm-sh{position:absolute;left:50%;bottom:-4px;width:54px;height:13px;margin-left:-27px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(0,0,0,.55) 0,rgba(0,0,0,.3) 42%,rgba(0,0,0,0) 72%)}
+.jm-monkey.idle .jm-bd{animation:jmBreath 2.6s ease-in-out infinite}
+.jm-monkey.walk .jm-bd{animation:jmStep .22s ease-in-out infinite}
+@keyframes jmBreath{0%,100%{transform:scale(1,1)}50%{transform:scale(1.02,1.035)}}
+@keyframes jmStep{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
 .jm-fx{position:absolute;width:0;height:0;z-index:3;pointer-events:none}
 .jm-beam{position:absolute;left:-34px;bottom:0;width:68px;height:min(78vh,560px);transform-origin:50% 100%;background:linear-gradient(to top,rgba(255,250,200,.98),rgba(255,226,110,.6) 38%,rgba(255,226,110,0));-webkit-mask-image:linear-gradient(to right,transparent,#000 32%,#000 68%,transparent);mask-image:linear-gradient(to right,transparent,#000 32%,#000 68%,transparent);filter:blur(1.5px);animation:jmBeam 3s ease-out forwards}
 .jm-beam.b2{left:-12px;width:24px;background:linear-gradient(to top,#fff,rgba(255,255,255,.55) 45%,rgba(255,255,255,0));animation-delay:.1s}
@@ -5011,43 +5016,50 @@ function ensureJourneyMap(){
   });
   return journeyMapEl;
 }
-const JM_MK_FRONT="url('monkey-front.png?v=2')", JM_MK_BACK="url('monkey-back.png?v=2')";
-(function(){ ['monkey-front.png?v=2','monkey-back.png?v=2'].forEach(function(p){ var i=new Image(); i.src=p; }); })();
+const JM_MK_WALK=['walk1','walk2','walk3','walk4','walk5','walk6'];
+const JM_MK_URL=n=>"url('monkey-"+n+".png?v=3')";
+(function(){ ['idle','wave'].concat(JM_MK_WALK).forEach(function(n){ var i=new Image(); i.src='monkey-'+n+'.png?v=3'; }); })();
+function jmMkPose(m,n){ const b=m.querySelector('.jm-bd'); if(b) b.style.backgroundImage=JM_MK_URL(n); }
 function jmMonkeyJump(m, from, to, done){
   const box=m.parentNode, W=box.clientWidth, H=box.clientHeight;
   const dx=(to[0]-from[0])/100*W, dy=(to[1]-from[1])/100*H;
+  const bd=m.querySelector('.jm-bd'), sh=m.querySelector('.jm-sh');
   m.style.left=to[0]+'%'; m.style.top=to[1]+'%';
-  m.style.backgroundImage=JM_MK_BACK;            /* gidiş: sırtı dönük */
-  m.style.animation='none';                       /* uçarken bekleme sallanması kapalı */
-  const finish=()=>{ m.style.backgroundImage=JM_MK_BACK; m.style.animation=''; };
-  const turnBack=()=>{ const a=m.animate([{transform:'scaleX(1)'},{transform:'scaleX(0)'}],{duration:130,easing:'ease-in'});
-    a.onfinish=()=>{ m.style.backgroundImage=JM_MK_BACK; const b=m.animate([{transform:'scaleX(0)'},{transform:'scaleX(1)'}],{duration:130,easing:'ease-out'}); b.onfinish=()=>{ m.style.animation=''; }; }; };
-  if(!m.animate){ finish(); done&&done(); return; }
-  const run=(kf,o,next)=>{ const a=m.animate(kf,o); a.onfinish=()=>{ next&&next(); }; };
-  /* 1) zıplayarak yeni bölüme git (arkası dönük) */
-  run([
-    {transform:'translate('+(-dx)+'px,'+(-dy)+'px) scale(1,1) rotate(0deg)'},
-    {transform:'translate('+(-dx*0.5)+'px,'+(-dy*0.5-110)+'px) scale(1.12,1.12) rotate(-7deg)',offset:.5},
-    {transform:'translate(0,0) scale(1,1) rotate(0deg)'}
-  ],{duration:1000,easing:'cubic-bezier(.3,.1,.3,1)'},()=>{
-    /* 2) iniş: ezilme */
-    run([{transform:'scale(1.18,.82)'},{transform:'scale(1,1)'}],{duration:180,easing:'ease-out'},()=>{
-      /* 3) dön: yatayda daralıp ön yüze geç */
-      run([{transform:'scaleX(1)'},{transform:'scaleX(0)'}],{duration:130,easing:'ease-in'},()=>{
-        m.style.backgroundImage=JM_MK_FRONT;
-        run([{transform:'scaleX(0)'},{transform:'scaleX(1)'}],{duration:130,easing:'ease-out'},()=>{
-          /* 4) selam: iki küçük zıplama + parıltı, kilit bu sırada açılır */
-          done&&done();
-          run([
-            {transform:'translateY(0) rotate(0deg)',filter:'drop-shadow(0 0 0 rgba(255,220,80,0))'},
-            {transform:'translateY(-26px) rotate(-6deg)',filter:'drop-shadow(0 0 16px rgba(255,220,80,.95))',offset:.28},
-            {transform:'translateY(0) rotate(0deg)',offset:.5},
-            {transform:'translateY(-18px) rotate(6deg)',filter:'drop-shadow(0 0 14px rgba(255,220,80,.85))',offset:.75},
-            {transform:'translateY(0) rotate(0deg)',filter:'drop-shadow(0 0 0 rgba(255,220,80,0))'}
-          ],{duration:900,easing:'ease-in-out'},turnBack);
-        });
-      });
+  const toIdle=()=>{ jmMkPose(m,'idle'); m.classList.remove('walk'); m.classList.add('idle'); };
+  if(!m.animate||!bd){ toIdle(); done&&done(); return; }
+  const run=(el,kf,o,next)=>{ const a=el.animate(kf,o); a.onfinish=()=>{ next&&next(); }; };
+  const turn=(pose,next)=>{                       /* yatayda daralıp yeni poza geç = dönme */
+    run(bd,[{transform:'scaleX(1)'},{transform:'scaleX(0)'}],{duration:130,easing:'ease-in'},()=>{
+      jmMkPose(m,pose);
+      run(bd,[{transform:'scaleX(0)'},{transform:'scaleX(1)'}],{duration:130,easing:'ease-out'},next);
     });
+  };
+  /* 1) yürü: arkası dönük, ayaklar yerde, gölge yerinde kalır */
+  m.classList.remove('idle'); m.classList.add('walk');
+  let f=0; jmMkPose(m,JM_MK_WALK[0]);
+  const t=setInterval(()=>{ f=(f+1)%JM_MK_WALK.length; jmMkPose(m,JM_MK_WALK[f]); },110);
+  const dist=Math.sqrt(dx*dx+dy*dy), dur=Math.max(1300,Math.min(2800,dist/55*1000));
+  run(m,[{transform:'translate('+(-dx)+'px,'+(-dy)+'px)'},{transform:'translate(0,0)'}],{duration:dur,easing:'ease-in-out'},()=>{
+    clearInterval(t); m.classList.remove('walk'); jmMkPose(m,'idle');
+    setTimeout(()=>{
+      /* 2) dön, selam ver, kilit bu sırada açılır */
+      turn('wave',()=>{
+        done&&done();
+        run(bd,[
+          {transform:'translateY(0) rotate(0deg)',filter:'drop-shadow(0 0 0 rgba(255,220,80,0))'},
+          {transform:'translateY(-24px) rotate(-5deg)',filter:'drop-shadow(0 0 14px rgba(255,220,80,.95))',offset:.25},
+          {transform:'translateY(0) rotate(0deg)',offset:.5},
+          {transform:'translateY(-15px) rotate(5deg)',filter:'drop-shadow(0 0 12px rgba(255,220,80,.85))',offset:.75},
+          {transform:'translateY(0) rotate(0deg)',filter:'drop-shadow(0 0 0 rgba(255,220,80,0))'}
+        ],{duration:1000,easing:'ease-in-out'},()=>{
+          setTimeout(()=>{ turn('idle',toIdle); },350);
+        });
+        if(sh) sh.animate([
+          {transform:'scale(1)',opacity:1},{transform:'scale(.7)',opacity:.55,offset:.25},
+          {transform:'scale(1)',opacity:1,offset:.5},{transform:'scale(.82)',opacity:.7,offset:.75},{transform:'scale(1)',opacity:1}
+        ],{duration:1000,easing:'ease-in-out'});
+      });
+    },120);
   });
 }
 function showJourneyMap(chapterIndex, opts){
@@ -5133,7 +5145,7 @@ function showJourneyMap(chapterIndex, opts){
       };
     }
   }
-  { const mk=document.createElement('div'); mk.className='jm-monkey'; mk.style.backgroundImage=JM_MK_BACK;
+  { const mk=document.createElement('div'); mk.className='jm-monkey idle'; mk.innerHTML='<i class="jm-sh"></i><b class="jm-bd"></b>'; jmMkPose(mk,'idle');
     const start=(unlockIdx>0)?unlockIdx-1:Math.min(S.maxOpen,levelCount-1);
     mk.style.left=positions[start][0]+'%'; mk.style.top=positions[start][1]+'%';
     nodes.appendChild(mk);
