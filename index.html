@@ -3310,7 +3310,7 @@ $('btn-next-level').addEventListener('click', () => {
     iris.className = 'iris in';
     setTimeout(() => {
       modal.classList.remove('show','leave');
-      try { const nx = fromIdx + 1; showJourneyMap(0, { unlock: (nx < Math.min(10, LEVELS.length) && !S.done[nx] && S.justUnlocked === nx) ? nx : -1 }); } catch(e){ showLevels(); }
+      try { const nx = fromIdx + 1; showJourneyMap(0, { noLoading: true, unlock: (nx < Math.min(10, LEVELS.length) && !S.done[nx] && S.justUnlocked === nx) ? nx : -1 }); } catch(e){ showLevels(); }
       requestAnimationFrame(() => { iris.className = 'iris out'; });
       setTimeout(() => { iris.className = 'iris'; irisBusy = false; }, 600);
     }, 520);
@@ -4815,7 +4815,8 @@ function showJourneyMap(chapterIndex, opts){
   const bg = el.querySelector('.jm-bg');
   const vid = el.querySelector('.jm-bg-video');
   if (vid) { vid.muted = true; vid.loop = true; vid.playsInline = true; const play = () => { const pr = vid.play(); if (pr && pr.catch) pr.catch(() => {}); }; play(); }
-  { const ld = el.querySelector('#jm-loading'); if (ld) {
+  if (opts.noLoading) { const ld0 = el.querySelector('#jm-loading'); if (ld0) { try { ld0.getAnimations().forEach(a => a.cancel()); } catch(_){} ld0.style.transition = 'none'; ld0.classList.add('hide'); } }
+  else { const ld = el.querySelector('#jm-loading'); if (ld) {
       try { ld.getAnimations().forEach(a => a.cancel()); } catch(_){}
       ld.style.transition = 'none'; ld.classList.remove('hide');
       let minDone = false, vidDone = !vid || vid.readyState >= 3, closed = false;
@@ -4865,6 +4866,10 @@ function showJourneyMap(chapterIndex, opts){
           const x0 = (Math.random() - .5) * 120, sy = -(Math.random() * nodeY * .95), dx = (Math.random() - .5) * 70, dy = -(30 + Math.random() * 140), sz = 3 + Math.random() * 6;
           h += '<i style="--x0:' + x0.toFixed(0) + 'px;--sy:' + sy.toFixed(0) + 'px;--dx:' + (x0 + dx).toFixed(0) + 'px;--dy:' + dy.toFixed(0) + 'px;--sz:' + sz.toFixed(1) + 'px;--c:' + cols[k % cols.length] + ';--dl:' + (Math.random() * 1.6).toFixed(2) + 's"></i>';
         }
+        for (let k = 0; k < 70; k++) {
+          const sg = k % 2 ? 1 : -1, x0 = sg * (20 + Math.random() * 45), sy = -(Math.random() * nodeY * .9), dx = x0 + sg * (Math.random() * 30), dy = -(70 + Math.random() * 170), sz = 2.5 + Math.random() * 5;
+          h += '<i style="--x0:' + x0.toFixed(0) + 'px;--sy:' + sy.toFixed(0) + 'px;--dx:' + dx.toFixed(0) + 'px;--dy:' + dy.toFixed(0) + 'px;--sz:' + sz.toFixed(1) + 'px;--c:' + (k % 3 ? '#fff6b0' : cols[k % cols.length]) + ';--dl:' + (Math.random() * 2.2).toFixed(2) + 's;animation-duration:' + (2 + Math.random() * 1.6).toFixed(2) + 's"></i>';
+        }
         fx.innerHTML = h;
         nodes.appendChild(fx);
         try { SND.win && SND.win(); } catch(_){}
@@ -4878,6 +4883,7 @@ function showJourneyMap(chapterIndex, opts){
       };
     }
   }
+  if (opts.noLoading && afterLoad) setTimeout(afterLoad, 550);
   setView('home');
   viewHome.classList.add('off');
   viewGame.classList.add('off');
