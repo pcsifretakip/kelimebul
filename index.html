@@ -1624,6 +1624,10 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .jm-loading{transition:opacity .9s ease,visibility 0s linear .9s;will-change:opacity}
 .jm-loading.hide{transition:opacity .9s ease,visibility 0s linear .9s}
 .jm-ld-rays{width:140vmax;height:140vmax;margin:-70vmax 0 0 -70vmax;will-change:transform}
+
+.jm-ld-rays{animation:jmRayPulse 3.2s ease-in-out infinite!important;width:120vmax;height:120vmax;margin:-60vmax 0 0 -60vmax}
+@keyframes jmRayPulse{0%,100%{opacity:.55}50%{opacity:1}}
+.app.on-levels .topbar{display:none!important}
 .jm-ring{display:none!important}
 .jm-beam{left:-30px;width:60px;filter:none!important;transform-origin:50% 100%;background:linear-gradient(to top,rgba(255,252,210,1),rgba(255,232,120,.75) 35%,rgba(255,226,110,.35) 75%,rgba(255,226,110,0));animation:jmBeam 4s ease-out forwards;will-change:transform,opacity}
 .jm-beam.b2{left:-10px;width:20px}
@@ -4770,9 +4774,16 @@ function showJourneyMap(chapterIndex, opts){
   const vid = el.querySelector('.jm-bg-video');
   if (vid) { vid.muted = true; vid.loop = true; vid.playsInline = true; const play = () => { const pr = vid.play(); if (pr && pr.catch) pr.catch(() => {}); }; play(); }
   { const ld = el.querySelector('#jm-loading'); if (ld) {
-      ld.classList.remove('hide');
+      try { ld.getAnimations().forEach(a => a.cancel()); } catch(_){}
+      ld.style.transition = 'none'; ld.classList.remove('hide');
       let minDone = false, vidDone = !vid || vid.readyState >= 3, closed = false;
-      const tryHide = () => { if (!closed && minDone && vidDone) { closed = true; ld.classList.add('hide'); if (afterLoad) setTimeout(afterLoad, 900); } };
+      const tryHide = () => { if (closed || !minDone || !vidDone) return; closed = true;
+        requestAnimationFrame(() => {
+          const fin = () => { ld.style.transition = 'none'; ld.classList.add('hide'); };
+          if (ld.animate) { const a = ld.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 1100, easing: 'ease-in-out', fill: 'forwards' }); a.onfinish = fin; }
+          else fin();
+          if (afterLoad) setTimeout(afterLoad, 1250);
+        }); };
       setTimeout(() => { minDone = true; tryHide(); }, 2000);
       if (!vidDone) {
         const ok = () => { vidDone = true; tryHide(); };
