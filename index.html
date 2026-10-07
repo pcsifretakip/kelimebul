@@ -1723,6 +1723,47 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 
 
 
+
+/* ===== ANA SAYFA: profilaltin.png (profil + altın tek plaka) ===== */
+.app.on-home .topbar .grp:first-child{
+  --pa-w:236px; --pa-h:62px;
+  position:relative;flex:none;width:var(--pa-w);height:var(--pa-h);min-width:0;gap:0;
+  background:url('profilaltin.png?v=1') 0 50%/100% 100% no-repeat;
+}
+.app.on-home #btn-avatar.icon-btn{
+  position:absolute;left:5px;top:50%;transform:translateY(-50%);
+  width:calc(var(--pa-h) - 12px);height:calc(var(--pa-h) - 12px);
+  background:transparent;box-shadow:none;border-radius:50%;overflow:hidden;
+}
+.app.on-home #btn-avatar.icon-btn:active{transform:translateY(-50%) scale(.95);box-shadow:none}
+.app.on-home .topbar .coin{
+  position:absolute;left:calc(var(--pa-h) + 8px);right:14px;top:0;bottom:0;height:auto;
+  padding:0;border:0;background:none;box-shadow:none;border-radius:0;
+  justify-content:center;font-size:18px;font-weight:1000;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.55);
+}
+.app.on-home .topbar .coin .coin-ic{display:none}
+
+/* ===== ZAFER EKRANI: PNG asset'li (vic-baslik / vic-panel / vic-buton / vic-altin / vic-sure) ===== */
+#modal-victory .vcard{max-width:380px;width:calc(100% - 20px)}
+.vx-head{width:100%;aspect-ratio:760/346;background:url('vic-baslik.png?v=1') center/100% 100% no-repeat;position:relative}
+.vx-title{position:absolute;left:12%;right:12%;top:60%;height:28%;display:flex;align-items:center;justify-content:center}
+#modal-victory .vx-title .vtitle{margin:0;font-size:clamp(26px,9.4vw,38px);line-height:1;white-space:nowrap}
+#modal-victory .reward-chapter{display:flex;align-items:center;gap:10px;margin:2px 0 8px;font-size:16px;letter-spacing:.08em;color:#f3f0ff;text-shadow:0 2px 0 rgba(0,0,0,.5)}
+#modal-victory .reward-chapter::before,#modal-victory .reward-chapter::after{content:"";width:34px;height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,#818cf8)}
+#modal-victory .reward-chapter::after{background:linear-gradient(90deg,#38bdf8,transparent)}
+#modal-victory .vstats{width:100%;box-sizing:border-box;aspect-ratio:760/137;margin:0 0 10px;padding:0 7%;border:0;border-radius:0;
+  background:url('vic-panel.png?v=1') center/100% 100% no-repeat;box-shadow:none;display:flex;align-items:center;justify-content:space-around}
+.vs-item{display:flex;align-items:center;gap:8px}
+.vs-ic{width:clamp(34px,11vw,46px);height:auto;flex:none;filter:drop-shadow(0 3px 3px rgba(0,0,0,.45))}
+#modal-victory .vstats small{font-size:12px;color:#b9b4f5;text-align:left}
+#modal-victory .vstats b{justify-content:flex-start;margin-top:0;font-size:clamp(24px,8vw,30px);line-height:1.05}
+#modal-victory .vstats .g{color:#fbbf24;text-shadow:0 2px 0 #92400e}
+#modal-victory .vstats .t{color:#22d3ee;text-shadow:0 2px 0 #0e4f63}
+#modal-victory .vstats .sep{height:46px;background:rgba(165,180,252,.3)}
+#modal-victory .btn-main{width:100%;aspect-ratio:640/178;height:auto;padding:0 6% 0 27%;border:0;border-radius:0;box-shadow:none;
+  background:url('vic-buton.png?v=1') center/100% 100% no-repeat;display:flex;align-items:center;justify-content:center;
+  font-size:clamp(17px,5.6vw,22px);letter-spacing:.05em;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.45)}
+#modal-victory .btn-main:active{transform:translateY(3px) scale(.985)!important;box-shadow:none}
 </style>
 </head>
 <body>
@@ -2090,14 +2131,20 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
   <!-- VICTORY -->
   <div class="modal" id="modal-victory">
     <div class="vcard" id="victory-card">
-      <h3 class="vtitle">TEBRİKLER!</h3>
+      <div class="vx-head"><div class="vx-title"><h3 class="vtitle">TEBRİKLER!</h3></div></div>
       <div class="reward-chapter" id="reward-chapter">BÖLÜM TAMAMLANDI</div>
       <div class="vstats">
-        <div><small>Kazanılan Altın</small><b class="g"><svg class="i"><use href="#i-coin"/></svg><span id="reward-coins">+25</span></b></div>
+        <div class="vs-item">
+          <img class="vs-ic" src="vic-altin.png" alt="" draggable="false">
+          <div><small>Kazanılan Altın</small><b class="g" id="reward-coins">+25</b></div>
+        </div>
         <div class="sep"></div>
-        <div><small>Geçen Süre</small><b class="t" id="reward-time">00:00</b></div>
+        <div class="vs-item">
+          <img class="vs-ic" src="vic-sure.png" alt="" draggable="false">
+          <div><small>Geçen Süre</small><b class="t" id="reward-time">00:00</b></div>
+        </div>
       </div>
-      <button id="btn-next-level" class="btn-main">SONRAKİ BÖLÜM</button>
+      <button id="btn-next-level" class="btn-main"><span id="btn-next-txt">SONRAKİ BÖLÜM</span></button>
     </div>
   </div>
 
@@ -3338,7 +3385,7 @@ document.addEventListener('visibilitychange', () => {
 
 function vicScene(idx){
   const total = MAX_PLAY + 1;
-  $('btn-next-level').textContent = idx + 1 < total ? 'SONRAKİ BÖLÜM' : 'HARİTAYA DÖN';
+  $('btn-next-txt').textContent = idx + 1 < total ? 'SONRAKİ BÖLÜM' : 'HARİTAYA DÖN';
 }
 
 function vicFx(stars, reward, elapsed){
