@@ -3234,6 +3234,7 @@ function victory(){
   delete S.partial[idx];
   const oldMax = S.maxOpen;
   S.maxOpen = Math.max(S.maxOpen, Math.min(idx + 1, LEVELS.length - 1));
+  S.justUnlocked = (S.maxOpen > oldMax) ? S.maxOpen : -1;
   saveProgress(); syncLevelPoints();
   /* HER BÖLÜMDE bitiş kutusu + yıldız + havai fişek göster */
   $('reward-time').textContent = fmt(elapsed);
@@ -3303,17 +3304,13 @@ function playJourneyUnlockAnimation(fromIdx){
 $('btn-next-level').addEventListener('click', () => {
   if (irisBusy) return;
   const fromIdx = S.levelIndex, iris = $('iris');
-  { const nx = fromIdx + 1;
-    if (nx < LEVELS.length && nx <= S.maxOpen && LEVELS[nx].group === LEVELS[fromIdx].group){
-      buzz(15); modal.classList.remove('show','leave'); showGame(nx); return;
-    } }
   irisBusy = true; buzz(15);
   modal.classList.add('leave');
   setTimeout(() => {
     iris.className = 'iris in';
     setTimeout(() => {
       modal.classList.remove('show','leave');
-      try { const nx = fromIdx + 1; showJourneyMap(0, { unlock: (nx < Math.min(10, LEVELS.length) && !S.done[nx]) ? nx : -1 }); } catch(e){ showLevels(); }
+      try { const nx = fromIdx + 1; showJourneyMap(0, { unlock: (nx < Math.min(10, LEVELS.length) && !S.done[nx] && S.justUnlocked === nx) ? nx : -1 }); } catch(e){ showLevels(); }
       requestAnimationFrame(() => { iris.className = 'iris out'; });
       setTimeout(() => { iris.className = 'iris'; irisBusy = false; }, 600);
     }, 520);
