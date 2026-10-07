@@ -684,6 +684,9 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .vcard .btn-main{padding:14px 16px;font-size:19px;border-radius:20px}
 
 /* ================= HOME ACTIONS ================= */
+.home-img-btn{display:block;width:100%;padding:0;margin:0;border:0;background:none;box-shadow:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .08s}
+.home-img-btn img{display:block;width:100%;height:auto;pointer-events:none;-webkit-user-drag:none;user-select:none}
+.home-img-btn:active{transform:scale(.96)}
 .home-actions{display:flex;flex-direction:column;gap:14px;width:100%;max-width:320px;align-items:stretch}
 .home-actions .btn-main{width:100%;max-width:none;min-width:0}
 .btn-sq{
@@ -1762,7 +1765,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
   <header class="topbar">
     <div class="grp">
       <button class="icon-btn av" id="btn-avatar" aria-label="Profil"></button>
-      <button class="icon-btn" id="btn-home" aria-label="Ana menü"><svg class="i"><use href="#i-home"/></svg></button>
+      <button class="icon-btn" id="btn-home" aria-label="Geri"><svg class="i" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></button>
       <div class="coin"><svg class="i coin-ic"><use href="#i-coin"/></svg><span id="coin-count">150</span></div>
     </div>
     <div class="level-box"><small>BÖLÜM</small><b id="header-level-num">1</b></div>
@@ -1814,10 +1817,10 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 
 
       <div class="home-actions">
-        <button id="lb" class="btn-sq gold" aria-label="Liderlik tablosu"><span>🏆</span><span>LİDERLİK TABLOSU</span></button>
-        <button id="btn-levels" class="btn-sq" aria-label="Yolculuğa Başla"><svg class="i"><use href="#i-grid"/></svg><span>YOLCULUĞA BAŞLA</span></button>
-        <button id="btn-online" class="btn-sq pink"><svg class="i"><use href="#i-user"/></svg><span>ONLİNE MOD</span></button>
-        <button id="btn-settings-home" class="btn-sq home-settings" aria-label="Ayarlar"><svg class="i"><use href="#i-gear"/></svg><span>AYARLAR</span></button>
+        <button id="lb" class="home-img-btn" aria-label="Liderlik tablosu"><img src="btn-liderlik.png" alt="Liderlik Tablosu" draggable="false"></button>
+        <button id="btn-levels" class="home-img-btn" aria-label="Yolculuğa Başla"><img src="btn-yolculuk.png" alt="Yolculuğa Başla" draggable="false"></button>
+        <button id="btn-online" class="home-img-btn" aria-label="Online Mod"><img src="btn-online.png" alt="Online Mod" draggable="false"></button>
+        <button id="btn-settings-home" class="home-img-btn" aria-label="Ayarlar"><img src="btn-ayarlar.png" alt="Ayarlar" draggable="false"></button>
               </div>
     </section>
 
@@ -2363,7 +2366,7 @@ const store = {
   set(k,v){ try { localStorage.setItem(k, v); } catch(e){} }
 };
 
-const TEST_UNLOCK_ALL = true;    // TEST: tüm bölümler açık — test bitince false yap
+const TEST_UNLOCK_ALL = false;    // TEST: tüm bölümler açık — test bitince false yap
 const TEST_INF_COINS = true;     // TEST: sınırsız altın — test bitince false yap
 const SHOW_NOTICES = false;     // bilgilendirme toast'ları kapalı
 const S = {
@@ -2395,7 +2398,6 @@ const S = {
     S.levelIndex = S.maxOpen;
     try { S.done = JSON.parse(store.get('cidahl_doga_done') || '{}') || {}; } catch(e) { S.done = {}; }
   }
-  if (TEST_UNLOCK_ALL) S.maxOpen = last;
   if (!store.get('kb_hid_v1')){            // eski kayıtları, araya eklenen gizli kelime bölümlerine göre kaydır
     const mv = i => i + (i >= 4 ? 1 : 0) + (i >= 9 ? 1 : 0) + (i >= 14 ? 1 : 0);
     const mp = o => { const r = {}; Object.keys(o || {}).forEach(k => { r[mv(+k)] = o[k]; }); return r; };
@@ -2404,9 +2406,15 @@ const S = {
     S.maxOpen = Math.min(last, mv(S.maxOpen)); S.levelIndex = S.maxOpen;
     store.set('kb_hid_v1', '1');
     store.set('cidahl_doga_max', S.maxOpen); store.set('cidahl_doga_level', S.maxOpen); store.set('cidahl_doga_done', JSON.stringify(S.done));
-    if (TEST_UNLOCK_ALL) S.maxOpen = last;
   }
   try { S.partial = JSON.parse(store.get('cidahl_doga_partial') || '{}') || {}; } catch(e) { S.partial = {}; }
+  // Kilitler: yalnızca 1. bölüm açık; sonraki bölüm, öncekini bitirince açılır (test kayıtlarını da düzeltir)
+  if (TEST_UNLOCK_ALL) S.maxOpen = last;
+  else {
+    let hi = -1; Object.keys(S.done || {}).forEach(k => { if (S.done[k] && +k > hi) hi = +k; });
+    S.maxOpen = Math.min(last, hi + 1); S.levelIndex = S.maxOpen;
+    store.set('cidahl_doga_max', S.maxOpen); store.set('cidahl_doga_level', S.maxOpen);
+  }
   // Açılmış bölümler tamamlanmış sayılmaz; yıldız yalnızca bölüm gerçekten bitirilince verilir.
   // Böylece yeni/ilk kullanıcıya otomatik 1 yıldız yazılmaz.
 }
@@ -2705,7 +2713,7 @@ function startLevel(index, def, seed){
   S.level = def ? buildLevel(def, seed) : buildLevel(LEVELS[index], index);
   const savedFound = (!def && !review && Array.isArray(S.partial[index])) ? S.partial[index] : [];
   S.found = new Set(savedFound.filter(w => S.level.words.includes(w)));
-  S.bank = []; S.colorOf = {}; S.caps = []; S.sel = null; S.selecting = false; S.dragCap = null; updateLiveSelection([]);
+  S.colorOf = {}; S.caps = []; S.sel = null; S.selecting = false; S.dragCap = null; updateLiveSelection([]);
   S.level.words.forEach((w, i) => S.colorOf[w] = PALETTE[i % PALETTE.length]);
   $('header-level-num').textContent = def ? def.size + '×' + def.size : S.level.id;
   $('category-title').textContent = S.level.category;
@@ -3109,7 +3117,8 @@ $('btn-hint').addEventListener('click', () => {
 const MAGNET_COST = 100;
 const BANK_WORD_REWARD = 5, BANK_GIFT = 5, BANK_GOAL = 25;     // şimdilik 5 / 5 / 25
 let bankTotal = parseInt(store.get('kb_bank_total') || '0', 10) || 0;
-S.bank = [];
+try { S.bank = JSON.parse(store.get('kb_bank_words') || '[]') || []; } catch(e){ S.bank = []; }
+if (!Array.isArray(S.bank)) S.bank = [];
 function refreshJokers(){
   const a = $('jk-hint'), b = $('jk-magnet'); if (!a || !b) return;
   a.classList.toggle('dis', S.coins < 50);
@@ -3233,7 +3242,7 @@ function renderBank(){
 }
 function addBankWord(word){
   word = String(word || '').trim(); if (!word || S.bank.includes(word)) return false;
-  S.bank.push(word); bankTotal++; store.set('kb_bank_total', String(bankTotal));
+  S.bank.push(word); store.set('kb_bank_words', JSON.stringify(S.bank)); bankTotal++; store.set('kb_bank_total', String(bankTotal));
   S.coins += BANK_WORD_REWARD;
   if (bankTotal % BANK_GOAL === 0){ S.coins += BANK_GIFT; toast('🎁 Hediye: +' + BANK_GIFT + ' altın!'); }
   updateCoins(); renderBank(); return true;
@@ -3290,6 +3299,7 @@ $('bank-close').addEventListener('click', () => $('bankbox').classList.remove('s
 $('bankbox').addEventListener('click', e => { if (e.target === $('bankbox')) $('bankbox').classList.remove('show'); });
 $('s-home').addEventListener('click', () => { closeMenu(); $('btn-home').click(); });
 refreshJokers();
+renderBank();
 
 /* =====================================================
    ZAMANLAYICI + ZAFER
@@ -3707,7 +3717,7 @@ $('btn-review-next').addEventListener('click', () => {
   if (nx >= LEVELS.length || nx > S.maxOpen){ showLevels(); } else { startLevel(nx); }
 });
 $('btn-levels').addEventListener('click', () => { audio(); showLevels(); });
-$('btn-home').addEventListener('click', () => { audio(); leaveGame(); showLevels(); });
+$('btn-home').addEventListener('click', () => { audio(); leaveGame(); showJourneyMap(0, { noLoading: true }); });
 $('btn-sound').addEventListener('click', () => toggleSound());
 
 /* ana ekran süsü: yüzen harf karoları */
