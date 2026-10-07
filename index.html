@@ -1330,6 +1330,17 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #view-game .live-selection{min-height:22px;margin:0 12px}
 #view-game .board-wrap{padding:2px 0}
 #view-game .jokers{padding:4px 8px 14px}
+
+/* ===== JOKER BUTONLARI: resimli (jk-karistir / jk-ipucu / jk-miknatis / jk-kelime-bankasi .png) ===== */
+.jk-grp{gap:6px}
+.jk.jk-img{width:74px;height:auto;aspect-ratio:300/290;border-radius:0;padding:0;background:transparent!important;box-shadow:none!important;overflow:visible;-webkit-tap-highlight-color:transparent}
+.jk.jk-img img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;-webkit-user-drag:none;user-select:none;filter:drop-shadow(0 4px 6px rgba(0,0,0,.45));transition:filter .15s}
+.jk.jk-img:active{transform:scale(.93);box-shadow:none!important}
+.jk.jk-img.dis img{filter:grayscale(.9) brightness(.65) drop-shadow(0 3px 4px rgba(0,0,0,.4))}
+.jk.jk-img .jk-price{bottom:-13px;z-index:2}
+.jk.jk-img .jk-badge{top:2px;right:4px;z-index:2}
+.jk.jk-img.jk-pulse{animation:jkImgPulse .6s ease-out}
+@keyframes jkImgPulse{0%{transform:scale(1)}40%{transform:scale(1.22);filter:drop-shadow(0 0 14px rgba(255,214,90,.95))}100%{transform:scale(1);filter:none}}
 </style>
 <style>
 /* ===== GİZLİ KELİME bölümü ===== */
@@ -1828,11 +1839,11 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
       </div>
       <div class="jokers" id="jokers">
         <div class="jk-grp">
-          <button class="jk" id="jk-shuffle" aria-label="Karıştır"><svg class="i"><use href="#i-shuffle"/></svg></button>
-          <button class="jk" id="jk-hint" aria-label="İpucu"><svg class="i"><use href="#i-bulb"/></svg><span class="jk-price">50<svg class="i"><use href="#i-coin"/></svg></span></button>
-          <button class="jk" id="jk-magnet" aria-label="Mıknatıs"><svg class="i"><use href="#i-magnet"/></svg><span class="jk-price">100<svg class="i"><use href="#i-coin"/></svg></span></button>
+          <button class="jk jk-img" id="jk-shuffle" aria-label="Karıştır"><img src="jk-karistir.png" alt="Karıştır" draggable="false"></button>
+          <button class="jk jk-img" id="jk-hint" aria-label="İpucu"><img src="jk-ipucu.png" alt="İpucu" draggable="false"><span class="jk-price">50<svg class="i"><use href="#i-coin"/></svg></span></button>
+          <button class="jk jk-img" id="jk-magnet" aria-label="Mıknatıs"><img src="jk-miknatis.png" alt="Mıknatıs" draggable="false"><span class="jk-price">100<svg class="i"><use href="#i-coin"/></svg></span></button>
         </div>
-        <button class="jk" id="jk-bank" aria-label="Kelime Bankası"><svg class="i"><use href="#i-book"/></svg><span class="jk-badge" id="bank-badge"></span></button>
+        <button class="jk jk-img" id="jk-bank" aria-label="Kelime Bankası"><img src="jk-kelime-bankasi.png" alt="Kelime Bankası" draggable="false"><span class="jk-badge" id="bank-badge"></span></button>
       </div>
       <button class="btn-main review-next" id="btn-review-next">SONRAKİ MOD</button>
     </section>
@@ -2221,6 +2232,8 @@ const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => {
   };
 }));
 const LEVELS = CLASSIC_LEVELS;
+const LOCKED_LAST = 5;                                   // son 5 bölüm kapalı (açmak için 0 yap)
+const MAX_PLAY = Math.max(0, LEVELS.length - 1 - LOCKED_LAST);   // oynanabilir son bölüm indeksi
 const MODES = [
   { key:'classic', category:'KLASİK SERBEST', icon:'sprout', color:'#22c55e', subtitle:'Rahatça oyna. Bölümleri seç ve normal kelime bulma modunda ilerle.', available:true }
 ];
@@ -2355,7 +2368,7 @@ const S = {
 {
   const c = parseInt(store.get('wow_search_coins'), 10);
   if (!isNaN(c)) S.coins = c;
-  const last = LEVELS.length - 1;
+  const last = MAX_PLAY;
   /* Yeni 10 bölümlük yolculuk sistemi: eski harita ilerlemesini karıştırma. */
   if (store.get('cidahl_journey_10_v1') !== '1'){
     S.maxOpen = 0;
@@ -3299,7 +3312,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 function vicScene(idx){
-  const total = LEVELS.length;
+  const total = MAX_PLAY + 1;
   $('btn-next-level').textContent = idx + 1 < total ? 'SONRAKİ BÖLÜM' : 'HARİTAYA DÖN';
 }
 
@@ -3325,7 +3338,7 @@ function victory(){
   };
   delete S.partial[idx];
   const oldMax = S.maxOpen;
-  S.maxOpen = Math.max(S.maxOpen, Math.min(idx + 1, LEVELS.length - 1));
+  S.maxOpen = Math.max(S.maxOpen, Math.min(idx + 1, MAX_PLAY));
   S.justUnlocked = (S.maxOpen > oldMax) ? S.maxOpen : -1;
   saveProgress(); syncLevelPoints();
   /* HER BÖLÜMDE bitiş kutusu + yıldız + havai fişek göster */
@@ -4933,7 +4946,7 @@ function showJourneyMap(chapterIndex, opts){
   ];
   const levelCount = Math.min(10, LEVELS.length);
   for (let i=0;i<levelCount;i++){
-    const done = !!S.done[i];
+    const done = !!S.done[i] && i <= MAX_PLAY;
     const pendingUnlock = (i === unlockIdx);
     const unlocked = i <= S.maxOpen && !pendingUnlock;
     const b = document.createElement('button');
@@ -4945,6 +4958,7 @@ function showJourneyMap(chapterIndex, opts){
     const d=LEVELS[i];
     b.setAttribute('aria-label', d.category + ' seviye ' + (i+1));
     if (unlocked) b.addEventListener('click',()=>{ audio(); showGame(i); });
+    else b.addEventListener('click',()=>{ toast(i > MAX_PLAY ? 'Bu bölüm yakında açılacak!' : 'Önce önceki bölümü tamamla.'); });
     nodes.appendChild(b);
     if (pendingUnlock) {
       afterLoad = () => {
