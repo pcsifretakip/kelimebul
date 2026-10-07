@@ -1032,8 +1032,12 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .journey-list-title-wrap{text-align:center;min-width:0}.journey-list-kicker{font-size:10px;font-weight:1000;letter-spacing:.24em;color:#a78bfa;text-shadow:0 0 10px rgba(167,139,250,.75);margin-bottom:2px}.journey-list-title-wrap h2{margin:0;color:#fff;font-size:23px;font-weight:1000;letter-spacing:.08em;text-shadow:0 0 8px rgba(255,255,255,.18),0 0 24px rgba(139,92,246,.45)}.journey-list-title-wrap span{display:block;margin-top:3px;color:rgba(255,255,255,.48);font-size:10px;font-weight:700}
 .journey-list{position:relative;z-index:2;flex:1;min-height:0;overflow-y:auto;padding:5px 14px calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:11px;scrollbar-width:none}.journey-list::-webkit-scrollbar{display:none}
 .journey-card{--neon:#8b5cf6;position:relative;width:100%;min-height:76px;box-sizing:border-box;border-radius:20px;padding:9px 12px;display:grid;grid-template-columns:48px minmax(0,1fr) auto;align-items:center;gap:11px;text-align:left;color:#fff;overflow:hidden;cursor:pointer;background:linear-gradient(105deg,rgba(27,20,58,.96),rgba(12,10,27,.96));border:1.5px solid color-mix(in srgb,var(--neon) 72%,white 8%);box-shadow:0 0 8px color-mix(in srgb,var(--neon) 24%,transparent),0 0 22px color-mix(in srgb,var(--neon) 12%,transparent),inset 0 0 18px color-mix(in srgb,var(--neon) 7%,transparent);transition:transform .15s,filter .15s,box-shadow .2s}
-.journey-card.has-banner{background:linear-gradient(90deg,rgba(2,18,9,.84) 0%,rgba(2,18,9,.5) 55%,rgba(2,18,9,.16) 100%),url('banneramazon.png?v=2') 50% 48.2%/auto 212% no-repeat,#04140a!important;min-height:84px}
+.journey-card.has-banner{background:linear-gradient(90deg,rgba(2,18,9,.84) 0%,rgba(2,18,9,.5) 55%,rgba(2,18,9,.16) 100%),url('banneramazon.png?v=2') 50% 48.2%/auto 212% no-repeat,#04140a!important;min-height:92px}
 .journey-card.has-banner .journey-name{text-shadow:0 2px 7px rgba(0,0,0,.95),0 0 3px rgba(0,0,0,.8)}
+.journey-card.has-bn{background:linear-gradient(90deg,rgba(2,6,23,.8) 0%,rgba(2,6,23,.42) 55%,rgba(2,6,23,.12) 100%),var(--bn) 50% 50%/cover no-repeat,#0b0a2a!important;min-height:92px;border-color:color-mix(in srgb,var(--neon) 80%,transparent)}
+.journey-card.has-bn .lock-label2{color:#fff;background:rgba(0,0,0,.55);padding:6px 10px;border-radius:999px;text-shadow:none}
+.journey-card.has-bn .journey-name{text-shadow:0 2px 7px rgba(0,0,0,.95),0 0 3px rgba(0,0,0,.8)}
+.journey-card.locked.has-bn{opacity:.85;filter:grayscale(.45) brightness(.8)}.journey-card.locked.has-bn::before{background:var(--neon);box-shadow:none;opacity:.7}
 .journey-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--neon);box-shadow:0 0 9px var(--neon),0 0 22px var(--neon);opacity:.95}.journey-card::after{content:"";position:absolute;top:-40%;left:-25%;width:32%;height:180%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.13),transparent);transform:rotate(18deg);animation:journeyShine 4.6s ease-in-out infinite;pointer-events:none}@keyframes journeyShine{0%,65%{left:-35%;opacity:0}72%{opacity:1}100%{left:125%;opacity:0}}
 .journey-card:active:not(.locked){transform:scale(.975)}.journey-card.current{box-shadow:0 0 12px color-mix(in srgb,var(--neon) 55%,transparent),0 0 32px color-mix(in srgb,var(--neon) 26%,transparent),inset 0 0 22px color-mix(in srgb,var(--neon) 10%,transparent);animation:journeyCurrent 1.9s ease-in-out infinite}@keyframes journeyCurrent{0%,100%{filter:brightness(1)}50%{filter:brightness(1.16)}}
 .journey-card.done{border-color:#fbbf24;--neon:#fbbf24;box-shadow:0 0 12px rgba(251,191,36,.42),0 0 25px rgba(251,191,36,.18),inset 0 0 20px rgba(251,191,36,.08)}
@@ -3386,6 +3390,52 @@ function showAmazonIntro(cb){
   t = setTimeout(() => o.classList.add('hint'), 3500);
 }
 
+/* Banner resimleri: tek dosya (bannerler.png, 1934x813, 3x3 ızgara) açılışta 9 parçaya kesilir */
+const BANNER_SHEET = 'bannerler.png?v=3';
+const BANNER_RECTS = {   // [x, y, genişlik, yükseklik] — çerçevenin içi
+  misir:[34,95,586,155], sahra:[675,95,583,155], everest:[1313,93,586,158],
+  antarktika:[32,327,589,158], harika7:[674,327,585,157], mariana:[1313,327,586,158],
+  kapadokya:[34,563,586,156], niagara:[675,563,583,156], fuji:[1313,562,586,157]
+};
+let bannerURLs = null, bannerReq = false;
+function paintBanners(){
+  if (!bannerURLs) return;
+  document.querySelectorAll('#journey-list [data-bn]').forEach(el => {
+    const u = bannerURLs[el.dataset.bn];
+    if (u) el.style.setProperty('--bn', "url('" + u + "')");
+  });
+}
+function loadBanners(){
+  if (bannerURLs){ paintBanners(); return; }
+  if (bannerReq) return; bannerReq = true;
+  const im = new Image();
+  im.onload = () => {
+    try {
+      const sc = im.naturalWidth / 1934, o = {};
+      for (const k in BANNER_RECTS){
+        const r = BANNER_RECTS[k], c = document.createElement('canvas');
+        c.width = r[2]; c.height = r[3];
+        c.getContext('2d').drawImage(im, r[0] * sc, r[1] * sc, r[2] * sc, r[3] * sc, 0, 0, r[2], r[3]);
+        o[k] = c.toDataURL('image/jpeg', .9);
+      }
+      bannerURLs = o; paintBanners();
+    } catch(e){ bannerReq = false; }
+  };
+  im.onerror = () => { bannerReq = false; };
+  im.src = BANNER_SHEET;
+}
+const JOURNEY_CARDS = [
+  { name:'Amazon Yağmur Ormanları' },
+  { name:'Mısır Piramitleri',    key:'misir',      color:'#fbbf24' },
+  { name:'Sahra Çölü',           key:'sahra',      color:'#f59e0b' },
+  { name:'Everest Tepesi',       key:'everest',    color:'#22d3ee' },
+  { name:'Antarktika Kıtası',    key:'antarktika', color:'#38bdf8' },
+  { name:'Dünyanın 7 Harikası',  key:'harika7',    color:'#a855f7' },
+  { name:'Mariana Çukuru',       key:'mariana',    color:'#22b8f0' },
+  { name:'Kapadokya',            key:'kapadokya',  color:'#fb923c' },
+  { name:'Niagara Şelaleleri',   key:'niagara',    color:'#2dd4bf' },
+  { name:'Fuji Dağı',            key:'fuji',       color:'#f472b6' }
+];
 function renderModes(){
   const list = $('journey-list');
   if (!list) return;
@@ -3393,7 +3443,8 @@ function renderModes(){
   Object.keys(S.done || {}).forEach(k => { if (S.done[k]) totalStars += Number(S.done[k].stars || 0); });
   const score = $('jr-score-v'); if (score) score.textContent = totalStars;
   list.innerHTML = '';
-  LEVELS.forEach((d, i) => {
+  JOURNEY_CARDS.forEach((jc, i) => {
+    const d = LEVELS[i] || LEVELS[0];
     const th = themeOf(d);
     const done = S.done[i];
     const unlocked = i <= S.maxOpen;
@@ -3408,7 +3459,13 @@ function renderModes(){
     if (!unlocked) state = '<span class="lock-label2"><svg class="i"><use href="#i-lock"/></svg>KİLİTLİ</span>';
     else if (done) state = '<span class="done-label">✓ TAMAMLANDI</span>' + stars;
     else state = '<span class="play">OYNA</span>';
-    if (soon) { b.className = 'journey-card locked'; b.innerHTML = '<span class="journey-num">🔒</span><span class="journey-info"><span class="journey-name">' + d.category + '</span></span><span class="journey-state"><span class="lock-label2">YAKINDA</span></span>'; b.setAttribute('aria-disabled','true'); list.appendChild(b); return; }
+    if (soon) {
+      b.className = 'journey-card locked has-bn';
+      b.style.setProperty('--neon', jc.color);
+      b.dataset.bn = jc.key;
+      b.innerHTML = '<span class="journey-num">🔒</span><span class="journey-info"><span class="journey-name">' + jc.name + '</span></span><span class="journey-state"><span class="lock-label2">YAKINDA</span></span>';
+      b.setAttribute('aria-disabled','true'); list.appendChild(b); return;
+    }
     b.innerHTML = '<span class="journey-num">' + (unlocked ? (done ? '✓' : i + 1) : '🔒') + '</span>' +
       '<span class="journey-info"><span class="journey-name">' + d.category + '</span>' + (done ? stars : '') + '</span>' +
       '<span class="journey-state">' + state + '</span>';
@@ -3417,6 +3474,7 @@ function renderModes(){
     else b.setAttribute('aria-disabled','true');
     list.appendChild(b);
   });
+  loadBanners();
 }
 /* Harita.png yolu: resim koordinatlarında (940x1672) yol merkez noktaları, alttan üste */
 let JR_ART_H = 1672; // resmin gerçekten dolu olan yüksekliği (altı boş/siyah)
