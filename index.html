@@ -232,7 +232,7 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
     linear-gradient(160deg,#3a2299,#170e4c 55%,#0f0838);
   box-shadow:0 0 0 2px rgba(251,191,36,.75),0 0 0 6px rgba(124,92,255,.45),0 0 34px rgba(124,92,255,.5),0 24px 50px rgba(0,0,0,.55),inset 0 0 46px rgba(124,92,255,.25);
 }
-.cap-layer{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:visible}
+.cap-layer{position:absolute;inset:0;z-index:10;pointer-events:none;overflow:visible}
 .cell{
   position:relative;z-index:3;display:flex;align-items:center;justify-content:center;
   border-radius:12px;background:rgba(255,255,255,.075);
@@ -252,53 +252,18 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 .hint-fly::after{content:"";position:absolute;inset:-8px;border-radius:50%;box-shadow:0 0 18px rgba(255,215,80,.7);pointer-events:none}
 @keyframes hintFlyPop{0%{transform:translate(-50%,-50%) scale(.75)}100%{transform:translate(-50%,-50%) scale(1)}}
 
-/* ===== ELEKTRİK BAĞLANTISI EFEKTİ ===== */
-.cap{position:absolute;inset:0;width:100%!important;height:100%!important;overflow:visible;pointer-events:none;transform:none!important}
+/* ===== KELİME ÇİZGİSİ: tek, kalın, sabit neon çizgi ===== */
+.cap{position:absolute;inset:0;width:100%!important;height:100%!important;overflow:visible;pointer-events:none;transform:none!important;z-index:12}
 .cap svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.cap .ec-glow{fill:none;stroke:var(--c);stroke-width:18;stroke-linecap:round;stroke-linejoin:round;opacity:.42;filter:blur(6px);}
-.cap .ec-aura{fill:none;stroke:var(--c);stroke-width:10;stroke-linecap:round;stroke-linejoin:round;opacity:.92;filter:drop-shadow(0 0 7px var(--c)) drop-shadow(0 0 12px var(--c));}
-.cap .ec-core{fill:none;stroke:#ffffff;stroke-width:4.2;stroke-linecap:round;stroke-linejoin:round;opacity:1;stroke-dasharray:none;animation:none;}
-.cap .ec-node{fill:rgba(34,211,238,.72);stroke:#eaffff;stroke-width:1;filter:drop-shadow(0 0 3px var(--c));}
-.cap .ec-ring{fill:none;stroke:var(--c);stroke-width:1.2;opacity:.42;transform-box:fill-box;transform-origin:center;animation:ecRing .9s ease-out infinite;}
-.cap .ec-spark,.cap .ec-burst{display:none !important;}
-.cap .ec-ring{animation:none !important;}
-.cap .ec-burst{fill:var(--c);opacity:.35;filter:drop-shadow(0 0 3px var(--c));animation:ecBurst .8s ease-out infinite;}
-.cap.drag{--c:#22d3ee;opacity:.9}.cap:not(.drag){opacity:.48}
-.cap.new{animation:ecAppear .28s cubic-bezier(.2,1.5,.4,1) both}
-.cap.bad{--c:#ef4444;animation:ecBad .38s ease-out forwards}
+.cap .ec-core{fill:none;stroke:var(--c);stroke-width:12;stroke-linecap:round;stroke-linejoin:round;opacity:1;filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 6px var(--c)) drop-shadow(0 0 14px var(--c)) drop-shadow(0 0 24px var(--c));}
+.cap .ec-glow,.cap .ec-aura,.cap .ec-node,.cap .ec-ring,.cap .ec-spark,.cap .ec-burst{display:none!important}
+.cap.drag{--c:#20e7ff;opacity:1}
+.cap:not(.drag){opacity:1}
+.cap.new{animation:ecAppear .2s ease-out both}
+.cap.bad{--c:#ff315d;animation:ecBad .28s ease-out forwards}
 .cap.bad.out{opacity:0;transition:opacity .22s}
-@keyframes ecFlow{to{stroke-dashoffset:0}}
-@keyframes ecRing{0%{transform:scale(.55);opacity:.95}100%{transform:scale(1.5);opacity:0}}
-@keyframes ecSpark{from{opacity:.25;transform:scale(.65)}to{opacity:1;transform:scale(1.35)}}
-@keyframes ecBurst{0%{opacity:.9;transform:scale(.4)}100%{opacity:0;transform:scale(1.8)}}
-@keyframes ecAppear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
-@keyframes ecBad{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
-
-.status{
-  display:none;align-items:center;gap:10px;padding:9px 14px;border-radius:16px;
-  background:rgba(10,6,38,.62);border:1px solid var(--stroke);font-size:12px;font-weight:800;color:#c3bef0
-}
-.status .txt{flex:1;line-height:1.25}
-.prog{width:84px;height:8px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
-.prog i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#34d399,#fbbf24);transition:width .5s cubic-bezier(.3,1,.4,1)}
-#found-progress{font-weight:1000;font-size:14px;color:var(--gold);min-width:42px;text-align:right;font-variant-numeric:tabular-nums}
-
-/* flying word label */
-.word-fly{
-  position:absolute;left:0;top:0;z-index:70;pointer-events:none;white-space:nowrap;
-  padding:7px 18px;border-radius:999px;font-size:23px;font-weight:1000;letter-spacing:.08em;color:#fff;
-  background:var(--c);text-shadow:0 2px 3px rgba(0,0,0,.35);
-  box-shadow:0 0 0 3px rgba(255,255,255,.8),0 10px 34px var(--c)
-}
-.toast{
-  position:absolute;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));z-index:75;transform:translate(-50%,16px);
-  padding:9px 18px;border-radius:999px;font-size:13px;font-weight:900;color:#fff;
-  background:rgba(12,8,42,.92);border:1px solid rgba(255,255,255,.22);box-shadow:0 10px 30px rgba(0,0,0,.45);
-  opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap
-}
-.toast.show{opacity:1;transform:translate(-50%,0)}
-
-
+@keyframes ecAppear{from{opacity:0}to{opacity:1}}
+@keyframes ecBad{0%,100%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(3px)}60%{transform:translateX(-2px)}80%{transform:translateX(1px)}}
 /* ===== LOGIN ===== */
 #view-login{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;padding:24px 28px calc(24px + env(safe-area-inset-bottom));overflow:hidden}
 #view-login .home-top{animation:lgFloat 3.6s ease-in-out infinite}
@@ -1050,6 +1015,8 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
     linear-gradient(180deg,#090716 0%,#100b25 48%,#070611 100%);
 }
 .journey-list-view::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.38;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,black,transparent 92%)}
+.journey-list-title-wrap{display:flex;align-items:center;justify-content:center;min-width:0}
+.journey-title-img{display:block;width:min(72vw,430px);height:auto;max-height:82px;object-fit:contain;pointer-events:none;user-select:none;-webkit-user-drag:none}
 .journey-list-head{position:relative;z-index:2;display:grid;grid-template-columns:48px 1fr 64px;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 12px}
 .journey-list-back,.journey-list-score{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:rgba(18,14,39,.88);border:1px solid rgba(255,255,255,.16);box-shadow:0 0 16px rgba(124,58,237,.18),inset 0 1px 0 rgba(255,255,255,.12)}
 .journey-list-back{color:#fbbf24;cursor:pointer}.journey-list-back .i{width:24px;height:24px;fill:currentColor}.journey-list-back:active{transform:scale(.94)}
@@ -1395,13 +1362,13 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .mag-fx{position:absolute;inset:0;z-index:30;pointer-events:none;display:flex;align-items:center;justify-content:center;overflow:visible;transition:opacity .45s ease,transform .45s ease}
 .mag-fx.out{opacity:0;transform:scale(.6)}
 .mag-fx .mg-rays{position:absolute;width:min(92%,420px);aspect-ratio:1;transform-origin:center;border-radius:50%;
-  background:repeating-conic-gradient(from 0deg,rgba(251,191,36,.9) 0 11deg,transparent 11deg 22deg);
+  background:repeating-conic-gradient(from 0deg,rgba(251,191,36,.6) 0 7deg,transparent 7deg 22deg);
   -webkit-mask-image:radial-gradient(circle,#000 6%,transparent 66%);mask-image:radial-gradient(circle,#000 6%,transparent 66%);
   animation:mgRaysIn .6s ease-out .25s both,mgSpin 5s linear infinite}
 .mag-fx .mg-glow{position:absolute;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(251,191,36,.75),rgba(251,191,36,0) 68%);animation:mgGlow 1s ease-in-out infinite alternate}
 .mag-fx .mg-ring{position:absolute;width:110px;height:110px;border-radius:50%;border:3px solid rgba(34,211,238,.9);box-shadow:0 0 14px rgba(34,211,238,.7);opacity:0;animation:mgRing 1.5s ease-out .5s infinite}
 .mag-fx .mg-aura{position:absolute;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,.55),rgba(168,85,247,.28) 45%,rgba(168,85,247,0) 70%);animation:mgGlow 1s ease-in-out infinite alternate}
-.mag-fx .mg-beam{position:absolute;height:18px;margin-top:-9px;border-radius:7px;transform-origin:0 50%;z-index:2;background:linear-gradient(90deg,#ffffff 0%,#67e8f9 22%,#22d3ee 55%,#a855f7 100%);clip-path:polygon(0 35%,12% 35%,16% 0,21% 38%,34% 38%,39% 72%,45% 28%,57% 28%,62% 100%,68% 34%,82% 34%,87% 62%,94% 30%,100% 42%,100% 58%,93% 52%,87% 78%,81% 50%,68% 50%,62% 100%,56% 48%,45% 48%,39% 84%,33% 50%,20% 50%,16% 78%,11% 50%,0 55%);box-shadow:0 0 8px #fff,0 0 18px #22d3ee,0 0 36px #22d3ee,0 0 52px rgba(168,85,247,.95);filter:drop-shadow(0 0 8px #22d3ee) drop-shadow(0 0 16px rgba(168,85,247,.8));animation:mgBeam .4s ease-out both}
+.mag-fx .mg-beam{position:absolute;height:10px;margin-top:-5px;border-radius:4px;transform-origin:0 50%;z-index:2;background:linear-gradient(90deg,#ffffff 0%,#67e8f9 22%,#22d3ee 55%,#a855f7 100%);clip-path:polygon(0 35%,12% 35%,16% 0,21% 38%,34% 38%,39% 72%,45% 28%,57% 28%,62% 100%,68% 34%,82% 34%,87% 62%,94% 30%,100% 42%,100% 58%,93% 52%,87% 78%,81% 50%,68% 50%,62% 100%,56% 48%,45% 48%,39% 84%,33% 50%,20% 50%,16% 78%,11% 50%,0 55%);box-shadow:0 0 6px #fff,0 0 14px #22d3ee,0 0 28px rgba(168,85,247,.95);filter:drop-shadow(0 0 5px #22d3ee);animation:mgBeam .4s ease-out both}
 @keyframes mgBeam{from{scale:0 1;opacity:0}to{scale:1 1;opacity:1}}
 @keyframes mgFlick{from{opacity:.65}to{opacity:1}}
 .cell.mg-hit{box-shadow:0 0 10px #22d3ee,0 0 22px #a855f7,inset 0 0 8px rgba(34,211,238,.7)!important;color:#fff!important;position:relative;z-index:5}
@@ -1797,11 +1764,6 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 #view-home .home-img-btn { width:84% !important; max-width:350px !important; }
 #view-home .home-img-btn img { width:100% !important; height:auto !important; }
 @media (max-width:380px) { #view-home .home-img-btn { width:88% !important; } #view-home .home-actions { max-width:340px !important; } }
-</style>
-
-<style>
-.journey-list-title-wrap{display:flex;align-items:center;justify-content:center;}
-.journey-title-img{display:block;width:min(78vw,430px);height:auto;max-height:82px;object-fit:contain;}
 </style>
 </head>
 <body>
@@ -2963,28 +2925,29 @@ function placeCap(el, a, b){
 function electricPathD(path){
   if (!path || !path.length) return '';
   const pts = path.map(p => center(p.r, p.c));
-  if (pts.length === 1) return `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
-  return `M ${pts.map(p => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' L ')}`;
+  let d = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+  for (let i = 1; i < pts.length; i++) d += ` L ${pts[i].x.toFixed(1)} ${pts[i].y.toFixed(1)}`;
+  return d;
 }
 
 function renderElectricCap(el, path){
   if (!S.geo || !path || !path.length) return;
   el._path = path;
-  const d = electricPathD(path);
   const svg = el.querySelector('svg');
   if (!svg) return;
-  svg.querySelectorAll('.ec-line').forEach(p => p.setAttribute('d', d));
-  svg.querySelectorAll('.ec-node,.ec-ring,.ec-spark,.ec-burst').forEach(n => n.remove());
+  const core = svg.querySelector('.ec-core');
+  if (!core) return;
+  core.setAttribute('d', electricPathD(path));
+  core.setAttribute('stroke-width', Math.max(9, S.geo.cell * .24));
+  core.style.filter = `drop-shadow(0 0 2px #ffffff) drop-shadow(0 0 6px var(--c)) drop-shadow(0 0 14px var(--c)) drop-shadow(0 0 24px var(--c))`;
 }
 
 function makeCap(path, cls, color){
   const el = document.createElement('div');
   el.className = 'cap ' + cls;
   el._path = path.map(p => ({r:p.r,c:p.c}));
-  el.style.setProperty('--c', color || (cls === 'drag' ? '#22d3ee' : '#22d3ee'));
-  el.innerHTML = `<svg viewBox="0 0 ${Math.max(1, gridEl.clientWidth)} ${Math.max(1, gridEl.clientHeight)}" preserveAspectRatio="none" aria-hidden="true">
-    <path class="ec-line ec-glow"></path><path class="ec-line ec-aura"></path><path class="ec-line ec-core"></path>
-  </svg>`;
+  el.style.setProperty('--c', color || (cls === 'drag' ? '#20e7ff' : '#20e7ff'));
+  el.innerHTML = `<svg viewBox="0 0 ${Math.max(1, gridEl.clientWidth)} ${Math.max(1, gridEl.clientHeight)}" preserveAspectRatio="none" aria-hidden="true"><path class="ec-core"></path></svg>`;
   capLayer.appendChild(el);
   renderElectricCap(el, path);
   return el;
