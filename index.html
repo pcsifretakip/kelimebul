@@ -684,10 +684,10 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .vcard .btn-main{padding:14px 16px;font-size:19px;border-radius:20px}
 
 /* ================= HOME ACTIONS ================= */
-.home-img-btn{display:block;width:100%;padding:0;margin:0;border:0;background:none;box-shadow:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .08s}
+.home-img-btn{display:block;width:68%;align-self:center;padding:0;margin:0;border:0;background:none;box-shadow:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .08s}
 .home-img-btn img{display:block;width:100%;height:auto;pointer-events:none;-webkit-user-drag:none;user-select:none}
 .home-img-btn:active{transform:scale(.96)}
-.home-actions{display:flex;flex-direction:column;gap:14px;width:100%;max-width:320px;align-items:stretch}
+.home-actions{display:flex;flex-direction:column;gap:6px;width:100%;max-width:320px;align-items:stretch}
 .home-actions .btn-main{width:100%;max-width:none;min-width:0}
 .btn-sq{
   position:relative;overflow:hidden;--edge:#0b3d66;
@@ -1369,8 +1369,8 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 </style>
 <style>
 /* ===== MIKNATIS: ortada belirir, ışın yayar, olmayan harfler solar ===== */
-.cell.dim{color:rgba(243,241,255,.16);text-shadow:none;background:rgba(255,255,255,.025);transition:color 1.8s ease,background 1.8s ease,text-shadow 1.8s ease}
-.cell.dim.sel{color:#fff}
+.cell.dim{opacity:0;visibility:hidden;transition:opacity 1.2s ease,visibility 0s linear 1.2s}
+.cell.dim.sel{opacity:0}
 .mag-fx{position:absolute;inset:0;z-index:30;pointer-events:none;display:flex;align-items:center;justify-content:center;overflow:visible;transition:opacity .45s ease,transform .45s ease}
 .mag-fx.out{opacity:0;transform:scale(.6)}
 .mag-fx .mg-rays{position:absolute;width:min(92%,420px);aspect-ratio:1;transform-origin:center;border-radius:50%;
@@ -3185,7 +3185,8 @@ function useMagnet(){
   S.cells.forEach((el, i) => { if (!used.has(i) && !el.classList.contains('dim')) cand.push(i); });
   if (!cand.length){ toast('Solacak harf kalmadı'); return; }
   if (S.coins < MAGNET_COST){ toast('Yeterli altının yok!'); SND.miss(); return; }
-  S.coins -= MAGNET_COST; updateCoins(); SND.hint();
+  S.coins -= MAGNET_COST; updateCoins();
+  try { if (S.sound){ const ma = new Audio('miknatis.mp3'); ma.volume = 1; const pr = ma.play(); if (pr && pr.catch) pr.catch(() => SND.hint()); } } catch(e){ SND.hint(); }
   for (let i = cand.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [cand[i], cand[j]] = [cand[j], cand[i]]; }
   const targets = cand.slice(0, 5);
   S.magBusy = true;
@@ -3202,7 +3203,7 @@ function useMagnet(){
     const el = S.cells[idx];
     setTimeout(() => {
       if (tok !== S.token) return;
-      el.classList.add('dim');                       // yavaş yavaş solar (CSS geçişi 1.8 sn)
+      el.classList.add('dim');                       // harf tamamen yok olur (CSS geçişi 1.2 sn)
       const cx = el.offsetLeft + el.offsetWidth / 2, cy = el.offsetTop + el.offsetHeight / 2;
       const bdx = cx - mx, bdy = cy - my;
       const beam = document.createElement('i'); beam.className = 'mg-beam';
