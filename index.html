@@ -255,9 +255,9 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 /* ===== ELEKTRİK BAĞLANTISI EFEKTİ ===== */
 .cap{position:absolute;inset:0;width:100%!important;height:100%!important;overflow:visible;pointer-events:none;transform:none!important}
 .cap svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.cap .ec-glow{fill:none;stroke:var(--c);stroke-width:10;stroke-linecap:round;stroke-linejoin:round;opacity:.07;filter:blur(4px);}
-.cap .ec-aura{fill:none;stroke:var(--c);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;opacity:.28;filter:drop-shadow(0 0 4px var(--c));}
-.cap .ec-core{fill:none;stroke:#dffcff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;opacity:.72;stroke-dasharray:5 12;animation:ecFlow .7s linear infinite;}
+.cap .ec-glow{fill:none;stroke:var(--c);stroke-width:13;stroke-linecap:round;stroke-linejoin:round;opacity:.24;filter:blur(5px);}
+.cap .ec-aura{fill:none;stroke:var(--c);stroke-width:7;stroke-linecap:round;stroke-linejoin:round;opacity:.55;filter:drop-shadow(0 0 5px var(--c));}
+.cap .ec-core{fill:none;stroke:#f3ffff;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;opacity:.98;stroke-dasharray:none;animation:none;}
 .cap .ec-node{fill:rgba(34,211,238,.72);stroke:#eaffff;stroke-width:1;filter:drop-shadow(0 0 3px var(--c));}
 .cap .ec-ring{fill:none;stroke:var(--c);stroke-width:1.2;opacity:.42;transform-box:fill-box;transform-origin:center;animation:ecRing .9s ease-out infinite;}
 .cap .ec-spark,.cap .ec-burst{display:none !important;}
@@ -267,7 +267,7 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 .cap.new{animation:ecAppear .28s cubic-bezier(.2,1.5,.4,1) both}
 .cap.bad{--c:#ef4444;animation:ecBad .38s ease-out forwards}
 .cap.bad.out{opacity:0;transition:opacity .22s}
-@keyframes ecFlow{to{stroke-dashoffset:-36}}
+@keyframes ecFlow{to{stroke-dashoffset:0}}
 @keyframes ecRing{0%{transform:scale(.55);opacity:.95}100%{transform:scale(1.5);opacity:0}}
 @keyframes ecSpark{from{opacity:.25;transform:scale(.65)}to{opacity:1;transform:scale(1.35)}}
 @keyframes ecBurst{0%{opacity:.9;transform:scale(.4)}100%{opacity:0;transform:scale(1.8)}}
@@ -1194,7 +1194,7 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 
 /* ===== Yeni zafer ekranı ===== */
 #modal-victory .vcard{position:relative;transform:none!important}
-#modal-victory .vcard::before{content:"";position:absolute;left:50%;top:-30px;width:520px;height:520px;margin-left:-260px;z-index:-1;pointer-events:none;opacity:0;
+#modal-victory .vcard::before{content:"";position:absolute;left:50%;top:-65px;width:520px;height:520px;margin-left:-260px;z-index:-1;pointer-events:none;opacity:0;
   background:repeating-conic-gradient(from 0deg,rgba(251,191,36,.30) 0 7deg,transparent 7deg 20deg);
   -webkit-mask-image:radial-gradient(circle,#000 0,transparent 68%);mask-image:radial-gradient(circle,#000 0,transparent 68%)}
 #modal-victory.show .vcard::before{animation:vRays 22s linear infinite,vFade .8s .2s forwards}
@@ -1395,13 +1395,13 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .mag-fx{position:absolute;inset:0;z-index:30;pointer-events:none;display:flex;align-items:center;justify-content:center;overflow:visible;transition:opacity .45s ease,transform .45s ease}
 .mag-fx.out{opacity:0;transform:scale(.6)}
 .mag-fx .mg-rays{position:absolute;width:min(92%,420px);aspect-ratio:1;transform-origin:center;border-radius:50%;
-  background:repeating-conic-gradient(from 0deg,rgba(251,191,36,.6) 0 7deg,transparent 7deg 22deg);
+  background:repeating-conic-gradient(from 0deg,rgba(251,191,36,.9) 0 11deg,transparent 11deg 22deg);
   -webkit-mask-image:radial-gradient(circle,#000 6%,transparent 66%);mask-image:radial-gradient(circle,#000 6%,transparent 66%);
   animation:mgRaysIn .6s ease-out .25s both,mgSpin 5s linear infinite}
 .mag-fx .mg-glow{position:absolute;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(251,191,36,.75),rgba(251,191,36,0) 68%);animation:mgGlow 1s ease-in-out infinite alternate}
 .mag-fx .mg-ring{position:absolute;width:110px;height:110px;border-radius:50%;border:3px solid rgba(34,211,238,.9);box-shadow:0 0 14px rgba(34,211,238,.7);opacity:0;animation:mgRing 1.5s ease-out .5s infinite}
 .mag-fx .mg-aura{position:absolute;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,.55),rgba(168,85,247,.28) 45%,rgba(168,85,247,0) 70%);animation:mgGlow 1s ease-in-out infinite alternate}
-.mag-fx .mg-beam{position:absolute;height:10px;margin-top:-5px;border-radius:4px;transform-origin:0 50%;z-index:2;background:linear-gradient(90deg,#ffffff 0%,#67e8f9 22%,#22d3ee 55%,#a855f7 100%);clip-path:polygon(0 35%,12% 35%,16% 0,21% 38%,34% 38%,39% 72%,45% 28%,57% 28%,62% 100%,68% 34%,82% 34%,87% 62%,94% 30%,100% 42%,100% 58%,93% 52%,87% 78%,81% 50%,68% 50%,62% 100%,56% 48%,45% 48%,39% 84%,33% 50%,20% 50%,16% 78%,11% 50%,0 55%);box-shadow:0 0 6px #fff,0 0 14px #22d3ee,0 0 28px rgba(168,85,247,.95);filter:drop-shadow(0 0 5px #22d3ee);animation:mgBeam .4s ease-out both}
+.mag-fx .mg-beam{position:absolute;height:18px;margin-top:-9px;border-radius:7px;transform-origin:0 50%;z-index:2;background:linear-gradient(90deg,#ffffff 0%,#67e8f9 22%,#22d3ee 55%,#a855f7 100%);clip-path:polygon(0 35%,12% 35%,16% 0,21% 38%,34% 38%,39% 72%,45% 28%,57% 28%,62% 100%,68% 34%,82% 34%,87% 62%,94% 30%,100% 42%,100% 58%,93% 52%,87% 78%,81% 50%,68% 50%,62% 100%,56% 48%,45% 48%,39% 84%,33% 50%,20% 50%,16% 78%,11% 50%,0 55%);box-shadow:0 0 8px #fff,0 0 18px #22d3ee,0 0 36px #22d3ee,0 0 52px rgba(168,85,247,.95);filter:drop-shadow(0 0 8px #22d3ee) drop-shadow(0 0 16px rgba(168,85,247,.8));animation:mgBeam .4s ease-out both}
 @keyframes mgBeam{from{scale:0 1;opacity:0}to{scale:1 1;opacity:1}}
 @keyframes mgFlick{from{opacity:.65}to{opacity:1}}
 .cell.mg-hit{box-shadow:0 0 10px #22d3ee,0 0 22px #a855f7,inset 0 0 8px rgba(34,211,238,.7)!important;color:#fff!important;position:relative;z-index:5}
@@ -1775,12 +1775,12 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 #modal-victory .reward-chapter{display:flex;align-items:center;gap:10px;margin:2px 0 8px;font-size:16px;letter-spacing:.08em;color:#f3f0ff;text-shadow:0 2px 0 rgba(0,0,0,.5)}
 #modal-victory .reward-chapter::before,#modal-victory .reward-chapter::after{content:"";width:34px;height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,#818cf8)}
 #modal-victory .reward-chapter::after{background:linear-gradient(90deg,#38bdf8,transparent)}
-#modal-victory .vstats{width:100%;box-sizing:border-box;aspect-ratio:760/137;margin:0 0 10px;padding:0 7%;border:0;border-radius:0;
+#modal-victory .vstats{width:100%;box-sizing:border-box;aspect-ratio:760/137;margin:0 0 10px;padding:0 10%;border:0;border-radius:0;
   background:url('vic-panel.png?v=1') center/100% 100% no-repeat;box-shadow:none;display:flex;align-items:center;justify-content:space-around}
-.vs-item{display:flex;align-items:center;gap:8px}
+.vs-item{display:flex;align-items:center;gap:6px;min-width:0}
 .vs-ic{width:clamp(34px,11vw,46px);height:auto;flex:none;filter:drop-shadow(0 3px 3px rgba(0,0,0,.45))}
 #modal-victory .vstats small{font-size:12px;color:#b9b4f5;text-align:left}
-#modal-victory .vstats b{justify-content:flex-start;margin-top:0;font-size:clamp(24px,8vw,30px);line-height:1.05}
+#modal-victory .vstats b{justify-content:flex-start;margin-top:0;font-size:clamp(21px,7vw,27px);line-height:1.05}
 #modal-victory .vstats .g{color:#fbbf24;text-shadow:0 2px 0 #92400e}
 #modal-victory .vstats .t{color:#22d3ee;text-shadow:0 2px 0 #0e4f63}
 #modal-victory .vstats .sep{height:46px;background:rgba(165,180,252,.3)}
@@ -2958,22 +2958,8 @@ function placeCap(el, a, b){
 function electricPathD(path){
   if (!path || !path.length) return '';
   const pts = path.map(p => center(p.r, p.c));
-  if (pts.length === 1) return `M ${pts[0].x} ${pts[0].y}`;
-  let d = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
-  for (let i = 0; i < pts.length - 1; i++){
-    const A = pts[i], B = pts[i + 1];
-    const dx = B.x - A.x, dy = B.y - A.y, len = Math.hypot(dx, dy) || 1;
-    const nx = -dy / len, ny = dx / len;
-    const amp = Math.min(S.geo.cell * .18, len * .13) * (i % 2 ? -1 : 1);
-    const mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2;
-    const bend = {x: mx + nx * amp, y: my + ny * amp};
-    const c1 = {x: A.x + (B.x-A.x)*.34 + nx*amp*.45, y: A.y + (B.y-A.y)*.34 + ny*amp*.45};
-    const c2 = {x: B.x - (B.x-A.x)*.34 + nx*amp*.45, y: B.y - (B.y-A.y)*.34 + ny*amp*.45};
-    d += ` C ${c1.x.toFixed(1)} ${c1.y.toFixed(1)}, ${c2.x.toFixed(1)} ${c2.y.toFixed(1)}, ${bend.x.toFixed(1)} ${bend.y.toFixed(1)}`;
-    const c3 = {x: B.x - (B.x-A.x)*.16 - nx*amp*.2, y: B.y - (B.y-A.y)*.16 - ny*amp*.2};
-    d += ` C ${B.x-(B.x-A.x)*.16+nx*amp*.15} ${B.y-(B.y-A.y)*.16+ny*amp*.15}, ${c3.x.toFixed(1)} ${c3.y.toFixed(1)}, ${B.x.toFixed(1)} ${B.y.toFixed(1)}`;
-  }
-  return d;
+  if (pts.length === 1) return `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+  return `M ${pts.map(p => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' L ')}`;
 }
 
 function renderElectricCap(el, path){
@@ -2982,27 +2968,8 @@ function renderElectricCap(el, path){
   const d = electricPathD(path);
   const svg = el.querySelector('svg');
   if (!svg) return;
-  const paths = svg.querySelectorAll('.ec-line');
-  paths.forEach(p => p.setAttribute('d', d));
+  svg.querySelectorAll('.ec-line').forEach(p => p.setAttribute('d', d));
   svg.querySelectorAll('.ec-node,.ec-ring,.ec-spark,.ec-burst').forEach(n => n.remove());
-  path.forEach((p, i) => {
-    const c = center(p.r, p.c);
-    const node = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    node.setAttribute('cx', c.x); node.setAttribute('cy', c.y); node.setAttribute('r', Math.max(3, S.geo.cell*.065)); node.setAttribute('class','ec-node');
-    svg.appendChild(node);
-    const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    ring.setAttribute('cx', c.x); ring.setAttribute('cy', c.y); ring.setAttribute('r', Math.max(6, S.geo.cell*.14)); ring.setAttribute('class','ec-ring');
-    ring.style.animationDelay = (i * .08) + 's'; svg.appendChild(ring);
-    if (i < path.length - 1){
-      const A = c, B = center(path[i+1].r, path[i+1].c), dx=B.x-A.x, dy=B.y-A.y, len=Math.hypot(dx,dy)||1;
-      const mx=(A.x+B.x)/2, my=(A.y+B.y)/2;
-      for(let k=0;k<2;k++){
-        const sp = document.createElementNS('http://www.w3.org/2000/svg','circle');
-        sp.setAttribute('cx', mx + (-dy/len)*(k?7:-7)); sp.setAttribute('cy', my + (dx/len)*(k?7:-7));
-        sp.setAttribute('r', k ? 1.3 : 1.0); sp.setAttribute('class','ec-spark'); sp.style.animationDelay=(i*.08+k*.13)+'s'; svg.appendChild(sp);
-      }
-    }
-  });
 }
 
 function makeCap(path, cls, color){
