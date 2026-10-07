@@ -1719,7 +1719,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 }
 
 /* Kalıcı harita maymunu */
-.jm-monkey{position:absolute;width:84px;height:84px;margin:-30px 0 0 -118px;background:center/contain no-repeat;z-index:6;pointer-events:none;filter:drop-shadow(0 6px 6px rgba(0,0,0,.35));animation:jmMonkeyBob 1.7s ease-in-out infinite}
+.jm-monkey{position:absolute;width:78px;height:104px;margin:-74px 0 0 -119px;transform-origin:50% 100%;background:center/contain no-repeat;z-index:6;pointer-events:none;filter:drop-shadow(0 6px 6px rgba(0,0,0,.35));animation:jmMonkeyBob 1.7s ease-in-out infinite}
 @keyframes jmMonkeyBob{0%,100%{translate:0 0}50%{translate:0 -5px}}
 .jm-fx{position:absolute;width:0;height:0;z-index:3;pointer-events:none}
 .jm-beam{position:absolute;left:-34px;bottom:0;width:68px;height:min(78vh,560px);transform-origin:50% 100%;background:linear-gradient(to top,rgba(255,250,200,.98),rgba(255,226,110,.6) 38%,rgba(255,226,110,0));-webkit-mask-image:linear-gradient(to right,transparent,#000 32%,#000 68%,transparent);mask-image:linear-gradient(to right,transparent,#000 32%,#000 68%,transparent);filter:blur(1.5px);animation:jmBeam 3s ease-out forwards}
@@ -3488,8 +3488,8 @@ function victory(){
   vicFx(stars, reward, elapsed);
 }
 
-const JR_MONKEY_BACK = 'monkey-back.png?v=1';
-const JR_MONKEY_FRONT = 'monkey-front.png?v=1';
+const JR_MONKEY_BACK = 'monkey-back.png?v=2';
+const JR_MONKEY_FRONT = 'monkey-front.png?v=2';
 
 function playJourneyUnlockAnimation(fromIdx){
   const nextIdx = fromIdx + 1;
@@ -5011,22 +5011,42 @@ function ensureJourneyMap(){
   });
   return journeyMapEl;
 }
-const JM_MK_FRONT="url('monkey-front.png?v=1')", JM_MK_BACK="url('monkey-back.png?v=1')";
+const JM_MK_FRONT="url('monkey-front.png?v=2')", JM_MK_BACK="url('monkey-back.png?v=2')";
+(function(){ ['monkey-front.png?v=2','monkey-back.png?v=2'].forEach(function(p){ var i=new Image(); i.src=p; }); })();
 function jmMonkeyJump(m, from, to, done){
   const box=m.parentNode, W=box.clientWidth, H=box.clientHeight;
   const dx=(to[0]-from[0])/100*W, dy=(to[1]-from[1])/100*H;
   m.style.left=to[0]+'%'; m.style.top=to[1]+'%';
-  m.style.backgroundImage=JM_MK_BACK;
-  if(!m.animate){ m.style.backgroundImage=JM_MK_FRONT; done&&done(); return; }
-  const a=m.animate([
-    {transform:'translate('+(-dx)+'px,'+(-dy)+'px) scale(1)'},
-    {transform:'translate('+(-dx/2)+'px,'+(-dy/2-90)+'px) scale(1.3) rotate(-8deg)',offset:.5},
-    {transform:'translate(0,0) scale(1)'}
-  ],{duration:950,easing:'cubic-bezier(.3,.1,.3,1)'});
-  setTimeout(()=>{ m.style.backgroundImage=JM_MK_FRONT; },520);
-  a.onfinish=()=>{ m.style.backgroundImage=JM_MK_FRONT;
-    m.animate([{transform:'scale(1.15,.85)'},{transform:'scale(1)'}],{duration:260});
-    done&&done(); };
+  m.style.backgroundImage=JM_MK_BACK;            /* gidiş: sırtı dönük */
+  m.style.animation='none';                       /* uçarken bekleme sallanması kapalı */
+  const finish=()=>{ m.style.backgroundImage=JM_MK_FRONT; m.style.animation=''; };
+  if(!m.animate){ finish(); done&&done(); return; }
+  const run=(kf,o,next)=>{ const a=m.animate(kf,o); a.onfinish=()=>{ next&&next(); }; };
+  /* 1) zıplayarak yeni bölüme git (arkası dönük) */
+  run([
+    {transform:'translate('+(-dx)+'px,'+(-dy)+'px) scale(1,1) rotate(0deg)'},
+    {transform:'translate('+(-dx*0.5)+'px,'+(-dy*0.5-110)+'px) scale(1.12,1.12) rotate(-7deg)',offset:.5},
+    {transform:'translate(0,0) scale(1,1) rotate(0deg)'}
+  ],{duration:1000,easing:'cubic-bezier(.3,.1,.3,1)'},()=>{
+    /* 2) iniş: ezilme */
+    run([{transform:'scale(1.18,.82)'},{transform:'scale(1,1)'}],{duration:180,easing:'ease-out'},()=>{
+      /* 3) dön: yatayda daralıp ön yüze geç */
+      run([{transform:'scaleX(1)'},{transform:'scaleX(0)'}],{duration:130,easing:'ease-in'},()=>{
+        m.style.backgroundImage=JM_MK_FRONT;
+        run([{transform:'scaleX(0)'},{transform:'scaleX(1)'}],{duration:130,easing:'ease-out'},()=>{
+          /* 4) selam: iki küçük zıplama + parıltı, kilit bu sırada açılır */
+          done&&done();
+          run([
+            {transform:'translateY(0) rotate(0deg)',filter:'drop-shadow(0 0 0 rgba(255,220,80,0))'},
+            {transform:'translateY(-26px) rotate(-6deg)',filter:'drop-shadow(0 0 16px rgba(255,220,80,.95))',offset:.28},
+            {transform:'translateY(0) rotate(0deg)',offset:.5},
+            {transform:'translateY(-18px) rotate(6deg)',filter:'drop-shadow(0 0 14px rgba(255,220,80,.85))',offset:.75},
+            {transform:'translateY(0) rotate(0deg)',filter:'drop-shadow(0 0 0 rgba(255,220,80,0))'}
+          ],{duration:900,easing:'ease-in-out'},finish);
+        });
+      });
+    });
+  });
 }
 function showJourneyMap(chapterIndex, opts){
   opts = opts || {};
