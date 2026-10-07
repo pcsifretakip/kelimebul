@@ -1628,6 +1628,14 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .jm-ld-rays{animation:jmRayPulse 3.2s ease-in-out infinite!important;width:120vmax;height:120vmax;margin:-60vmax 0 0 -60vmax}
 @keyframes jmRayPulse{0%,100%{opacity:.55}50%{opacity:1}}
 .app.on-levels .topbar{display:none!important}
+
+/* --- harita üst butonları küçültüldü --- */
+.jm-score{height:30px!important;padding:0 11px 0 6px!important;gap:5px!important;font-size:14px!important;border-width:1.5px!important}
+.jm-score .i{width:20px!important;height:20px!important}
+.jm-set{width:32px!important;height:32px!important;border-width:1.5px!important}
+.jm-set .i{width:17px!important;height:17px!important}
+.jm-right{gap:7px!important}
+.jm-loading{z-index:9!important}
 .jm-ring{display:none!important}
 .jm-beam{left:-30px;width:60px;filter:none!important;transform-origin:50% 100%;background:linear-gradient(to top,rgba(255,252,210,1),rgba(255,232,120,.75) 35%,rgba(255,226,110,.35) 75%,rgba(255,226,110,0));animation:jmBeam 4s ease-out forwards;will-change:transform,opacity}
 .jm-beam.b2{left:-10px;width:20px}
@@ -1817,7 +1825,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
         <button class="journey-list-back" id="jr-home" aria-label="Ana sayfa"><svg class="i"><use href="#i-home"/></svg></button>
         <div class="journey-list-title-wrap">
           <div class="journey-list-kicker">YOLCULUK</div>
-          <h2>MACERANI SEÇ</h2>
+          <h2>MACERAYA BAŞLA</h2>
           <span>İlerledikçe yeni bölümlerin kilidi açılır</span>
         </div>
         <div class="journey-list-score"><svg class="i"><use href="#i-star"/></svg><b id="jr-score-v">0</b></div>
