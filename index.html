@@ -3390,39 +3390,13 @@ function showAmazonIntro(cb){
   t = setTimeout(() => o.classList.add('hint'), 3500);
 }
 
-/* Banner resimleri: tek dosya (bannerler.png, 1934x813, 3x3 ızgara) açılışta 9 parçaya kesilir */
-const BANNER_SHEET = 'bannerler.png?v=3';
-const BANNER_RECTS = {   // [x, y, genişlik, yükseklik] — çerçevenin içi
-  misir:[34,95,586,155], sahra:[675,95,583,155], everest:[1313,93,586,158],
-  antarktika:[32,327,589,158], harika7:[674,327,585,157], mariana:[1313,327,586,158],
-  kapadokya:[34,563,586,156], niagara:[675,563,583,156], fuji:[1313,562,586,157]
-};
-let bannerURLs = null, bannerReq = false;
-function paintBanners(){
-  if (!bannerURLs) return;
-  document.querySelectorAll('#journey-list [data-bn]').forEach(el => {
-    const u = bannerURLs[el.dataset.bn];
-    if (u) el.style.setProperty('--bn', "url('" + u + "')");
-  });
-}
+/* Banner resimleri: her biri ayrı dosya (banner-xxx.jpg) */
+const BANNER_FILES = {misir:'banner-misir.jpg', sahra:'banner-sahra.jpg', everest:'banner-everest.jpg', antarktika:'banner-antarktika.jpg', harika7:'banner-7harika.jpg', mariana:'banner-mariana.jpg', kapadokya:'banner-kapadokya.jpg', niagara:'banner-niagara.jpg', fuji:'banner-fuji.jpg'};
 function loadBanners(){
-  if (bannerURLs){ paintBanners(); return; }
-  if (bannerReq) return; bannerReq = true;
-  const im = new Image();
-  im.onload = () => {
-    try {
-      const sc = im.naturalWidth / 1934, o = {};
-      for (const k in BANNER_RECTS){
-        const r = BANNER_RECTS[k], c = document.createElement('canvas');
-        c.width = r[2]; c.height = r[3];
-        c.getContext('2d').drawImage(im, r[0] * sc, r[1] * sc, r[2] * sc, r[3] * sc, 0, 0, r[2], r[3]);
-        o[k] = c.toDataURL('image/jpeg', .9);
-      }
-      bannerURLs = o; paintBanners();
-    } catch(e){ bannerReq = false; }
-  };
-  im.onerror = () => { bannerReq = false; };
-  im.src = BANNER_SHEET;
+  document.querySelectorAll('#journey-list [data-bn]').forEach(el => {
+    const f = BANNER_FILES[el.dataset.bn];
+    if (f) el.style.setProperty('--bn', "url('" + f + "?v=1')");
+  });
 }
 const JOURNEY_CARDS = [
   { name:'Amazon Yağmur Ormanları' },
