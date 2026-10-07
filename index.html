@@ -1679,6 +1679,45 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .jm-loading:not(.hide) .jm-bar i{animation:jmBar 2s cubic-bezier(.3,.7,.3,1) forwards}
 @keyframes jmBar{to{width:92%}}
 /* ===== Bölüm açılış efekti: ışık huzmesi + renkli noktalar ===== */
+
+/* Bölüm geçiş maymun animasyonu */
+.jm-monkey-launch{
+  position:absolute;
+  width:112px;
+  height:112px;
+  transform:translate(-50%,-50%);
+  background-position:center;
+  background-repeat:no-repeat;
+  background-size:contain;
+  z-index:20;
+  pointer-events:none;
+  filter:drop-shadow(0 8px 10px rgba(0,0,0,.28));
+}
+.jm-monkey-wait{opacity:.28;filter:blur(1.5px) drop-shadow(0 8px 10px rgba(0,0,0,.18));}
+.jm-monkey-fly{
+  animation:jmMonkeyFly 1.05s cubic-bezier(.18,.78,.22,1) forwards;
+}
+@keyframes jmMonkeyFly{
+  0%{opacity:.35;transform:translate(-50%,-50%) scale(.62) rotate(-4deg)}
+  30%{opacity:1;transform:translate(-50%,-115%) scale(.82) rotate(2deg)}
+  62%{opacity:1;transform:translate(-50%,-205%) scale(1.02) rotate(-2deg)}
+  100%{opacity:1;transform:translate(-50%,-300%) scale(1.08) rotate(0)}
+}
+.jm-monkey-spark{
+  position:absolute;
+  width:8px;height:8px;
+  border-radius:50%;
+  background:#ffe14d;
+  box-shadow:0 0 10px 3px #ffe14d;
+  pointer-events:none;
+  z-index:21;
+  animation:jmMonkeySpark .9s ease-out forwards;
+}
+@keyframes jmMonkeySpark{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(.3)}
+  100%{opacity:0;transform:translate(calc(-50% + cos(var(--a))*var(--d)),calc(-50% + sin(var(--a))*var(--d))) scale(1.3)}
+}
+
 .jm-fx{position:absolute;width:0;height:0;z-index:3;pointer-events:none}
 .jm-beam{position:absolute;left:-34px;bottom:0;width:68px;height:min(78vh,560px);transform-origin:50% 100%;background:linear-gradient(to top,rgba(255,250,200,.98),rgba(255,226,110,.6) 38%,rgba(255,226,110,0));-webkit-mask-image:linear-gradient(to right,transparent,#000 32%,#000 68%,transparent);mask-image:linear-gradient(to right,transparent,#000 32%,#000 68%,transparent);filter:blur(1.5px);animation:jmBeam 3s ease-out forwards}
 .jm-beam.b2{left:-12px;width:24px;background:linear-gradient(to top,#fff,rgba(255,255,255,.55) 45%,rgba(255,255,255,0));animation-delay:.1s}
@@ -3451,79 +3490,76 @@ const JR_MONKEY_FRONT = 'monkey-front.png?v=1';
 
 function playJourneyUnlockAnimation(fromIdx){
   const nextIdx = fromIdx + 1;
-  if (nextIdx >= LEVELS.length) { showLevels(); return; }
-  leaveGame();
-  setView('modes');
-  updateHome();
-  const PT = JR_IMG.perTile, wrap = $('jr-wrap');
-  const cross = Math.floor(fromIdx / PT) !== Math.floor(nextIdx / PT);
-  let canvas = null, P = null, nextNode = null;
-  const grab = () => { canvas = wrap.querySelector('.jr-canvas'); P = JR_P; nextNode = wrap.querySelector('.jr-node[data-i="' + nextIdx + '"]'); return !!(canvas && nextNode); };
-  drawMap(Math.floor(fromIdx / PT));
-  if (!cross){
-    if (!grab()) return;
-    nextNode.className = 'jr-node lk';
-    setTimeout(unlockNext, 650);
-  } else {
-    /* 8. bölüm bitti: yeni haritaya geç */
-    setTimeout(() => {
-      drawMap(Math.floor(nextIdx / PT));
-      if (!grab()) return;
-      nextNode.className = 'jr-node lk';
-      setTimeout(unlockNext, 500);
-    }, 1000);
+  if (nextIdx >= LEVELS.length) { showJourneyMap(fromIdx, {noLoading:true}); return; }
+
+  /*
+     ÖNEMLİ: Eski kod burada olmayan #jr-wrap elemanını arıyordu.
+     Bu yüzden hata oluşuyor ve catch -> showLevels() çalışarak
+     kullanıcıyı tekrar "Maceraya Başla" listesine atıyordu.
+     Artık doğrudan gerçek bölüm haritasını açıyoruz.
+  */
+  try {
+    showJourneyMap(nextIdx, {unlock: nextIdx, noLoading:true});
+  } catch (e) {
+    console.error('Bölüm haritası açılamadı:', e);
+    showJourneyMap(Math.min(nextIdx, S.maxOpen), {noLoading:true});
+    return;
   }
 
-  function unlockNext(){
-    nextNode.className = 'jr-node cur';
+  /* Yeni bölüm açılış animasyonu */
+  setTimeout(() => {
+    const area = document.querySelector('#journey-map-screen.show .jm-map-area');
+    const node = area && area.querySelector('.jm-node[data-i="' + nextIdx + '"]');
+    if (!area || !node) return;
 
-    // Yeni bölüm açılırken maskot önce arkası dönük bekler, sonra ekrana doğru sıçrayarak gelir.
+    const old = area.querySelector('.jm-monkey-launch');
+    if (old) old.remove();
+
     const monkey = document.createElement('div');
-    monkey.className = 'jr-monkey-launch wait';
-    monkey.style.left = P[nextIdx].x + 'px';
-    monkey.style.top = P[nextIdx].y + 'px';
-    monkey.style.backgroundImage = `url(\"${JR_MONKEY_BACK}\")`;
-    canvas.appendChild(monkey);
+    monkey.className = 'jm-monkey-launch jm-monkey-wait';
+    monkey.style.left = node.style.left;
+    monkey.style.top = node.style.top;
+    monkey.style.backgroundImage = "url('monkey-back.png?v=1')";
+    area.appendChild(monkey);
 
+    /* 1) Donuk bekle */
     setTimeout(() => {
       if (!monkey.isConnected) return;
-      monkey.classList.remove('wait');
-      monkey.classList.add('fly');
-      // Uçuşun ortasında önden görünmeye geçsin.
-      setTimeout(() => {
-        if (monkey.isConnected) monkey.style.backgroundImage = `url(\"${JR_MONKEY_FRONT}\")`;
-      }, 390);
-      setTimeout(() => { if (monkey.isConnected) monkey.remove(); }, 1250);
-    }, 450);
-    nextNode.animate([{transform:'scale(.6)'},{transform:'scale(1.3)'},{transform:'scale(1)'}], {duration:700, easing:'cubic-bezier(.2,1.4,.4,1)'});
-    nextNode.animate([{transform:'scale(.6)'},{transform:'scale(1.3)'},{transform:'scale(1)'}], {duration:700, easing:'cubic-bezier(.2,1.4,.4,1)'});
-    /* parıltı: yıldız patlaması */
-    const cols = ['#fde047','#fff','#fbbf24','#a7f3d0'];
-    for (let i = 0; i < 14; i++){
-      const st = document.createElement('i'); st.className = 'jr-spk'; st.textContent = '✦';
-      st.style.left = P[nextIdx].x + 'px'; st.style.top = P[nextIdx].y + 'px';
-      st.style.color = cols[i % cols.length]; st.style.fontSize = (12 + Math.random()*12) + 'px';
-      canvas.appendChild(st);
-      const ang = i / 14 * Math.PI * 2, d = 38 + Math.random() * 30;
-      st.animate([{transform:'translate(-50%,-50%) scale(.2)',opacity:1},{transform:'translate(calc(-50% + ' + (Math.cos(ang)*d) + 'px),calc(-50% + ' + (Math.sin(ang)*d) + 'px)) scale(1.2) rotate(120deg)',opacity:0}], {duration:900 + Math.random()*400, easing:'ease-out'}).onfinish = () => st.remove();
-    }
-    /* ışık huzmesi */
-    const beam = document.createElement('div'); beam.className = 'jr-beam';
-    beam.style.left = P[nextIdx].x + 'px'; beam.style.top = P[nextIdx].y + 'px';
-    beam.innerHTML = '<i class="b-core"></i><i class="b-halo"></i><i class="b-base"></i>';
-    canvas.appendChild(beam);
-    for (let k = 0; k < 10; k++){
-      const m = document.createElement('i'); m.className = 'jr-mote';
-      m.style.left = (P[nextIdx].x + (Math.random() - .5) * 34) + 'px'; m.style.top = P[nextIdx].y + 'px';
-      canvas.appendChild(m);
-      m.animate([{transform:'translate(-50%,0) scale(1)',opacity:0},{opacity:1,offset:.2},{transform:'translate(-50%,' + (-90 - Math.random()*110) + 'px) scale(.3)',opacity:0}], {duration:1300 + Math.random()*900, delay:Math.random()*500, easing:'ease-out', fill:'backwards'}).onfinish = () => m.remove();
-    }
-    setTimeout(() => beam.remove(), 2600);
-    nextNode.classList.add('jr-glow');
-    setTimeout(() => nextNode.classList.remove('jr-glow'), 2600);
-  }
-}
 
+      /* 2-3) Ekrana doğru sıçra */
+      monkey.classList.remove('jm-monkey-wait');
+      monkey.classList.add('jm-monkey-fly');
+
+      /* 4) Önden görün */
+      setTimeout(() => {
+        if (monkey.isConnected) {
+          monkey.style.backgroundImage = "url('monkey-front.png?v=1')";
+        }
+      }, 360);
+
+      /* 5-7) Zafer parıltıları */
+      const r = node.getBoundingClientRect();
+      const ar = area.getBoundingClientRect();
+      for (let i = 0; i < 18; i++) {
+        const sp = document.createElement('i');
+        sp.className = 'jm-monkey-spark';
+        sp.style.left = (r.left - ar.left + r.width/2) + 'px';
+        sp.style.top = (r.top - ar.top + r.height/2) + 'px';
+        sp.style.setProperty('--a', (i / 18 * 360) + 'deg');
+        sp.style.setProperty('--d', (35 + Math.random()*65) + 'px');
+        area.appendChild(sp);
+        setTimeout(() => sp.remove(), 1000);
+      }
+
+      /* 8) Bölüm açık kalır */
+      setTimeout(() => {
+        if (monkey.isConnected) monkey.remove();
+        node.classList.add('jm-pop');
+        setTimeout(() => node.classList.remove('jm-pop'), 800);
+      }, 1050);
+    }, 500);
+  }, 650);
+}
 $('btn-next-level').addEventListener('click', () => {
   if (irisBusy) return;
   const fromIdx = S.levelIndex, iris = $('iris');
