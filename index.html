@@ -3509,7 +3509,7 @@ function playJourneyUnlockAnimation(fromIdx){
   /* Yeni bölüm açılış animasyonu */
   setTimeout(() => {
     const area = document.querySelector('#journey-map-screen.show .jm-map-area');
-    const node = area && area.querySelector('.jm-node[data-i="' + nextIdx + '"]');
+    const node = area && (area.querySelector('.jm-node[data-i="' + nextIdx + '"]') || area.querySelectorAll('.jm-node')[nextIdx]);
     if (!area || !node) return;
 
     const old = area.querySelector('.jm-monkey-launch');
@@ -5107,6 +5107,7 @@ function showJourneyMap(chapterIndex, opts){
     b.type='button';
     const isCur = unlocked && !done && i === S.maxOpen;
     b.className='jm-node ' + (done?'done':isCur?'cur':unlocked?'open':'locked');
+    b.dataset.i = i;
     b.style.left=positions[i][0]+'%'; b.style.top=positions[i][1]+'%';
     b.innerHTML = done ? '✓' : (unlocked ? '' : '🔒');
     const d=LEVELS[i];
