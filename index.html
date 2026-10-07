@@ -61,6 +61,16 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 }
 .topbar .grp{display:flex;align-items:center;gap:8px;min-width:104px}
 .topbar .grp.r{justify-content:flex-end}
+.app:not(.on-home) .topbar .grp:not(.r){min-width:0}
+.app:not(.on-home) .topbar .grp:not(.r) .coin{margin-left:0}
+/* Oyun üst başlığı: coin en solda, bölüm adı hemen yanında */
+.game-top-title{display:none;min-width:0;max-width:145px;margin-left:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px;font-weight:1000;letter-spacing:.045em;color:#fde68a;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.app.on-game .game-top-title{display:block}
+.app.on-game .topbar .grp:not(.r){gap:7px}
+.app.on-game .topbar .grp.r{min-width:84px;gap:6px}
+.app.on-game .topbar .grp.r #btn-home{order:1}
+.app.on-game .topbar .grp.r #btn-settings{order:2}
+.app.on-game .topbar .grp.r #btn-sound{display:none}
 .app.on-home #btn-sound,.app.on-home #btn-hint,.app.on-home #btn-home,.app.on-home #btn-settings,.app.on-levels #btn-sound,.app.on-levels #btn-hint{display:none}
 .app:not(.on-home) #btn-avatar{display:none}
 .app.on-levels #btn-settings{display:none}
@@ -189,7 +199,7 @@ svg.i{width:1em;height:1em;fill:currentColor;display:block}
 }
 .banner .b-label{display:flex;align-items:center;gap:4px;font-size:9px;font-weight:800;letter-spacing:.14em;color:#c7c1ff}
 .banner .b-label svg.i{font-size:14px;color:var(--gold)}
-.banner h2{font-size:15px;font-weight:1000;letter-spacing:.07em;color:#fde68a;text-align:center;flex:1}
+.banner h2{font-size:15px;font-weight:1000;letter-spacing:.07em;color:#fde68a;text-align:left;flex:1;margin:0}
 .timer{display:flex;align-items:center;gap:5px;padding:3px 7px;border-radius:8px;font-size:11px;font-weight:900;color:#d8d4ff;
   background:rgba(8,5,30,.55);border:1px solid rgba(255,255,255,.14);font-variant-numeric:tabular-nums}
 .timer svg.i{font-size:14px}
@@ -1766,6 +1776,14 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 #view-home .home-img-btn { width:84% !important; max-width:350px !important; }
 #view-home .home-img-btn img { width:100% !important; height:auto !important; }
 @media (max-width:380px) { #view-home .home-img-btn { width:88% !important; } #view-home .home-actions { max-width:340px !important; } }
+
+/* MACERA BAŞLA ÜST BAR DÜZENİ */
+.journey-list-head{grid-template-columns:minmax(0,1fr) 48px !important;gap:10px !important;padding-left:14px !important;padding-right:14px !important}
+.journey-list-title-wrap{justify-content:flex-start !important;text-align:left !important;min-width:0 !important}
+.journey-title-img{width:min(62vw,340px) !important;max-width:calc(100% - 6px) !important;max-height:66px !important;margin:0 !important}
+.journey-list-back{width:44px !important;height:44px !important;justify-self:end !important}
+.journey-list-score{display:none !important}
+@media(max-width:430px){.journey-list-head{grid-template-columns:minmax(0,1fr) 48px !important;gap:8px !important;padding-left:14px !important;padding-right:14px !important}.journey-title-img{width:min(64vw,340px) !important;max-width:calc(100% - 4px) !important;max-height:64px !important}}
 </style>
 </head>
 <body>
@@ -1808,11 +1826,12 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
   <header class="topbar">
     <div class="grp">
       <button class="icon-btn av" id="btn-avatar" aria-label="Profil"></button>
-      <button class="icon-btn" id="btn-home" aria-label="Geri"><svg class="i" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></button>
       <div class="coin"><svg class="i coin-ic"><use href="#i-coin"/></svg><span id="coin-count">150</span></div>
+      <div class="game-top-title" id="game-top-title"></div>
     </div>
     <div class="level-box"><small>BÖLÜM</small><b id="header-level-num">1</b></div>
     <div class="grp r">
+      <button class="icon-btn" id="btn-home" aria-label="Geri"><svg class="i" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></button>
       <button class="icon-btn" id="btn-settings" aria-label="Ayarlar"><svg class="i"><use href="#i-gear"/></svg></button>
       <button class="icon-btn" id="btn-sound" aria-label="Ses"><svg class="i" id="sound-icon"><use href="#i-vol"/></svg></button>
       <button class="icon-btn hint" id="btn-hint" aria-label="İpucu"><svg class="i"><use href="#i-bulb"/></svg><span class="badge">50</span></button>
@@ -1870,8 +1889,6 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
     <!-- GAME -->
     <section id="view-game" class="view off">
       <div class="banner">
-        <span class="b-label"><svg class="i"><use href="#i-pin"/></svg>YOLCULUK</span>
-        <h2 id="category-title">İLKBAHAR</h2>
         <div class="timer"><svg class="i"><use href="#i-clock"/></svg><span id="time-val">00:00</span></div>
       </div>
 
@@ -1943,11 +1960,10 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
     <!-- MOD SEÇİMİ (kaydırmalı sahne) -->
     <section id="view-modes" class="view off modes journey-list-view">
       <div class="journey-list-head">
-        <button class="journey-list-back" id="jr-home" aria-label="Ana sayfa"><svg class="i"><use href="#i-home"/></svg></button>
         <div class="journey-list-title-wrap">
           <img class="journey-title-img" src="maceraya-basla.png" alt="Maceraya Başla" draggable="false">
         </div>
-        <div class="journey-list-score"><svg class="i"><use href="#i-star"/></svg><b id="jr-score-v">0</b></div>
+        <button class="journey-list-back" id="jr-home" aria-label="Ana sayfa"><svg class="i"><use href="#i-home"/></svg></button>
       </div>
       <div class="journey-list" id="journey-list"></div>
     </section>
@@ -2765,7 +2781,7 @@ function startLevel(index, def, seed){
   S.colorOf = {}; S.caps = []; S.sel = null; S.selecting = false; S.dragCap = null; updateLiveSelection([]);
   S.level.words.forEach((w, i) => S.colorOf[w] = PALETTE[i % PALETTE.length]);
   $('header-level-num').textContent = def ? def.size + '×' + def.size : S.level.id;
-  $('category-title').textContent = S.level.category;
+  $('game-top-title').textContent = S.level.category;
   $('time-val').textContent = '00:00';
   renderWords(); renderGrid(); updateProgress();
   S.playing = false;
@@ -3389,8 +3405,9 @@ function vicFx(stars, reward, elapsed){
 function victory(){
   if (R){ raceFinish(); return; }
   S.playing = false; stopTimer();
-  const isLast = S.levelIndex >= LEVELS.length - 1;
-  if (isLast){ SND.level(); buzz([40, 60, 40, 60, 120]); }
+  // Her bölüm tamamlandığında, TEBRİKLER ekranı açılırken bölüm geçiş sesi çal
+  SND.level();
+  buzz([40, 60, 40, 60, 120]);
   S.wins++; store.set('kb_wins', S.wins);
   const idx = S.levelIndex, prev = S.done[idx];
   const reward = prev ? 5 : 25;               // ilk bitirişte 25, tekrar oynayınca 5 altın
