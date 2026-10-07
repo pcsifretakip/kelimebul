@@ -974,6 +974,8 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #bankbox h3{font-size:25px;font-weight:1000;letter-spacing:.05em;color:#ddd6fe;text-shadow:0 3px 0 rgba(0,0,0,.4);padding:0 34px}
 .bk-ic{margin:10px auto 12px;color:var(--gold);filter:drop-shadow(0 0 14px rgba(251,191,36,.5))}
 .bk-ic svg.i{font-size:78px;margin:0 auto}
+.bk-ic{filter:none}
+.bk-ic img{display:block;width:210px;max-width:72%;height:auto;margin:0 auto;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45))}
 .bk-list{border-radius:16px;overflow:hidden;background:#eceaff;color:#1b1245;text-align:left;box-shadow:0 4px 0 rgba(0,0,0,.25)}
 .bk-head{padding:9px 10px;text-align:center;font-size:11px;font-weight:1000;letter-spacing:.04em;color:#fff;background:linear-gradient(180deg,#a78bfa,#7c4dff)}
 .bk-body{min-height:130px;max-height:190px;overflow-y:auto;padding:10px 12px;display:flex;flex-wrap:wrap;gap:6px 14px;align-content:flex-start;font-size:15px;font-weight:900;user-select:text}
@@ -1332,8 +1334,9 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #view-game .jokers{padding:4px 8px 14px}
 
 /* ===== JOKER BUTONLARI: resimli (jk-karistir / jk-ipucu / jk-miknatis / jk-kelime-bankasi .png) ===== */
-.jk-grp{gap:6px}
-.jk.jk-img{width:74px;height:auto;aspect-ratio:300/290;border-radius:0;padding:0;background:transparent!important;box-shadow:none!important;overflow:visible;-webkit-tap-highlight-color:transparent}
+.jokers,#view-game .jokers{display:grid;grid-template-columns:repeat(4,1fr);justify-items:center;align-items:end;gap:0;padding-left:6px;padding-right:6px}
+.jk-grp{display:contents}
+.jk.jk-img{width:min(23vw,88px);height:auto;aspect-ratio:300/290;border-radius:0;padding:0;background:transparent!important;box-shadow:none!important;overflow:visible;-webkit-tap-highlight-color:transparent}
 .jk.jk-img img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;-webkit-user-drag:none;user-select:none;filter:drop-shadow(0 4px 6px rgba(0,0,0,.45));transition:filter .15s}
 .jk.jk-img:active{transform:scale(.93);box-shadow:none!important}
 .jk.jk-img.dis img{filter:grayscale(.9) brightness(.65) drop-shadow(0 3px 4px rgba(0,0,0,.4))}
@@ -1373,8 +1376,13 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
   animation:mgRaysIn .6s ease-out .25s both,mgSpin 5s linear infinite}
 .mag-fx .mg-glow{position:absolute;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(251,191,36,.75),rgba(251,191,36,0) 68%);animation:mgGlow 1s ease-in-out infinite alternate}
 .mag-fx .mg-ring{position:absolute;width:110px;height:110px;border-radius:50%;border:3px solid rgba(34,211,238,.9);box-shadow:0 0 14px rgba(34,211,238,.7);opacity:0;animation:mgRing 1.5s ease-out .5s infinite}
-.mag-fx .mg-magnet{position:relative;width:88px;height:88px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.55)) drop-shadow(0 0 14px rgba(251,191,36,.9));animation:mgIn .6s cubic-bezier(.2,1.6,.4,1) both,mgWob 1.1s ease-in-out .6s infinite}
-.mag-fx .mg-dot{position:absolute;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,#fff,#fde68a 45%,rgba(251,191,36,0) 72%);box-shadow:0 0 12px 3px rgba(251,191,36,.8)}
+.mag-fx .mg-aura{position:absolute;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,.55),rgba(168,85,247,.28) 45%,rgba(168,85,247,0) 70%);animation:mgGlow 1s ease-in-out infinite alternate}
+.mag-fx .mg-beam{position:absolute;height:5px;margin-top:-2.5px;border-radius:99px;transform-origin:0 50%;z-index:2;background:linear-gradient(90deg,#fff,#22d3ee 30%,#a855f7 100%);box-shadow:0 0 8px #22d3ee,0 0 18px #a855f7,0 0 30px rgba(168,85,247,.6);animation:mgBeam .4s ease-out both,mgFlick .22s linear .4s infinite alternate}
+@keyframes mgBeam{from{scale:0 1;opacity:0}to{scale:1 1;opacity:1}}
+@keyframes mgFlick{from{opacity:.65}to{opacity:1}}
+.cell.mg-hit{box-shadow:0 0 10px #22d3ee,0 0 22px #a855f7,inset 0 0 8px rgba(34,211,238,.7)!important;color:#fff!important;position:relative;z-index:5}
+.mag-fx .mg-magnet{position:relative;z-index:3;width:128px;height:auto;filter:drop-shadow(0 0 10px rgba(56,189,248,.95)) drop-shadow(0 0 24px rgba(168,85,247,.8));animation:mgIn .6s cubic-bezier(.2,1.6,.4,1) both,mgWob 1.1s ease-in-out .6s infinite}
+.mag-fx .mg-dot{position:absolute;z-index:4;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,#fff,#67e8f9 45%,rgba(168,85,247,0) 72%);box-shadow:0 0 12px 3px rgba(34,211,238,.85)}
 @keyframes mgIn{0%{transform:scale(0) rotate(-50deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
 @keyframes mgWob{0%,100%{transform:scale(1) rotate(-5deg)}50%{transform:scale(1.1) rotate(5deg)}}
 @keyframes mgRaysIn{from{opacity:0;scale:.3}to{opacity:1;scale:1}}
@@ -1924,7 +1932,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
     <div class="hcard">
       <button class="bk-x" id="bank-close" type="button" aria-label="Kapat">×</button>
       <h3>KELİME BANKASI</h3>
-      <div class="bk-ic"><svg class="i"><use href="#i-book"/></svg></div>
+      <div class="bk-ic"><img src="jk-kelime-bankasi.png" alt="Kelime Bankası" draggable="false"></div>
       <div class="bk-list">
         <div class="bk-head">BU BÖLÜMDE BULUNAN EKSTRA KELİMELER</div>
         <div class="bk-body" id="bank-words"></div>
@@ -3176,8 +3184,7 @@ function useMagnet(){
 
   // mıknatıs ortada belirir, ışın yayar
   const fx = document.createElement('div'); fx.className = 'mag-fx';
-  fx.innerHTML = '<div class="mg-rays"></div><div class="mg-glow"></div><i class="mg-ring"></i><i class="mg-ring" style="animation-delay:.45s"></i><i class="mg-ring" style="animation-delay:.9s"></i>' +
-    '<svg class="mg-magnet" viewBox="0 0 24 24"><path d="M4 3h5v9a3 3 0 0 0 6 0V3h5v9a8 8 0 0 1-16 0V3z" fill="#ef4444" stroke="#7f1d1d" stroke-width=".6" stroke-linejoin="round"/><rect x="4" y="3" width="5" height="5" fill="#f1f5f9"/><rect x="15" y="3" width="5" height="5" fill="#f1f5f9"/></svg>';
+  fx.innerHTML = '<div class="mg-aura"></div><img class="mg-magnet" src="jk-miknatis.png" alt="" draggable="false">';
   gridEl.appendChild(fx);
   const W = gridEl.clientWidth, H = gridEl.clientHeight;
   const mx = W / 2, my = H / 2;
@@ -3188,6 +3195,13 @@ function useMagnet(){
       if (tok !== S.token) return;
       el.classList.add('dim');                       // yavaş yavaş solar (CSS geçişi 1.8 sn)
       const cx = el.offsetLeft + el.offsetWidth / 2, cy = el.offsetTop + el.offsetHeight / 2;
+      const bdx = cx - mx, bdy = cy - my;
+      const beam = document.createElement('i'); beam.className = 'mg-beam';
+      beam.style.left = mx + 'px'; beam.style.top = my + 'px';
+      beam.style.width = Math.hypot(bdx, bdy) + 'px';
+      beam.style.transform = 'rotate(' + Math.atan2(bdy, bdx) + 'rad)';
+      fx.appendChild(beam);
+      el.classList.add('mg-hit'); setTimeout(() => el.classList.remove('mg-hit'), 1000);
       const dot = document.createElement('i'); dot.className = 'mg-dot';
       dot.style.left = cx + 'px'; dot.style.top = cy + 'px';
       fx.appendChild(dot);
