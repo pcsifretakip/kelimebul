@@ -1814,8 +1814,8 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 }
 
 /* Kalıcı harita maymunu */
-.jm-monkey{position:absolute;width:78px;height:104px;margin:-74px 0 0 33px;z-index:6;pointer-events:none}
-.jm-monkey .jm-bw{position:absolute;left:0;top:0;width:100%;height:100%;display:block;transform-origin:50% 100%}
+.jm-monkey{position:absolute;width:78px;height:104px;margin:-74px 0 0 33px;z-index:6;pointer-events:auto;touch-action:none;cursor:grab}
+.jm-monkey .jm-bw{position:absolute;left:0;top:0;width:100%;height:100%;display:block;transform-origin:50% 100%;pointer-events:none}
 .jm-monkey .jm-bd,.jm-monkey .jm-bd2{position:absolute;left:0;top:0;width:100%;height:100%;display:block;background:center bottom/contain no-repeat;transform-origin:50% 100%}
 .jm-monkey .jm-bd2{opacity:0}
 .jm-monkey .jm-sh{position:absolute;left:50%;bottom:-4px;width:54px;height:13px;margin-left:-27px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(0,0,0,.55) 0,rgba(0,0,0,.3) 42%,rgba(0,0,0,0) 72%)}
@@ -2929,15 +2929,33 @@ const INFO = [
   ["Güney Amerika / BREZİLYA","Jaguar, tukan ve koati şelalelerin çevresindeki ormanda yaşar."],
   ["Üç Ülke Sınırı / ARJANTİN","Şelalelerin yakınında Brezilya, Arjantin ve Paraguay sınırları buluşur."]
 ];
+/* Tüm klasik bölümler için sabit oyun standardı:
+   - Izgara daima en fazla 6x6 (burada tam 6x6)
+   - Her bölümde 7-8 kelime
+   - 6 harften uzun kelimeler kullanılmaz; kelime havuzu buna göre seçilir. */
+const SHORT_WORD_POOL = GROUPS.flatMap(g => g[2].flatMap(l => String(l[2] || '').split(/\s+/).map(TR)))
+  .filter(w => w.length >= 3 && w.length <= 6);
+
 const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => {
   const hide = l[3] ? l[3] : null;
   const dirs = l[4] || (j < 2 ? 'easy' : (j < 5 ? 'medium' : 'hard'));
   const beginner = j < 3;
   const labels = ['KOLAY','KOLAY','ORTA','ORTA','ZOR','ZOR','ÇOK ZOR','UZMAN','UZMAN','MAX ZORLUK'];
+
+  /* Önce bölümün kendi kelimelerinden 3-6 harfli olanları al.
+     Yetmezse aynı grubun, sonra tüm oyunun kısa kelime havuzundan tamamla. */
+  const own = [...new Set(String(l[2] || '').split(/\s+/).map(TR).filter(w => w.length >= 3 && w.length <= 6))];
+  const groupPool = [...new Set(g[2].flatMap(x => String(x[2] || '').split(/\s+/).map(TR))
+    .filter(w => w.length >= 3 && w.length <= 6))];
+  const words = [...own];
+  for (const w of groupPool) if (words.length < 8 && !words.includes(w)) words.push(w);
+  for (const w of SHORT_WORD_POOL) if (words.length < 8 && !words.includes(w)) words.push(w);
+  const finalWords = words.slice(0, 8);
+
   return {
     category:l[0], group:gi, lv:j,
-    info:undefined, size:l[1], dirs, mode:'classic', hide,
-    subtitle:labels[j] + ' • ' + l[2].split(' ').length + ' KELİME', words:l[2].split(' '), beginner
+    info:undefined, size:6, dirs, mode:'classic', hide,
+    subtitle:labels[j] + ' • ' + finalWords.length + ' KELİME', words:finalWords, beginner
   };
 }));
 const LEVELS = CLASSIC_LEVELS;
@@ -2964,8 +2982,9 @@ function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t
 
 function buildLevel(def, index){
   const words = (Array.isArray(def.words) ? def.words : String(def.words || '').split(/\s+/).filter(Boolean)).map(TR);
-  const requestedSize = Number(def.size) || 1;
-  const size = Math.max(requestedSize, ...words.map(w => [...w].length));
+  /* Bölüm standardı 6x6'dır; kelimeler buildLevel öncesinde 6 harfe sınırlandırılır. */
+  const requestedSize = Math.min(Number(def.size) || 6, 6);
+  const size = Math.max(1, requestedSize);
   const dirs = DIRS[def.dirs] || DIRS.medium;
   const order = [...words].sort((a,b) => b.length - a.length);
 
@@ -5957,6 +5976,43 @@ function showJourneyMap(chapterIndex, opts){
     const start=(unlockIdx>0)?unlockIdx-1:Math.min(S.maxOpen,levelCount-1);
     mk.style.left=positions[start][0]+'%'; mk.style.top=positions[start][1]+'%';
     nodes.appendChild(mk);
+
+    /* Maymunu parmakla tutup istediğin yere götür; bırakınca kendi yerine dönsün. */
+    (function(){
+      let dragging=false, sx=0, sy=0;
+      const homeX=positions[start][0], homeY=positions[start][1];
+      const box=nodes;
+      const stopMonkeyAnimations=()=>{ try{ mk.getAnimations().forEach(a=>a.cancel()); }catch(_){} try{ mk.querySelector('.jm-bw')?.getAnimations().forEach(a=>a.cancel()); }catch(_){} };
+      mk.addEventListener('pointerdown', function(e){
+        e.preventDefault(); e.stopPropagation();
+        dragging=true; sx=e.clientX; sy=e.clientY;
+        stopMonkeyAnimations();
+        mk.classList.remove('idle','walk');
+        mk.style.cursor='grabbing';
+        try{ mk.setPointerCapture(e.pointerId); }catch(_){}
+        try{ audio(); }catch(_){}
+        try{ SND.click(); }catch(_){}
+      });
+      mk.addEventListener('pointermove', function(e){
+        if(!dragging) return;
+        e.preventDefault();
+        const dx=e.clientX-sx, dy=e.clientY-sy;
+        mk.style.transform='translate('+dx+'px,'+dy+'px)';
+      });
+      const release=function(e){
+        if(!dragging) return;
+        dragging=false;
+        try{ mk.releasePointerCapture(e.pointerId); }catch(_){}
+        mk.style.cursor='grab';
+        const anim=mk.animate([
+          {transform:mk.style.transform || 'translate(0,0)'},
+          {transform:'translate(0,0)'}
+        ],{duration:420,easing:'cubic-bezier(.22,.8,.25,1)'});
+        anim.onfinish=()=>{ mk.style.transform=''; mk.classList.add('idle'); jmMkPose(mk,'idle'); };
+      };
+      mk.addEventListener('pointerup',release);
+      mk.addEventListener('pointercancel',release);
+    })();
     if (afterLoad && unlockIdx>0) { const fx0=afterLoad; afterLoad=()=>jmMonkeyJump(mk,positions[unlockIdx-1],positions[unlockIdx],fx0); } }
   if (opts.noLoading && afterLoad) setTimeout(afterLoad, 550);
   setView('home');
