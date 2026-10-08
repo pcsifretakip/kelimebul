@@ -2961,25 +2961,44 @@ function buildLevel(def, index){
   const dirs = DIRS[def.dirs] || DIRS.medium;
   const order = [...words].sort((a,b) => b.length - a.length);
 
-  /* İlk 3 alt bölüm öğretici olsun: kelimeleri temiz yatay satırlara yerleştir.
-     Kelime listesindeki gerçek kelimeler değişmez; sadece arama düzeni kolaylaşır. */
+  /* İlk 3 alt bölüm de kolay kalsın; ancak kelimeler sadece alt alta değil,
+     yatay, dikey ve çapraz yönlerde karışık yerleşsin. */
   if (def.beginner){
-    const grid = Array.from({length:size}, () => Array(size).fill(''));
-    const placements = {};
-    let row = 0;
-    let ok = true;
-    for (const w of words){
-      const L = [...w];
-      if (row >= size || L.length > size){ ok = false; break; }
-      for (let c=0;c<L.length;c++) grid[row][c]=L[c];
-      placements[w] = {r:row,c:0,dr:0,dc:1,len:L.length};
-      row += 1;
-    }
-    if (ok){
-      const rnd = mulberry32((index + 1) * 7919);
-      for (let r=0;r<size;r++) for (let c=0;c<size;c++)
-        if (grid[r][c] === '') grid[r][c] = FILLER[Math.floor(rnd()*FILLER.length)];
-      return { id:index + 1, category:def.category, group:def.group, lv:def.lv, subtitle:def.subtitle, mode:def.mode, size, words, grid, placements, hidden:(Array.isArray(def.hide) ? def.hide : String(def.hide || '').split(/\s+/).filter(Boolean)).map(TR) };
+    const beginnerDirs = [[0,1],[1,0],[1,1],[1,-1]];
+    for (let attempt = 0; attempt < 400; attempt++){
+      const rnd = mulberry32((index + 1) * 7919 + attempt * 104729);
+      const grid = Array.from({length:size}, () => Array(size).fill(''));
+      const placements = {};
+      let ok = true;
+
+      for (const w of order){
+        const L = [...w];
+        let placed = false;
+        for (let t = 0; t < 400 && !placed; t++){
+          const [dr, dc] = beginnerDirs[Math.floor(rnd() * beginnerDirs.length)];
+          const r0 = Math.floor(rnd() * size), c0 = Math.floor(rnd() * size);
+          const r1 = r0 + dr * (L.length - 1), c1 = c0 + dc * (L.length - 1);
+          if (r1 < 0 || r1 >= size || c1 < 0 || c1 >= size) continue;
+
+          let fit = true;
+          for (let i = 0; i < L.length; i++){
+            const g = grid[r0 + dr*i][c0 + dc*i];
+            if (g !== '' && g !== L[i]) { fit = false; break; }
+          }
+          if (!fit) continue;
+
+          for (let i = 0; i < L.length; i++) grid[r0 + dr*i][c0 + dc*i] = L[i];
+          placements[w] = {r:r0,c:c0,dr,dc,len:L.length};
+          placed = true;
+        }
+        if (!placed){ ok = false; break; }
+      }
+
+      if (ok){
+        for (let r=0;r<size;r++) for (let c=0;c<size;c++)
+          if (grid[r][c] === '') grid[r][c] = FILLER[Math.floor(rnd()*FILLER.length)];
+        return { id:index + 1, category:def.category, group:def.group, lv:def.lv, subtitle:def.subtitle, mode:def.mode, size, words, grid, placements, hidden:(Array.isArray(def.hide) ? def.hide : String(def.hide || '').split(/\s+/).filter(Boolean)).map(TR) };
+      }
     }
   }
 
