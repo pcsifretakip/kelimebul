@@ -1861,7 +1861,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .chapter-end{position:absolute;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:22px;overflow:hidden;background:#04140a;opacity:0;visibility:hidden;transition:opacity .7s ease,visibility .7s}
 .chapter-end.show{opacity:1;visibility:visible}
 .ce-bg{position:absolute;inset:0;transform:scale(1.1);transition:transform 9s ease-out;
-  background:radial-gradient(80% 50% at 50% 28%,rgba(250,204,21,.30),transparent 70%),linear-gradient(180deg,rgba(2,22,11,.30) 0%,rgba(2,16,8,.90) 100%),url('amazon.png?v=2') center/cover no-repeat,linear-gradient(180deg,#0e4a24,#031a0d)}
+  background:radial-gradient(60% 40% at 50% 26%,rgba(251,191,36,.34),transparent 70%),radial-gradient(70% 45% at 12% 78%,rgba(236,72,153,.30),transparent 70%),radial-gradient(70% 45% at 92% 62%,rgba(34,211,238,.26),transparent 70%),linear-gradient(180deg,#1b0b4a 0%,#2a1170 42%,#120733 100%)}
 .chapter-end.show .ce-bg{transform:scale(1)}
 .ce-rays{position:absolute;left:50%;top:26%;width:150vmax;height:150vmax;margin:-75vmax 0 0 -75vmax;pointer-events:none;
   background:repeating-conic-gradient(from 0deg,rgba(255,236,150,.11) 0 7deg,transparent 7deg 20deg);
@@ -1900,7 +1900,15 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .coin-fly .i{width:28px;height:28px;filter:drop-shadow(0 0 8px rgba(255,200,40,.9))}
 .topbar .coin.coin-bump{animation:coinBump .45s ease-out}
 @keyframes coinBump{0%{transform:scale(1)}35%{transform:scale(1.22);filter:brightness(1.5)}100%{transform:scale(1)}}
+/* ===== Kalın neon çizgi + harfler çizginin üstünde görünür ===== */
+.cap .ec-core{opacity:.88 !important;filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 7px var(--c)) drop-shadow(0 0 16px var(--c)) !important}
+.cell.found,.cell.sel{z-index:11;background:transparent;color:#fff;text-shadow:0 0 3px rgba(0,0,0,.65),0 1px 0 rgba(0,0,0,.5)}
+.cell.sel{text-shadow:0 0 3px rgba(0,0,0,.65),0 0 8px #22d3ee}
+/* Maceraya Başla banner: daha alçak, içerik (başlık) ortada kalır */
+.journey-list-head{aspect-ratio:1911/600 !important;background-position:center 53% !important}
 </style>
+
+
 
 
 </head>
@@ -1951,7 +1959,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
       <button class="icon-btn" id="btn-home" aria-label="Geri"><svg class="i" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></button>
       <button class="icon-btn" id="btn-settings" aria-label="Ayarlar"><svg class="i"><use href="#i-gear"/></svg></button>
       <button class="icon-btn" id="btn-sound" aria-label="Ses"><svg class="i" id="sound-icon"><use href="#i-vol"/></svg></button>
-      <button class="icon-btn hint" id="btn-hint" aria-label="İpucu"><svg class="i"><use href="#i-bulb"/></svg><span class="badge">50</span></button>
+      <button class="icon-btn hint" id="btn-hint" aria-label="İpucu"><svg class="i"><use href="#i-bulb"/></svg><span class="badge">20</span></button>
     </div>
   </header>
 
@@ -2026,7 +2034,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
       <div class="jokers" id="jokers">
         <div class="jk-grp">
           <button class="jk jk-img" id="jk-shuffle" aria-label="Karıştır"><img src="jk-karistir.png" alt="Karıştır" draggable="false"></button>
-          <button class="jk jk-img" id="jk-hint" aria-label="İpucu"><img src="jk-ipucu.png" alt="İpucu" draggable="false"><span class="jk-price">50<svg class="i"><use href="#i-coin"/></svg></span></button>
+          <button class="jk jk-img" id="jk-hint" aria-label="İpucu"><img src="jk-ipucu.png" alt="İpucu" draggable="false"><span class="jk-price">20<svg class="i"><use href="#i-coin"/></svg></span></button>
           <button class="jk jk-img" id="jk-magnet" aria-label="Mıknatıs"><img src="jk-miknatis.png" alt="Mıknatıs" draggable="false"><span class="jk-price">100<svg class="i"><use href="#i-coin"/></svg></span></button>
         </div>
         <button class="jk jk-img" id="jk-bank" aria-label="Kelime Bankası"><img src="jk-kelime-bankasi.png" alt="Kelime Bankası" draggable="false"><span class="jk-badge" id="bank-badge"></span></button>
@@ -2557,7 +2565,9 @@ const store = {
 };
 
 const TEST_UNLOCK_ALL = false;    // TEST: tüm bölümler açık — test bitince false yap
-const TEST_INF_COINS = true;     // TEST: sınırsız altın — test bitince false yap
+const TEST_INF_COINS = false;    // TEST: sınırsız altın — test bitince false yap
+const HINT_COST = 20;               // ipucu fiyatı
+const levelBonus = i => i === LEVELS.length - 1 ? 100 : (i >= 5 ? 15 : 10);   // bölüm bitirme ödülü: 1-5 → 10, 6-9 → 15, 10 → 100
 const SHOW_NOTICES = false;     // bilgilendirme toast'ları kapalı
 const S = {
   levelIndex: 0, maxOpen: 0, done: {}, partial: {}, coins: 100, sound: true,
@@ -2569,6 +2579,8 @@ const S = {
 {
   const c = parseInt(store.get('wow_search_coins'), 10);
   if (!isNaN(c)) S.coins = c;
+  /* Tek seferlik coin sıfırlama: test coinlerini siler, herkes 100 ile başlar */
+  if (store.get('kb_coin_reset_v1') !== '1'){ S.coins = 100; store.set('wow_search_coins', 100); store.set('kb_coin_reset_v1', '1'); }
   const last = MAX_PLAY;
   /* Yeni 10 bölümlük yolculuk sistemi: eski harita ilerlemesini karıştırma. */
   if (store.get('cidahl_journey_10_v1') !== '1'){
@@ -2817,7 +2829,11 @@ async function syncCoinsFromCloud(){
   if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id) return;
   try{
     const db = await getDb(), ref = db.collection('users').doc(USER.id), snap = await ref.get();
-    if (snap.exists && snap.data().coins != null){
+    if (store.get('kb_coin_reset_cloud_v1') !== '1'){            // tek seferlik sıfırlama: buluttaki coini de 100 yap
+      S.coins = 100; store.set('kb_coin_reset_cloud_v1', '1');
+      await ref.set({name:USER.name || '', coins:100},{merge:true});
+      updateCoins();
+    }else if (snap.exists && snap.data().coins != null){
       S.coins = Math.max(0, Number(snap.data().coins) || 0);
       store.set('wow_search_coins', S.coins);
       updateCoins();
@@ -3082,7 +3098,7 @@ function renderElectricCap(el, path){
   const core = svg.querySelector('.ec-core');
   if (!core) return;
   core.setAttribute('d', electricPathD(path));
-  core.setAttribute('stroke-width', Math.max(9, S.geo.cell * .24));
+  core.setAttribute('stroke-width', Math.max(12, S.geo.cell * .36));
   core.style.filter = `drop-shadow(0 0 2px #ffffff) drop-shadow(0 0 6px var(--c)) drop-shadow(0 0 14px var(--c)) drop-shadow(0 0 24px var(--c))`;
 }
 
@@ -3129,6 +3145,7 @@ function computeSel(start, p){
   for (let i = 0; i <= steps; i++){
     const r = start.r + dr * i, c = start.c + dc * i;
     if (r < 0 || c < 0 || r >= n || c >= n) break;
+    if (i > 0 && S.cells[r * n + c].classList.contains('dim')) break;   // silinen harfin üstünden geçilemez
     path.push({ r, c });
   }
   return path;
@@ -3160,6 +3177,7 @@ gridEl.addEventListener('pointerdown', e => {
   S.geo.left = gridEl.getBoundingClientRect().left; S.geo.top = gridEl.getBoundingClientRect().top;
   const start = cellAt(pointerPos(e));
   if (!start) return;
+  if (S.cells[start.r * S.level.size + start.c].classList.contains('dim')) return;   // mıknatısla silinen harf seçilemez
   try { gridEl.setPointerCapture(e.pointerId); } catch(_) {}
   S.selecting = true;
   const path = [start];
@@ -3285,9 +3303,9 @@ $('btn-hint').addEventListener('click', () => {
   if (!S.playing) return;
   const left = S.level.words.filter(w => !S.found.has(w));
   if (!left.length) return;
-  if (S.coins < 50){ toast('Yeterli altının yok!'); SND.miss(); return; }
+  if (S.coins < HINT_COST){ toast('Yeterli altının yok!'); SND.miss(); return; }
   const w = left[0], pl = S.level.placements[w], n = S.level.size;
-  S.coins -= 50; updateCoins(); SND.hint();
+  S.coins -= HINT_COST; updateCoins(); SND.hint();
   const el = S.cells[pl.r * n + pl.c];
 
   // Ampul butonundan hedef harfe doğru uçan ipucu animasyonu.
@@ -3325,13 +3343,14 @@ $('btn-hint').addEventListener('click', () => {
    JOKERLER: KARIŞTIR / İPUCU / MIKNATIS / KELİME BANKASI
    ===================================================== */
 const MAGNET_COST = 100;
+
 const BANK_WORD_REWARD = 5, BANK_GIFT = 5, BANK_GOAL = 25;     // şimdilik 5 / 5 / 25
 let bankTotal = parseInt(store.get('kb_bank_total') || '0', 10) || 0;
 try { S.bank = JSON.parse(store.get('kb_bank_words') || '[]') || []; } catch(e){ S.bank = []; }
 if (!Array.isArray(S.bank)) S.bank = [];
 function refreshJokers(){
   const a = $('jk-hint'), b = $('jk-magnet'); if (!a || !b) return;
-  a.classList.toggle('dis', S.coins < 50);
+  a.classList.toggle('dis', S.coins < HINT_COST);
   b.classList.toggle('dis', S.coins < MAGNET_COST);
 }
 $('jk-hint').addEventListener('click', () => $('btn-hint').click());
@@ -3564,7 +3583,7 @@ function victory(){
   S.wins++; store.set('kb_wins', S.wins);
   const idx = S.levelIndex, prev = S.done[idx];
   const isFinal = idx === LEVELS.length - 1;
-  const bonus = (!prev && isFinal) ? 100 : 0;  // 10. bölüm ilk bitirişte 100 coin
+  const bonus = prev ? 0 : levelBonus(idx);   // bölüm bitirme ödülü (ilk bitirişte)
   const reward = prev ? 0 : S.level.words.length + bonus;   // kelime coinleri oynarken verildi; burada yalnız gösterim
   if (bonus){ S.coins += bonus; } updateCoins();
   const elapsed = S.level.mode === 'time' ? (S.level.timeLimit - S.seconds) : S.seconds;
@@ -3573,7 +3592,7 @@ function victory(){
   S.done[idx] = {
     stars: Math.max(stars, prev ? prev.stars : 0),
     time: prev && prev.time ? Math.min(prev.time, elapsed) : elapsed,
-    gold: prev ? (prev.gold != null ? prev.gold : (LEVELS[idx].words.length + (isFinal ? 100 : 0))) : reward   // bölümün ilk bitiriş altını (final ekranı toplamı için)
+    gold: prev ? (prev.gold != null ? prev.gold : (LEVELS[idx].words.length + levelBonus(idx))) : reward   // bölümün ilk bitiriş altını (final ekranı toplamı için)
   };
   delete S.partial[idx];
   const oldMax = S.maxOpen;
@@ -3636,7 +3655,7 @@ let irisBusy = false;
    ===================================================== */
 function showChapterEnd(){
   let gold = 0, time = 0;
-  for (let i = 0; i < LEVELS.length; i++){ const d = S.done[i]; if (d){ gold += (d.gold != null ? d.gold : (LEVELS[i].words.length + (i === LEVELS.length - 1 ? 100 : 0))); time += d.time || 0; } }
+  for (let i = 0; i < LEVELS.length; i++){ const d = S.done[i]; if (d){ gold += (d.gold != null ? d.gold : (LEVELS[i].words.length + levelBonus(i))); time += d.time || 0; } }
   $('ce-time').textContent = fmt(time);
   const fl = $('ce-flies');
   if (!fl.children.length){
