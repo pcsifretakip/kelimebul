@@ -2054,6 +2054,22 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .dw-key:disabled{opacity:.25}
 .dw-msg{min-height:20px;margin-bottom:8px;font-size:14px;font-weight:900;color:#86efac}
 </style>
+<style id="requested-home-tweaks">
+.hm-tiles{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.hm-tile{min-height:82px}
+.app.on-home .topbar .grp:first-child{justify-content:flex-start!important;gap:9px!important}
+.home-username{display:block;min-width:0;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:1000;color:#fff;text-shadow:0 2px 5px rgba(0,0,0,.65)}
+.home-username::before{content:'@';color:#fde68a;margin-right:1px}
+.app.on-home .topbar .coin{margin-left:auto!important}
+.app.on-home .hm-nav{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(47,27,117,.96),rgba(13,7,48,.98))!important;border:1px solid rgba(167,139,250,.42)!important;box-shadow:0 -8px 26px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.12),0 0 28px rgba(124,77,255,.16)!important}
+.app.on-home .hm-nav::before{content:'';position:absolute;left:8%;right:8%;top:-16px;height:34px;background:radial-gradient(ellipse at center,rgba(167,139,250,.52),rgba(124,77,255,0) 70%);filter:blur(7px);pointer-events:none}
+.app.on-home .hm-nav .nav-item{position:relative;z-index:2}
+.app.on-home .hm-nav .nav-item svg{filter:drop-shadow(0 0 5px rgba(167,139,250,.25));transition:filter .2s,transform .2s}
+.app.on-home .hm-nav .nav-item.on svg,.app.on-home .hm-nav .nav-item:active svg{filter:drop-shadow(0 0 9px rgba(251,191,36,.85));transform:translateY(-1px) scale(1.06)}
+.app.on-home .hm-nav .nav-orb{box-shadow:0 0 0 2px rgba(251,191,36,.24),0 0 20px rgba(139,92,246,.72),inset 0 1px 0 rgba(255,255,255,.35)!important}
+.app.on-game .top-timer{display:none!important}
+</style>
+
 </head>
 <body>
 
@@ -2095,6 +2111,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
   <header class="topbar">
     <div class="grp">
       <button class="icon-btn av" id="btn-avatar" aria-label="Profil"></button>
+      <span class="home-username" id="home-username">Oyuncu</span>
       <div class="coin"><svg class="i coin-ic"><use href="#i-coin"/></svg><span id="coin-count">100</span><button class="coin-plus hm-fx" id="coin-plus" aria-label="Altın kazan">+</button></div>
     </div>
     <div class="level-box"><small>BÖLÜM</small><b id="header-level-num">1</b></div>
@@ -2119,7 +2136,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
       <div class="hm-level" aria-label="Yolculuk ilerlemesi">
         <div class="hm-lv-badge" id="hm-lv-num">1</div>
         <div class="hm-lv-body">
-          <div class="hm-lv-top"><span class="hm-lv-name">🌿 Macera Yolculuğu <i class="hm-lv-ch" id="hm-lv-ch">Bölüm 1</i></span><span id="hm-lv-count">0 / 0</span></div>
+          <div class="hm-lv-top"><span class="hm-lv-name"><span id="hm-lv-name">🌿 Amazon Yağmur Ormanları</span><i class="hm-lv-ch" id="hm-lv-ch">Bölüm 1</i></span><span id="hm-lv-count">0 / 0</span></div>
           <div class="hm-lv-bar"><div class="hm-lv-fill" id="hm-lv-fill"></div></div>
         </div>
       </div>
@@ -2159,10 +2176,6 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
           <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="13" width="24" height="15" rx="3" fill="#a855f7"/><rect x="4" y="13" width="24" height="6" rx="2" fill="#c084fc"/><rect x="14" y="13" width="4" height="15" fill="#fbbf24"/><path d="M16 13c-2-7-10-6-9-2 1 3 5 2 9 2zm0 0c2-7 10-6 9-2-1 3-5 2-9 2z" fill="#fbbf24"/></svg>
           <b>Günlük ödül</b><em id="hm-chest-v">Ödülünü al</em>
         </button>
-        <button class="hm-tile hm-fx" id="hm-streak" aria-label="Günlük seri">
-          <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3c1 5 8 8 8 16a8 8 0 0 1-16 0c0-4 2-6 3-8 1 2 2 3 3 3 0-4-1-7 2-11z" fill="#fb923c"/><path d="M16 15c1 3 4 4 4 8a4 4 0 0 1-8 0c0-2 1-3 2-4 0 1 1 2 1 2 0-2-1-4 1-6z" fill="#fde68a"/></svg>
-          <b>Seri</b><em id="hm-streak-v">1 gün</em>
-        </button>
         <button class="hm-tile hm-fx" id="hm-word" aria-label="Günün kelimesi">
           <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="3" width="26" height="26" rx="7" fill="#2dd4bf"/><rect x="3" y="3" width="26" height="12" rx="7" fill="rgba(255,255,255,.25)"/><text x="16" y="23.5" text-anchor="middle" font-size="19" font-weight="900" fill="#053b36">K</text></svg>
           <b>Günün kelimesi</b><em id="hm-word-v">Oyna</em>
@@ -2187,7 +2200,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 
     <!-- GAME -->
     <section id="view-game" class="view off">
-      <div class="banner" aria-hidden="true"><h2 class="game-top-title" id="game-top-title"></h2><div class="timer top-timer"><svg class="i"><use href="#i-clock"/></svg><span id="time-val">00:00</span></div></div>
+      <div class="banner" aria-hidden="true"><h2 class="game-top-title" id="game-top-title"></h2><span id="time-val" hidden>00:00</span></div>
 
       <div class="words-panel"><div id="word-list" class="word-list"></div></div>
       <div id="live-selection" class="live-selection" aria-live="polite">
@@ -3017,7 +3030,8 @@ async function syncCoinsFromCloud(){
   }catch(e){}
 }
 function updateHome(){
-  $('header-level-num').textContent = S.maxOpen + 1;
+  const hLevel = LEVELS[Math.min(S.maxOpen, LEVELS.length - 1)] || LEVELS[0];
+  $('header-level-num').textContent = hLevel && hLevel.group != null ? hLevel.group + 1 : 1;
   try { renderHomeHud(); } catch(e){}
   try { lbStart(); lbOwn(); } catch(e){}
 }
@@ -3097,8 +3111,10 @@ function startLevel(index, def, seed){
   S.found = new Set(savedFound.filter(w => S.level.words.includes(w)));
   S.colorOf = {}; S.caps = []; S.sel = null; S.selecting = false; S.dragCap = null; updateLiveSelection([]);
   S.level.words.forEach((w, i) => S.colorOf[w] = PALETTE[i % PALETTE.length]);
-  $('header-level-num').textContent = def ? def.size + '×' + def.size : S.level.id;
-  $('game-top-title').textContent = S.level.category;
+  const chapterNo = S.level && S.level.group != null ? S.level.group + 1 : 1;
+  const chapterName = (typeof JOURNEY_CARDS !== 'undefined' && JOURNEY_CARDS[chapterNo - 1]) ? JOURNEY_CARDS[chapterNo - 1].name : S.level.category;
+  $('header-level-num').textContent = chapterNo;
+  $('game-top-title').textContent = chapterName;
   $('time-val').textContent = '00:00';
   renderWords(); renderGrid(); updateProgress();
   S.playing = false;
@@ -5599,17 +5615,21 @@ function hmMask(w){ const a = Array.from(w || ''); return a.length ? a[0] + ' ' 
 function hmSet(id, fn){ const el = $(id); if (el) fn(el); }
 function renderHomeHud(){
   const total = MAX_PLAY + 1, done = Math.max(0, Math.min(S.maxOpen, total)), lv = Math.min(S.maxOpen + 1, total);
-  hmSet('hm-lv-num', e => { e.textContent = lv; });
+  const activeLevel = LEVELS[Math.min(S.maxOpen, LEVELS.length - 1)] || LEVELS[0];
+  const chapter = activeLevel && activeLevel.group != null ? activeLevel.group + 1 : 1;
+  const chapterName = (typeof JOURNEY_CARDS !== 'undefined' && JOURNEY_CARDS[chapter - 1]) ? JOURNEY_CARDS[chapter - 1].name : (activeLevel ? activeLevel.category : 'Amazon Yağmur Ormanları');
+  hmSet('hm-lv-num', e => { e.textContent = chapter; });
+  hmSet('hm-lv-name', e => { e.textContent = '🌿 ' + chapterName; });
   hmSet('hm-lv-count', e => { e.textContent = done + ' / ' + total; });
   hmSet('hm-lv-fill', e => { e.style.width = Math.max(4, Math.round(done / total * 100)) + '%'; });
-  hmSet('hm-play-tag', e => { e.textContent = 'Bölüm ' + lv; });
-  hmSet('hm-lv-ch', e => { e.textContent = 'Bölüm ' + lv; });
-  const streak = hmStreak(), ready = drReady();
-  hmSet('hm-streak-v', e => { e.textContent = streak + ' gün'; });
+  hmSet('hm-play-tag', e => { e.textContent = 'Bölüm ' + chapter; });
+  hmSet('hm-lv-ch', e => { e.textContent = 'Bölüm ' + chapter; });
+  hmSet('home-username', e => { e.textContent = (USER && USER.name) ? USER.name : 'Oyuncu'; });
+  const ready = drReady();
   hmSet('hm-chest', e => e.classList.toggle('ready', ready));
   hmSet('hm-chest-v', e => { e.textContent = ready ? 'Ödülünü al' : 'Haftalık takvim'; });
-  hmSet('hm-word-v', e => { e.textContent = dwDone() ? dwNextText() : 'Oyna +' + DW_REWARD; });
-  hmSet('hm-word', e => e.classList.toggle('off', dwDone()));
+  hmSet('hm-word-v', e => { e.textContent = dwDone() ? 'Bugün tamamlandı' : 'Oyna +' + DW_REWARD; });
+  hmSet('hm-word', e => e.classList.remove('off'));
 }
 function hmNote(msg){
   const n = $('hm-note'); if (!n) return;
@@ -5662,23 +5682,24 @@ function drClaim(){
   setTimeout(() => { const o = $('dr-ov'); if (o) o.classList.remove('show'); }, 900);
 }
 $('hm-chest').addEventListener('click', () => { drRender().classList.add('show'); });
-$('hm-streak').addEventListener('click', () => hmNote('Her gün gir, serini koru'));
 
 /* ===== GÜNÜN KELİMESİ: her gün 15:30'da yenilenir, oynayınca pasife geçer ===== */
-var DW_HOUR = 15, DW_MIN = 30, DW_REWARD = 30;
+var DW_REWARD = 30;
 /* Yeni günün kelimelerini/ifadelerini buraya ekle (her gün sıradaki gelir): */
 var DAILY_WORDS = ['UEFA ULUSLAR LİGİ'];
-function dwCycle(){ const n = new Date(), c = new Date(n.getFullYear(), n.getMonth(), n.getDate(), DW_HOUR, DW_MIN, 0); if (n < c) c.setDate(c.getDate() - 1); return c; }
+function dwCycle(){ const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate(), 0, 0, 0); }
 function dwKey(){ return hmDayKey(dwCycle()); }
 function dwWord(){ const c = dwCycle(), i = Math.floor(Date.UTC(c.getFullYear(), c.getMonth(), c.getDate()) / 86400000); return String(DAILY_WORDS[i % DAILY_WORDS.length]).toLocaleUpperCase('tr-TR'); }
 function dwDone(){ return store.get('kb_dw_done') === dwKey(); }
-function dwNextText(){ const c = dwCycle(); c.setDate(c.getDate() + 1); const hh = String(DW_HOUR).padStart(2, '0') + ':' + String(DW_MIN).padStart(2, '0'); return (c.getDate() === new Date().getDate() ? 'Bugün ' : 'Yarın ') + hh; }
+function dwNextText(){ return 'Yarın yeni kelime'; }
 var DW = null;
 function dwOpen(){
   if (dwDone()){ hmNote('Yeni kelime ' + dwNextText() + "'da"); return; }
   const w = dwWord(), words = w.split(' ').map(x => Array.from(x)), pool = [];
   DW = { w: w, words: words, fill: words.map(a => a.map((ch, i) => i === 0 ? ch : null)), pool: [] };
   words.forEach(a => a.slice(1).forEach(ch => pool.push(ch)));
+  const extraLetters = Array.from('AEİNKRLMOSTUYÇĞÖÜŞZBDG').filter(ch => !w.includes(ch));
+  for (let i = 0; i < Math.min(5, extraLetters.length); i++) pool.push(extraLetters[Math.floor(Math.random() * extraLetters.length)]);
   for (let i = pool.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
   DW.pool = pool.map(ch => ({ ch: ch, used: false }));
   dwEl('dw-ov', '<div class="dw-card"><button class="dw-x" aria-label="Kapat">✕</button><h3>Günün Kelimesi</h3><p>⚽ Güncel bilgi · Doğru bulursan +' + DW_REWARD + ' altın</p><div class="dw-words" id="dw-words"></div><div class="dw-msg" id="dw-msg"></div><div class="dw-pool" id="dw-pool"></div><button class="dw-btn sec" id="dw-clear">Temizle</button></div>');
