@@ -2009,6 +2009,51 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 
 
 
+<style id="hm-patch">
+/* ANA SAYFA: üst bar kalktı, profil + altın küçük */
+.app.on-home .topbar{background:none!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;padding:calc(8px + env(safe-area-inset-top)) 12px 0!important}
+.app.on-home .topbar .grp:first-child{height:34px!important}
+.app.on-home #btn-avatar.icon-btn{width:34px!important;height:34px!important;padding:4px!important}
+.app.on-home .topbar .coin{width:auto!important;min-width:78px!important;height:30px!important;padding:0 26px 0 30px!important;background-size:100% 100%!important}
+.app.on-home .topbar .coin b,.app.on-home .topbar .coin span{font-size:12px!important}
+.app.on-home .topbar .coin .coin-plus{width:18px!important;height:18px!important;margin-top:-9px!important;right:5px!important;font-size:14px!important}
+/* Macera Yolculuğu çubuğu: yağmur ormanı teması */
+.hm-level{border-color:rgba(74,222,128,.38)!important;background:linear-gradient(90deg,rgba(6,44,30,.72),rgba(10,6,36,.62))!important}
+.hm-lv-fill{background:linear-gradient(180deg,#86efac,#16a34a)!important;box-shadow:0 0 10px rgba(74,222,128,.7)!important}
+.hm-lv-name{display:flex;align-items:center;min-width:0;white-space:nowrap}
+.hm-lv-ch{font-style:normal;margin-left:7px;padding:1px 8px;border-radius:99px;background:rgba(74,222,128,.2);color:#bbf7d0;font-size:11px}
+.hm-tile.off{opacity:.55;filter:grayscale(.5)}
+/* Günlük ödül + günün kelimesi pencereleri */
+.dw-ov{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(8,4,30,.82);backdrop-filter:blur(4px)}
+.dw-ov.show{display:flex}
+.dw-card{position:relative;width:min(100%,360px);max-height:92dvh;overflow:auto;padding:18px 14px 16px;border-radius:24px;background:linear-gradient(180deg,#2d1d7c,#150c42);border:1.5px solid rgba(251,191,36,.5);box-shadow:0 20px 50px rgba(0,0,0,.65);text-align:center;color:#fff}
+.dw-x{position:absolute;right:10px;top:10px;width:30px;height:30px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:17px;font-weight:900}
+.dw-card h3{margin:0 0 4px;font-size:22px;font-weight:1000;color:#fde68a;text-shadow:0 2px 0 #92400e}
+.dw-card p{margin:0 0 12px;font-size:12.5px;font-weight:800;color:#c3bef0}
+.dr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.dr-cell{padding:8px 2px;border-radius:14px;border:1.5px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;font-weight:900;display:flex;flex-direction:column;align-items:center;gap:3px;opacity:.45}
+.dr-cell small{font-size:11px;color:#c3bef0}
+.dr-cell b{font-size:16px;color:#fde68a}
+.dr-cell.big{grid-column:span 2}
+.dr-cell.today{opacity:1;border-color:#fbbf24;background:linear-gradient(180deg,rgba(251,191,36,.3),rgba(251,191,36,.1));box-shadow:0 0 16px rgba(251,191,36,.55);animation:drPulse 1.4s ease-in-out infinite}
+.dr-cell.done{opacity:.9;border-color:rgba(74,222,128,.6);background:rgba(34,197,94,.18)}
+.dr-cell.done b{color:#86efac}
+@keyframes drPulse{50%{transform:scale(1.05)}}
+.dw-btn{width:100%;padding:12px;border:0;border-radius:99px;font-size:16px;font-weight:1000;color:#3b1d00;background:linear-gradient(180deg,#fff0a8,#fbbf24 55%,#e8890a);box-shadow:inset 0 2px 0 rgba(255,255,255,.55),0 3px 0 #92400e}
+.dw-btn:disabled{opacity:.45;filter:grayscale(.6)}
+.dw-btn.sec{width:auto;padding:8px 18px;font-size:13px;color:#fff;background:rgba(255,255,255,.14);box-shadow:none}
+.dw-words{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 16px;margin:6px 0 14px}
+.dw-word{display:flex;gap:4px}
+.dw-box{width:30px;height:36px;border-radius:9px;display:grid;place-items:center;font-size:18px;font-weight:1000;border:1.5px solid rgba(255,255,255,.25);background:rgba(0,0,0,.35);color:#fff;padding:0}
+.dw-box.hint{background:linear-gradient(180deg,#fff0a8,#fbbf24);color:#3b1d00;border-color:#92400e}
+.dw-box.ok{background:rgba(34,197,94,.35);border-color:#4ade80}
+.dw-words.shake{animation:dwShake .4s}
+@keyframes dwShake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.dw-pool{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-bottom:12px}
+.dw-key{width:38px;height:42px;border-radius:11px;border:0;font-size:19px;font-weight:1000;color:#fff;background:linear-gradient(180deg,#7c5cff,#4c33c9);box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 3px 0 #2a1a84}
+.dw-key:disabled{opacity:.25}
+.dw-msg{min-height:20px;margin-bottom:8px;font-size:14px;font-weight:900;color:#86efac}
+</style>
 </head>
 <body>
 
@@ -2074,7 +2119,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
       <div class="hm-level" aria-label="Yolculuk ilerlemesi">
         <div class="hm-lv-badge" id="hm-lv-num">1</div>
         <div class="hm-lv-body">
-          <div class="hm-lv-top"><span>Yolculuk</span><span id="hm-lv-count">0 / 0</span></div>
+          <div class="hm-lv-top"><span class="hm-lv-name">🌿 Macera Yolculuğu <i class="hm-lv-ch" id="hm-lv-ch">Bölüm 1</i></span><span id="hm-lv-count">0 / 0</span></div>
           <div class="hm-lv-bar"><div class="hm-lv-fill" id="hm-lv-fill"></div></div>
         </div>
       </div>
@@ -2112,7 +2157,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
         <button class="hm-tile hm-fx" id="hm-chest" aria-label="Günlük ödül">
           <i class="hm-dot"></i>
           <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="13" width="24" height="15" rx="3" fill="#a855f7"/><rect x="4" y="13" width="24" height="6" rx="2" fill="#c084fc"/><rect x="14" y="13" width="4" height="15" fill="#fbbf24"/><path d="M16 13c-2-7-10-6-9-2 1 3 5 2 9 2zm0 0c2-7 10-6 9-2-1 3-5 2-9 2z" fill="#fbbf24"/></svg>
-          <b>Günlük ödül</b><em id="hm-chest-v">+15 altın</em>
+          <b>Günlük ödül</b><em id="hm-chest-v">Ödülünü al</em>
         </button>
         <button class="hm-tile hm-fx" id="hm-streak" aria-label="Günlük seri">
           <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3c1 5 8 8 8 16a8 8 0 0 1-16 0c0-4 2-6 3-8 1 2 2 3 3 3 0-4-1-7 2-11z" fill="#fb923c"/><path d="M16 15c1 3 4 4 4 8a4 4 0 0 1-8 0c0-2 1-3 2-4 0 1 1 2 1 2 0-2-1-4 1-6z" fill="#fde68a"/></svg>
@@ -2120,7 +2165,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
         </button>
         <button class="hm-tile hm-fx" id="hm-word" aria-label="Günün kelimesi">
           <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="3" width="26" height="26" rx="7" fill="#2dd4bf"/><rect x="3" y="3" width="26" height="12" rx="7" fill="rgba(255,255,255,.25)"/><text x="16" y="23.5" text-anchor="middle" font-size="19" font-weight="900" fill="#053b36">K</text></svg>
-          <b>Günün kelimesi</b><em id="hm-word-v">K _ _ _</em>
+          <b>Günün kelimesi</b><em id="hm-word-v">Oyna</em>
         </button>
       </div>
 
@@ -5558,11 +5603,13 @@ function renderHomeHud(){
   hmSet('hm-lv-count', e => { e.textContent = done + ' / ' + total; });
   hmSet('hm-lv-fill', e => { e.style.width = Math.max(4, Math.round(done / total * 100)) + '%'; });
   hmSet('hm-play-tag', e => { e.textContent = 'Bölüm ' + lv; });
-  const streak = hmStreak(), ready = store.get('kb_chest_day') !== hmDayKey();
+  hmSet('hm-lv-ch', e => { e.textContent = 'Bölüm ' + lv; });
+  const streak = hmStreak(), ready = drReady();
   hmSet('hm-streak-v', e => { e.textContent = streak + ' gün'; });
   hmSet('hm-chest', e => e.classList.toggle('ready', ready));
-  hmSet('hm-chest-v', e => { e.textContent = ready ? '+' + hmChestReward(streak) + ' altın' : 'Yarın gel'; });
-  hmSet('hm-word-v', e => { if (!hmRevealT) e.textContent = hmMask(hmWordOfDay()); });
+  hmSet('hm-chest-v', e => { e.textContent = ready ? 'Ödülünü al' : 'Haftalık takvim'; });
+  hmSet('hm-word-v', e => { e.textContent = dwDone() ? dwNextText() : 'Oyna +' + DW_REWARD; });
+  hmSet('hm-word', e => e.classList.toggle('off', dwDone()));
 }
 function hmNote(msg){
   const n = $('hm-note'); if (!n) return;
@@ -5576,21 +5623,108 @@ function hmFly(txt, el){
   viewHome.appendChild(f); setTimeout(() => f.remove(), 1000);
 }
 var hmRevealT = null;
-$('hm-chest').addEventListener('click', () => {
-  if (store.get('kb_chest_day') === hmDayKey()){ hmNote('Günlük ödülü aldın, yarın tekrar gel'); return; }
-  const r = hmChestReward(hmStreak());
-  store.set('kb_chest_day', hmDayKey());
+/* ===== GÜNLÜK ÖDÜL: 7 günlük takvim (sadece bugün aktif) ===== */
+var DR_REW = [10, 15, 20, 25, 30, 40, 60], DR_DAYS = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+function drClaimed(){ try{ return JSON.parse(store.get('kb_dr_days') || '[]'); }catch(e){ return []; } }
+function drToday(){ return (new Date().getDay() + 6) % 7; }
+function drWeekKeys(){ const n = new Date(), t = drToday(), out = []; for (let i = 0; i < 7; i++) out.push(hmDayKey(new Date(n.getFullYear(), n.getMonth(), n.getDate() - t + i))); return out; }
+function drIsClaimed(k){ return drClaimed().indexOf(k) >= 0 || store.get('kb_chest_day') === k; }
+function drReady(){ return !drIsClaimed(hmDayKey()); }
+function dwEl(id, html){
+  let o = $(id); if (o) return o;
+  o = document.createElement('div'); o.id = id; o.className = 'dw-ov'; o.innerHTML = html; document.body.appendChild(o);
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('show'); });
+  o.querySelector('.dw-x').addEventListener('click', () => o.classList.remove('show'));
+  return o;
+}
+function drRender(){
+  const o = dwEl('dr-ov', '<div class="dw-card"><button class="dw-x" aria-label="Kapat">✕</button><h3>Günlük Ödül</h3><p>Bugünün kutusuna dokun, ödülünü al</p><div class="dr-grid" id="dr-grid"></div><button class="dw-btn" id="dr-btn"></button></div>');
+  const keys = drWeekKeys(), t = drToday(); let h = '';
+  keys.forEach((k, i) => {
+    const done = drIsClaimed(k), isT = i === t;
+    h += '<button class="dr-cell' + (i === 6 ? ' big' : '') + (isT && !done ? ' today' : '') + (done ? ' done' : '') + '" data-i="' + i + '"' + (isT && !done ? '' : ' disabled') + '><small>' + DR_DAYS[i] + '</small><b>' + (done ? '✓' : '+' + DR_REW[i]) + '</b></button>';
+  });
+  $('dr-grid').innerHTML = h;
+  const btn = $('dr-btn'), ready = drReady();
+  btn.disabled = !ready; btn.textContent = ready ? 'Ödülü Al +' + DR_REW[t] : 'Bugünün ödülünü aldın';
+  $('dr-grid').onclick = e => { const c = e.target.closest('.dr-cell.today'); if (c) drClaim(); };
+  btn.onclick = drClaim;
+  return o;
+}
+function drClaim(){
+  if (!drReady()) return;
+  const r = DR_REW[drToday()], k = hmDayKey(), list = drClaimed(); list.push(k);
+  store.set('kb_dr_days', JSON.stringify(list.slice(-21))); store.set('kb_chest_day', k);
   S.coins += r; updateCoins();
-  hmFly('+' + r, $('hm-chest'));
   const c = document.querySelector('.topbar .coin'); if (c){ c.classList.remove('coin-bump'); void c.offsetWidth; c.classList.add('coin-bump'); }
   buzz([18, 30, 18]); try{ SND.found(); }catch(e){}
-  renderHomeHud();
-});
+  drRender(); renderHomeHud(); hmNote('+' + r + ' altın kazandın!');
+  setTimeout(() => { const o = $('dr-ov'); if (o) o.classList.remove('show'); }, 900);
+}
+$('hm-chest').addEventListener('click', () => { drRender().classList.add('show'); });
 $('hm-streak').addEventListener('click', () => hmNote('Her gün gir, serini koru'));
-$('hm-word').addEventListener('click', () => {
-  const w = hmWordOfDay(), el = $('hm-word-v'); if (!w || !el) return;
-  clearTimeout(hmRevealT); el.textContent = w; hmRevealT = setTimeout(() => { hmRevealT = null; el.textContent = hmMask(w); }, 2500);
-});
+
+/* ===== GÜNÜN KELİMESİ: her gün 15:30'da yenilenir, oynayınca pasife geçer ===== */
+var DW_HOUR = 15, DW_MIN = 30, DW_REWARD = 30;
+/* Yeni günün kelimelerini/ifadelerini buraya ekle (her gün sıradaki gelir): */
+var DAILY_WORDS = ['UEFA ULUSLAR LİGİ'];
+function dwCycle(){ const n = new Date(), c = new Date(n.getFullYear(), n.getMonth(), n.getDate(), DW_HOUR, DW_MIN, 0); if (n < c) c.setDate(c.getDate() - 1); return c; }
+function dwKey(){ return hmDayKey(dwCycle()); }
+function dwWord(){ const c = dwCycle(), i = Math.floor(Date.UTC(c.getFullYear(), c.getMonth(), c.getDate()) / 86400000); return String(DAILY_WORDS[i % DAILY_WORDS.length]).toLocaleUpperCase('tr-TR'); }
+function dwDone(){ return store.get('kb_dw_done') === dwKey(); }
+function dwNextText(){ const c = dwCycle(); c.setDate(c.getDate() + 1); const hh = String(DW_HOUR).padStart(2, '0') + ':' + String(DW_MIN).padStart(2, '0'); return (c.getDate() === new Date().getDate() ? 'Bugün ' : 'Yarın ') + hh; }
+var DW = null;
+function dwOpen(){
+  if (dwDone()){ hmNote('Yeni kelime ' + dwNextText() + "'da"); return; }
+  const w = dwWord(), words = w.split(' ').map(x => Array.from(x)), pool = [];
+  DW = { w: w, words: words, fill: words.map(a => a.map((ch, i) => i === 0 ? ch : null)), pool: [] };
+  words.forEach(a => a.slice(1).forEach(ch => pool.push(ch)));
+  for (let i = pool.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+  DW.pool = pool.map(ch => ({ ch: ch, used: false }));
+  dwEl('dw-ov', '<div class="dw-card"><button class="dw-x" aria-label="Kapat">✕</button><h3>Günün Kelimesi</h3><p>⚽ Güncel bilgi · Doğru bulursan +' + DW_REWARD + ' altın</p><div class="dw-words" id="dw-words"></div><div class="dw-msg" id="dw-msg"></div><div class="dw-pool" id="dw-pool"></div><button class="dw-btn sec" id="dw-clear">Temizle</button></div>');
+  $('dw-clear').onclick = () => { if (!DW) return; DW.fill = DW.words.map(a => a.map((ch, i) => i === 0 ? ch : null)); DW.pool.forEach(p => p.used = false); $('dw-msg').textContent = ''; dwDraw(); };
+  $('dw-words').onclick = e => {
+    const b = e.target.closest('.dw-box.slot'); if (!b || !DW || DW.lock) return;
+    const wi = +b.dataset.w, ci = +b.dataset.c, pi = DW.fill[wi][ci] != null ? DW.fillIdx[wi][ci] : -1;
+    if (pi >= 0){ DW.pool[pi].used = false; DW.fill[wi][ci] = null; DW.fillIdx[wi][ci] = -1; dwDraw(); }
+  };
+  $('dw-pool').onclick = e => {
+    const b = e.target.closest('.dw-key'); if (!b || !DW || DW.lock) return;
+    const pi = +b.dataset.p; if (DW.pool[pi].used) return;
+    for (let wi = 0; wi < DW.fill.length; wi++) for (let ci = 1; ci < DW.fill[wi].length; ci++){
+      if (DW.fill[wi][ci] == null){ DW.fill[wi][ci] = DW.pool[pi].ch; DW.fillIdx[wi][ci] = pi; DW.pool[pi].used = true; try{ audio(); SND.click(); }catch(_){} dwDraw(); dwCheck(); return; }
+    }
+  };
+  DW.fillIdx = words.map(a => a.map(() => -1));
+  $('dw-msg').textContent = '';
+  dwDraw();
+  $('dw-ov').classList.add('show');
+}
+function dwDraw(){
+  $('dw-words').innerHTML = DW.fill.map((a, wi) => '<div class="dw-word">' + a.map((ch, ci) =>
+    ci === 0 ? '<span class="dw-box hint">' + ch + '</span>' : '<button class="dw-box slot" data-w="' + wi + '" data-c="' + ci + '">' + (ch || '') + '</button>').join('') + '</div>').join('');
+  $('dw-pool').innerHTML = DW.pool.map((p, i) => '<button class="dw-key" data-p="' + i + '"' + (p.used ? ' disabled' : '') + '>' + p.ch + '</button>').join('');
+}
+function dwCheck(){
+  if (DW.fill.some(a => a.some(c => c == null))) return;
+  const got = DW.fill.map(a => a.join('')).join(' ');
+  if (got === DW.w){
+    DW.lock = true; store.set('kb_dw_done', dwKey());
+    S.coins += DW_REWARD; updateCoins();
+    const c = document.querySelector('.topbar .coin'); if (c){ c.classList.remove('coin-bump'); void c.offsetWidth; c.classList.add('coin-bump'); }
+    buzz([18, 30, 18]); try{ SND.found(); }catch(e){}
+    document.querySelectorAll('#dw-words .dw-box').forEach(b => b.classList.add('ok'));
+    $('dw-msg').textContent = 'Tebrikler! +' + DW_REWARD + ' altın 🎉';
+    renderHomeHud();
+    setTimeout(() => { $('dw-ov').classList.remove('show'); DW = null; }, 1600);
+  } else {
+    DW.lock = true; const wb = $('dw-words'); wb.classList.add('shake'); $('dw-msg').style.color = '#fca5a5'; $('dw-msg').textContent = 'Olmadı, tekrar dene';
+    try{ SND.miss(); }catch(e){}
+    setTimeout(() => { wb.classList.remove('shake'); $('dw-msg').style.color = ''; $('dw-msg').textContent = ''; DW.fill = DW.words.map(a => a.map((ch, i) => i === 0 ? ch : null)); DW.fillIdx = DW.words.map(a => a.map(() => -1)); DW.pool.forEach(p => p.used = false); DW.lock = false; dwDraw(); }, 650);
+  }
+}
+$('hm-word').addEventListener('click', dwOpen);
+setInterval(() => { try{ renderHomeHud(); }catch(e){} }, 30000);
 $('nav-shop').addEventListener('click', () => hmNote('Mağaza yakında geliyor'));
 $('coin-plus').addEventListener('click', e => { e.stopPropagation(); hmNote('Mağaza yakında geliyor'); });
 $('nav-tasks').addEventListener('click', () => hmNote('Görevler yakında geliyor'));
