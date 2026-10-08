@@ -1857,7 +1857,52 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
   border-bottom:2px solid rgba(251,191,36,.55);box-shadow:0 8px 20px rgba(0,0,0,.35)}
 .journey-list-head .journey-list-title-wrap{visibility:hidden}
 .journey-list-head .journey-list-back{background:rgba(15,10,45,.72) !important;border:1.5px solid rgba(251,191,36,.7) !important;align-self:start !important}
+/* ===== AMAZON FİNAL EKRANI (10. bölüm bitince) ===== */
+.chapter-end{position:absolute;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:22px;overflow:hidden;background:#04140a;opacity:0;visibility:hidden;transition:opacity .7s ease,visibility .7s}
+.chapter-end.show{opacity:1;visibility:visible}
+.ce-bg{position:absolute;inset:0;transform:scale(1.1);transition:transform 9s ease-out;
+  background:radial-gradient(80% 50% at 50% 28%,rgba(250,204,21,.30),transparent 70%),linear-gradient(180deg,rgba(2,22,11,.30) 0%,rgba(2,16,8,.90) 100%),url('amazon.png?v=2') center/cover no-repeat,linear-gradient(180deg,#0e4a24,#031a0d)}
+.chapter-end.show .ce-bg{transform:scale(1)}
+.ce-rays{position:absolute;left:50%;top:26%;width:150vmax;height:150vmax;margin:-75vmax 0 0 -75vmax;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg,rgba(255,236,150,.11) 0 7deg,transparent 7deg 20deg);
+  -webkit-mask-image:radial-gradient(circle,#000 0,transparent 52%);mask-image:radial-gradient(circle,#000 0,transparent 52%);animation:ceSpin 70s linear infinite}
+@keyframes ceSpin{to{transform:rotate(360deg)}}
+.ce-flies{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.ce-flies i{position:absolute;bottom:-12px;width:var(--s);height:var(--s);border-radius:50%;background:#fde68a;box-shadow:0 0 8px #fde68a,0 0 18px #facc15;opacity:0;animation:ceFly var(--d) linear var(--dl) infinite}
+@keyframes ceFly{0%{transform:translate(0,0);opacity:0}10%{opacity:.95}85%{opacity:.7}100%{transform:translate(var(--x),-108vh);opacity:0}}
+.ce-wrap{position:relative;width:100%;max-width:380px;display:flex;flex-direction:column;gap:14px;opacity:0;transform:translateY(34px)}
+.chapter-end.show .ce-wrap{animation:ceUp .85s cubic-bezier(.2,1,.3,1) .45s forwards}
+@keyframes ceUp{to{opacity:1;transform:none}}
+.ce-stat{display:flex;align-items:center;gap:16px;padding:16px 22px;border-radius:24px;border:1.5px solid rgba(251,191,36,.55);
+  background:linear-gradient(135deg,rgba(10,42,23,.74),rgba(3,17,9,.84));-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+  box-shadow:0 0 20px rgba(251,191,36,.22),inset 0 1px 0 rgba(255,255,255,.14)}
+.ce-stat img{width:clamp(48px,15vw,62px);height:auto;flex:none;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))}
+.ce-stat small{display:block;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#bbf7d0}
+.ce-stat b{display:block;margin-top:2px;font-size:clamp(32px,10.5vw,42px);line-height:1.05;font-weight:1000}
+.ce-stat .g{color:#fbbf24;text-shadow:0 2px 0 #92400e,0 0 18px rgba(251,191,36,.45)}
+.ce-stat .t{color:#22d3ee;text-shadow:0 2px 0 #0e4f63,0 0 18px rgba(34,211,238,.4)}
+.ce-btn{margin-top:6px;width:100%;aspect-ratio:640/178;height:auto;border:0;background:url('vic-buton.png?v=1') center/100% 100% no-repeat;padding:0 6% 0 27%;
+  display:flex;align-items:center;justify-content:center;font-family:inherit;font-weight:1000;font-size:clamp(13px,4.3vw,18px);letter-spacing:.04em;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.45);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ce-btn:active{transform:translateY(3px) scale(.985)}
+
+/* ===== MISIR PİRAMİTLERİ: açılış animasyonu (neon yuvarlaklar) ===== */
+.misir-wrap{position:relative;width:100%;flex:none}
+.misir-wrap .journey-card{width:100%}
+.orbit-layer{position:absolute;inset:-9px;pointer-events:none;z-index:6}
+.orbit-layer .mo{position:absolute;left:50%;top:50%;border-radius:50%;will-change:transform,opacity}
+.journey-card.misir-charging{animation:misirCharge .45s ease-in-out infinite alternate}
+@keyframes misirCharge{from{box-shadow:0 0 10px #22d3ee,0 0 22px rgba(34,211,238,.4)}to{box-shadow:0 0 26px #f0abfc,0 0 50px rgba(34,211,238,.55)}}
+.journey-card.misir-open{--neon:#fbbf24;border-color:#fbbf24;opacity:1;filter:none;cursor:pointer;animation:misirGlow 2.4s ease-in-out infinite}
+@keyframes misirGlow{0%,100%{box-shadow:0 0 12px rgba(251,191,36,.55),0 0 26px rgba(34,211,238,.22)}50%{box-shadow:0 0 22px rgba(251,191,36,.95),0 0 46px rgba(240,171,252,.42)}}
+.misir-wrap.misir-burst .journey-card{animation:misirBurst .9s ease-out}
+@keyframes misirBurst{0%{filter:brightness(2.4) saturate(1.6);transform:scale(1.035)}100%{filter:none;transform:none}}
+.coin-fly{position:fixed;z-index:300;pointer-events:none;display:flex;align-items:center;gap:3px;font-weight:1000;font-size:18px;color:#ffe27a;text-shadow:0 2px 0 #7a4a00,0 0 10px rgba(255,214,90,.9)}
+.coin-fly .i{width:28px;height:28px;filter:drop-shadow(0 0 8px rgba(255,200,40,.9))}
+.topbar .coin.coin-bump{animation:coinBump .45s ease-out}
+@keyframes coinBump{0%{transform:scale(1)}35%{transform:scale(1.22);filter:brightness(1.5)}100%{transform:scale(1)}}
 </style>
+
+
 </head>
 <body>
 
@@ -1899,7 +1944,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
   <header class="topbar">
     <div class="grp">
       <button class="icon-btn av" id="btn-avatar" aria-label="Profil"></button>
-      <div class="coin"><svg class="i coin-ic"><use href="#i-coin"/></svg><span id="coin-count">150</span></div>
+      <div class="coin"><svg class="i coin-ic"><use href="#i-coin"/></svg><span id="coin-count">100</span></div>
     </div>
     <div class="level-box"><small>BÖLÜM</small><b id="header-level-num">1</b></div>
     <div class="grp r">
@@ -2236,6 +2281,16 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
     </div>
   </div>
 
+  <!-- AMAZON FİNAL (10. bölüm bitince) -->
+  <div class="chapter-end" id="chapter-end">
+    <div class="ce-bg"></div><div class="ce-rays"></div><div class="ce-flies" id="ce-flies"></div>
+    <div class="ce-wrap">
+      <div class="ce-stat"><img src="vic-altin.png" alt="" draggable="false"><div><small>Kazanılan Altın</small><b class="g" id="ce-gold">0</b></div></div>
+      <div class="ce-stat"><img src="vic-sure.png" alt="" draggable="false"><div><small>Toplam Süre</small><b class="t" id="ce-time">00:00</b></div></div>
+      <button id="ce-next" class="ce-btn" type="button"><span>SONRAKİ MACERAYA GEÇ</span></button>
+    </div>
+  </div>
+
   <div class="iris" id="iris"></div>
   <canvas id="fx"></canvas>
 </div>
@@ -2502,10 +2557,10 @@ const store = {
 };
 
 const TEST_UNLOCK_ALL = false;    // TEST: tüm bölümler açık — test bitince false yap
-const TEST_INF_COINS = true;     // TEST: sınırsız altın — test bitince false yap
+const TEST_INF_COINS = false;    // TEST: sınırsız altın — test bitince false yap
 const SHOW_NOTICES = false;     // bilgilendirme toast'ları kapalı
 const S = {
-  levelIndex: 0, maxOpen: 0, done: {}, partial: {}, coins: 150, sound: true,
+  levelIndex: 0, maxOpen: 0, done: {}, partial: {}, coins: 100, sound: true,
   level: null, found: new Set(), colorOf: {}, caps: [],
   cells: [], chips: {}, token: 0, playing: false,
   selecting: false, sel: null, dragCap: null,
@@ -2840,6 +2895,7 @@ function startLevel(index, def, seed){
   const review = !def && !!S.done[index];             // tamamlanmış bölüm: bitmiş hali gösterilir, puan/altın yok
   if (!review){ S.games++; store.set('kb_games', S.games); }
   app.classList.toggle('on-review', review);
+  S.coinOk = !def && !review;      // kelime başına coin yalnızca ilk oynayışta
   $('status-txt').textContent = review ? '✔ Mod tamamlandı • tekrar puan kazanılmaz' : 'Harfleri parmağınla sürükleyip kelimeyi bul!';
   S.token++; stopTimer();
   { const t = document.querySelector('.hid-tut'); if (t) t.remove(); }
@@ -3165,10 +3221,37 @@ gridEl.addEventListener('pointercancel', endSel);
 /* =====================================================
    KELİME BULUNDU  —  kapsül çizimi + harf dalgası + kıvılcım + uçan etiket
    ===================================================== */
+/* Kelime bulunca +1 coin: kelimeden çıkıp sol üstteki coin'e uçar */
+function awardWordCoin(path){
+  S.coins += 1; store.set('wow_search_coins', S.coins);
+  clearTimeout(coinSyncTimer); coinSyncTimer = setTimeout(syncCoinsToCloud, 600);
+  const tgt = document.querySelector('.topbar .coin'), n = S.level.size;
+  const last = path[path.length - 1], cell = S.cells[last.r * n + last.c];
+  const show = () => { const c = $('coin-count'); if (c) c.textContent = S.coins; try { refreshJokers(); } catch(e){} };
+  if (!tgt || !cell){ show(); return; }
+  const r = cell.getBoundingClientRect(), t = tgt.getBoundingClientRect();
+  const x0 = r.left + r.width / 2, y0 = r.top + r.height / 2, x1 = t.left + 26, y1 = t.top + t.height / 2;
+  const el = document.createElement('div'); el.className = 'coin-fly';
+  el.innerHTML = '<svg class="i"><use href="#i-coin"/></svg><b>+1</b>';
+  el.style.left = x0 + 'px'; el.style.top = y0 + 'px';
+  document.body.appendChild(el);
+  const a = el.animate([
+    { transform:'translate(-50%,-50%) scale(.4)', opacity:0 },
+    { transform:'translate(-50%,calc(-50% - 34px)) scale(1.25)', opacity:1, offset:.22 },
+    { transform:'translate(-50%,calc(-50% - 34px)) scale(1.15)', opacity:1, offset:.38 },
+    { transform:'translate(calc(-50% + ' + (x1 - x0) + 'px),calc(-50% + ' + (y1 - y0) + 'px)) scale(.55)', opacity:.95 }
+  ], { duration:900, easing:'cubic-bezier(.45,0,.35,1)', fill:'forwards' });
+  a.onfinish = () => {
+    el.remove(); show();
+    tgt.classList.remove('coin-bump'); void tgt.offsetWidth; tgt.classList.add('coin-bump');
+    try { SND.tling(3); } catch(e){}
+  };
+}
 function onFound(word, path){
   const tok = S.token, color = S.colorOf[word], n = S.level.size;
   S.found.add(word);
   if (!R) savePartialProgress();
+  if (!R && S.coinOk) awardWordCoin(path);
 
   // Kelime bulunduğunda bağlantı SABİT kalır. Hareket, kıvılcım ve patlama yok.
   S.caps.push({ word, path, el: makeCap(path, 'new', color) });
@@ -3480,20 +3563,25 @@ function victory(){
   buzz([40, 60, 40, 60, 120]);
   S.wins++; store.set('kb_wins', S.wins);
   const idx = S.levelIndex, prev = S.done[idx];
-  const reward = prev ? 5 : 25;               // ilk bitirişte 25, tekrar oynayınca 5 altın
-  S.coins += reward; updateCoins();
+  const isFinal = idx === LEVELS.length - 1;
+  const bonus = (!prev && isFinal) ? 100 : 0;  // 10. bölüm ilk bitirişte 100 coin
+  const reward = prev ? 0 : S.level.words.length + bonus;   // kelime coinleri oynarken verildi; burada yalnız gösterim
+  if (bonus){ S.coins += bonus; } updateCoins();
   const elapsed = S.level.mode === 'time' ? (S.level.timeLimit - S.seconds) : S.seconds;
   const per = elapsed / S.level.words.length;
   const stars = per <= 12 ? 3 : per <= 25 ? 2 : 1;
   S.done[idx] = {
     stars: Math.max(stars, prev ? prev.stars : 0),
-    time: prev && prev.time ? Math.min(prev.time, elapsed) : elapsed
+    time: prev && prev.time ? Math.min(prev.time, elapsed) : elapsed,
+    gold: prev ? (prev.gold != null ? prev.gold : (LEVELS[idx].words.length + (isFinal ? 100 : 0))) : reward   // bölümün ilk bitiriş altını (final ekranı toplamı için)
   };
   delete S.partial[idx];
   const oldMax = S.maxOpen;
   S.maxOpen = Math.max(S.maxOpen, Math.min(idx + 1, MAX_PLAY));
   S.justUnlocked = (S.maxOpen > oldMax) ? S.maxOpen : -1;
   saveProgress(); syncLevelPoints();
+  /* 10. (son) bölüm: normal TEBRİKLER kutusu yerine Amazon final ekranı */
+  if (idx === LEVELS.length - 1){ showChapterEnd(); return; }
   /* HER BÖLÜMDE bitiş kutusu + yıldız + havai fişek göster */
   $('reward-time').textContent = fmt(elapsed);
   $('reward-coins').textContent = '+' + reward;
@@ -3542,6 +3630,90 @@ $('btn-next-level').addEventListener('click', () => {
   }, 220);
 });
 let irisBusy = false;
+
+/* =====================================================
+   AMAZON FİNAL EKRANI + MISIR PİRAMİTLERİ AÇILIŞI
+   ===================================================== */
+function showChapterEnd(){
+  let gold = 0, time = 0;
+  for (let i = 0; i < LEVELS.length; i++){ const d = S.done[i]; if (d){ gold += (d.gold != null ? d.gold : (LEVELS[i].words.length + (i === LEVELS.length - 1 ? 100 : 0))); time += d.time || 0; } }
+  $('ce-time').textContent = fmt(time);
+  const fl = $('ce-flies');
+  if (!fl.children.length){
+    for (let i = 0; i < 22; i++){
+      const f = document.createElement('i');
+      f.style.cssText = 'left:' + (Math.random()*100).toFixed(1) + '%;--s:' + (3 + Math.random()*5).toFixed(1) + 'px;--d:' + (7 + Math.random()*7).toFixed(1) + 's;--dl:-' + (Math.random()*10).toFixed(1) + 's;--x:' + ((Math.random()*80 - 40)).toFixed(0) + 'px';
+      fl.appendChild(f);
+    }
+  }
+  store.set('kb_misir_anim', '1');
+  $('chapter-end').classList.add('show');
+  const g = $('ce-gold'), t0 = performance.now(), D = 1300;
+  g.textContent = '0';
+  const tick = now => { const k = Math.min(1, (now - t0 - 700) / D); if (k > 0) g.textContent = Math.round(gold * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+}
+$('ce-next').addEventListener('click', () => {
+  if (irisBusy) return;
+  const iris = $('iris'); irisBusy = true; buzz(15);
+  iris.className = 'iris in';
+  setTimeout(() => {
+    $('chapter-end').classList.remove('show');
+    showLevels();
+    requestAnimationFrame(() => { iris.className = 'iris out'; });
+    setTimeout(() => { iris.className = 'iris'; irisBusy = false; }, 600);
+  }, 520);
+});
+
+function buildMisirCard(jc){
+  const pending = store.get('kb_misir_anim') === '1';
+  const w = document.createElement('div'); w.className = 'misir-wrap';
+  const b = document.createElement('button'); b.type = 'button';
+  b.style.setProperty('--neon', jc.color); b.dataset.bn = jc.key;
+  const setOpen = open => {
+    b.className = 'journey-card has-bn ' + (open ? 'misir-open' : 'locked');
+    b.innerHTML = '<span class="journey-num">' + (open ? '🔺' : '🔒') + '</span><span class="journey-info"><span class="journey-name">' + jc.name + '</span></span><span class="journey-state">' + (open ? '<span class="play">YENİ</span>' : '<span class="lock-label2">YAKINDA</span>') + '</span>';
+  };
+  setOpen(!pending);
+  b.addEventListener('click', () => { if (b.classList.contains('misir-open')){ audio(); toast('Mısır Piramitleri çok yakında! 🔺'); } });
+  const layer = document.createElement('div'); layer.className = 'orbit-layer';
+  w.append(b, layer); w._setOpen = setOpen;
+  if (pending) w.dataset.pending = '1';
+  return w;
+}
+function misirUnlockAnim(w){
+  if (!w || !w.isConnected) return;
+  store.set('kb_misir_anim', '0'); delete w.dataset.pending;
+  try { w.scrollIntoView({block:'center', behavior:'smooth'}); } catch(e){}
+  const b = w.querySelector('.journey-card'), layer = w.querySelector('.orbit-layer');
+  const cols = ['#22d3ee','#f0abfc','#fbbf24','#a3e635','#fb7185','#60a5fa'], N = 14, orbs = [];
+  for (let i = 0; i < N; i++){
+    const o = document.createElement('i'), c = cols[i % cols.length], sz = (i % 3 ? 8 : 13);
+    o.className = 'mo'; o.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;background:' + c + ';box-shadow:0 0 6px ' + c + ',0 0 14px ' + c + ',0 0 28px ' + c;
+    layer.appendChild(o); orbs.push(o);
+  }
+  b.classList.add('misir-charging'); buzz([30, 40, 30]);
+  const t0 = performance.now(), DUR = 4200; let opened = false;
+  const frame = now => {
+    const t = now - t0, k = Math.min(1, t / DUR);
+    const W = layer.clientWidth, H = layer.clientHeight, rx = W/2 - 7, ry = H/2 - 7;
+    const e = 1 - Math.pow(1 - Math.min(1, k / .3), 3);          // yarıçap açılır
+    const spin = (t / 1000) * (2.0 + k * 3.2);                     // giderek hızlanan dönüş
+    const op = k > .82 ? Math.max(0, 1 - (k - .82) / .18) : 1;
+    orbs.forEach((o, i) => {
+      const a = spin + i * (Math.PI * 2 / N), wob = 1 + .12 * Math.sin(t / 220 + i);
+      o.style.transform = 'translate(' + (Math.cos(a) * rx * e * wob).toFixed(1) + 'px,' + (Math.sin(a) * ry * e * wob).toFixed(1) + 'px) translate(-50%,-50%)';
+      o.style.opacity = op;
+    });
+    if (!opened && t > 1700){
+      opened = true; b.classList.remove('misir-charging'); w._setOpen(true);
+      w.classList.add('misir-burst'); buzz([60, 40, 90]); try { SND.level(); } catch(e){}
+      setTimeout(() => w.classList.remove('misir-burst'), 1000);
+    }
+    if (k < 1 && w.isConnected) requestAnimationFrame(frame); else orbs.forEach(o => o.remove());
+  };
+  requestAnimationFrame(frame);
+}
 
 /* =====================================================
    BÖLÜM SEÇİM EKRANI
@@ -3632,12 +3804,11 @@ const JOURNEY_CARDS = [
   { name:'Niagara Şelaleleri',   key:'niagara',    color:'#2dd4bf' },
   { name:'Fuji Dağı',            key:'fuji',       color:'#f472b6' }
 ];
+function chapterStars(){ let n = 0; for (let i = 0; i < LEVELS.length; i++) if (S.done[i]) n++; return n; }   // her bölüm = 1 yıldız
 function renderModes(){
   const list = $('journey-list');
   if (!list) return;
-  let totalStars = 0;
-  Object.keys(S.done || {}).forEach(k => { if (S.done[k]) totalStars += Number(S.done[k].stars || 0); });
-  const score = $('jr-score-v'); if (score) score.textContent = totalStars;
+  const score = $('jr-score-v'); if (score) score.textContent = chapterStars() + '/' + LEVELS.length;
   list.innerHTML = '';
   JOURNEY_CARDS.forEach((jc, i) => {
     const d = LEVELS[i] || LEVELS[0];
@@ -3650,7 +3821,8 @@ function renderModes(){
     b.className = 'journey-card ' + (done ? 'done' : current ? 'current' : unlocked ? 'open' : 'locked');
     b.style.setProperty('--neon', th.color);
     const soon = i > 0;
-    const stars = done ? '<div class="journey-stars">' + [1,2,3].map(n => '<svg class="i ' + (n <= done.stars ? 'on' : '') + '"><use href="#i-star"/></svg>').join('') + '</div>' : '';
+    if (i === 1 && S.done[LEVELS.length - 1]){ list.appendChild(buildMisirCard(jc)); return; }
+    const stars = done ? '<div class="journey-stars">' + [1].map(n => '<svg class="i ' + (n <= 1 ? 'on' : '') + '"><use href="#i-star"/></svg>').join('') + '</div>' : '';
     let state = '';
     if (!unlocked) state = '<span class="lock-label2"><svg class="i"><use href="#i-lock"/></svg>KİLİTLİ</span>';
     else if (done) state = '<span class="done-label">✓ TAMAMLANDI</span>' + stars;
@@ -3671,6 +3843,8 @@ function renderModes(){
     list.appendChild(b);
   });
   loadBanners();
+  const pw = list.querySelector('.misir-wrap[data-pending="1"]');
+  if (pw) setTimeout(() => misirUnlockAnim(pw), 900);
 }
 /* Harita.png yolu: resim koordinatlarında (940x1672) yol merkez noktaları, alttan üste */
 let JR_ART_H = 1672; // resmin gerçekten dolu olan yüksekliği (altı boş/siyah)
@@ -3717,7 +3891,7 @@ function drawMap(page){
   const from = page * PT, to = Math.min(n, from + PT);
   JR_P = new Array(n);
   for (let i = from; i < to; i++){ const q = jrAt(sOf(i - from)); JR_P[i] = {x: X(q), y: Y(q)}; }
-  { let tot = 0; for (const key in S.done) if (S.done[key]) tot += (S.done[key].stars || 0); const sv = $('jr-score-v'); if (sv) sv.textContent = tot + '/' + (n * 3); }
+  { const sv = $('jr-score-v'); if (sv) sv.textContent = chapterStars() + '/' + LEVELS.length; }
   let road = '';
   for (let i = from + 1; i < to; i++){
     const lit = !!S.done[i-1];
@@ -3728,8 +3902,8 @@ function drawMap(page){
   let nodes = '';
   for (let i = from; i < to; i++){
     const d = LEVELS[i], p = JR_P[i], dn = S.done[i], ok = i <= S.maxOpen, isCur = i === cur && ok && !dn;
-    const got = dn ? dn.stars : 0;
-    const st = !dn ? '' : '<span class="jr-stars">' + [1, 2, 3].map(q => '<svg class="i st' + (q <= got ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>';
+    const got = dn ? 1 : 0;
+    const st = !dn ? '' : '<span class="jr-stars">' + [1].map(q => '<svg class="i st' + (q <= got ? ' on' : '') + '"><use href="#i-star"/></svg>').join('') + '</span>';
     nodes += '<div class="jr-nw" style="left:' + p.x.toFixed(1) + 'px;top:' + p.y.toFixed(1) + 'px;--c:' + GROUPS[d.group][1] + '">' +
             '<button class="jr-node ' + (dn ? 'done' : isCur ? 'cur' : ok ? 'open' : 'lk') + '" data-i="' + i + '" aria-label="Bölüm ' + (i + 1) + '">' +
             (dn ? '✓' : (ok ? '' : '🔒')) + '</button>' + st +
@@ -3775,7 +3949,7 @@ function renderLevels(){
     b.querySelector('.lv-ic').innerHTML = iconSVG(unlocked ? th.icon : 'lock');
     b.querySelector('.lv-name').innerHTML = d.category + '<span class="mode-sub">' + (d.subtitle || '') + '</span>';
     const foot = b.querySelector('.lv-foot');
-    if (done) foot.innerHTML = [1, 2, 3].map(n => '<svg class="i st' + (n <= done.stars ? ' on' : '') + '"><use href="#i-star"/></svg>').join('');
+    if (done) foot.innerHTML = [1].map(n => '<svg class="i st' + (n <= 1 ? ' on' : '') + '"><use href="#i-star"/></svg>').join('');
     else if (unlocked) foot.innerHTML = '<span class="pill-play">OYNA</span>';
     else foot.innerHTML = '<span class="lock-label">KİLİTLİ</span>';
     if (unlocked) b.addEventListener('click', () => { audio(); showGame(i); });
@@ -3985,7 +4159,7 @@ async function registerUser(type, name){          // name yoksa sadece ID üreti
         const n = nRef ? await tx.get(nRef) : null;
         if (n && n.exists) throw new Error('taken');
         if (u.exists) throw new Error('idtaken');
-        tx.set(uRef, { name: name || '', type, coins: 150, created: firebase.firestore.FieldValue.serverTimestamp() });
+        tx.set(uRef, { name: name || '', type, coins: 100, created: firebase.firestore.FieldValue.serverTimestamp() });
         if (nRef) tx.set(nRef, { id, name });
       });
       return id;
@@ -4127,7 +4301,7 @@ AVATARS.forEach(a => {
   avpick.appendChild(b);
 });
 function openProfile(){
-  const stars = Object.values(S.done).reduce((t, d) => t + ((d && d.stars) || 0), 0);
+  const stars = chapterStars();
   $('p-name').textContent = USER ? USER.name : '-';
   $('p-id').textContent = USER && USER.id ? USER.id : '-';
   $('p-level').textContent = S.maxOpen + 1;
@@ -4999,7 +5173,7 @@ function ensureJourneyMap(){
     <div class="jm-bg"><video class="jm-bg-video" src="harita.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto"></video></div>
     <div class="jm-vignette"></div>
     <header class="jm-head">
-      <div class="jm-score" aria-label="İlerleme"><svg class="i"><use href="#i-star"/></svg><b id="jm-score-v">0/30</b></div>
+      <div class="jm-score" aria-label="İlerleme"><svg class="i"><use href="#i-star"/></svg><b id="jm-score-v">0/10</b></div>
       <div class="jm-right"><button type="button" class="jm-set jm-gear" aria-label="Ayarlar"><svg class="i"><use href="#i-gear"/></svg></button>
       <button type="button" class="jm-set jm-backbtn" aria-label="Geri"><svg class="i" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg></button></div>
     </header>
@@ -5091,7 +5265,7 @@ function showJourneyMap(chapterIndex, opts){
   leaveGame();
   const el = ensureJourneyMap();
   const def = LEVELS[idx] || LEVELS[0];
-  { let tot = 0; for (const k in S.done) if (S.done[k]) tot += (S.done[k].stars || 0); const sv = el.querySelector('#jm-score-v'); if (sv) sv.textContent = tot + '/' + (LEVELS.length * 3); }
+  { const sv = el.querySelector('#jm-score-v'); if (sv) sv.textContent = chapterStars() + '/' + LEVELS.length; }
   const bg = el.querySelector('.jm-bg');
   const vid = el.querySelector('.jm-bg-video');
   if (vid) { vid.muted = true; vid.loop = true; vid.playsInline = true; const play = () => { const pr = vid.play(); if (pr && pr.catch) pr.catch(() => {}); }; play(); }
