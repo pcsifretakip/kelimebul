@@ -2727,7 +2727,7 @@ const GROUPS = [
     ['Temizlik Ve Hijyen',7,'SABUN PASPAS ELDİVEN FIRÇA KOVA SÜNGER ŞAMPUAN','','hv'],
     ['Kamp Ve Doğa Sporları',8,'ÇADIR PUSULA MATARA FENER HARİTA DÜRBÜN BİVAK','','hvr'],
     ['Terzi Ve Tekstil',8,'TEBEŞİR MEZURA KASNAK DÜĞME YÜKSÜK KUMAŞ İPLİK','','medium'],
-    ['Bahçe Ve Tarım',8,'TIRMIK SULAMA FİDAN TOHUM KAZMA ÇAPA İLAÇLAMA','','medium'],
+    ['Bahçe Ve Tarım',8,'TIRMIK SULAMA FİDAN TOHUM KAZMA ÇAPA İLAÇLAMA','SULAMA TOHUM ÇAPA İLAÇLAMA','medium'],
     ['Marangoz Ve Sanayi',8,'KERESTE TESTERE MENGENE PLANYA VERNİK ZIMPARA RENDE','','hard'],
     ['El Aletleri Ve Sanayi',8,'ÇEKİÇ PENSE MATKAP KERPETEN ANAHTAR YANKESKİ PERÇİN','','hard'],
     ['Ameliyathane Malzemeleri',8,'BİSTÜRİ NEŞTER ANESTEZİ MASKE ÖNLÜK SERUM PENS','','hard'],
@@ -2922,7 +2922,7 @@ const INFO = [
   ["Üç Ülke Sınırı / ARJANTİN","Şelalelerin yakınında Brezilya, Arjantin ve Paraguay sınırları buluşur."]
 ];
 const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => {
-  const hide = null;
+  const hide = l[3] ? l[3] : null;
   const dirs = l[4] || (j < 2 ? 'easy' : (j < 5 ? 'medium' : 'hard'));
   const beginner = j < 3;
   const labels = ['KOLAY','KOLAY','ORTA','ORTA','ZOR','ZOR','ÇOK ZOR','UZMAN','UZMAN','MAX ZORLUK'];
@@ -4130,14 +4130,30 @@ function victory(){
   saveProgress(); syncLevelPoints();
   /* J alt bölümü: bölümün (10 alt seviyenin) final tebrik ekranı */
   if (isChapterFinal){ showChapterEnd(Math.floor(idx / CHAPTER_SIZE)); return; }
-  /* HER BÖLÜMDE bitiş kutusu + yıldız + havai fişek göster */
-  $('reward-time').textContent = fmt(elapsed);
-  $('reward-coins').textContent = '+' + reward;
-  const rc = $('reward-chapter');
-  if (rc) rc.textContent = 'BÖLÜM ' + (idx + 1) + ' TAMAMLANDI';
-  vicScene(idx);
-  modal.classList.add('show');
-  vicFx(stars, reward, elapsed);
+  /* Ara bölümlerde tebrik/altın/süre ekranı AÇILMAZ: kısa bir bildirim şeridi gösterilir,
+     oyun otomatik olarak sonraki bölüme geçer. Tam ekran yalnızca ana bölüm bitince (showChapterEnd). */
+  showLevelPass(idx, reward, stars);
+}
+function showLevelPass(idx, reward, stars){
+  if (!document.getElementById('lp-style')){
+    const st = document.createElement('style'); st.id = 'lp-style';
+    st.textContent = '.lp-banner{position:absolute;left:50%;top:22%;z-index:95;transform:translate(-50%,0);display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 26px;border-radius:22px;pointer-events:none;color:#fff;font-weight:1000;text-align:center;background:linear-gradient(180deg,rgba(34,197,94,.95),rgba(21,128,61,.95));box-shadow:0 10px 30px rgba(0,0,0,.45),0 0 0 3px rgba(255,255,255,.35) inset;animation:lpIn .9s cubic-bezier(.2,1.5,.4,1) both}'
+      + '.lp-banner b{font-size:22px;letter-spacing:.06em;text-shadow:0 2px 0 rgba(0,0,0,.35)}'
+      + '.lp-banner .lp-st{font-size:26px;letter-spacing:4px}.lp-banner .lp-co{font-size:18px;color:#fde68a}'
+      + '@keyframes lpIn{0%{opacity:0;transform:translate(-50%,-30px) scale(.6)}35%{opacity:1;transform:translate(-50%,0) scale(1.08)}60%{transform:translate(-50%,0) scale(1)}100%{opacity:1;transform:translate(-50%,0) scale(1)}}';
+    document.head.appendChild(st);
+  }
+  const old = document.querySelector('.lp-banner'); if (old) old.remove();
+  const el = document.createElement('div'); el.className = 'lp-banner';
+  const stTxt = '★'.repeat(stars) + '☆'.repeat(3 - stars);
+  el.innerHTML = '<b>✓ BÖLÜM ' + ((idx % CHAPTER_SIZE) + 1) + ' TAMAM!</b><span class="lp-st">' + stTxt + '</span>' + (reward ? '<span class="lp-co">+' + reward + ' 🪙</span>' : '');
+  app.appendChild(el);
+  const tok = S.token;
+  setTimeout(() => {
+    el.remove();
+    if (tok !== S.token || irisBusy) return;     // oyuncu bu arada çıktıysa otomatik geçme
+    $('btn-next-level').click();                 // iris geçişiyle sonraki bölüm
+  }, 1300);
 }
 
 const JR_MONKEY_BACK = 'monkey-back.png?v=2';
@@ -4397,6 +4413,7 @@ function renderModes(){
       '<span class="journey-info"><span class="journey-name">' + jc.name + '</span>' + stars + '</span>' +
       '<span class="journey-state">' + state + '</span>';
     if (i === 0) b.classList.add('has-banner');
+    else if (jc.key) { b.classList.add('has-bn'); b.dataset.bn = jc.key; }
     if (unlocked) b.addEventListener('click', () => { audio(); if (i === 0 && !done) showAmazonIntro(() => showJourneyMap(i)); else showJourneyMap(i); });
     list.appendChild(b);
   });
@@ -5814,6 +5831,12 @@ function jmMonkeyJump(m, from, to, done){
     },200);
   });
 }
+/* Bir bölümün (harita düğümü) içinde kalınan alt bölümü bulur: ilk bitmemiş seviye */
+function resumeLevelOf(ci){
+  const st = chapterStart(ci), en = Math.min(chapterEnd(ci), LEVELS.length - 1);
+  for (let i = st; i <= en; i++) if (!S.done[i] && i <= S.maxOpen) return i;
+  return st;
+}
 function showJourneyMap(chapterIndex, opts){
   opts = opts || {};
   const unlockIdx = (opts.unlock === undefined) ? -1 : opts.unlock;
@@ -5866,7 +5889,7 @@ function showJourneyMap(chapterIndex, opts){
     const d=LEVELS[chapterStart(i)];
     const chapterName = (GROUPS[i] && GROUPS[i][0]) ? GROUPS[i][0] : ('Bölüm ' + (i+1));
     b.setAttribute('aria-label', chapterName + ' seviye ' + (i+1));
-    if (unlocked) b.addEventListener('click',()=>{ audio(); showGame(chapterStart(i)); });
+    if (unlocked) b.addEventListener('click',()=>{ audio(); showGame(resumeLevelOf(i)); });
     else b.addEventListener('click',()=>{ toast('Önce önceki bölümü tamamla.'); });
     nodes.appendChild(b);
     const label = document.createElement('div');
@@ -5897,7 +5920,7 @@ function showJourneyMap(chapterIndex, opts){
         setTimeout(() => {
           b.className = 'jm-node cur jm-pop';
           b.innerHTML = '';
-          b.addEventListener('click', () => { audio(); showGame(i); });
+          b.addEventListener('click', () => { audio(); showGame(resumeLevelOf(i)); });
         }, 650);
         setTimeout(() => fx.remove(), 4800);
       };
