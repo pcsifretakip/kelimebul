@@ -1851,6 +1851,12 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .journey-list-back{width:44px !important;height:44px !important;justify-self:end !important}
 .journey-list-score{display:none !important}
 @media(max-width:430px){.journey-list-head{grid-template-columns:minmax(0,1fr) 48px !important;gap:8px !important;padding-left:14px !important;padding-right:14px !important}.journey-title-img{width:min(64vw,340px) !important;max-width:calc(100% - 4px) !important;max-height:64px !important}}
+/* MACERA BAŞLA: üst bara manzara arka planı (başlık görselin içinde) */
+.journey-list-head{aspect-ratio:1911/823;min-height:0 !important;padding-top:calc(env(safe-area-inset-top,0px) + 10px) !important;align-items:start !important;
+  background:linear-gradient(180deg,rgba(10,6,40,.0) 70%,rgba(10,6,40,.55)),url('macera-header.jpg?v=1') center/cover no-repeat;
+  border-bottom:2px solid rgba(251,191,36,.55);box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.journey-list-head .journey-list-title-wrap{visibility:hidden}
+.journey-list-head .journey-list-back{background:rgba(15,10,45,.72) !important;border:1.5px solid rgba(251,191,36,.7) !important;align-self:start !important}
 </style>
 </head>
 <body>
