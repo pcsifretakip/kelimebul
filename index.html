@@ -1906,7 +1906,19 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .cell.sel{text-shadow:0 0 3px rgba(0,0,0,.65),0 0 8px #22d3ee}
 /* Maceraya Başla banner: daha alçak, içerik (başlık) ortada kalır */
 .journey-list-head{aspect-ratio:1911/600 !important;background-position:center 53% !important}
+/* Oyun içi bölüm adı (mor şeritte sol tarafta) */
+.app.on-game .banner .game-top-title{display:block;flex:1;max-width:none;margin:0;font-size:17px;letter-spacing:.06em;color:#fde68a;text-align:left}
+/* Amazon kartı yıldız sayacı */
+.journey-stars{align-items:center}
+.journey-stars .js-n{margin-left:6px;font-size:13px;font-weight:1000;color:#fde68a;text-shadow:0 1px 3px rgba(0,0,0,.9)}
+/* TEBRİKLER arkasındaki dönen ışınlar: ekranın üstüne ve altına kadar uzanır */
+#modal-victory{overflow:hidden}
+#modal-victory .vcard::before{top:50%;left:50%;width:220vh;height:220vh;margin:-110vh 0 0 -110vh;
+  background:repeating-conic-gradient(from 0deg,rgba(251,191,36,.34) 0 7deg,transparent 7deg 20deg);
+  -webkit-mask-image:radial-gradient(circle,#000 0,rgba(0,0,0,.75) 18%,transparent 38%);mask-image:radial-gradient(circle,#000 0,rgba(0,0,0,.75) 18%,transparent 38%)}
 </style>
+
+
 
 
 
@@ -3071,6 +3083,13 @@ function measure(){
   const c = n > 1 ? S.cells[n].getBoundingClientRect() : a;
   S.geo = { left: gr.left, top: gr.top, x0: a.left - gr.left + a.width / 2, y0: a.top - gr.top + a.height / 2,
             px: b.left - a.left || a.width, py: c.top - a.top || a.height, cell: Math.min(a.width, a.height) };
+  /* Hücre animasyonu (pop/scale) ölçümü bozmasın: yerleşim (offset) değerleriyle hesapla */
+  if (S.cells[0].offsetParent === gridEl){
+    const e0 = S.cells[0], e1 = n > 1 ? S.cells[1] : e0, en = n > 1 ? S.cells[n] : e0;
+    S.geo.x0 = e0.offsetLeft + e0.offsetWidth / 2; S.geo.y0 = e0.offsetTop + e0.offsetHeight / 2;
+    S.geo.px = (e1.offsetLeft - e0.offsetLeft) || e0.offsetWidth; S.geo.py = (en.offsetTop - e0.offsetTop) || e0.offsetHeight;
+    S.geo.cell = Math.min(e0.offsetWidth, e0.offsetHeight);
+  }
   S.caps.forEach(cp => placeCap(cp.el, cp.path[0], cp.path[cp.path.length - 1]));
   if (S.dragCap && S.sel) placeCap(S.dragCap, S.sel.path[0], S.sel.path[S.sel.path.length - 1]);
 }
@@ -3274,6 +3293,7 @@ function onFound(word, path){
   // Kelime bulunduğunda bağlantı SABİT kalır. Hareket, kıvılcım ve patlama yok.
   S.caps.push({ word, path, el: makeCap(path, 'new', color) });
   updateProgress();
+  requestAnimationFrame(measure); setTimeout(measure, 450);
   SND.found();
   buzz([35]);
 
@@ -3832,19 +3852,21 @@ function renderModes(){
   JOURNEY_CARDS.forEach((jc, i) => {
     const d = LEVELS[i] || LEVELS[0];
     const th = themeOf(d);
-    const done = S.done[i];
+    const chapAll = chapterStars() === LEVELS.length;
+    const done = i === 0 ? (chapAll ? S.done[0] : null) : S.done[i];     // Amazon: yalnızca 10 bölümün hepsi bitince "tamamlandı"
     const unlocked = i <= S.maxOpen;
-    const current = unlocked && !done && i === S.maxOpen;
+    const current = unlocked && !done && (i === 0 || i === S.maxOpen);
+    const nStars = i === 0 ? chapterStars() : (done ? 1 : 0);
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'journey-card ' + (done ? 'done' : current ? 'current' : unlocked ? 'open' : 'locked');
     b.style.setProperty('--neon', th.color);
     const soon = i > 0;
     if (i === 1 && S.done[LEVELS.length - 1]){ list.appendChild(buildMisirCard(jc)); return; }
-    const stars = done ? '<div class="journey-stars">' + [1].map(n => '<svg class="i ' + (n <= 1 ? 'on' : '') + '"><use href="#i-star"/></svg>').join('') + '</div>' : '';
+    const stars = nStars ? '<div class="journey-stars"><svg class="i on"><use href="#i-star"/></svg>' + (i === 0 ? '<b class="js-n">' + nStars + '/' + LEVELS.length + '</b>' : '') + '</div>' : '';
     let state = '';
     if (!unlocked) state = '<span class="lock-label2"><svg class="i"><use href="#i-lock"/></svg>KİLİTLİ</span>';
-    else if (done) state = '<span class="done-label">✓ TAMAMLANDI</span>' + stars;
+    else if (done) state = '<span class="done-label">✓ TAMAMLANDI</span>';
     else state = '<span class="play">OYNA</span>';
     if (soon) {
       b.className = 'journey-card locked has-bn';
@@ -3854,7 +3876,7 @@ function renderModes(){
       b.setAttribute('aria-disabled','true'); list.appendChild(b); return;
     }
     b.innerHTML = '<span class="journey-num">' + (unlocked ? (done ? '✓' : i + 1) : '🔒') + '</span>' +
-      '<span class="journey-info"><span class="journey-name">' + (i === 0 ? jc.name : d.category) + '</span>' + (done ? stars : '') + '</span>' +
+      '<span class="journey-info"><span class="journey-name">' + (i === 0 ? jc.name : d.category) + '</span>' + stars + '</span>' +
       '<span class="journey-state">' + state + '</span>';
     if (i === 0) b.classList.add('has-banner');
     if (unlocked) b.addEventListener('click', () => { audio(); if (i === 0) showAmazonIntro(() => showJourneyMap(i)); else showJourneyMap(i); });
