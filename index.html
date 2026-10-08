@@ -2722,16 +2722,16 @@ const DIRS = {
 };
 const GROUPS = [
   ['Doğanın Unsurları', '#22c55e', [
-    ['Doğanın Unsurları',7,'TOPRAK RÜZGAR ATEŞ','','hv'],
-    ['Kırtasiye Ve Büro',7,'RAPTİYE DEFTER CETVEL SİLGİ','','hv'],
-    ['Temizlik Ve Hijyen',8,'DETERJAN SABUN PASPAS ELDİVEN FIRÇA','','medium'],
-    ['Kamp Ve Doğa Sporları',9,'YAĞMURLUK DAĞCILIK PUSULA MATARA ÇADIR FENER','','medium'],
-    ['Terzi Ve Tekstil',10,'İPLİKÇİLİK TEBEŞİR MEZURA KASNAK DÜĞME YÜKSÜK KUMAŞÇI','','medium'],
-    ['Bahçe Ve Tarım',11,'BAHÇEMAKASI GÜBRELEME ÇAPALAMA İLAÇLAMA TIRMIK SULAMA FİDAN TOHUM','','hard'],
-    ['Marangoz Ve Sanayi',12,'DOĞRAMACILIK KONTRAPLAK MENGENE TESTERE PLANYA VERNİK DÜBEL RENDE','','hard'],
-    ['El Aletleri Ve Sanayi',13,'AYARLIANAHTAR TORNAVİDA KERPETEN YANKESKİ MATKAP PENSE ÇEKİÇ PERÇİN MENGENE','','hard'],
-    ['Ameliyathane Malzemeleri',14,'AMELİYATMASASI ANESTEZİ BİSTÜRİ NEŞTER PENS MAKAS MASKE ÖNLÜK SERUM','','hard'],
-    ['Oto Tamir Ve Ağır Sanayi',15,'TEKERLEKBALANSI KOMPRESÖR ŞANZIMAN ENJEKTÖR AMORTİSÖR DİFERANSİYEL SUPAP PİSTON KRİKO EGZOZ','','hard']
+    ['Doğanın Unsurları',7,'TOPRAK ATEŞ HAVA BULUT DENİZ ORMAN NEHİR','','hv'],
+    ['Kırtasiye Ve Büro',7,'DEFTER CETVEL SİLGİ MAKAS ZARF KALEM KLASÖR','','hv'],
+    ['Temizlik Ve Hijyen',7,'SABUN PASPAS ELDİVEN FIRÇA KOVA SÜNGER ŞAMPUAN','','hv'],
+    ['Kamp Ve Doğa Sporları',8,'ÇADIR PUSULA MATARA FENER HARİTA DÜRBÜN BİVAK','','hvr'],
+    ['Terzi Ve Tekstil',8,'TEBEŞİR MEZURA KASNAK DÜĞME YÜKSÜK KUMAŞ İPLİK','','medium'],
+    ['Bahçe Ve Tarım',8,'TIRMIK SULAMA FİDAN TOHUM KAZMA ÇAPA İLAÇLAMA','','medium'],
+    ['Marangoz Ve Sanayi',8,'KERESTE TESTERE MENGENE PLANYA VERNİK ZIMPARA RENDE','','hard'],
+    ['El Aletleri Ve Sanayi',8,'ÇEKİÇ PENSE MATKAP KERPETEN ANAHTAR YANKESKİ PERÇİN','','hard'],
+    ['Ameliyathane Malzemeleri',8,'BİSTÜRİ NEŞTER ANESTEZİ MASKE ÖNLÜK SERUM PENS','','hard'],
+    ['Oto Tamir Ve Ağır Sanayi',8,'ŞANZIMAN ENJEKTÖR DEBRİYAJ PİSTON SUPAP KRİKO EGZOZ','','hard']
   ]],
   ['Orman Yaşamı', '#10b981', [
     ['Ağaç Türleri',3,'MEŞE GÜRGEN KESTANE','','hv'],
@@ -2925,15 +2925,11 @@ const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => {
   const hide = null;
   const dirs = l[4] || (j < 2 ? 'easy' : (j < 5 ? 'medium' : 'hard'));
   const beginner = j < 3;
-  const subtitles = [
-    'KOLAY • 3 KELİME', 'KOLAY • 4 KELİME', 'ORTA • 5 KELİME',
-    'ORTA • 6 KELİME', 'ZOR • 7 KELİME', 'ZOR • 8 KELİME',
-    'ÇOK ZOR • 8 KELİME', 'UZMAN • 9 KELİME', 'UZMAN • 9 KELİME', 'MAX ZORLUK • 10 KELİME'
-  ];
+  const labels = ['KOLAY','KOLAY','ORTA','ORTA','ZOR','ZOR','ÇOK ZOR','UZMAN','UZMAN','MAX ZORLUK'];
   return {
     category:l[0], group:gi, lv:j,
     info:undefined, size:l[1], dirs, mode:'classic', hide,
-    subtitle:subtitles[j], words:l[2].split(' '), beginner
+    subtitle:labels[j] + ' • ' + l[2].split(' ').length + ' KELİME', words:l[2].split(' '), beginner
   };
 }));
 const LEVELS = CLASSIC_LEVELS;
