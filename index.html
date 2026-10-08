@@ -2929,33 +2929,26 @@ const INFO = [
   ["Güney Amerika / BREZİLYA","Jaguar, tukan ve koati şelalelerin çevresindeki ormanda yaşar."],
   ["Üç Ülke Sınırı / ARJANTİN","Şelalelerin yakınında Brezilya, Arjantin ve Paraguay sınırları buluşur."]
 ];
-/* Tüm klasik bölümler için sabit oyun standardı:
-   - Izgara daima en fazla 6x6 (burada tam 6x6)
-   - Her bölümde 7-8 kelime
-   - 6 harften uzun kelimeler kullanılmaz; kelime havuzu buna göre seçilir. */
-const SHORT_WORD_POOL = GROUPS.flatMap(g => g[2].flatMap(l => String(l[2] || '').split(/\s+/).map(TR)))
-  .filter(w => w.length >= 3 && w.length <= 6);
-
+/* KLASİK BÖLÜM KURALI:
+   - Her harita bölümü 10 bulmacadan oluşur.
+   - İlk 3 bulmaca: 4x4 ve 4 kelime.
+   - Sonraki 7 bulmaca: en fazla 6x6 ve 7 kelime.
+   - Aynı kelime iki farklı bulmacada kesinlikle kullanılmaz.
+   - Tüm kelimeler 6 harf veya daha kısadır. */
+const UNIQUE_LEVEL_WORDS = [["ATEŞ", "HAVA", "TAŞ", "GÖL", "KUM", "GÖK", "KAR", "BUZ", "SIS", "ÇİĞ", "KAYA", "DAĞ", "NEHİR", "AÇI", "ÇİMEN", "BAHAR", "IŞIK", "KUMSAL", "KOR", "ORMAN", "DAL", "ÇİÇEK", "BULUT", "KIYI", "RÜZGAR", "KÖK", "PINAR", "TEPE", "ADAM", "DENİZ", "AĞAÇ", "TOPRAK", "KÖZ", "SAHİL", "UFUK", "ADAY", "DUMAN", "AĞIL", "YAPRAK", "OVA", "TOHUM", "VADİ", "AFET", "FİDAN", "AĞIZ", "YAĞMUR", "YAZ", "ÇAMUR", "ÇALI", "AFİŞ", "GÖLGE", "DERE", "YILDIZ", "ÇÖL", "ÇAYIR", "ACI", "ALEV", "GÜNEŞ", "DOĞA", "ŞİMŞEK", "KIŞ"], ["MEŞE", "ÇAM", "KOZ", "YUVA", "AYI", "KURT", "BİT", "KENE", "TRÜF", "KÜF", "AĞRI", "AKIL", "GEYİK", "ASMA", "PATİKA", "YOSUN", "NOKTA", "EĞRELİ", "ATA", "GÖVDE", "ATKI", "PORSUK", "ÇINAR", "NİSAN", "FISTIK", "AŞI", "KABUK", "ALAN", "REÇİNE", "AKIM", "SAKIZ", "GÜRGEN", "AYAK", "KAVAK", "ALTI", "SİNCAP", "AKIN", "SEDİR", "KARACA", "AYVA", "KAVUK", "AMCA", "TAVŞAN", "AKOR", "SÖĞÜT", "KUNDUZ", "AŞÇI", "DEFNE", "ARPA", "ARDIÇ", "TİLKİ", "LADİN", "KÖKNAR", "BABA", "DİKEN", "ARSA", "ATLAS", "VAŞAK", "MEYVE", "MANTAR", "ANA"], ["KANO", "SAZ", "OCAK", "ODA", "OĞUL", "BEND", "KUĞU", "OKUL", "DEBİ", "OKUR", "ADA", "SEL", "YAYIN", "BASKI", "AKINTI", "MARTI", "BİNA", "LEYLEK", "BİLET", "YAĞIŞ", "BEBEK", "ARITMA", "MİDYE", "BİRA", "NUMARA", "BİTKİ", "ÇAKIL", "BEDEN", "BARDAK", "SAZAN", "BAĞ", "SAZLIK", "DELTA", "ÖRDEK", "BEKÇİ", "BUĞDAY", "SUCUL", "BAŞ", "SUYOLU", "HAVZA", "BALI", "BELGE", "DRENAJ", "SÜLÜK", "BAĞA", "TAŞKIN", "KAMIŞ", "BANT", "BENEK", "KAYNAK", "TORTU", "BOYA", "ŞELALE", "KANAL", "YATAK", "BARAJ", "KÖRFEZ", "KEFAL", "BUĞU", "BALIK", "BOZUK"], ["OLTA", "ORAK", "ORDU", "OYUN", "PUMA", "FİL", "KEÇİ", "ÖDEV", "BOĞA", "KEDİ", "CİNS", "DİŞ", "ÇAY", "ZEBRA", "AKBABA", "ÇATI", "PANTER", "ÖRNEK", "KİRPİ", "ÇAĞ", "ZEHİR", "BOYNUZ", "ÇENE", "İGUANA", "ŞAHİN", "MANDA", "ÖKÜZ", "PENÇE", "JAGUAR", "KOKU", "ASLAN", "ÇAKAL", "CEKET", "ÖZEL", "PİTON", "KAPLAN", "PUSU", "BURUN", "ÇANTA", "DOĞAN", "CAM", "TAPİR", "KARTAL", "SÜRÜ", "BÜYÜK", "ÇAĞRI", "KOBRA", "CAN", "VARAN", "LEOPAR", "ÇAPA", "BİZON", "ÇEVRE", "KOYUN", "CEP", "YABAN", "MAYMUN", "ÇARK", "CADDE", "ÇİLEK", "KÖPEK"], ["MUZ", "LİME", "KAJU", "MAUN", "KİVİ", "PARA", "NEM", "DOLU", "PLAN", "PLAK", "PUF", "ROTA", "ÇÖP", "ŞEKER", "MUSON", "ETİK", "TARÇIN", "ABANOZ", "SAMAN", "EVET", "SANAT", "KAKAO", "DANA", "BAMBU", "ANANAS", "PALET", "EŞYA", "TUKAN", "KAMİŞ", "DOST", "DÜNYA", "KAKTÜS", "PARÇA", "SARI", "ÇORAP", "KAVUN", "ELMA", "DÜĞÜN", "LİLİUM", "PİLAV", "ELM", "ÇUVAL", "KOKOS", "EMEK", "DİREK", "ORKİDE", "PİLOT", "SAÇ", "ÇİZGİ", "LİMON", "EMİR", "GUAVA", "PAPAYA", "SABIR", "SAĞ", "İNCİR", "MANGO", "ESER", "KAHVE", "PEYNİR", "SALON"], ["SAYI", "PUHU", "SIRA", "SORU", "SOY", "SÖZ", "ŞAH", "ŞİİR", "GAGA", "ŞİŞE", "TAT", "AVCI", "FİLİZ", "FARE", "BAYKUŞ", "KARGA", "SOKAK", "ÖTÜŞ", "TAVAN", "GÖKÇE", "FİLM", "FİNCAN", "KULAK", "SONUÇ", "GAZ", "TAVUK", "GÖNÜL", "FİRE", "GÖZLEM", "MAKAV", "SOĞAN", "GÖZ", "TEKNE", "GÜLÜŞ", "GIDA", "KAYMAN", "SATIR", "SUCUK", "GÖÇ", "TELEK", "GÜVEN", "HALI", "KURSAK", "SEPET", "SİNEK", "GÜL", "TEMİZ", "HALKA", "TEST", "TERLİK", "SERİN", "SİPER", "SES", "YAVRU", "KANAT", "UÇUŞ", "TİMSAH", "SEVGİ", "TABAK", "TÜY", "ŞAPKA"], ["TOP", "PİRE", "ARI", "TUZ", "TÜRK", "UÇAK", "UYKU", "ÜZÜM", "VANA", "YAKA", "YAZI", "KOZA", "YENGEÇ", "YENİ", "YAKIT", "İÇME", "ZİL", "ADALET", "ZAMAN", "İSKELE", "İLİK", "YALAN", "BAL", "HIZ", "HAYVAN", "ÇÜRÜK", "AKREP", "İNSAN", "HELVA", "HAN", "TOZ", "HAZİNE", "YAPIT", "BÖCEK", "ADET", "POLEN", "İNCİ", "YER", "HİZMET", "YARIN", "HAMUR", "HIRS", "TORBA", "İNEK", "YOL", "NEKTAR", "YEMEK", "HEDEF", "KAPI", "TUĞLA", "İSİM", "ZAR", "TEMBEL", "YORUM", "HEKİM", "KARA", "VAGON", "İZİN", "ZOR", "TERMİT", "YÜZÜK"], ["ALO", "GEKO", "ARKA", "DİL", "ÇİVİ", "RENK", "DÖL", "DEDE", "DERS", "DERİ", "KARE", "KARI", "DİKİŞ", "KIL", "KİLİM", "ÇORBA", "BAKIR", "KELİME", "BİLGİ", "KASAP", "KOL", "KİTAP", "ÇUBUK", "BALON", "KOLTUK", "BİLİM", "KAZAK", "KOVA", "MAMBA", "KASA", "BARUT", "PULLAR", "BİTİŞ", "KAZMA", "KULE", "PITON", "KENT", "BAVUL", "TAYPAN", "CANLI", "DAMAR", "KUPA", "KEMİK", "SICAK", "ARICI", "AKŞAM", "BUHAR", "DAVET", "KİRA", "KESİK", "YAŞAM", "AYDIN", "ALARM", "BULGU", "DÖKÜM", "KAZ", "KURAK", "ÇALIŞ", "BAHÇE", "ARABA", "BİBER"], ["GEN", "DNA", "RNA", "KOD", "TÜR", "AİLE", "PARK", "RİSK", "ANIZ", "UYUM", "DOKU", "ETKİ", "DİRENÇ", "NEFES", "LİTRE", "FAKAT", "TEHDİT", "MASA", "KUZU", "ENERJİ", "ORGAN", "MAKAS", "FAUNA", "YANGIN", "MAVİ", "KÜRE", "KORUMA", "MERAK", "FENER", "ELMAS", "BESİN", "KUŞ", "SINIF", "KRİTİK", "MİKRO", "FLORA", "ENLEM", "BİYOM", "KÜP", "TAKIM", "MEKTUP", "MİRAS", "HÜCRE", "ESNEK", "DENGE", "MOR", "YEREL", "MİLLET", "NADİR", "KAÇAK", "EVLAT", "DOLAP", "NAR", "İKLİM", "REZERV", "NEDEN", "LİSTE", "EVRİM", "DÜZEN", "MAMA", "KUTU"], ["CİN", "DEV", "PERİ", "BÜYÜ", "RUH", "OKÇU", "İZCİ", "DANS", "KAMP", "FİLE", "HECE", "İLAÇ", "BÜYÜCÜ", "İŞARET", "TOTEM", "LOKUM", "KÖY", "KESKİN", "KUMAR", "DESTAN", "FİKİR", "MADEN", "KUTUP", "YILAN", "KURŞUN", "HİSAR", "EFSANE", "FİRAR", "MASAL", "KÖMÜR", "İLERİ", "MANDAL", "KABLO", "HEYKEL", "GÖREV", "MASKE", "KÖPRÜ", "İPLİK", "MAĞARA", "KALIP", "KABİLE", "GÜBRE", "MUSKA", "KİMYA", "ŞAMAN", "REHBER", "KARIN", "KAMERA", "HAZIR", "MÜZİK", "KİREÇ", "GEMİ", "RİTÜEL", "KAVGA", "KAMYON", "HİNDİ", "NESİL", "KİTLE", "KART", "TILSIM", "KORNA"]];
 const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => {
-  const hide = l[3] ? l[3] : null;
-  const dirs = l[4] || (j < 2 ? 'easy' : (j < 5 ? 'medium' : 'hard'));
-  const beginner = j < 3;
-  const labels = ['KOLAY','KOLAY','ORTA','ORTA','ZOR','ZOR','ÇOK ZOR','UZMAN','UZMAN','MAX ZORLUK'];
-
-  /* Önce bölümün kendi kelimelerinden 3-6 harfli olanları al.
-     Yetmezse aynı grubun, sonra tüm oyunun kısa kelime havuzundan tamamla. */
-  const own = [...new Set(String(l[2] || '').split(/\s+/).map(TR).filter(w => w.length >= 3 && w.length <= 6))];
-  const groupPool = [...new Set(g[2].flatMap(x => String(x[2] || '').split(/\s+/).map(TR))
-    .filter(w => w.length >= 3 && w.length <= 6))];
-  const words = [...own];
-  for (const w of groupPool) if (words.length < 8 && !words.includes(w)) words.push(w);
-  for (const w of SHORT_WORD_POOL) if (words.length < 8 && !words.includes(w)) words.push(w);
-  const finalWords = words.slice(0, 8);
-
+  const words = UNIQUE_LEVEL_WORDS[gi][j < 3 ? j * 4 : 12 + (j - 3) * 7];
+  const count = j < 3 ? 4 : 7;
+  const start = j < 3 ? j * 4 : 12 + (j - 3) * 7;
+  const finalWords = UNIQUE_LEVEL_WORDS[gi].slice(start, start + count);
   return {
     category:l[0], group:gi, lv:j,
-    info:undefined, size:6, dirs, mode:'classic', hide,
-    subtitle:labels[j] + ' • ' + finalWords.length + ' KELİME', words:finalWords, beginner
+    info:undefined,
+    size:j < 3 ? 4 : 6,
+    dirs:'hard', mode:'classic', hide:l[3] ? l[3] : null,
+    subtitle:(j < 3 ? 'KOLAY' : (j < 5 ? 'ORTA' : 'ZOR')) + ' • ' + finalWords.length + ' KELİME',
+    words:finalWords,
+    beginner:j < 3
   };
 }));
 const LEVELS = CLASSIC_LEVELS;
@@ -2983,8 +2976,8 @@ function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t
 function buildLevel(def, index){
   const words = (Array.isArray(def.words) ? def.words : String(def.words || '').split(/\s+/).filter(Boolean)).map(TR);
   /* Bölüm standardı 6x6'dır; kelimeler buildLevel öncesinde 6 harfe sınırlandırılır. */
-  const requestedSize = Math.min(Number(def.size) || 6, 6);
-  const size = Math.max(1, requestedSize);
+  const requestedSize = Number(def.size) || 6;
+  const size = Math.max(1, Math.min(requestedSize, 6));
   const dirs = DIRS[def.dirs] || DIRS.medium;
   const order = [...words].sort((a,b) => b.length - a.length);
 
@@ -3229,6 +3222,7 @@ const SND = {
     tone(f, 0, .32, 'sine', .13); tone(f * 2.01, 0, .22, 'sine', .05); tone(f * 3.99, 0, .1, 'sine', .018);
   },
   click(){ tone(1500, 0, .04, 'triangle', .17, 900); tone(700, .01, .035, 'sine', .09); },
+  monkey(){ if (!S.sound) return; tone(620,0,.11,'triangle',.16,420); tone(480,.08,.13,'triangle',.14,310); tone(760,.18,.09,'sine',.11,520); tone(380,.26,.16,'triangle',.12,220); },
   intro(){ tone(180, 0, .55, 'sawtooth', .035, 760); [523.25, 659.25, 783.99].forEach((f, i) => tone(f, .4 + i * .09, .38, 'triangle', .09)); },
   found(){ [523.25, 659.25, 783.99, 1046.5].forEach((f,i) => { tone(f, i * .07, .22, 'triangle', .16); tone(f * 2, i * .07, .16, 'sine', .04); }); },
   miss(){ tone(220, 0, .18, 'sawtooth', .05, 140); },
@@ -5991,7 +5985,7 @@ function showJourneyMap(chapterIndex, opts){
         mk.style.cursor='grabbing';
         try{ mk.setPointerCapture(e.pointerId); }catch(_){}
         try{ audio(); }catch(_){}
-        try{ SND.click(); }catch(_){}
+        try{ SND.monkey(); }catch(_){}
       });
       mk.addEventListener('pointermove', function(e){
         if(!dragging) return;
