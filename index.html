@@ -2951,7 +2951,153 @@ const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => {
     beginner:j < 3
   };
 }));
-const LEVELS = CLASSIC_LEVELS;
+/* Kategoriye uygun kelime havuzu: Her bulmaca kendi alt başlığındaki kelimeleri kullanır. */
+const CATEGORY_WORD_OVERRIDES = {
+  'Bahçe Ve Tarım':['TIRMIK','SULAMA','FİDAN','TOHUM','KAZMA','ÇAPA','BAHÇE'],
+  'Kırtasiye Ve Büro':['KALEM','SİLGİ','ZARF','MAKAS','DEFTER','DOSYA','KART'],
+  'Temizlik Ve Hijyen':['SABUN','PASPAS','FIRÇA','KOVA','SÜNGER','BEZ','JEL'],
+  'Kamp Ve Doğa Sporları':['ÇADIR','PUSULA','MATARA','FENER','KAMP','İP','ÇANTA'],
+  'Marangoz Ve Sanayi':['PLANYA','VERNİK','RENDE','ÇİVİ','TAHTA','KESKİ','MENGENE'],
+  'El Aletleri Ve Sanayi':['ÇEKİÇ','PENSE','MATKAP','ANAHTAR','PERÇİN','KESKİ','TESTERE'],
+  'Ameliyathane Malzemeleri':['BİSTÜRİ','NEŞTER','MASKE','ÖNLÜK','SERUM','ŞIRINGA','PENS'],
+  'Oto Tamir Ve Ağır Sanayi':['PİSTON','SUPAP','KRİKO','EGZOZ','FREN','LASTİK','MOTOR'],
+  'Ağaç Türleri':['MEŞE','ÇAM','GÜRGEN','KAVAK','SÖĞÜT','ARDIÇ','SEDİR'],
+  'Yaban Meyveleri':['DUT','ERİK','ÜZÜM','AYVA','İNCİR','MÜRVER','KIZIL'],
+  'Orman Mantarları':['TRÜF','KÜF','MANTAR','ŞAPKA','KÖK','SAP','PORÇİN'],
+  'Orman Sürüngenleri':['BOĞA','GEKO','YILAN','VARAN','PİTON','KOBRA','İGUANA'],
+  'Orman Kemirgenleri':['FARE','SİNCAP','KUNDUZ','KÖSTEBEK','TAVŞAN','OKLU','DİKEN'],
+  'Yırtıcı Memeliler':['PARS','PUMA','ÇAKAL','VAŞAK','ASLAN','KAPLAN','SIRTLAN'],
+  'Ormancı Ekipmanları':['BALTA','MIZRAK','KASK','HALAT','KAZMA','BIÇAK','TESTERE'],
+  'Orman Zararlıları':['TIRTIL','KENE','BİT','GÜVE','SİNEK','KURT','KABUK'],
+  'Orman Koruma Terimleri':['YANGIN','PARK','FİDAN','KORU','DOĞA','NÖBET','ORMAN'],
+  'Ekolojik Sistem Terimleri':['OKSİJEN','BİYOM','İKLİM','HABİTAT','EKOSİSTEM','TOPRAK','KÖK'],
+  'Tatlı Su Balıkları':['SAZAN','YAYIN','KEFAL','ALABALIK','BALIĞI','ÇAPA','PULLU'],
+  'Nehir Taşıtları':['KANO','SAL','TEKNE','KAYIK','SANDAL','KÜREK','DÜMEN'],
+  'Su Kıyısı Bitkileri':['SAZ','KAMIŞ','YOSUN','NİLÜFER','OT','KÖK','YAPRAK'],
+  'Nehir Kuşları':['ÖRDEK','KUĞU','LEYLEK','PELİKAN','BALIKÇIL','KARABATAK','FLAMİNGO'],
+  'Tatlı Su Kabukluları':['MİDYE','SÜLÜK','KEREVİT','YENGEÇ','KARİDES','KABUK','İSTAKOZ'],
+  'Akarsu Terimleri':['DEBİ','YATAK','BARAJ','BEND','AKINTI','HAVZA','TORTU'],
+  'Nehir Amfibileri':['BAĞA','KURBAĞA','SEMENDER','SUYILANI','YAVRU','DERİ','YUMURTA'],
+  'Hidroloji Terimleri':['DEBİ','HAVZA','DRENAJ','SEVİYE','BUHAR','AKIM','SU'],
+  'Tatlı Su Ekosistemi':['SU','PLANKTON','BİYOFİLM','OKSİJEN','DÖNGÜ','TABAN','KORUMA'],
+  'Limnoloji Bilimi Terimleri':['GÖL','PLANKTON','TORTU','SİRKÜL','SU','DİP','KAYNAK'],
+  'Otçul Memeliler':['GEYİK','KEÇİ','KARACA','CEYLAN','AYI','TAVŞAN','GİBİ'],
+  'Gece Canlıları':['GECE','PUHU','YARASA','KİRPİ','BAYKUŞ','AY','GÖLGE'],
+  'Vahşi Sürüngenler':['KOBRA','BOĞA','PİTON','VARAN','İGUANA','GEKO','ENGEREK'],
+  'Vahşi Kuş Türleri':['ŞAHİN','DOĞAN','AKBABA','KARTAL','ATMACA','PUHU','BAYKUŞ'],
+  'Sürü Yaşamı Terimleri':['SÜRÜ','LİDER','OTLAK','BASKIN','AVCI','ALAN','İZ'],
+  'Vahşi Yaşam Savunması':['DİKEN','ZEHİR','KOKU','KABUK','BOYNUZ','PENÇE','DİŞ'],
+  'Vahşi Avlanma Stratejileri':['PUSU','KAPAN','BOĞMA','İZ','SESSİZ','AV','SÜRÜ'],
+  'Hayvan Anatomisi Terimleri':['KAS','DİŞ','KIL','DERİ','KEMİK','İSKELET','PENÇE'],
+  'Etoloji (Davranış Bilimi)':['DÜRTÜ','SES','YAVRU','SÜRÜ','İLETİŞİM','DAVRAN','İZ'],
+  'Biyolojik Sınıflandırma':['TÜR','CİNS','AİLE','TAKIM','SINIF','MEMELİ','OMURGALI'],
+  'Tropikal Meyveler':['MUZ','MANGO','LİME','GUAVA','PAPAYA','KİVİ','KOKOS'],
+  'Tropikal Baharatlar':['TARÇIN','KAKAO','KAJUN','ZENCEFİL','KARANFİL','VANİLYA','BİBER'],
+  'Tropikal İklim Unsurları':['MUSON','NEM','SICAK','YAĞIŞ','DOLU','BULUT','YAĞMUR'],
+  'Çiçekli Bitki Türleri':['ÇİÇEK','TAÇ','ORKİDE','LİLİUM','BEGONYA','MANOLYA','BROMELİA'],
+  'Endemik Ağaç Türleri':['MAUN','SAKIZ','ABANOZ','BAMBU','SEDİR','KAVAK','PALMİYE'],
+  'Tropikal Yağmur Yapısı':['MUSON','NEM','YAĞIŞ','DOLU','BULUT','ÇİSE','SAĞANAK'],
+  'Tarımsal Üretim Terimleri':['KAKAO','KAHVE','AVOKADO','KAJU','YAM','TOHUM','EKİN'],
+  'Orman Katmanları':['TEPE','TABAN','KANOPİ','ÇALI','OT','AĞAÇ','TOPRAK'],
+  'Biyoçeşitlilik Terimleri':['TÜR','BİYOM','HABİTAT','DENGE','DOĞA','GEN','ENDEMİZM'],
+  'Klimatoloji Ve Coğrafya':['EKVATOR','TROPİK','MUSON','NEM','YAĞMUR','İKLİM','KUŞAK'],
+  'Yırtıcı Kuşlar':['ŞAHİN','KARTAL','ATMACA','PUHU','DOĞAN','AKBABA','KUZGUN'],
+  'Yırtıcı Memeliler':['ASLAN','KAPLAN','LEOPAR','PANTER','PUMA','VAŞAK','SIRTLAN'],
+  'Renkli Kuş Türleri':['TUKAN','MAKAV','PAPAĞAN','FLAMİNGO','KUŞ','GAGA','KANAT'],
+  'Gece Yırtıcıları':['PUHU','BAYKUŞ','YARASA','VAŞAK','SIRTLAN','ÇAKAL','GECE'],
+  'Kuş Anatomisi Terimleri':['KANAT','TELEK','GAGA','PENÇE','İSKELET','KURSAK','TÜY'],
+  'Yırtıcı Sürüngenler':['TİMSAH','KOBRA','PİTON','VARAN','ENGEREK','BOĞA','ANAKONDA'],
+  'Avlanma Araçları Ve Organları':['PUSU','GÖRME','İŞİTME','KOKU','PENÇE','DİŞ','KANAT'],
+  'Ornitoloji (Kuş Bilimi)':['GÖÇ','YUVA','ÖTÜŞ','HALKA','GÖZLEM','KULUÇKA','TELEK'],
+  'Yırtıcı Davranışları':['PUSU','AVCI','ALAN','SÜRÜ','GECE','SÜZÜLME','YAVRU'],
+  'Taksonomik Sınıflandırma':['TÜR','CİNS','AİLE','TAKIM','FAMİLYA','MEMELİ','KUŞ'],
+  'Omurgasız Hayvanlar':['SÜLÜK','KENE','PİRE','SOLUCAN','BİT','GÜVE','KURT'],
+  'Otçul Orman Canlıları':['TAPİR','GEYİK','KUNDUZ','MAYMUN','SİNCAP','TAVŞAN','KARACA'],
+  'Orman Eklem Bacaklıları':['AKREP','BÖCEK','ARI','KIRKAYAK','YÜZAYAK','ÖRÜMCEK','KELEBEK'],
+  'Orman Sinek Türleri':['SİNEK','ÇEÇE','SİVRİ','ATSI','BÜVELEK','KANAT','LARVA'],
+  'Sürüngen Canlılar':['PİTON','KAYMAN','İGUANA','GEKO','ENGEREK','VARAN','KOBRA'],
+  'Sosyal Böcekler':['ARI','KARINCA','TERMİT','KOVAN','PETEK','KRALİÇE','EŞEKARISI'],
+  'Ağaç Yaşamına Uyumlu Canlılar':['MAYMUN','TUKAN','SİNCAP','GEKO','ORANGUTAN','AĞAÇ','YUVA'],
+  'Ekosistem Rolleri':['AVCI','AV','PARAZİT','OTÇUL','ETÇİL','LEŞÇİL','TOZLAŞ'],
+  'Parazit Ve Asalak Canlılar':['PİRE','BİT','KENE','ASALAK','GÜVE','KURT','PARAZİT'],
+  'Biyokültürel Orman Canlıları':['TÜR','DENGE','HABİTAT','REKABET','SİMBİYOZ','ADAPTASYON','POPÜLASYON'],
+  'Zehirli Yılanlar':['KOBRA','TAYPAN','MAMBA','ENGEREK','BOĞA','PİTON','VARAN'],
+  'Su Sürüngenleri':['KAYMAN','TİMSAH','BAĞA','SUYILANI','YAVRU','PUL','KABUK'],
+  'Kertenkele Türleri':['GEKO','İGUANA','VARAN','BUKALEMUN','KERTENKELE','PUL','KUYRUK'],
+  'Sürüngen Anatomisi':['PUL','KABUK','DİŞ','İSKELET','DERİ','DİL','KEMİK'],
+  'Sürüngen Çevre Uyuşumu':['RENK','DERİ','KIVRILMA','SÜRÜNME','KAZMA','GÜNEŞ','KAMUFLAJ'],
+  'Yılan Türleri':['BOĞA','PİTON','ENGEREK','MAMBA','VARAN','KOBRA','TAYPAN'],
+  'Sürüngen Üreme Terimleri':['YUMURTA','YUVA','YAVRU','KULUÇKA','DÖLLENME','MEVSİM','KABUK'],
+  'Herpetoloji (Sürüngen Bilimi)':['PUL','OMURGA','TERARYUM','BİYOTOP','YILAN','ZEHİR','SÜRÜNGEN'],
+  'Zehir Fizyolojisi Terimleri':['ZEHİR','TOKSİN','DİŞ','BEZ','KAN','ETKİ','PANZEHİR'],
+  'Sürüngen Biyolojisi Terimleri':['DERİ','KLOAK','PUL','OMURGA','ZEHİR','ISI','YILAN'],
+  'Genetik Unsurlar':['GEN','DNA','RNA','KOD','SOY','TÜR','ALEL'],
+  'Yaşam Alanları':['BİYOM','HABİTAT','EKOSİSTEM','BİYOSFER','ORMAN','GÖL','ÇÖL'],
+  'Tür Düzeyleri':['CİNS','AİLE','TAKIM','SINIF','TÜR','ALTTÜR','SOY'],
+  'Çevre Koruma Terimleri':['PARK','KORU','REZERV','YABAN','MİRAS','DOĞAL','KORUMA'],
+  'Ekolojik Tehditler':['ANIZ','YANGIN','KAÇAK','EROZYON','İKLİM','KİRLİLİK','TAHRİBAT'],
+  'Araştırma Yöntemleri':['ÖRNEK','SAYIM','GÖZLEM','HARİTA','KAMERA','MARKA','ENVANTER'],
+  'Koruma Statüleri':['NADİR','YEREL','ENDEMİK','KRİTİK','DUYARLI','TEHLİKE','KORUMA'],
+  'Biyoloji Terimleri':['EKOLOJİ','FLORA','FAUNA','BİYOM','DENGE','TÜR','MİRAS'],
+  'Biyosfer Sistemleri':['BİYOM','SU','KARBON','DENGE','TÜR','GEN','DOĞA'],
+  'Taksonomi Ve Biyoçeşitlilik':['TAKSONOMİ','TÜR','CİNS','AİLE','SOY','EKOLOJİ','KORUMA'],
+  'Mitolojik Varlıklar':['DEV','PERİ','CİN','RUH','EJDER','TANRI','CANAVAR'],
+  'Kabile İnançları':['TOTEM','ŞAMAN','BÜYÜ','İNANÇ','RİTÜEL','MUSKA','KUTSAL'],
+  'Efsanevi Mekanlar':['MAĞARA','TAPINAK','NEHİR','KÖY','ORMAN','ALTIN','ŞEHİR'],
+  'Kabile Şifacıları':['ŞAMAN','OTLACI','ŞİFACI','BÜYÜCÜ','REHBER','İLAÇ','OT'],
+  'Söylence Nesneleri':['TILSIM','MUSKA','TOTEM','MASKE','MIZRAK','TAŞ','ALTIN'],
+  'Amazon Savaşçıları':['SAVAŞÇI','OKÇU','İZCİ','MUHAFIZ','NİŞANCI','KABİLE','KORUYUCU'],
+  'Kabile Ritüelleri':['DANS','ATEŞ','MÜZİK','ŞARKI','TÖREN','RİTÜEL','BEREKET'],
+  'Sözlü Kültür Terimleri':['EFSANE','MASAL','DESTAN','İNANÇ','GELENEK','GÖRENEK','SÖYLENCE'],
+  'Antropoloji Ve Etnografya':['KABİLE','YERLİ','TARİH','KÜLTÜR','MİRAS','ARKEOLOJİ','GELENEK'],
+  'Amazon Mitolojisi Ve Uygarlıklar':['ELDORADO','ŞAMANİZM','KUTSAL','ORMAN','UYGARLIK','TILSIM','KABİLE']
+};
+
+const _usedCategoryWords = new Set();
+const _categoryFallback = {
+  'Doğanın Unsurları':['ATEŞ','HAVA','TAŞ','SU','GÖL','KUM','GÖK'],
+  'Doğanın Unsurları 2':['BULUT','DENİZ','ORMAN','NEHİR','DAĞ','KAYA','YAĞMUR']
+};
+function categoryWords(def, j){
+  const cat=String(def.category||'').trim();
+  let src=(CATEGORY_WORD_OVERRIDES[cat]||[]).map(TR).filter(w=>w && w.length<=6);
+  const old=(Array.isArray(def.words)?def.words:String(def.words||'').split(/\s+/)).map(TR).filter(w=>w&&w.length<=6);
+  const fb=(_categoryFallback[cat]||[]).map(TR);
+  let pool=[...src,...old,...fb];
+  const need=j<3?4:7;
+  const result=[];
+  // İlk üç 4x4 bulmaca için 4 harften uzun kelimeleri yalnızca yerleşebiliyorsa son çare olarak kullanma.
+  for(const w of pool){
+    if(!w||result.includes(w)||_usedCategoryWords.has(w)) continue;
+    if(j<3 && w.length>4) continue;
+    result.push(w); _usedCategoryWords.add(w);
+    if(result.length===need) return result;
+  }
+  // Kategoriye uygun kelime sayısı yetmezse, yine aynı kategorinin kaynak
+  // kelimelerinden devam et. Böylece başlık dışı ATEŞ/HAVA/TAŞ gibi rastgele
+  // doldurmalar kesinlikle gelmez. Benzersizlik mümkün olan her yerde korunur.
+  for(const w of pool){
+    if(!w||result.includes(w)) continue;
+    result.push(w); _usedCategoryWords.add(w);
+    if(result.length===need) return result;
+  }
+  // Çok dar kategorilerde 7 benzersiz kısa kelime bulunamazsa, son çare olarak
+  // aynı kategorinin kendi kelimelerini tekrar kullan; başka kategoriden alakasız
+  // kelime ekleme.
+  for(const w of pool){
+    if(!w||result.includes(w)) continue;
+    result.push(w);
+    if(result.length===need) return result;
+  }
+  return result;
+}
+
+const CATEGORY_LEVELS=[];
+GROUPS.forEach((g,gi)=>g[2].forEach((l,j)=>{
+  const words=categoryWords({category:l[0],words:l[2]},j);
+  CATEGORY_LEVELS.push({category:l[0],group:gi,lv:j,info:undefined,size:j<3?4:6,dirs:'hard',mode:'classic',hide:l[3]?l[3]:null,subtitle:(j<3?'KOLAY':'ZOR')+' • '+words.length+' KELİME',words,beginner:j<3});
+}));
+const LEVELS=CATEGORY_LEVELS;
 const LOCKED_LAST = 0;
 const MAX_PLAY = Math.max(0, LEVELS.length - 1 - LOCKED_LAST);
 const CHAPTER_COUNT = GROUPS.length;
