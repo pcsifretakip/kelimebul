@@ -6094,7 +6094,8 @@ function dwOpen(){
   for (let i = 0; i < Math.min(5, extraLetters.length); i++) pool.push(extraLetters[Math.floor(Math.random() * extraLetters.length)]);
   for (let i = pool.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
   DW.pool = pool.map(ch => ({ ch: ch, used: false }));
-  dwEl('dw-ov', '<div class="dw-card"><button class="dw-x" aria-label="Kapat">✕</button><h3>Günün Kelimesi</h3><p>⚽ Güncel bilgi · Doğru bulursan +' + DW_REWARD + ' altın</p><div class="dw-words" id="dw-words"></div><div class="dw-msg" id="dw-msg"></div><div class="dw-pool" id="dw-pool"></div><button class="dw-btn sec" id="dw-clear">Temizle</button></div>');
+  dwEl('dw-ov', '<div class="dw-card"><button class="dw-x" aria-label="Kapat">✕</button><h3>Günün Kelimesi</h3><p>⚽ Güncel Soru · Doğru bulursan +' + DW_REWARD + ' altın</p><div class="dw-words" id="dw-words"></div><div class="dw-msg" id="dw-msg"></div><div class="dw-pool" id="dw-pool"></div><button class="dw-btn sec" id="dw-delete">Sil</button><button class="dw-btn sec" id="dw-clear">Temizle</button></div>');
+  $('dw-delete').onclick = () => { if (!DW || DW.lock) return; for (let wi = DW.fill.length - 1; wi >= 0; wi--){ for (let ci = DW.fill[wi].length - 1; ci >= 1; ci--){ if (DW.fill[wi][ci] != null){ const pi = DW.fillIdx[wi][ci]; if (pi >= 0) DW.pool[pi].used = false; DW.fill[wi][ci] = null; DW.fillIdx[wi][ci] = -1; dwDraw(); return; } } } };
   $('dw-clear').onclick = () => { if (!DW) return; DW.fill = DW.words.map(a => a.map((ch, i) => i === 0 ? ch : null)); DW.pool.forEach(p => p.used = false); $('dw-msg').textContent = ''; dwDraw(); };
   $('dw-words').onclick = e => {
     const b = e.target.closest('.dw-box.slot'); if (!b || !DW || DW.lock) return;
