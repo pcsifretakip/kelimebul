@@ -1720,7 +1720,9 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 
 /* Kalıcı harita maymunu */
 .jm-monkey{position:absolute;width:78px;height:104px;margin:-74px 0 0 33px;z-index:6;pointer-events:none}
-.jm-monkey .jm-bd{position:absolute;left:0;top:0;width:100%;height:100%;display:block;background:center bottom/contain no-repeat;transform-origin:50% 100%}
+.jm-monkey .jm-bw{position:absolute;left:0;top:0;width:100%;height:100%;display:block;transform-origin:50% 100%}
+.jm-monkey .jm-bd,.jm-monkey .jm-bd2{position:absolute;left:0;top:0;width:100%;height:100%;display:block;background:center bottom/contain no-repeat;transform-origin:50% 100%}
+.jm-monkey .jm-bd2{opacity:0}
 .jm-monkey .jm-sh{position:absolute;left:50%;bottom:-4px;width:54px;height:13px;margin-left:-27px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(0,0,0,.55) 0,rgba(0,0,0,.3) 42%,rgba(0,0,0,0) 72%)}
 .jm-monkey.idle .jm-bd{animation:jmBreath 2.6s ease-in-out infinite}
 .jm-monkey.walk .jm-bd{animation:jmStep .22s ease-in-out infinite}
@@ -5016,50 +5018,59 @@ function ensureJourneyMap(){
   });
   return journeyMapEl;
 }
-const JM_MK_WALK=['walk1','walk2','walk3','walk4','walk5','walk6'];
+const JM_MK_WALK=['walk1','walk3','walk2','walk3','walk4','walk3','walk6','walk3'];  /* sol-orta-sağ-orta adım döngüsü */
 const JM_MK_URL=n=>"url('monkey-"+n+".png?v=3')";
-(function(){ ['idle','wave'].concat(JM_MK_WALK).forEach(function(n){ var i=new Image(); i.src='monkey-'+n+'.png?v=3'; }); })();
+(function(){ ['idle','wave','walk1','walk2','walk3','walk4','walk6'].forEach(function(n){ var i=new Image(); i.src='monkey-'+n+'.png?v=3'; }); })();
 function jmMkPose(m,n){ const b=m.querySelector('.jm-bd'); if(b) b.style.backgroundImage=JM_MK_URL(n); }
 function jmMonkeyJump(m, from, to, done){
   const box=m.parentNode, W=box.clientWidth, H=box.clientHeight;
   const dx=(to[0]-from[0])/100*W, dy=(to[1]-from[1])/100*H;
-  const bd=m.querySelector('.jm-bd'), sh=m.querySelector('.jm-sh');
+  const bw=m.querySelector('.jm-bw'), bd=m.querySelector('.jm-bd'), bd2=m.querySelector('.jm-bd2'), sh=m.querySelector('.jm-sh');
   m.style.left=to[0]+'%'; m.style.top=to[1]+'%';
   const toIdle=()=>{ jmMkPose(m,'idle'); m.classList.remove('walk'); m.classList.add('idle'); };
-  if(!m.animate||!bd){ toIdle(); done&&done(); return; }
-  const run=(el,kf,o,next)=>{ const a=el.animate(kf,o); a.onfinish=()=>{ next&&next(); }; };
-  const turn=(pose,next)=>{                       /* yatayda daralıp yeni poza geç = dönme */
-    run(bd,[{transform:'scaleX(1)'},{transform:'scaleX(0)'}],{duration:130,easing:'ease-in'},()=>{
-      jmMkPose(m,pose);
-      run(bd,[{transform:'scaleX(0)'},{transform:'scaleX(1)'}],{duration:130,easing:'ease-out'},next);
-    });
+  if(!m.animate||!bw||!bd2){ toIdle(); done&&done(); return; }
+  const run=(el,kf,o,next)=>{ const a=el.animate(kf,o); a.onfinish=()=>{ next&&next(); }; return a; };
+  /* dönüş: küçük bir zıplama sırasında iki poz birbirine karışır (kağıt gibi çevirme yok) */
+  const turn=(pose,next)=>{
+    run(bw,[
+      {transform:'translateY(0) scale(1.06,.92)'},
+      {transform:'translateY(-22px) scale(.97,1.05) rotate(-6deg)',offset:.4},
+      {transform:'translateY(-22px) scale(.97,1.05) rotate(6deg)',offset:.6},
+      {transform:'translateY(0) scale(1.06,.92)'}
+    ],{duration:520,easing:'ease-in-out'},next);
+    sh.animate([{transform:'scale(1)',opacity:1},{transform:'scale(.7)',opacity:.55,offset:.5},{transform:'scale(1)',opacity:1}],{duration:520,easing:'ease-in-out'});
+    setTimeout(()=>{
+      bd2.style.backgroundImage=JM_MK_URL(pose);
+      const f=bd2.animate([{opacity:0},{opacity:1}],{duration:200,fill:'forwards'});
+      f.onfinish=()=>{ jmMkPose(m,pose); f.cancel(); };
+    },150);
   };
   /* 1) yürü: arkası dönük, ayaklar yerde, gölge yerinde kalır */
   m.classList.remove('idle'); m.classList.add('walk');
   let f=0; jmMkPose(m,JM_MK_WALK[0]);
-  const t=setInterval(()=>{ f=(f+1)%JM_MK_WALK.length; jmMkPose(m,JM_MK_WALK[f]); },110);
-  const dist=Math.sqrt(dx*dx+dy*dy), dur=Math.max(1300,Math.min(2800,dist/55*1000));
-  run(m,[{transform:'translate('+(-dx)+'px,'+(-dy)+'px)'},{transform:'translate(0,0)'}],{duration:dur,easing:'ease-in-out'},()=>{
+  const t=setInterval(()=>{ f=(f+1)%JM_MK_WALK.length; jmMkPose(m,JM_MK_WALK[f]); },170);
+  const dist=Math.sqrt(dx*dx+dy*dy), dur=Math.max(2000,Math.min(4500,dist/45*1000));
+  run(m,[{transform:'translate('+(-dx)+'px,'+(-dy)+'px)'},{transform:'translate(0,0)'}],{duration:dur,easing:'cubic-bezier(.25,.1,.75,.9)'},()=>{
     clearInterval(t); m.classList.remove('walk'); jmMkPose(m,'idle');
     setTimeout(()=>{
       /* 2) dön, selam ver, kilit bu sırada açılır */
       turn('wave',()=>{
         done&&done();
-        run(bd,[
+        run(bw,[
           {transform:'translateY(0) rotate(0deg)',filter:'drop-shadow(0 0 0 rgba(255,220,80,0))'},
           {transform:'translateY(-24px) rotate(-5deg)',filter:'drop-shadow(0 0 14px rgba(255,220,80,.95))',offset:.25},
           {transform:'translateY(0) rotate(0deg)',offset:.5},
           {transform:'translateY(-15px) rotate(5deg)',filter:'drop-shadow(0 0 12px rgba(255,220,80,.85))',offset:.75},
           {transform:'translateY(0) rotate(0deg)',filter:'drop-shadow(0 0 0 rgba(255,220,80,0))'}
-        ],{duration:1000,easing:'ease-in-out'},()=>{
-          setTimeout(()=>{ turn('idle',toIdle); },350);
+        ],{duration:1100,easing:'ease-in-out'},()=>{
+          setTimeout(()=>{ turn('idle',toIdle); },400);
         });
-        if(sh) sh.animate([
+        sh.animate([
           {transform:'scale(1)',opacity:1},{transform:'scale(.7)',opacity:.55,offset:.25},
           {transform:'scale(1)',opacity:1,offset:.5},{transform:'scale(.82)',opacity:.7,offset:.75},{transform:'scale(1)',opacity:1}
-        ],{duration:1000,easing:'ease-in-out'});
+        ],{duration:1100,easing:'ease-in-out'});
       });
-    },120);
+    },200);
   });
 }
 function showJourneyMap(chapterIndex, opts){
@@ -5145,7 +5156,7 @@ function showJourneyMap(chapterIndex, opts){
       };
     }
   }
-  { const mk=document.createElement('div'); mk.className='jm-monkey idle'; mk.innerHTML='<i class="jm-sh"></i><b class="jm-bd"></b>'; jmMkPose(mk,'idle');
+  { const mk=document.createElement('div'); mk.className='jm-monkey idle'; mk.innerHTML='<i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span>'; jmMkPose(mk,'idle');
     const start=(unlockIdx>0)?unlockIdx-1:Math.min(S.maxOpen,levelCount-1);
     mk.style.left=positions[start][0]+'%'; mk.style.top=positions[start][1]+'%';
     nodes.appendChild(mk);
