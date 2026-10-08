@@ -2070,163 +2070,6 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .app.on-game .top-timer{display:none!important}
 </style>
 
-
-<style id="bottom-bar-redesign">
-/* ===== ANA SAYFA ALT BAR - YENİ FLOATING DOCK ===== */
-.app.on-home .hm-nav{
-  position:absolute!important;
-  left:4%!important;
-  right:4%!important;
-  bottom:calc(10px + env(safe-area-inset-bottom))!important;
-  width:92%!important;
-  height:76px!important;
-  padding:7px 7px 6px!important;
-  box-sizing:border-box!important;
-  display:grid!important;
-  grid-template-columns:repeat(5,1fr)!important;
-  align-items:center!important;
-  gap:2px!important;
-  overflow:visible!important;
-  border:1px solid rgba(196,181,253,.34)!important;
-  border-radius:24px!important;
-  background:
-    linear-gradient(180deg,rgba(54,35,139,.92),rgba(17,9,61,.96))!important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.16),
-    inset 0 -1px 0 rgba(0,0,0,.35),
-    0 8px 0 rgba(7,3,30,.48),
-    0 14px 28px rgba(0,0,0,.42),
-    0 0 22px rgba(124,77,255,.16)!important;
-  backdrop-filter:blur(14px)!important;
-  -webkit-backdrop-filter:blur(14px)!important;
-}
-
-.app.on-home .hm-nav::before{
-  content:""!important;
-  position:absolute!important;
-  left:12%!important;
-  right:12%!important;
-  top:-10px!important;
-  height:20px!important;
-  border-radius:50%!important;
-  background:rgba(139,92,246,.34)!important;
-  filter:blur(12px)!important;
-  pointer-events:none!important;
-}
-
-.app.on-home .hm-nav .nav-item{
-  position:relative!important;
-  z-index:2!important;
-  min-width:0!important;
-  height:62px!important;
-  padding:5px 1px 2px!important;
-  margin:0!important;
-  display:flex!important;
-  flex-direction:column!important;
-  align-items:center!important;
-  justify-content:center!important;
-  gap:3px!important;
-  color:#b9b1e8!important;
-  font-size:10px!important;
-  font-weight:1000!important;
-  line-height:1!important;
-  text-shadow:0 2px 4px rgba(0,0,0,.55)!important;
-  border-radius:17px!important;
-  transition:transform .15s ease,color .15s ease,background .15s ease!important;
-}
-
-.app.on-home .hm-nav .nav-item svg{
-  width:25px!important;
-  height:25px!important;
-  flex:none!important;
-  filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))!important;
-}
-
-.app.on-home .hm-nav .nav-item:not(.center):active{
-  transform:translateY(2px) scale(.94)!important;
-  background:rgba(255,255,255,.07)!important;
-}
-
-.app.on-home .hm-nav .nav-item.on{
-  color:#fff0a8!important;
-  background:linear-gradient(180deg,rgba(251,191,36,.12),rgba(251,191,36,.035))!important;
-}
-
-.app.on-home .hm-nav .nav-item.on svg{
-  filter:drop-shadow(0 0 8px rgba(251,191,36,.8))!important;
-}
-
-.app.on-home .hm-nav .nav-item span{
-  white-space:nowrap!important;
-}
-
-/* Ortadaki Ana Sayfa butonu */
-.app.on-home .hm-nav .nav-item.center{
-  height:70px!important;
-  margin-top:-25px!important;
-  padding-top:0!important;
-  overflow:visible!important;
-  color:#fff0a8!important;
-}
-
-.app.on-home .hm-nav .nav-item.center .nav-orb{
-  width:54px!important;
-  height:54px!important;
-  margin:0 0 2px!important;
-  flex:none!important;
-  border:3px solid #1b104f!important;
-  box-shadow:
-    0 0 0 2px #fbbf24,
-    0 5px 0 #8b4b08,
-    0 8px 16px rgba(0,0,0,.5),
-    0 0 20px rgba(251,191,36,.55),
-    inset 0 2px 0 rgba(255,255,255,.5)!important;
-}
-
-.app.on-home .hm-nav .nav-item.center .nav-orb svg{
-  width:25px!important;
-  height:25px!important;
-  filter:none!important;
-}
-
-.app.on-home .hm-nav .nav-item.center > span:last-child{
-  font-size:10px!important;
-  font-weight:1000!important;
-  color:#fff0a8!important;
-}
-
-/* Alt barın oyun ekranından bağımsız şekilde yalnızca ana sayfada görünmesi */
-.app.on-home .hm-nav{
-  transform:translateZ(0);
-}
-
-/* Küçük telefonlarda taşmayı engelle */
-@media (max-width:380px){
-  .app.on-home .hm-nav{
-    left:3%!important;
-    right:3%!important;
-    width:94%!important;
-    height:72px!important;
-    border-radius:21px!important;
-  }
-  .app.on-home .hm-nav .nav-item{
-    font-size:9px!important;
-    height:58px!important;
-  }
-  .app.on-home .hm-nav .nav-item svg{
-    width:23px!important;
-    height:23px!important;
-  }
-  .app.on-home .hm-nav .nav-item.center{
-    margin-top:-22px!important;
-  }
-  .app.on-home .hm-nav .nav-item.center .nav-orb{
-    width:50px!important;
-    height:50px!important;
-  }
-}
-</style>
-
 </head>
 <body>
 
@@ -2669,17 +2512,125 @@ const DIRS = {
   hvr1:   [[0,1],[1,0],[0,-1],[-1,0]]   /* + tam 1 kelime çapraz */
 };
 const GROUPS = [
-  ['YOLCULUK','#22c55e',[
-    ['Doğanın Unsurları',5,'KUŞ DERE AĞAÇ','','hv'],
-    ['Orman Yaşamı',6,'DOĞA YEŞİL YAĞMUR MAYMUN','','hv'],
-    ['Nehir Ekosistemi',7,'NEHİR YAPRAK PAPAĞAN ORMAN ORKİDE','','hvr'],
-    ['Vahşi Sakinler',8,'TUKAN SARMAŞIK TİMSAH PİRANA KAPLAN BİTKİ','','hvr1'],
-    ['Tropikal Zenginlik',9,'TROPİKAL PANTER BAMBU ŞELALE NEMLİ TOPRAK YABANİ','','hard'],
-    ['Yırtıcılar ve Kuşlar',9,'JAGUAR AMAZON PİRANA MAKAV YABANİ KANOPİ BALTA','PİRANA MAKAV YABANİ','hard'],
-    ['Orman Canlıları',10,'EKOSİSTEM TAPİR ANAKONDA SARMAL KABİLE ŞAMAN FLORA','TAPİR ANAKONDA SARMAL KABİLE','hard'],
-    ['Sürüngenler ve Doğa',10,'AMAZONİT BUMERANG İGUANA TARANTULA KAYMAN AKARSU MANGO','AMAZONİT BUMERANG İGUANA TARANTULA KAYMAN','hard'],
-    ['Biyolojik Çeşitlilik',10,'ENDEMİK KAMUFLAJ BİYOSFER ZEHİRLİ OKSİJEN FLORA FAUNA','ENDEMİK KAMUFLAJ BİYOSFER ZEHİRLİ OKSİJEN FLORA','hard'],
-    ['Amazon Efsaneleri',11,'ANAKONDA JAGUAR KAMUFLAJ TARANTULA TROPİKAL VEJETASYON BİYODERM','ANAKONDA JAGUAR KAMUFLAJ TARANTULA TROPİKAL VEJETASYON BİYODERM','hard']
+  ['Doğanın Unsurları', '#22c55e', [
+    ['Doğanın Unsurları',3,'ASPİRATÖR MİKRODALGA DONDURUCU','','hv'],
+    ['Kırtasiye Ve Büro',4,'FOTOKOPİ DELGEÇ HESAPMAKİNESİ EVRAKİMHA','','hv'],
+    ['Temizlik Ve Hijyen',5,'DETERJAN DEZENFEKTAN DEODORANT DEZENFEKSİYON TEMİZLEYİCİ','','medium'],
+    ['Kamp Ve Doğa Sporları',6,'YAĞMURLUK NAVİGASYON İLKYARDIM PUSULA DAĞCILIK MATARA','','medium'],
+    ['Terzi Ve Tekstil',7,'DİKİŞMAKİNESİ TEBEŞİR İPLİKÇİLİK MEZURA KUMAŞÇI KASNAK DÜĞME','','medium'],
+    ['Bahçe Ve Tarım',8,'PÜSKÜRTÜCÜ ÇİMBİÇME MOTORLUTIRPAN İLAÇLAMA SULAMA GÜBRELENME BUDAMA HAŞERE','','hard'],
+    ['Marangoz Ve Sanayi',8,'ZIMPARALAMA MENGENELEME TEZGÂHTESTERE ELEKTRİKLİMATKAP SIKIŞTIRMA DÜBELLEME AHŞAPİŞLEME PLANYA','','hard'],
+    ['El Aletleri Ve Sanayi',9,'TORNAVİDA LOKMAANAHTARI KONTROLPALEMİ ŞARJLIMATKAP KABLOSOYUCU AYARLIANAHTAR KERPENSE PERÇİNTABANCASI YANKESKİ','','hard'],
+    ['Ameliyathane Malzemeleri',9,'STERİLİZASYON ELEKTROKOTER LUPAMİKROSKOP DEFİBRİLATÖR ANESTEZİCİHAZI AMELİYATMASASI ASPİRASYON BİŞTURİ NEŞTER','','hard'],
+    ['Oto Tamir Ve Ağır Sanayi',10,'KOMPRESÖR KALDIRMAKRATOSU LOKMATAKIMI ROTBALANSAYARI ŞANZIMAN ENJEKTÖR AMORTİSÖR PİSTONSEKMANI DİFERANSİYEL SUBAPAYARI','','hard']
+  ]],
+  ['Orman Yaşamı', '#10b981', [
+    ['Ağaç Türleri',3,'MEŞE GÜRGEN KESTANE','','hv'],
+    ['Yaban Meyveleri',4,'BÖĞÜRTLEN AHUDUDU KUŞBURNU YABANMERSİNİ','','hv'],
+    ['Orman Mantarları',5,'KANLICA TRÜF İSTİRİDYE BUMBAR KÜF','','medium'],
+    ['Orman Sürüngenleri',6,'ENGEREK KELERTENKELE BOGA BUKALEMUN OKYILANI KERTENKELE','','medium'],
+    ['Orman Kemirgenleri',7,'SİNCAP KUNDUZ FINDIKFARESİ OKLUKİRPİ DİKENLİ TARLAFARESİ KÖSTEBEK','','medium'],
+    ['Yırtıcı Memeliler',8,'PARS LEOPAR SIRTLAN ÇAKAL VAŞAK SİYAHAYI KUZEYASLANI KUNDUZ','','hard'],
+    ['Ormancı Ekipmanları',8,'MOTORLUTESTERE BALTA NİŞANBOYASI MIZRAK NİŞANCI YARMAKAMASI ÖLÇÜŞERİDİ TAŞIMALANCI','','hard'],
+    ['Orman Zararlıları',9,'ÇAMKESE KABUKBÖCEĞİ YAPRAKBİTİ TIRTIL KENE SİVRİSİNEK TIRTILKURDU KIRKAYAK BİT','','hard'],
+    ['Orman Koruma Terimleri',9,'YANGINSÖNDÜRME AĞAÇLANDIRMA MİLLİPARK FİDANLIK ORMANMUHAFIZ SÜRDÜRÜLEBİLİRLİK KORUMABÖLGESİ BİYOÇEŞİTLİLİK YENİLENME','','hard'],
+    ['Ekolojik Sistem Terimleri',10,'OKSİJENDERESİ FOTOSENTEZ MİKORİZA BİYOKÜTLE KARBONSABİTLEME MİKROKLİMA VEJETASYON HABİTATBOZULMASI EKOSİSTEM YERBASTI','','hard']
+  ]],
+  ['Nehir Ekosistemi', '#06b6d4', [
+    ['Tatlı Su Balıkları',3,'SAZAN YAYIN ALABALIK','','hv'],
+    ['Nehir Taşıtları',4,'KANO SANDAL FLOTAN TEKNE','','hv'],
+    ['Su Kıyısı Bitkileri',5,'KAMIŞ SAZLIK NİLÜFER YOSUN SUZÜMBÜLÜ','','medium'],
+    ['Nehir Kuşları',6,'BALIKÇIL YALIÇAPKINI KARABATAK FLAMİNGO ÖRDEK KUĞU','','medium'],
+    ['Tatlı Su Kabukluları',7,'TATLISUKERİDESİ MİDYE SÜLÜK KEREVİT SUKAPLUMBAĞASI İSTAKOZ SUKAYARI','','medium'],
+    ['Akarsu Terimleri',8,'DEBİ ALÜVYON MENDERES ÇAĞLAYAN YATAK SUKAVUŞUMU BARAJ BEND','','hard'],
+    ['Nehir Amfibileri',8,'SEMENDER SUYILANI SUKAPLUMBAĞASI YEŞİLKURBAĞA AĞAÇKURBAĞASI CAMKURBAĞASI KARAKURBAĞASI SUKAPLANI','','hard'],
+    ['Hidroloji Terimleri',9,'SUHAVZASI TAŞKINYATAĞI YERALTISUYU BARAJSETİ DRENAJ SUKALİTESİ AKINTIÖLÇER SUSEVİYESİ BUHARLAŞMA','','hard'],
+    ['Tatlı Su Ekosistemi',9,'SUKORUMA OKSİJENLEŞME MİKROORGANİZMA PLANKTON BİYOFİLM SUKİRLİLİĞİ BİYOLOJİKARITMA SUDÖNGÜSÜ TABANMİLİ','','hard'],
+    ['Limnoloji Bilimi Terimleri',10,'EUTROFİKASYON LİMNOLOJİ BİYOMANİPÜLASYON TERMOKLİN FİTOPLANKTON ZOOPLANKTON SEDİMENTASYON HİDROBİYOLOJİ BİYOTURBASYON ORMANSUYU','','hard']
+  ]],
+  ['Vahşi Sakinler', '#f59e0b', [
+    ['Otçul Memeliler',3,'GEYİK CEYLAN KARACA','','hv'],
+    ['Gece Canlıları',4,'BAYKUŞ YASA YARASA KİRPI','','hv'],
+    ['Vahşi Sürüngenler',5,'KOBRA BOGA PİTON VARAN İGUANA','','medium'],
+    ['Vahşi Kuş Türleri',6,'ŞAHİN DOĞAN AKBABA KARTAL BAYKUŞ ATMACA','','medium'],
+    ['Sürü Yaşamı Terimleri',7,'ALANİŞGALİ SÜRÜBAŞI LİDERLİK BASKINLIK OTLAĞIN AVLANMA BÖLGECİLİK','','medium'],
+    ['Vahşi Yaşam Savunması',8,'KAMUFLAJ DİKEN ZEHİR KOKU KABUK BOYNUZ PENÇE DİŞ','','hard'],
+    ['Vahşi Avlanma Stratejileri',8,'PUSUKURMA İZSÜRME SIKIŞTIRMA KAMUFLAJ BOĞMA KAPAN SÜRÜAVCILIĞI SESSİZLİK','','hard'],
+    ['Hayvan Anatomisi Terimleri',9,'OMURGALILAR PENÇEYAPISI DİŞDİZİLİMİ SOLUNUM SİNDİRİM KASGRUBU İSKELET SİNİRSİSTEMİ KILÖRTÜSÜ','','hard'],
+    ['Etoloji (Davranış Bilimi)',9,'DÜRTÜ ŞARTLANMA ALANİŞGALİ İLETİŞİM SESLENME KURDAVRANIŞI YAVRUBAKIMI SÜRÜDÜZENİ HİYERARŞİ','','hard'],
+    ['Biyolojik Sınıflandırma',10,'MAMMALIA OMURGALI BİNOMİNAL FAMİLYA KORDALILAR ETÇİLLER OTÇULLAR CANLIALEMİ TAKIM TÜREŞİTLİLİĞİ','','hard']
+  ]],
+  ['Tropikal Zenginlik', '#f97316', [
+    ['Tropikal Meyveler',3,'MUZ ANANAS MANGO','','hv'],
+    ['Tropikal Baharatlar',4,'ZERDEÇAL ZENCEFİL TARÇIN KARABİBER','','hv'],
+    ['Tropikal İklim Unsurları',5,'MUSON NEMLİLİK SICAKLIK BASTIRIK YAĞIŞ','','medium'],
+    ['Çiçekli Bitki Türleri',6,'ORKİDE BROMELİA MANOLYA HİBİSKUS BEGONYA LİLİUM','','medium'],
+    ['Endemik Ağaç Türleri',7,'MAUN KAUÇUK SAKIZ ABANOZ PALMİYE BAMBU SEDİR','','medium'],
+    ['Tropikal Yağmur Yapısı',8,'BULUTSUZ SAĞANAK BASTIRIK MUSON NEMLİLİK YÜKSELİM ÇİSELEME DOLU','','hard'],
+    ['Tarımsal Üretim Terimleri',8,'KAKAO KAHVE PALMİYE ŞEKERAMACI AVOKADO KAJU NİŞASTA YAM','','hard'],
+    ['Orman Katmanları',9,'TEPEKATMANI TAVANKATMANI ÇALIŞILIK TABANKATMANI OTKATMANI ORTAKATMAN KANOPİ ÖRTÜKATMANI TOPRAKALTI','','hard'],
+    ['Biyoçeşitlilik Terimleri',9,'GENETİKÇEŞİTLİLİK HABİTATZENGİNLİĞİ ENDEMİZM BİYOLOJİKMİRAS TÜRZENGİNLİĞİ EKOSİSTEMDENGESİ DOĞALPOPÜLASYON YENİLENME BİYOM','','hard'],
+    ['Klimatoloji Ve Coğrafya',10,'EKVATORALİKLİM TROPİKALKUŞAK ORMANAÇILIMI MİKROKLİMATOLOJİ NEMORANLARI BASTIRIKHAVA TROPİKALYAĞMUR COĞRAFİKONUM YÜKSEKBASINÇ ALÇAKBASINÇ','','hard']
+  ]],
+  ['Yırtıcılar ve Kuşlar', '#ef4444', [
+    ['Yırtıcı Kuşlar',3,'ŞAHİN KARTAL ATMACA','','hv'],
+    ['Yırtıcı Memeliler',4,'ASLAN KAPLAN LEOPAR PANTER','','hv'],
+    ['Renkli Kuş Türleri',5,'PAPAĞAN TUKAN MAKAV MUHABBET FLAMİNGO','','medium'],
+    ['Gece Yırtıcıları',6,'PUHU BAYKUŞ YARASA VAŞAK SIRTLAN ÇAKAL','','medium'],
+    ['Kuş Anatomisi Terimleri',7,'KANAT TELEK GAGA PENÇE İSKELET KURSAK TELEK','','medium'],
+    ['Yırtıcı Sürüngenler',8,'TİMSAH ANAKONDA ENGEREK KOBRA KERTENKELE BOGA PİTON VARAN','','hard'],
+    ['Avlanma Araçları Ve Organları',8,'KESKİNDİŞ KIVRIKPENÇE GÖRMEYETİSİ İŞİTME KOKULAMA KANATÇIRPMA SESSİZLİK PUSU','','hard'],
+    ['Ornitoloji (Kuş Bilimi)',9,'ORNİTOLOJİ HALKALAMA GÖÇYOLU KULUÇKA YUVAYAPIMI TÜYDÖKÜMÜ KUŞGÖZLEMİ ÖTÜŞ AĞAÇKAKAN','','hard'],
+    ['Yırtıcı Davranışları',9,'ALANİŞGALİ SÜRÜAVCI BÖLGECİLİK TEKÇİL PUSUKURMA GECEAVCI KANATGENİŞLİĞİ YAVRUBAKIMI SÜZÜLME','','hard'],
+    ['Taksonomik Sınıflandırma',10,'FALCONIFORMES ACCIPITRIDAE STRIGIFORMES CARNIVORA FELIDAE ANATOMİKAL BİYOLOJİKTAKIM GENETİKSOY EVRİMSEL YIRTICILIK','','hard']
+  ]],
+  ['Orman Canlıları', '#a855f7', [
+    ['Omurgasız Hayvanlar',3,'SÜLÜK KENE SOLUCAN','','hv'],
+    ['Otçul Orman Canlıları',4,'TAPİR GEYİK KUNDUZ MAYMUN','','hv'],
+    ['Orman Eklem Bacaklıları',5,'TARANTULA AKREP KIRKAYAK ÇANAKBÖCEĞİ YÜZAYAK','','medium'],
+    ['Orman Sinek Türleri',6,'BÜVELEK ÇEÇE SİVRİSİNEK TROPİKALSİNEK KARASİNEK ATSİNEĞİ','','medium'],
+    ['Sürüngen Canlılar',7,'ANAKONDA KAYMAN İGUANA KERTENKELE BUKALEMUN ENGEREK OKYILANI','','medium'],
+    ['Sosyal Böcekler',8,'KARINCA TERMİT BALARISI EŞEKARISI YAPRAKKESEN SÜRÜBÖCEĞİ SAVAŞÇIKARINCA KRALİÇEBÖCEK','','hard'],
+    ['Ağaç Yaşamına Uyumlu Canlılar',8,'TEMBELLAYVANI AĞAÇKURBAĞASI BUKALEMUN ORANGUTAN TUKAN SİNCAP AĞAÇYILANI ŞEKERUÇAN','','hard'],
+    ['Ekosistem Rolleri',9,'TOZLAŞTIRICI AYRIŞTIRICI AV AVCI PARAZİT BİTKİYİYEN ETÇİL OTÇUL LEŞÇİL','','hard'],
+    ['Parazit Ve Asalak Canlılar',9,'PİRE BİT KENE YUVARLAKSOLUCAN ŞERİT BÖCEKPARAZİTİ MANTARASALAĞI BİTKİPARAZİTİ ASALAK','','hard'],
+    ['Biyokültürel Orman Canlıları',10,'BİYOÇEŞİTLİLİK POPÜLASYON DENGELENME MİKROHABİTAT ADAPTASYON SİMBİYOZ MUTUALİZM PARAZİTİZM REKABET ENDEMİKTÜR','','hard']
+  ]],
+  ['Sürüngenler ve Doğa', '#8b5cf6', [
+    ['Zehirli Yılanlar',3,'KOBRA ENGEREK TAYPAN','','hv'],
+    ['Su Sürüngenleri',4,'KAYMAN TİMSAH KAPLUMBAĞA SUYILANI','','hv'],
+    ['Kertenkele Türleri',5,'BUKALEMUN İGUANA VARAN GEKO KELERTENKELE','','medium'],
+    ['Sürüngen Anatomisi',6,'PULLAR ÇATALLIDİL KABUK ISIDUYARLI DİŞLER İSKELET','','medium'],
+    ['Sürüngen Çevre Uyuşumu',7,'KAMUFLAJ RENKDEĞİŞİMİ DERİDÖKÜMÜ KIVRILMA SÜRÜNME KAZIMA GÜNEŞLENME','','medium'],
+    ['Yılan Türleri',8,'BOGA PITON ENGEREK ANAKONDA OKYILANI MAMBA ÇINGIRAKLI ŞERİTLİ','','hard'],
+    ['Sürüngen Üreme Terimleri',8,'YUMURTLAMA KULUÇKA YUMURTAKABUĞU DÖLLENME YAVRUÇIKIMI ÜREMEBÖLGESİ MEVSİM NESTING','','hard'],
+    ['Herpetoloji (Sürüngen Bilimi)',9,'HERPETOLOJİ ZEHİRARAŞTIRMASI SÜRÜNGENBİLİM BİYOTOP TERARYUM ARAŞTIRMACI SAVAŞÇI PULYAPISI OMURGABİLİM','','hard'],
+    ['Zehir Fizyolojisi Terimleri',9,'NÖROTOKSİN HEMOTOKSİN ZEHİRBEZİ DİŞKANALI ENJEKSİYON PANZEHİR ANTİTOKSİN TOKSİSİTE DOKUTAHİRİBATI','','hard'],
+    ['Sürüngen Biyolojisi Terimleri',10,'POİKİLOTERM EKTOTERMİK DERİDEĞİŞİMİ JAKOBSONORGAN ISIALGILAYICI HERPETOFAUNA OVOVİVİPAR KAZICILIK KLOAK ZEHİRFLAKONU','','hard']
+  ]],
+  ['Biyolojik Çeşitlilik', '#14b8a6', [
+    ['Genetik Unsurlar',3,'GEN KROMOZOM DNA','','hv'],
+    ['Yaşam Alanları',4,'BİYOM HABİTAT EKOSİSTEM BİYOSFER','','hv'],
+    ['Tür Düzeyleri',5,'ALTTÜR CİNS FAMİLYA TAKIM SINIF','','medium'],
+    ['Çevre Koruma Terimleri',6,'MİLLİPARK KORUMA REZERV YABAN MİRAS DOĞAL','','medium'],
+    ['Ekolojik Tehditler',7,'ANIZYANGINI KAÇAKAVCILIK KİRLİLİK İKLİMDEĞİŞİMİ HABİTATKAYBI EROZYON TAHRİBAT','','medium'],
+    ['Araştırma Yöntemleri',8,'FOTOKAPAN ÖRNEKLEME ENVANTER ARAZİÇALIŞMASI MARKA SAYIM HARİTALAMA GÖZLEM','','hard'],
+    ['Koruma Statüleri',8,'TEHLİKEDE KRİTİK DUYARLI TÜKENMİŞ KORUMADA NADİR ENDEMİK YEREL','','hard'],
+    ['Biyoloji Terimleri',9,'BİYOÇEŞİTLİLİK POPÜLASYON EKOLOJİKDENGE BİYOLOJİKMİRAS DOĞALRESURSLAR BİYOSFER FLORA FAUNA GENHAVUZU','','hard'],
+    ['Biyosfer Sistemleri',9,'KARASALBİYOM SUCULBİYOM EKOSİSTEMHİZMETİ KARBONYUTAGI GENETİKÇEŞİTLİLİK BİYOGEOKİMYA EKOLOJİKNİŞ SÜRDÜRÜLEBİLİRLİK DENGELENME','','hard'],
+    ['Taksonomi Ve Biyoçeşitlilik',10,'BİYODERÇEŞİTLİLİK TAKSONOMİ FİLOGENETİK SYNECOLOGY AUTECOLOGY BİYOGEOĞRAFYA GENETİKOTONOMİ EKOLOJİKMODELLEME RESTORASYON KORUMABİYOLOJİSİ','','hard']
+  ]],
+  ['Amazon Efsaneleri', '#eab308', [
+    ['Mitolojik Varlıklar',3,'DEV PERİ CİN','','hv'],
+    ['Kabile İnançları',4,'TOTEM ŞAMAN RİTÜEL BÜYÜ','','hv'],
+    ['Efsanevi Mekanlar',5,'KAYIPŞEHİR ELDORADO KUTSALMAĞARA TAPINAK NEHİRBAŞI','','medium'],
+    ['Kabile Şifacıları',6,'ŞAMAN OTLACI ŞİFACI BÜYÜCÜ ARAMACI REHBER','','medium'],
+    ['Söylence Nesneleri',7,'KUTSALTAŞ ALTINKAP TILSIM MUSKA TOTEMDİREĞİ MASKE MIZRAK','','medium'],
+    ['Amazon Savaşçıları',8,'KABİLEREİSİ SAVAŞÇI OKÇU NİŞANCI MUHAFIZ SİPERCİ İZCİ KORUYUCU','','hard'],
+    ['Kabile Ritüelleri',8,'DANS ATEŞTÖRENİ BEREKETRİTÜELİ KUTSALŞARKI YÜZBOYAMA MÜZİK BÜYÜTÖRENİ ERGİNLİK','','hard'],
+    ['Sözlü Kültür Terimleri',9,'EFSANE MİTOLOJİ SÖYLENCE MASAL DESTAN AKTARIM GELENEK GÖRENEK İNANÇ','','hard'],
+    ['Antropoloji Ve Etnografya',9,'ANTROPOLOJİ ETNOGRAFYA ARKEOLOJİ KÜLTÜRELMİRAS YERLİHALK KABİLEYAŞAMI SÖZLÜTARİH GELENEKSELBİLGİ KUTSALALAN','','hard'],
+    ['Amazon Mitolojisi Ve Uygarlıklar',10,'ELDORADOEFSANESİ YERLİMİTOLOJİSİ KUTSALNEHİR ŞAMANİZM ARKEOLOJİKKAZI KAYIPUYGARLIK TILSIMLIORMAN BİTKİŞİFACILIĞI SAVAŞÇIKABİLELER SÖZLÜGELENEK','','hard']
   ]]
 ];
 const INFO = [
@@ -2762,31 +2713,33 @@ const INFO = [
   ["Üç Ülke Sınırı / ARJANTİN","Şelalelerin yakınında Brezilya, Arjantin ve Paraguay sınırları buluşur."]
 ];
 const CLASSIC_LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => {
-  const hide = l[3] ? l[3].split(' ') : null;
-  const dirs = l[4] || (hide ? (j < 5 ? 'medium' : 'hard') : (j < 2 ? 'easy' : (j < 4 ? 'medium' : 'hard')));
+  const hide = null;
+  const dirs = l[4] || (j < 2 ? 'easy' : (j < 5 ? 'medium' : 'hard'));
   const subtitles = [
-    'EĞİTİM • OYUNU ÖĞREN',
-    'KOLAY • BİRAZ DAHA HIZLI',
-    'ORTA • YÖNLER ÇOĞALIYOR',
-    'ORTA • UZUN KELİMELER',
-    'ZOR • GİZLİ KELİMELER BAŞLIYOR',
-    'ZOR • DAHA UZUN KELİMELER',
-    'ÇOK ZOR • GİZLİ KELİMELER',
-    'ÇOK ZOR • UZUN VE ÇAPRAZ KELİMELER',
-    'UZMAN • KARIŞIK YÖNLER',
-    'SON BÖLÜM • EN ZOR'
+    'KOLAY • 3 KELİME', 'KOLAY • 4 KELİME', 'ORTA • 5 KELİME',
+    'ORTA • 6 KELİME', 'ZOR • 7 KELİME', 'ZOR • 8 KELİME',
+    'ÇOK ZOR • 8 KELİME', 'UZMAN • 9 KELİME', 'UZMAN • 9 KELİME', 'MAX ZORLUK • 10 KELİME'
   ];
   return {
     category:l[0], group:gi, lv:j,
-    info:INFO[j] || undefined,
-    size:l[1], dirs, mode:hide ? 'hidden' : 'classic', hide,
-    subtitle:subtitles[j],
-    words:l[2].split(' ')
+    info:undefined, size:l[1], dirs, mode:'classic', hide,
+    subtitle:subtitles[j], words:l[2].split(' ')
   };
 }));
 const LEVELS = CLASSIC_LEVELS;
-const LOCKED_LAST = 0;                                   // son 5 bölüm kapalı (açmak için 0 yap)
-const MAX_PLAY = Math.max(0, LEVELS.length - 1 - LOCKED_LAST);   // oynanabilir son bölüm indeksi
+const LOCKED_LAST = 0;
+const MAX_PLAY = Math.max(0, LEVELS.length - 1 - LOCKED_LAST);
+const CHAPTER_COUNT = GROUPS.length;
+const CHAPTER_SIZE = 10;
+const chapterStart = gi => gi * CHAPTER_SIZE;
+const chapterEnd = gi => gi * CHAPTER_SIZE + CHAPTER_SIZE - 1;
+const chapterComplete = gi => {
+  const st = chapterStart(gi), en = Math.min(chapterEnd(gi), LEVELS.length - 1);
+  for (let i = st; i <= en; i++) if (!S.done[i]) return false;
+  return true;
+};
+const chapterUnlocked = gi => gi === 0 || S.maxOpen >= chapterStart(gi);
+const currentChapter = () => Math.min(CHAPTER_COUNT - 1, Math.floor((S.levelIndex || 0) / CHAPTER_SIZE));
 const MODES = [
   { key:'classic', category:'KLASİK SERBEST', icon:'sprout', color:'#22c55e', subtitle:'Rahatça oyna. Bölümleri seç ve normal kelime bulma modunda ilerle.', available:true }
 ];
@@ -2926,8 +2879,8 @@ const S = {
   /* Tek seferlik coin sıfırlama: test coinlerini siler, herkes 100 ile başlar */
   if (store.get('kb_coin_reset_v1') !== '1'){ S.coins = 100; store.set('wow_search_coins', 100); store.set('kb_coin_reset_v1', '1'); }
   const last = MAX_PLAY;
-  /* Yeni 10 bölümlük yolculuk sistemi: eski harita ilerlemesini karıştırma. */
-  if (store.get('cidahl_journey_10_v1') !== '1'){
+  /* Yeni Amazon 10 bölüm x 10 alt bölüm sistemi. Eski 10 seviyelik kayıtları bir kez sıfırla. */
+  if (store.get('cidahl_amazon_100_v1') !== '1'){
     S.maxOpen = 0;
     S.levelIndex = 0;
     S.done = {};
@@ -2936,22 +2889,13 @@ const S = {
     store.set('cidahl_doga_level', '0');
     store.set('cidahl_doga_done', '{}');
     store.set('cidahl_doga_partial', '{}');
-    store.set('cidahl_journey_10_v1', '1');
+    store.set('cidahl_amazon_100_v1', '1');
   } else {
     const l = parseInt(store.get('cidahl_doga_level'), 10);
     const m = parseInt(store.get('cidahl_doga_max'), 10);
     S.maxOpen = Math.min(last, Math.max(isNaN(l) ? 0 : l, isNaN(m) ? 0 : m));
     S.levelIndex = S.maxOpen;
     try { S.done = JSON.parse(store.get('cidahl_doga_done') || '{}') || {}; } catch(e) { S.done = {}; }
-  }
-  if (!store.get('kb_hid_v1')){            // eski kayıtları, araya eklenen gizli kelime bölümlerine göre kaydır
-    const mv = i => i + (i >= 4 ? 1 : 0) + (i >= 9 ? 1 : 0) + (i >= 14 ? 1 : 0);
-    const mp = o => { const r = {}; Object.keys(o || {}).forEach(k => { r[mv(+k)] = o[k]; }); return r; };
-    S.done = mp(S.done);
-    try { store.set('cidahl_doga_partial', JSON.stringify(mp(JSON.parse(store.get('cidahl_doga_partial') || '{}')))); } catch(e) {}
-    S.maxOpen = Math.min(last, mv(S.maxOpen)); S.levelIndex = S.maxOpen;
-    store.set('kb_hid_v1', '1');
-    store.set('cidahl_doga_max', S.maxOpen); store.set('cidahl_doga_level', S.maxOpen); store.set('cidahl_doga_done', JSON.stringify(S.done));
   }
   try { S.partial = JSON.parse(store.get('cidahl_doga_partial') || '{}') || {}; } catch(e) { S.partial = {}; }
   // Kilitler: yalnızca 1. bölüm açık; sonraki bölüm, öncekini bitirince açılır (test kayıtlarını da düzeltir)
@@ -3270,8 +3214,8 @@ function startLevel(index, def, seed){
   S.level.words.forEach((w, i) => S.colorOf[w] = PALETTE[i % PALETTE.length]);
   const chapterNo = S.level && S.level.group != null ? S.level.group + 1 : 1;
   const chapterName = (typeof JOURNEY_CARDS !== 'undefined' && JOURNEY_CARDS[chapterNo - 1]) ? JOURNEY_CARDS[chapterNo - 1].name : S.level.category;
-  $('header-level-num').textContent = chapterNo;
-  $('game-top-title').textContent = chapterName;
+  $('header-level-num').textContent = (S.level.lv + 1);
+  $('game-top-title').textContent = S.level.category;
   $('time-val').textContent = '00:00';
   renderWords(); renderGrid(); updateProgress();
   S.playing = false;
@@ -3922,8 +3866,9 @@ document.addEventListener('visibilitychange', () => {
 });
 
 function vicScene(idx){
-  const total = MAX_PLAY + 1;
-  $('btn-next-txt').textContent = idx + 1 < total ? 'SONRAKİ BÖLÜM' : 'HARİTAYA DÖN';
+  const next = idx + 1;
+  const sameChapter = next < LEVELS.length && Math.floor(next / CHAPTER_SIZE) === Math.floor(idx / CHAPTER_SIZE);
+  $('btn-next-txt').textContent = sameChapter ? 'SONRAKİ BÖLÜM' : 'HARİTAYA DÖN';
 }
 
 function vicFx(stars, reward, elapsed){
@@ -3938,7 +3883,7 @@ function victory(){
   buzz([40, 60, 40, 60, 120]);
   S.wins++; store.set('kb_wins', S.wins);
   const idx = S.levelIndex, prev = S.done[idx];
-  const isFinal = idx === LEVELS.length - 1;
+  const isChapterFinal = (idx % CHAPTER_SIZE) === CHAPTER_SIZE - 1;
   const bonus = prev ? 0 : levelBonus(idx);   // bölüm bitirme ödülü (ilk bitirişte)
   const reward = prev ? 0 : S.level.words.length + bonus;   // kelime coinleri oynarken verildi; burada yalnız gösterim
   if (bonus){ S.coins += bonus; } updateCoins();
@@ -3955,8 +3900,8 @@ function victory(){
   S.maxOpen = Math.max(S.maxOpen, Math.min(idx + 1, MAX_PLAY));
   S.justUnlocked = (S.maxOpen > oldMax) ? S.maxOpen : -1;
   saveProgress(); syncLevelPoints();
-  /* 10. (son) bölüm: normal TEBRİKLER kutusu yerine Amazon final ekranı */
-  if (idx === LEVELS.length - 1){ showChapterEnd(); return; }
+  /* J alt bölümü: bölümün (10 alt seviyenin) final tebrik ekranı */
+  if (isChapterFinal){ showChapterEnd(Math.floor(idx / CHAPTER_SIZE)); return; }
   /* HER BÖLÜMDE bitiş kutusu + yıldız + havai fişek göster */
   $('reward-time').textContent = fmt(elapsed);
   $('reward-coins').textContent = '+' + reward;
@@ -3998,7 +3943,14 @@ $('btn-next-level').addEventListener('click', () => {
     iris.className = 'iris in';
     setTimeout(() => {
       modal.classList.remove('show','leave');
-      try { playJourneyUnlockAnimation(fromIdx); } catch(e){ console.error('Bölüm geçiş animasyonu:', e); showLevels(); }
+      try {
+        const nextIdx = fromIdx + 1;
+        if (nextIdx < LEVELS.length && Math.floor(nextIdx / CHAPTER_SIZE) === Math.floor(fromIdx / CHAPTER_SIZE)) {
+          showGame(nextIdx);
+        } else {
+          showJourneyMap(Math.floor(nextIdx / CHAPTER_SIZE), { noLoading: true });
+        }
+      } catch(e){ console.error('Bölüm geçiş animasyonu:', e); showJourneyMap(Math.floor((fromIdx + 1) / CHAPTER_SIZE), { noLoading: true }); }
       requestAnimationFrame(() => { iris.className = 'iris out'; });
       setTimeout(() => { iris.className = 'iris'; irisBusy = false; }, 600);
     }, 520);
@@ -4009,9 +3961,14 @@ let irisBusy = false;
 /* =====================================================
    AMAZON FİNAL EKRANI + MISIR PİRAMİTLERİ AÇILIŞI
    ===================================================== */
-function showChapterEnd(){
+function showChapterEnd(chapterIndex){
+  chapterIndex = Math.max(0, Math.min(CHAPTER_COUNT - 1, Number(chapterIndex) || 0));
+  const st = chapterStart(chapterIndex), en = Math.min(chapterEnd(chapterIndex), LEVELS.length - 1);
   let gold = 0, time = 0;
-  for (let i = 0; i < LEVELS.length; i++){ const d = S.done[i]; if (d){ gold += (d.gold != null ? d.gold : (LEVELS[i].words.length + levelBonus(i))); time += d.time || 0; } }
+  for (let i = st; i <= en; i++){
+    const d = S.done[i];
+    if (d){ gold += (d.gold != null ? d.gold : (LEVELS[i].words.length + levelBonus(i))); time += d.time || 0; }
+  }
   $('ce-time').textContent = fmt(time);
   const fl = $('ce-flies');
   if (!fl.children.length){
@@ -4021,6 +3978,13 @@ function showChapterEnd(){
       fl.appendChild(f);
     }
   }
+  window._chapterEndIndex = chapterIndex;
+  const title = $('chapter-end').querySelector('.ce-title');
+  if (title) title.textContent = 'TEBRİKLER!';
+  const sub = $('chapter-end').querySelector('.ce-sub');
+  if (sub) sub.textContent = GROUPS[chapterIndex][0] + ' tamamlandı';
+  const next = $('ce-next');
+  if (next) next.textContent = chapterIndex < CHAPTER_COUNT - 1 ? 'HARİTAYA DÖN' : 'HARİTAYA DÖN';
   store.set('kb_misir_anim', '1');
   $('chapter-end').classList.add('show');
   const g = $('ce-gold'), t0 = performance.now(), D = 1300;
@@ -4031,10 +3995,12 @@ function showChapterEnd(){
 $('ce-next').addEventListener('click', () => {
   if (irisBusy) return;
   const iris = $('iris'); irisBusy = true; buzz(15);
+  const ch = Number(window._chapterEndIndex || 0);
   iris.className = 'iris in';
   setTimeout(() => {
     $('chapter-end').classList.remove('show');
-    showLevels();
+    const nextChapter = Math.min(CHAPTER_COUNT - 1, ch + 1);
+    showJourneyMap(nextChapter, { noLoading: true });
     requestAnimationFrame(() => { iris.className = 'iris out'; });
     setTimeout(() => { iris.className = 'iris'; irisBusy = false; }, 600);
   }, 520);
@@ -4179,49 +4145,34 @@ const JOURNEY_CARDS = [
   { name:'Niagara Şelaleleri',   key:'niagara',    color:'#2dd4bf' },
   { name:'Fuji Dağı',            key:'fuji',       color:'#f472b6' }
 ];
-function chapterStars(){ let n = 0; for (let i = 0; i < LEVELS.length; i++) if (S.done[i]) n++; return n; }   // her bölüm = 1 yıldız
+function chapterStars(){
+  let n = 0;
+  for (let i = 0; i < CHAPTER_COUNT; i++) if (chapterComplete(i)) n++;
+  return n;
+}
 function renderModes(){
-  const list = $('journey-list');
-  if (!list) return;
-  const score = $('jr-score-v'); if (score) score.textContent = chapterStars() + '/' + LEVELS.length;
+  const list = $('journey-list'); if (!list) return;
+  const score = $('jr-score-v'); if (score) score.textContent = chapterStars() + '/' + CHAPTER_COUNT;
   list.innerHTML = '';
   JOURNEY_CARDS.forEach((jc, i) => {
-    const d = LEVELS[i] || LEVELS[0];
+    const d = LEVELS[chapterStart(i)] || LEVELS[0];
     const th = themeOf(d);
-    const chapAll = chapterStars() === LEVELS.length;
-    const done = i === 0 ? (chapAll ? S.done[0] : null) : S.done[i];     // Amazon: yalnızca 10 bölümün hepsi bitince "tamamlandı"
-    const unlocked = i <= S.maxOpen;
-    const current = unlocked && !done && (i === 0 || i === S.maxOpen);
-    const nStars = i === 0 ? chapterStars() : (done ? 1 : 0);
-    const b = document.createElement('button');
-    b.type = 'button';
+    const done = chapterComplete(i);
+    const unlocked = chapterUnlocked(i);
+    const current = unlocked && !done && i === Math.min(i, Math.floor(S.maxOpen / CHAPTER_SIZE));
+    const b = document.createElement('button'); b.type='button';
     b.className = 'journey-card ' + (done ? 'done' : current ? 'current' : unlocked ? 'open' : 'locked');
     b.style.setProperty('--neon', th.color);
-    const soon = i > 0;
-    if (i === 1 && S.done[LEVELS.length - 1]){ list.appendChild(buildMisirCard(jc)); return; }
-    const stars = nStars ? '<div class="journey-stars"><svg class="i on"><use href="#i-star"/></svg>' + (i === 0 ? '<b class="js-n">' + nStars + '/' + LEVELS.length + '</b>' : '') + '</div>' : '';
-    let state = '';
-    if (!unlocked) state = '<span class="lock-label2"><svg class="i"><use href="#i-lock"/></svg>KİLİTLİ</span>';
-    else if (done) state = '<span class="done-label">✓ TAMAMLANDI</span>';
-    else state = '<span class="play">OYNA</span>';
-    if (soon) {
-      b.className = 'journey-card locked has-bn';
-      b.style.setProperty('--neon', jc.color);
-      b.dataset.bn = jc.key;
-      b.innerHTML = '<span class="journey-num">🔒</span><span class="journey-info"><span class="journey-name">' + jc.name + '</span></span><span class="journey-state"><span class="lock-label2">YAKINDA</span></span>';
-      b.setAttribute('aria-disabled','true'); list.appendChild(b); return;
-    }
-    b.innerHTML = '<span class="journey-num">' + (unlocked ? (done ? '✓' : i + 1) : '🔒') + '</span>' +
-      '<span class="journey-info"><span class="journey-name">' + (i === 0 ? jc.name : d.category) + '</span>' + stars + '</span>' +
+    const stars = done ? '<div class="journey-stars"><svg class="i on"><use href="#i-star"/></svg><b class="js-n">10/10</b></div>' : '';
+    const state = !unlocked ? '<span class="lock-label2"><svg class="i"><use href="#i-lock"/></svg>KİLİTLİ</span>' : done ? '<span class="done-label">✓ TAMAMLANDI</span>' : '<span class="play">OYNA</span>';
+    b.innerHTML = '<span class="journey-num">' + (!unlocked ? '🔒' : (done ? '✓' : i + 1)) + '</span>' +
+      '<span class="journey-info"><span class="journey-name">' + jc.name + '</span>' + stars + '</span>' +
       '<span class="journey-state">' + state + '</span>';
     if (i === 0) b.classList.add('has-banner');
-    if (unlocked) b.addEventListener('click', () => { audio(); if (i === 0) showAmazonIntro(() => showJourneyMap(i)); else showJourneyMap(i); });
-    else b.setAttribute('aria-disabled','true');
+    if (unlocked) b.addEventListener('click', () => { audio(); if (i === 0 && !done) showAmazonIntro(() => showJourneyMap(i)); else showJourneyMap(i); });
     list.appendChild(b);
   });
   loadBanners();
-  const pw = list.querySelector('.misir-wrap[data-pending="1"]');
-  if (pw) setTimeout(() => misirUnlockAnim(pw), 900);
 }
 /* Harita.png yolu: resim koordinatlarında (940x1672) yol merkez noktaları, alttan üste */
 let JR_ART_H = 1672; // resmin gerçekten dolu olan yüksekliği (altı boş/siyah)
@@ -5640,11 +5591,11 @@ function showJourneyMap(chapterIndex, opts){
   const unlockIdx = (opts.unlock === undefined) ? -1 : opts.unlock;
   let afterLoad = null;
   const idx = Number(chapterIndex) || 0;
-  if (idx > S.maxOpen) { toast('Önceki bölümü tamamla.'); return; }
+  if (!chapterUnlocked(idx)) { toast('Önceki bölümü tamamla.'); return; }
   leaveGame();
   const el = ensureJourneyMap();
-  const def = LEVELS[idx] || LEVELS[0];
-  { const sv = el.querySelector('#jm-score-v'); if (sv) sv.textContent = chapterStars() + '/' + LEVELS.length; }
+  const def = LEVELS[chapterStart(idx)] || LEVELS[0];
+  { const sv = el.querySelector('#jm-score-v'); if (sv) sv.textContent = chapterStars() + '/' + CHAPTER_COUNT; }
   const bg = el.querySelector('.jm-bg');
   const vid = el.querySelector('.jm-bg-video');
   if (vid) { vid.muted = true; vid.loop = true; vid.playsInline = true; const play = () => { const pr = vid.play(); if (pr && pr.catch) pr.catch(() => {}); }; play(); }
@@ -5674,9 +5625,9 @@ function showJourneyMap(chapterIndex, opts){
   ];
   const levelCount = Math.min(10, LEVELS.length);
   for (let i=0;i<levelCount;i++){
-    const done = !!S.done[i] && i <= MAX_PLAY;
+    const done = chapterComplete(i);
     const pendingUnlock = (i === unlockIdx);
-    const unlocked = i <= S.maxOpen && !pendingUnlock;
+    const unlocked = chapterUnlocked(i) && !pendingUnlock;
     const b = document.createElement('button');
     b.type='button';
     const isCur = unlocked && !done && i === S.maxOpen;
@@ -5684,10 +5635,10 @@ function showJourneyMap(chapterIndex, opts){
     b.dataset.i = i;
     b.style.left=positions[i][0]+'%'; b.style.top=positions[i][1]+'%';
     b.innerHTML = done ? '✓' : (unlocked ? '' : '🔒');
-    const d=LEVELS[i];
+    const d=LEVELS[chapterStart(i)];
     b.setAttribute('aria-label', d.category + ' seviye ' + (i+1));
-    if (unlocked) b.addEventListener('click',()=>{ audio(); showGame(i); });
-    else b.addEventListener('click',()=>{ toast(i > MAX_PLAY ? 'Bu bölüm yakında açılacak!' : 'Önce önceki bölümü tamamla.'); });
+    if (unlocked) b.addEventListener('click',()=>{ audio(); showGame(chapterStart(i)); });
+    else b.addEventListener('click',()=>{ toast('Önce önceki bölümü tamamla.'); });
     nodes.appendChild(b);
     if (pendingUnlock) {
       afterLoad = () => {
@@ -5771,7 +5722,7 @@ function hmWordOfDay(){
 function hmMask(w){ const a = Array.from(w || ''); return a.length ? a[0] + ' ' + a.slice(1).map(() => '_').join(' ') : '—'; }
 function hmSet(id, fn){ const el = $(id); if (el) fn(el); }
 function renderHomeHud(){
-  const total = MAX_PLAY + 1, done = Math.max(0, Math.min(S.maxOpen, total)), lv = Math.min(S.maxOpen + 1, total);
+  const total = CHAPTER_COUNT, done = chapterStars(), lv = Math.min(currentChapter() + 1, total);
   const activeLevel = LEVELS[Math.min(S.maxOpen, LEVELS.length - 1)] || LEVELS[0];
   const chapter = activeLevel && activeLevel.group != null ? activeLevel.group + 1 : 1;
   const chapterName = (typeof JOURNEY_CARDS !== 'undefined' && JOURNEY_CARDS[chapter - 1]) ? JOURNEY_CARDS[chapter - 1].name : (activeLevel ? activeLevel.category : 'Amazon Yağmur Ormanları');
