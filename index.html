@@ -3097,7 +3097,7 @@ GROUPS.forEach((g,gi)=>g[2].forEach((l,j)=>{
   const words=categoryWords({category:l[0],words:l[2]},j);
   CATEGORY_LEVELS.push({category:l[0],group:gi,lv:j,info:undefined,size:j<3?4:6,dirs:'hard',mode:'classic',hide:l[3]?l[3]:null,subtitle:(j<3?'KOLAY':'ZOR')+' • '+words.length+' KELİME',words,beginner:j<3});
 }));
-const LEVELS=CATEGORY_LEVELS;
+const LEVELS=CLASSIC_LEVELS;
 const LOCKED_LAST = 0;
 const MAX_PLAY = Math.max(0, LEVELS.length - 1 - LOCKED_LAST);
 const CHAPTER_COUNT = GROUPS.length;
@@ -3109,7 +3109,7 @@ const chapterComplete = gi => {
   for (let i = st; i <= en; i++) if (!S.done[i]) return false;
   return true;
 };
-const chapterUnlocked = gi => gi === 0 || S.maxOpen >= chapterStart(gi);
+const chapterUnlocked = gi => gi === 0 || chapterComplete(gi - 1);
 const currentChapter = () => Math.min(CHAPTER_COUNT - 1, Math.floor((S.levelIndex || 0) / CHAPTER_SIZE));
 const MODES = [
   { key:'classic', category:'KLASİK SERBEST', icon:'sprout', color:'#22c55e', subtitle:'Rahatça oyna. Bölümleri seç ve normal kelime bulma modunda ilerle.', available:true }
@@ -4430,7 +4430,7 @@ $('ce-next').addEventListener('click', () => {
   setTimeout(() => {
     $('chapter-end').classList.remove('show');
     const nextChapter = Math.min(CHAPTER_COUNT - 1, ch + 1);
-    showJourneyMap(nextChapter, { noLoading: true });
+    showJourneyMap(nextChapter, { unlock: nextChapter, noLoading: true });
     requestAnimationFrame(() => { iris.className = 'iris out'; });
     setTimeout(() => { iris.className = 'iris'; irisBusy = false; }, 600);
   }, 520);
@@ -6067,7 +6067,7 @@ function showJourneyMap(chapterIndex, opts){
     const unlocked = chapterUnlocked(i) && !pendingUnlock;
     const b = document.createElement('button');
     b.type='button';
-    const isCur = unlocked && !done && i === S.maxOpen;
+    const isCur = unlocked && !done && i === Math.min(CHAPTER_COUNT - 1, Math.floor(S.maxOpen / CHAPTER_SIZE));
     b.className='jm-node ' + (done?'done':isCur?'cur':unlocked?'open':'locked');
     b.dataset.i = i;
     b.style.left=positions[i][0]+'%'; b.style.top=positions[i][1]+'%';
@@ -6113,7 +6113,8 @@ function showJourneyMap(chapterIndex, opts){
     }
   }
   { const mk=document.createElement('div'); mk.className='jm-monkey idle'; mk.innerHTML='<i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span>'; jmMkPose(mk,'idle');
-    const start=(unlockIdx>0)?unlockIdx-1:Math.min(S.maxOpen,levelCount-1);
+    const currentChapterIdx = Math.min(CHAPTER_COUNT - 1, Math.floor(S.maxOpen / CHAPTER_SIZE));
+    const start=(unlockIdx>0)?unlockIdx-1:currentChapterIdx;
     mk.style.left=positions[start][0]+'%'; mk.style.top=positions[start][1]+'%';
     nodes.appendChild(mk);
 
