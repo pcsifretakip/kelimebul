@@ -2070,6 +2070,163 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .app.on-game .top-timer{display:none!important}
 </style>
 
+
+<style id="bottom-bar-redesign">
+/* ===== ANA SAYFA ALT BAR - YENİ FLOATING DOCK ===== */
+.app.on-home .hm-nav{
+  position:absolute!important;
+  left:4%!important;
+  right:4%!important;
+  bottom:calc(10px + env(safe-area-inset-bottom))!important;
+  width:92%!important;
+  height:76px!important;
+  padding:7px 7px 6px!important;
+  box-sizing:border-box!important;
+  display:grid!important;
+  grid-template-columns:repeat(5,1fr)!important;
+  align-items:center!important;
+  gap:2px!important;
+  overflow:visible!important;
+  border:1px solid rgba(196,181,253,.34)!important;
+  border-radius:24px!important;
+  background:
+    linear-gradient(180deg,rgba(54,35,139,.92),rgba(17,9,61,.96))!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    inset 0 -1px 0 rgba(0,0,0,.35),
+    0 8px 0 rgba(7,3,30,.48),
+    0 14px 28px rgba(0,0,0,.42),
+    0 0 22px rgba(124,77,255,.16)!important;
+  backdrop-filter:blur(14px)!important;
+  -webkit-backdrop-filter:blur(14px)!important;
+}
+
+.app.on-home .hm-nav::before{
+  content:""!important;
+  position:absolute!important;
+  left:12%!important;
+  right:12%!important;
+  top:-10px!important;
+  height:20px!important;
+  border-radius:50%!important;
+  background:rgba(139,92,246,.34)!important;
+  filter:blur(12px)!important;
+  pointer-events:none!important;
+}
+
+.app.on-home .hm-nav .nav-item{
+  position:relative!important;
+  z-index:2!important;
+  min-width:0!important;
+  height:62px!important;
+  padding:5px 1px 2px!important;
+  margin:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:3px!important;
+  color:#b9b1e8!important;
+  font-size:10px!important;
+  font-weight:1000!important;
+  line-height:1!important;
+  text-shadow:0 2px 4px rgba(0,0,0,.55)!important;
+  border-radius:17px!important;
+  transition:transform .15s ease,color .15s ease,background .15s ease!important;
+}
+
+.app.on-home .hm-nav .nav-item svg{
+  width:25px!important;
+  height:25px!important;
+  flex:none!important;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))!important;
+}
+
+.app.on-home .hm-nav .nav-item:not(.center):active{
+  transform:translateY(2px) scale(.94)!important;
+  background:rgba(255,255,255,.07)!important;
+}
+
+.app.on-home .hm-nav .nav-item.on{
+  color:#fff0a8!important;
+  background:linear-gradient(180deg,rgba(251,191,36,.12),rgba(251,191,36,.035))!important;
+}
+
+.app.on-home .hm-nav .nav-item.on svg{
+  filter:drop-shadow(0 0 8px rgba(251,191,36,.8))!important;
+}
+
+.app.on-home .hm-nav .nav-item span{
+  white-space:nowrap!important;
+}
+
+/* Ortadaki Ana Sayfa butonu */
+.app.on-home .hm-nav .nav-item.center{
+  height:70px!important;
+  margin-top:-25px!important;
+  padding-top:0!important;
+  overflow:visible!important;
+  color:#fff0a8!important;
+}
+
+.app.on-home .hm-nav .nav-item.center .nav-orb{
+  width:54px!important;
+  height:54px!important;
+  margin:0 0 2px!important;
+  flex:none!important;
+  border:3px solid #1b104f!important;
+  box-shadow:
+    0 0 0 2px #fbbf24,
+    0 5px 0 #8b4b08,
+    0 8px 16px rgba(0,0,0,.5),
+    0 0 20px rgba(251,191,36,.55),
+    inset 0 2px 0 rgba(255,255,255,.5)!important;
+}
+
+.app.on-home .hm-nav .nav-item.center .nav-orb svg{
+  width:25px!important;
+  height:25px!important;
+  filter:none!important;
+}
+
+.app.on-home .hm-nav .nav-item.center > span:last-child{
+  font-size:10px!important;
+  font-weight:1000!important;
+  color:#fff0a8!important;
+}
+
+/* Alt barın oyun ekranından bağımsız şekilde yalnızca ana sayfada görünmesi */
+.app.on-home .hm-nav{
+  transform:translateZ(0);
+}
+
+/* Küçük telefonlarda taşmayı engelle */
+@media (max-width:380px){
+  .app.on-home .hm-nav{
+    left:3%!important;
+    right:3%!important;
+    width:94%!important;
+    height:72px!important;
+    border-radius:21px!important;
+  }
+  .app.on-home .hm-nav .nav-item{
+    font-size:9px!important;
+    height:58px!important;
+  }
+  .app.on-home .hm-nav .nav-item svg{
+    width:23px!important;
+    height:23px!important;
+  }
+  .app.on-home .hm-nav .nav-item.center{
+    margin-top:-22px!important;
+  }
+  .app.on-home .hm-nav .nav-item.center .nav-orb{
+    width:50px!important;
+    height:50px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
