@@ -1,0 +1,9 @@
+# Otomatik yukleyicinin kendi gunluk dosyalari
+.auto-push/
+
+# Gecici / yedek dosyalar
+*.tmp
+*.bak
+*~
+Thumbs.db
+desktop.ini
