@@ -6687,31 +6687,30 @@ function kvTime(){
  if(KV.left<=0)kvFinish();
 }
 function kvStop(silent){clearInterval(kvTick);kvTick=null;if(KV&&!KV.over)KV.over=true;if(silent)KV=null;}
-function kvFlyToWallet(wordCount){
- if(!wordCount)return;
- const from=$('kv-bonus-icon'),wallet=document.querySelector('.topbar .coin');
- if(!from||!wallet)return;
+function kvFlyToWallet(wordCount,gold){
+ const wallet=document.querySelector('.topbar .coin'),from=$('kv-bonus-icon');
+ const pay=()=>{if(gold>0){S.coins+=gold;updateCoins();}if(wallet){wallet.classList.remove('kv-wallet-bump');void wallet.offsetWidth;wallet.classList.add('kv-wallet-bump');setTimeout(()=>wallet.classList.remove('kv-wallet-bump'),850);}};
+ if(!wordCount||!wallet||!from){pay();return;}
  const a=from.getBoundingClientRect(),b=wallet.getBoundingClientRect();
- const sx=a.left+a.width/2,sy=a.top+a.height/2,dx=b.left+b.width/2-sx,dy=b.top+b.height/2-sy;
- for(let i=0;i<Math.min(wordCount,10);i++){
+ const sx=a.left+a.width/2,sy=a.top+a.height/2,dx=b.left+b.width/2-sx,dy=b.top+b.height/2-sy,count=Math.min(wordCount,10);
+ let remaining=count;
+ for(let i=0;i<count;i++){
   const coin=document.createElement('span');coin.className='kv-flight-coin';coin.textContent='🪙';
   coin.style.left=sx+'px';coin.style.top=sy+'px';document.body.appendChild(coin);
   const anim=coin.animate([{transform:'translate(-50%,-50%) scale(1)',opacity:1},{transform:'translate(calc(-50% + '+dx+'px),calc(-50% + '+dy+'px)) scale(.35)',opacity:.15}],{duration:850,delay:i*65,easing:'cubic-bezier(.18,.72,.28,1)',fill:'forwards'});
-  anim.onfinish=()=>coin.remove();
+  anim.onfinish=()=>{coin.remove();if(--remaining===0)pay();};
  }
- wallet.classList.remove('kv-wallet-bump');void wallet.offsetWidth;wallet.classList.add('kv-wallet-bump');
- setTimeout(()=>wallet.classList.remove('kv-wallet-bump'),850);
 }
 function kvFinish(){
  if(!KV||KV.over)return;kvStop(false);
  const r={words:KV.found.length,gold:KV.gold};
- if(r.gold>0){S.coins+=r.gold;updateCoins();}
+ 
  try{SND.win();}catch(_){}buzz([40,40,40]);
  const o=$('dw-ov'),card=o.querySelector('.dw-card'),headline=r.words>=KV_MAX_WORDS?'HEPSİNİ BULDUN!':'SÜRE BİTTİ!';
  card.innerHTML='<button class="dw-x" aria-label="Kapat">✕</button><div class="kv-res"><h3>'+headline+'</h3><div class="kv-res-words">'+r.words+' / '+KV_MAX_WORDS+' KELİME</div><div class="kv-bonus-total"><span id="kv-bonus-icon">🪙</span><b>+'+r.gold+'</b><small>ALTIN</small></div><button class="dw-btn sec" id="kv-close">KAPAT</button></div>';
  const close=()=>{o.classList.remove('show');KV=null;};
  card.querySelector('.dw-x').onclick=close;$('kv-close').onclick=close;renderHomeHud();
- requestAnimationFrame(()=>kvFlyToWallet(r.words));
+ requestAnimationFrame(()=>kvFlyToWallet(r.words,r.gold));
 }
 $('hm-word').addEventListener('click',dwOpen);$('hm-word').addEventListener('click',dwOpen);
 setInterval(() => { try{ renderHomeHud(); }catch(e){} }, 30000);
