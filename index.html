@@ -1445,6 +1445,43 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #view-home .action-card:active .action-icon,#view-home .action-card.action-pressed .action-icon{transform:scale(.9);box-shadow:0 0 20px rgba(98,235,255,.45)}
 @media(max-width:380px){#view-home .home-actions{width:90%!important;gap:10px!important}#view-home .action-card{min-height:74px;padding:11px 13px;gap:11px;border-radius:19px}#view-home .action-icon{width:43px;height:43px}#view-home .online-card{min-height:67px}}
 @media(prefers-reduced-motion:reduce){#view-home .action-card,#view-home .action-card:after,#view-home .action-arrow{transition:none!important}}
+/* Online mod seçim ekranı · mobil arena kartı */
+#olbox{padding:14px}
+#olbox .ol-card{position:relative;width:min(100%,440px);max-height:min(92dvh,790px);overflow:auto;overscroll-behavior:contain;padding:23px 18px 17px;border:1px solid rgba(120,220,255,.32);border-radius:30px;background:radial-gradient(ellipse at 12% 0,rgba(45,211,255,.2),transparent 37%),radial-gradient(ellipse at 100% 35%,rgba(165,92,255,.19),transparent 39%),linear-gradient(155deg,rgba(39,30,102,.98),rgba(20,14,59,.99) 60%,rgba(13,13,43,.99));box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 25px 70px rgba(0,0,0,.58),0 0 38px rgba(78,113,255,.19)}
+#olbox .ol-card:before{content:"";position:absolute;inset:6px;border:1px solid rgba(199,190,255,.08);border-radius:24px;pointer-events:none}
+.ol-close-x{position:absolute;z-index:3;right:13px;top:13px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(202,190,255,.28);background:linear-gradient(145deg,rgba(164,126,255,.42),rgba(94,67,190,.32));color:white;font-size:21px;font-weight:900;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 4px 12px rgba(0,0,0,.22);cursor:pointer}
+.ol-close-x:active{transform:scale(.92)}
+#olbox .ol-head{position:relative;margin:0 44px 15px 0;min-height:48px}
+#olbox .ol-title-wrap{display:grid;gap:1px}
+#olbox .ol-kicker{font-size:9px;line-height:1.2;font-weight:1000;letter-spacing:.2em;color:#76e8ff}
+#olbox .ol-head h3{margin:0;font-size:23px;letter-spacing:.07em;line-height:1.12;color:#fff;text-shadow:0 0 16px rgba(112,169,255,.42)}
+#olbox .ol-bal{min-height:38px;padding:7px 11px;background:linear-gradient(130deg,rgba(255,196,68,.16),rgba(23,17,61,.8));border:1px solid rgba(255,209,95,.44);box-shadow:0 0 16px rgba(255,194,57,.08);font-size:16px}
+#olbox .ol-step{margin:17px 0 9px;font-size:11px;letter-spacing:.14em;color:#e2dcff}
+#olbox .ol-step i{width:23px;height:23px;color:#092e49;background:linear-gradient(145deg,#a7f3ff,#47c9f5);box-shadow:0 0 13px rgba(69,211,255,.35)}
+#olbox .ol-sz,#olbox .ol-stake{gap:7px}
+#olbox .ol-sz button,#olbox .ol-stake button{height:62px;border-radius:16px;background:linear-gradient(155deg,rgba(115,103,181,.28),rgba(71,58,133,.25));border:1px solid rgba(190,178,255,.21);box-shadow:inset 0 1px 0 rgba(255,255,255,.09);transition:transform .16s,border-color .16s,background .16s,box-shadow .16s}
+#olbox .ol-sz button:active,#olbox .ol-stake button:active{transform:scale(.95)}
+#olbox .ol-sz button b,#olbox .ol-stake button b{font-size:16px}
+#olbox .ol-sz button small{font-size:9px;color:#c3bde8}
+#olbox .ol-sz button.on,#olbox .ol-stake button.on{color:#082c45;background:linear-gradient(155deg,#b6f6ff,#50c9f3 65%,#37a8ee);border-color:#bbf5ff;box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 0 0 2px rgba(72,208,255,.16),0 5px 18px rgba(38,181,242,.24)}
+#olbox .ol-sz button.on small{color:#15516d}
+#olbox .ol-stake button.low{opacity:.38;filter:saturate(.45)}
+#olbox .ol-prize{min-height:56px;margin:15px 0 0;padding:10px 14px;border:1px solid rgba(255,205,91,.25);border-radius:17px;background:linear-gradient(110deg,rgba(252,190,60,.1),rgba(10,14,46,.58));color:#d1caef;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+#olbox .ol-prize.set{border-color:rgba(255,206,92,.52);background:linear-gradient(100deg,rgba(251,191,36,.19),rgba(85,61,148,.28));box-shadow:0 0 20px rgba(251,191,36,.08)}
+#olbox .ol-prize b{font-size:22px;color:#ffe38e;text-shadow:0 0 12px rgba(255,205,81,.3)}
+#olbox .ol-play{gap:11px;margin-top:15px}
+#olbox .ol-play button{min-height:58px;border-radius:18px;letter-spacing:.04em;transition:transform .15s,filter .15s}
+#olbox .ol-play button:active{transform:translateY(3px) scale(.99)}
+#olbox .ol-play .btn-main{max-width:none;width:100%;padding:14px 15px;font-size:16px;color:#102b50;background:linear-gradient(180deg,#c5f7ff,#69d5f4 52%,#36aee4);border:1px solid rgba(185,246,255,.76);box-shadow:inset 0 2px 0 rgba(255,255,255,.72),0 5px 0 #167aa8,0 9px 20px rgba(27,170,222,.22);text-shadow:0 1px rgba(255,255,255,.35)}
+#olbox .ol-play .ol-duel-btn{padding:13px 15px;font-size:14px;border-radius:17px;background:linear-gradient(180deg,#9b84ff,#7457e8 55%,#5638c8);border:1px solid rgba(206,193,255,.6);box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 4px 0 #39248e,0 9px 20px rgba(102,72,222,.23)}
+#olbox .ol-play:not(.ready) button{opacity:.56;filter:saturate(.65)}
+#olbox .ol-err{margin:8px 0 0}
+#olbox .ol-stop-btn{margin-top:13px;border-radius:16px}
+#olbox .ol-list,#olbox .ol-duel-list{gap:8px}
+#olbox .ol-footnote{display:flex;align-items:center;justify-content:center;gap:7px;margin:15px 0 0;padding-top:12px;border-top:1px solid rgba(191,180,255,.12);color:#aaa3d6;font-size:10px;font-weight:800;letter-spacing:.04em}
+#olbox .ol-footnote span{color:#71e6ff}
+@media(max-width:380px){#olbox{padding:10px}#olbox .ol-card{padding:20px 13px 14px;border-radius:25px}#olbox .ol-head h3{font-size:20px}#olbox .ol-bal{font-size:14px;padding:6px 9px}#olbox .ol-sz button,#olbox .ol-stake button{height:56px}#olbox .ol-play .btn-main{font-size:14px}#olbox .ol-play .ol-duel-btn{font-size:12px}}
+@media(prefers-reduced-motion:reduce){#olbox .ol-card *,#olbox .ol-card *:before{transition:none!important;animation:none!important}}
 </style>
 
 <style>
@@ -2792,8 +2829,9 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
     </div>
   </div>
   <div class="help" id="olbox">
-    <div class="hcard">
-      <div class="ol-head"><h3>ONLİNE MOD</h3><div class="ol-bal"><svg class="i"><use href="#i-coin"/></svg><b id="ol-bal">0</b></div></div>
+    <div class="hcard ol-card">
+      <button class="ol-close-x" id="ol-close" type="button" aria-label="Kapat">✕</button>
+      <div class="ol-head"><div class="ol-title-wrap"><small class="ol-kicker">SÖZCÜK AVI ARENASI</small><h3>ONLİNE MOD</h3></div><div class="ol-bal"><svg class="i"><use href="#i-coin"/></svg><b id="ol-bal">0</b></div></div>
       <div class="ol-step"><i>1</i>TAHTA BOYUTU</div>
       <div class="ol-sz" id="ol-sz"></div>
       <div class="ol-step"><i>2</i>MAÇ BEDELİ</div>
@@ -2808,7 +2846,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
       <div class="ol-duel-list" id="ol-duel-list" hidden></div>
       <div class="ol-list" id="ol-inv"></div>
       <div class="ol-list" id="ol-fr"></div>
-      <button class="nm-cancel" id="ol-close">KAPAT</button>
+      <div class="ol-footnote"><span>✦</span> Seçimlerini yap ve arenaya katıl</div>
     </div>
   </div>
   <div class="help" id="delbox">
