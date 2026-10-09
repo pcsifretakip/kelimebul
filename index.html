@@ -2789,6 +2789,53 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 /* buton basma efekti */
 button,[role="button"],.hm-fx,.nav-item,.action-card,.lb-row{-webkit-tap-highlight-color:transparent;transition:transform .09s ease,filter .09s ease}
 button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:active,.action-card:active,.lb-row:active{transform:scale(.93)!important;filter:brightness(1.18)}
+
+/* ===== MAĞAZA + ÇARK (mobil oyun görünümü) ===== */
+.shop-ov{padding:0!important;align-items:stretch!important;justify-content:center!important;background:linear-gradient(180deg,#0a0f2c,#1a1238 55%,#2b1a12)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.wh-ov{z-index:520!important}
+.sh2{width:100%;max-width:480px;box-sizing:border-box;overflow-y:auto;padding:calc(14px + env(safe-area-inset-top)) 14px 24px;color:#fff;font-family:inherit;display:flex;flex-direction:column;gap:12px}
+.sh2-top{display:flex;align-items:center;justify-content:space-between}
+.sh2-wallet{display:flex;align-items:center;gap:8px;height:44px;padding:0 12px 0 0;border-radius:99px;background:#1d3f9c;border:2px solid #3b82f6;border-bottom-width:4px}
+.sh2-bag{display:grid;place-items:center;width:44px;height:44px;margin:-2px 0 -2px -2px;border-radius:50%;background:#3b82f6;font-size:22px}
+.sh2-wallet b{font-size:20px;font-weight:1000}
+.sh2-wc{width:30px;height:30px;object-fit:contain}.sh2-wallet em{font-style:normal;font-size:24px}
+.sh2-x{width:46px;height:46px;border-radius:50%;background:#3b82f6;border:2px solid #60a5fa;border-bottom-width:4px;color:#fff;font-size:24px;font-weight:1000;line-height:1}
+.sh2-title{margin:2px 0 0;text-align:center;font-size:40px;font-weight:1000;letter-spacing:.02em;text-shadow:0 4px 0 rgba(0,0,0,.35)}
+.sh2-inv{display:flex;gap:10px}
+.sh2-pill{flex:1;display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 16px 0 12px;border-radius:99px;background:#1d3f9c;border:2px solid #3b82f6;border-bottom-width:4px}
+.sh2-pill img{width:30px;height:30px;object-fit:contain}.sh2-pill em{font-style:normal;font-size:24px}
+.sh2-pill b{font-size:24px;font-weight:1000}
+.sh2-card{position:relative;overflow:hidden;border-radius:26px;background:linear-gradient(180deg,#3b9bff,#2a78e6);border:2px solid #6db4ff;border-bottom:5px solid #1b4fae}
+.sh2-body{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 14px 12px}
+.sh2-tiles{display:flex;gap:7px}
+.sh2-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:62px;height:84px;border-radius:12px;background:rgba(10,40,120,.28);border:2px solid rgba(255,255,255,.35)}
+.sh2-tile img{width:40px;height:40px;object-fit:contain}.sh2-tile em{font-style:normal;font-size:32px;line-height:40px}
+.sh2-tile span{font-size:19px;font-weight:900}
+.sh2-ill{font-size:78px;line-height:1;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));flex:none}
+.sh2-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px 8px 16px;background:linear-gradient(180deg,#ffc45c,#f59e0b)}
+.sh2-foot b{font-size:22px;font-weight:1000;color:#fff;text-shadow:0 3px 0 rgba(150,80,0,.55)}
+.sh2-price{display:flex;align-items:center;justify-content:center;gap:6px;min-width:128px;height:46px;padding:0 16px;border-radius:99px;background:linear-gradient(180deg,#4df23a,#18b81a);border:0;border-bottom:4px solid #0c7d12;color:#fff;font-size:19px;font-weight:1000;text-shadow:0 2px 0 rgba(0,0,0,.3)}
+.sh2-price:disabled{background:linear-gradient(180deg,#9ca3af,#6b7280);border-bottom-color:#4b5563;opacity:.85}
+.sh2-pc{width:24px;height:24px;object-fit:contain}.sh2-price em{font-style:normal}
+.sh2-ribbon{position:absolute;left:-30px;top:12px;width:120px;padding:3px 0;transform:rotate(-40deg);background:#9333ea;color:#fff;font-size:11px;font-weight:900;text-align:center;font-style:normal;z-index:2}
+.sh2-wcard .sh2-wtxt h3{margin:0 0 6px;font-size:26px;font-weight:1000;text-shadow:0 3px 0 rgba(0,0,0,.3)}
+.sh2-wcard .sh2-wtxt p{margin:0 0 8px;font-size:17px;font-weight:700;line-height:1.3}
+.sh2-wcard .sh2-wtxt small{font-size:12px;opacity:.85}
+.sh2-wbtn{margin:0 14px 14px auto;width:auto}
+.sh2-sec{margin:6px 2px 0;font-size:13px;font-weight:1000;letter-spacing:.14em;color:#93c5fd}
+.sh2-note{text-align:center;font-size:11px;color:#9aa3d8;font-weight:700;margin-top:4px}
+.wh{align-items:center}
+.wh-stage{position:relative;width:min(92vw,400px);aspect-ratio:1;margin:18px auto 8px}
+.wh-wheel{position:absolute;inset:0;border-radius:50%;filter:drop-shadow(0 10px 18px rgba(0,0,0,.55));will-change:transform}
+.wh-wheel svg{width:100%;height:100%;display:block}
+.wh-hub{position:absolute;left:50%;top:50%;width:30%;height:auto;transform:translate(-50%,-66%);pointer-events:none;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))}
+.wh-btn{position:relative;display:flex;align-items:center;justify-content:center;width:min(78vw,340px);height:70px;margin:20px auto 0;border-radius:99px;background:linear-gradient(180deg,#3df52a,#14b514);border:5px solid #2b72ea;border-bottom-width:8px;color:#fff;font-size:30px;font-weight:1000;text-shadow:0 3px 0 rgba(0,0,0,.3)}
+.wh-btn:disabled{background:linear-gradient(180deg,#9ca3af,#6b7280);opacity:.9}
+.wh-ad{position:absolute;left:-22px;top:-30px;display:none;place-items:center;width:58px;height:58px;font-size:42px;transform:rotate(-10deg);filter:drop-shadow(0 4px 4px rgba(0,0,0,.4))}
+.wh-dots{display:flex;gap:10px;margin:0 auto;padding:10px 20px;border-radius:0 0 28px 28px;background:#2b72ea}
+.wh-dots i{width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid #1b4fae}
+.wh-dots i.used{background:#2a2f86}
+.wh-msg{min-height:20px;text-align:center;font-size:13px;font-weight:800;color:#cfe0ff;padding:6px 20px}
 </style>
 </head>
 <body>
@@ -7257,24 +7304,122 @@ function shopTryUse(id,cost){
  if(S.coins<cost){toast('Yeterli altının yok!');SND.miss();return false;}
  S.coins-=cost;updateCoins();return true;
 }
+const SHOP_PACKS=[
+ {id:'pk1',name:'SÜPER PAKET',give:{hint:3,magnet:2},price:150,ill:'💰'},
+ {id:'pk2',name:'MEGA PAKET',give:{hint:8,magnet:5},price:350,ill:'🧲',pop:true},
+ {id:'pk3',name:'DEV PAKET',give:{hint:20,magnet:12},price:750,ill:'🎁'}
+];
+function shopAll(){return SHOP_ITEMS.map(it=>Object.assign({give:{[it.id]:it.qty},ill:it.icon},it)).concat(SHOP_PACKS);}
 function shopRender(){
  let o=$('shop-ov');
  if(!o){o=document.createElement('div');o.id='shop-ov';o.className='shop-ov';document.body.appendChild(o);o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');});}
- const inv=shopInventory();
- o.innerHTML='<section class="shop-card" role="dialog" aria-modal="true" aria-label="Mağaza"><button class="shop-close" type="button" aria-label="Kapat">×</button><div class="shop-head"><div><div class="shop-kicker">SÖZCÜK AVI • DÜKKÂN</div><h2 class="shop-title">Mağaza</h2></div><div class="shop-wallet">🪙 <span id="shop-coins">'+S.coins+'</span></div></div><div class="shop-feature"><b>Macera güçlendiricileri</b><small>Altınlarını kullan, jokerlerini biriktir ve zor bölümlerde avantaj kazan.</small></div><div class="shop-section-label"><span>JOKER PAKETLERİ</span><span>Hemen kullan</span></div><div class="shop-items">'+SHOP_ITEMS.map(it=>'<article class="shop-item"><div class="shop-item-icon">'+it.icon+'</div><div class="shop-item-copy"><b>'+it.name+'</b><small>'+it.desc+'</small><span class="shop-owned">Envanter: '+inv[it.id]+'</span></div><button class="shop-buy" type="button" data-buy="'+it.id+'" '+(S.coins<it.price?'disabled':'')+'>🪙 '+it.price+'<small>AL</small></button></article>').join('')+'</div><div class="shop-foot">Satın alınan jokerler hesabında saklanır ve oyunda kullanılır.</div></section>';
- o.querySelector('.shop-close').onclick=()=>o.classList.remove('show');
+ const inv=shopInventory(), ws=wheelState();
+ const img=(src,fb,cls)=>'<img class="'+(cls||'')+'" src="'+src+'" alt="" draggable="false" onerror="this.outerHTML=\'<em>'+fb+'</em>\'">';
+ const tile=(src,fb,n)=>'<div class="sh2-tile">'+img(src,fb)+'<span>'+n+'</span></div>';
+ const card=it=>{
+  const tiles=(it.give.hint?tile('jk-ipucu.png','💡',it.give.hint):'')+(it.give.magnet?tile('jk-miknatis.png','🧲',it.give.magnet):'');
+  const name=it.pack||it.pop||it.id.indexOf('pk')===0?it.name:it.name;
+  return '<article class="sh2-card">'+(it.pop?'<i class="sh2-ribbon">Popüler</i>':'')
+   +'<div class="sh2-body"><div class="sh2-tiles">'+tiles+'</div><div class="sh2-ill">'+it.ill+'</div></div>'
+   +'<div class="sh2-foot"><b>'+name.toLocaleUpperCase('tr')+'</b><button class="sh2-price" type="button" data-buy="'+it.id+'" '+(S.coins<it.price?'disabled':'')+'>'+img('vic-altin.png','🪙','sh2-pc')+' '+it.price+'</button></div></article>';
+ };
+ o.innerHTML='<section class="sh2" role="dialog" aria-modal="true" aria-label="Mağaza">'
+  +'<div class="sh2-top"><div class="sh2-wallet"><span class="sh2-bag">🛍️</span><b id="shop-coins">'+S.coins+'</b>'+img('vic-altin.png','🪙','sh2-wc')+'</div><button class="sh2-x" type="button" aria-label="Kapat">✕</button></div>'
+  +'<h2 class="sh2-title">MAĞAZA</h2>'
+  +'<div class="sh2-inv"><div class="sh2-pill">'+img('jk-ipucu.png','💡')+'<b>'+inv.hint+'</b></div><div class="sh2-pill">'+img('jk-miknatis.png','🧲')+'<b>'+inv.magnet+'</b></div></div>'
+  +'<article class="sh2-card sh2-wcard"><div class="sh2-body"><div class="sh2-wtxt"><h3>ÇARKI ÇEVİR</h3><p>Her gün bedava altın kazan!</p><small>Bugünkü haklar: '+Math.max(0,WHEEL_MAX-ws.n)+' / '+WHEEL_MAX+'</small></div><div class="sh2-ill">🎡</div></div>'
+  +'<button class="sh2-price sh2-wbtn" type="button" id="sh2-wheel">ÇEVİR</button></article>'
+  +SHOP_PACKS.map(card).join('')
+  +'<div class="sh2-sec">TEKLİ ÜRÜNLER</div>'
+  +SHOP_ITEMS.map(it=>card(Object.assign({give:{[it.id]:it.qty},ill:it.icon},it))).join('')
+  +'<div class="sh2-note">Satın alınan jokerler hesabında saklanır ve oyunda kullanılır.</div></section>';
+ o.querySelector('.sh2-x').onclick=()=>o.classList.remove('show');
  o.querySelectorAll('[data-buy]').forEach(btn=>btn.onclick=()=>shopBuy(btn.dataset.buy));
+ $('sh2-wheel').onclick=()=>wheelOpen();
  return o;
 }
 function shopRefresh(){const o=$('shop-ov');if(o&&o.classList.contains('show'))shopRender();refreshJokers();}
 function shopBuy(id){
- const item=SHOP_ITEMS.find(x=>x.id===id);if(!item)return;
+ const item=shopAll().find(x=>x.id===id);if(!item)return;
  if(S.coins<item.price){SND.miss();return;}
  S.coins-=item.price;updateCoins();
- const inv=shopInventory();inv[id]+=item.qty;shopSaveInventory(inv);
+ const inv=shopInventory();Object.keys(item.give).forEach(k=>{inv[k]=(inv[k]||0)+item.give[k];});shopSaveInventory(inv);
  try{SND.found();buzz([18,28,18]);}catch(_){}
  shopRender();renderHomeHud();toast(item.name+' envanterine eklendi!');
  taskCoinToast(-item.price);
+}
+
+/* ===== ŞANS ÇARKI ===== */
+const WHEEL_PRIZES=[200,5,20,40,10,25,50,15], WHEEL_W=[1,22,14,6,20,12,4,21], WHEEL_COL=['#c2610c','#0f9d76','#3f3fb8','#0e8fc7','#7b21b5','#b3202c','#e0900c','#b81e9e'];
+const WHEEL_MAX=6, WHEEL_FREE=1;   // günde 6 çevirme; ilk WHEEL_FREE tanesi bedava, kalanı ödüllü reklamla
+let wheelRot=0, wheelBusy=false;
+function wheelState(){
+ const d=hmDayKey();
+ try{const x=JSON.parse(store.get('kb_wheel')||'{}');return x.day===d?{day:d,n:Math.max(0,parseInt(x.n,10)||0)}:{day:d,n:0};}catch(e){return {day:d,n:0};}
+}
+function wheelPick(){let t=WHEEL_W.reduce((a,b)=>a+b,0),r=Math.random()*t;for(let i=0;i<WHEEL_W.length;i++){r-=WHEEL_W[i];if(r<0)return i;}return 1;}
+function wheelSvg(){
+ const R=140,rad=d=>d*Math.PI/180;let seg='',txt='';
+ for(let i=0;i<8;i++){
+  const a0=rad(i*45-22.5-90),a1=a0+rad(45);
+  seg+='<path d="M0 0 L'+(R*Math.cos(a0)).toFixed(1)+' '+(R*Math.sin(a0)).toFixed(1)+' A'+R+' '+R+' 0 0 1 '+(R*Math.cos(a1)).toFixed(1)+' '+(R*Math.sin(a1)).toFixed(1)+' Z" fill="'+WHEEL_COL[i]+'" stroke="#fbbf24" stroke-width="2"/>';
+  txt+='<g transform="rotate('+(i*45)+')"><image href="vic-altin.png" x="-19" y="-128" width="38" height="38"/><text y="-64" text-anchor="middle" font-size="27" font-weight="900" fill="#fff" stroke="rgba(0,0,0,.45)" stroke-width="3" paint-order="stroke" font-family="inherit">'+WHEEL_PRIZES[i]+'</text></g>';
+ }
+ let dots='';for(let i=0;i<8;i++){const a=rad(i*45-90+22.5);dots+='<circle cx="'+(157*Math.cos(a)).toFixed(1)+'" cy="'+(157*Math.sin(a)).toFixed(1)+'" r="4" fill="#9aa3ff"/>';}
+ return '<svg viewBox="-170 -170 340 340"><circle r="168" fill="#6d73f5"/><circle r="148" fill="#4b4fd1"/>'+seg+txt+dots+'</svg>';
+}
+function wheelUpdate(msg){
+ const st=wheelState(),btn=$('wh-spin');if(!btn)return;
+ const left=WHEEL_MAX-st.n,needAd=st.n>=WHEEL_FREE;
+ btn.disabled=wheelBusy||left<=0;
+ btn.querySelector('b').textContent=left<=0?'YARIN GEL':'ÇEVİR';
+ btn.querySelector('.wh-ad').style.display=(needAd&&left>0)?'grid':'none';
+ let dots='';for(let i=0;i<WHEEL_MAX;i++)dots+='<i class="'+(i<st.n?'used':'')+'"></i>';
+ $('wh-dots').innerHTML=dots;
+ $('wh-msg').textContent=msg||(left>0&&needAd?'Bu çevirme için kısa bir reklam izlenir.':'');
+ const wc=$('wh-coins');if(wc)wc.textContent=S.coins;
+}
+function wheelAd(ok,fail){
+ if(!kbAdsReady||typeof window.adBreak!=='function'){fail('Reklam hazır değil, biraz sonra tekrar dene.');return;}
+ let done=false,viewed=false;const end=m=>{if(done)return;done=true;fail(m);};
+ window.adBreak({type:'reward',name:'wheel_spin',
+  beforeReward:show=>{show();},
+  adViewed:()=>{viewed=true;if(!done){done=true;ok();}},
+  adDismissed:()=>end('Reklam tamamlanmadı, çark çevrilmedi.'),
+  adBreakDone:()=>{if(!viewed)end('Şu an uygun reklam yok, sonra tekrar dene.');}});
+}
+function wheelRun(){
+ const st=wheelState();st.n++;store.set('kb_wheel',JSON.stringify(st));
+ const k=wheelPick(),prize=WHEEL_PRIZES[k];
+ S.coins+=prize;updateCoins();try{renderHomeHud();}catch(_){}      // ödül hemen yazılır (çıkıp girerek kaçırılamaz)
+ const delta=(((-k*45-wheelRot)%360)+360)%360;
+ wheelRot+=360*6+delta+(Math.random()*24-12);
+ const el=$('wh-wheel');el.style.transition='transform 4.6s cubic-bezier(.12,.7,.1,1)';el.style.transform='rotate('+wheelRot+'deg)';
+ wheelUpdate('');
+ setTimeout(()=>{
+  try{SND.found();}catch(_){}buzz([40,40,60]);taskCoinToast(prize);
+  wheelBusy=false;wheelUpdate('');const sh=$('shop-ov');if(sh&&sh.classList.contains('show'))shopRender();
+ },4700);
+}
+function wheelSpin(){
+ if(wheelBusy)return;const st=wheelState();if(st.n>=WHEEL_MAX)return;
+ wheelBusy=true;
+ if(st.n>=WHEEL_FREE){wheelUpdate('Reklam yükleniyor…');wheelAd(wheelRun,m=>{wheelBusy=false;wheelUpdate(m);});}
+ else wheelRun();
+}
+function wheelOpen(){
+ let o=$('wheel-ov');
+ if(!o){o=document.createElement('div');o.id='wheel-ov';o.className='shop-ov wh-ov';document.body.appendChild(o);}
+ o.innerHTML='<section class="sh2 wh" role="dialog" aria-modal="true" aria-label="Şans çarkı">'
+  +'<div class="sh2-top"><div class="sh2-wallet"><span class="sh2-bag">🛍️</span><b id="wh-coins">'+S.coins+'</b><img class="sh2-wc" src="vic-altin.png" alt="" draggable="false" onerror="this.outerHTML=\'<em>🪙</em>\'"></div><button class="sh2-x" type="button" aria-label="Kapat">✕</button></div>'
+  +'<div class="wh-stage"><div class="wh-wheel" id="wh-wheel" style="transform:rotate('+wheelRot+'deg)">'+wheelSvg()+'</div>'
+  +'<svg class="wh-hub" viewBox="-60 -125 120 190"><path d="M-17 -34 L0 -118 L17 -34 Z" fill="#fbbf24" stroke="#b45309" stroke-width="3"/><circle r="46" fill="#6d73f5" stroke="#4b4fd1" stroke-width="6"/><circle r="30" fill="#fbbf24" stroke="#b45309" stroke-width="4"/><circle r="12" fill="#fde68a"/></svg></div>'
+  +'<button class="wh-btn" id="wh-spin" type="button"><span class="wh-ad">🎬</span><b>ÇEVİR</b></button>'
+  +'<div class="wh-dots" id="wh-dots"></div><div class="wh-msg" id="wh-msg"></div></section>';
+ o.querySelector('.sh2-x').onclick=()=>{if(!wheelBusy)o.classList.remove('show');};
+ $('wh-spin').onclick=wheelSpin;
+ wheelUpdate('');
+ o.classList.add('show');
 }
 $('nav-shop').addEventListener('click',()=>shopRender().classList.add('show'));
 
@@ -7325,7 +7470,7 @@ function adFlyReward(){
  anim.onfinish=()=>{coin.remove();wallet.classList.remove('kv-wallet-bump');void wallet.offsetWidth;wallet.classList.add('kv-wallet-bump');setTimeout(()=>wallet.classList.remove('kv-wallet-bump'),850);};
 }
 loadRewardAds();
-$('coin-plus').addEventListener('click', e => { e.stopPropagation(); adRewardModal(); });
+$('coin-plus').addEventListener('click', e => { e.stopPropagation(); wheelOpen(); });
 $('nav-tasks').addEventListener('click', taskOpen);
 $('nav-home').addEventListener('click', () => { const n = $('nav-home'); n.classList.remove('bump'); void n.offsetWidth; n.classList.add('bump'); });
 document.querySelectorAll('#view-home .action-card').forEach(b=>b.addEventListener('click',()=>{b.classList.remove('action-pressed');void b.offsetWidth;b.classList.add('action-pressed');setTimeout(()=>b.classList.remove('action-pressed'),280);}));
