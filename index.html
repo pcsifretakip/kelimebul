@@ -1409,6 +1409,27 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #lbbox .lb-close-btn span{color:#a89bea;font-size:12px}
 @media(max-width:420px){#lbbox .lb-card{padding:0 12px 13px;border-radius:23px}#lbbox .lb-hero{padding-top:17px}#lbbox .lb-orbit{width:56px;height:56px;font-size:30px}#lbbox .lb-row{min-height:39px;margin:4px 0;padding:6px 8px}}
 @media(prefers-reduced-motion:reduce){#lbbox .lb-live i{animation:none}}
+
+/* Brighter, tactile home navigation */
+.hm-nav{padding:10px 6px calc(9px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(29,18,91,.96),rgba(9,5,34,.99));border-top:1px solid rgba(157,137,255,.48);box-shadow:0 -8px 28px rgba(2,0,20,.58),0 -2px 18px rgba(104,74,255,.12)}
+.hm-nav .nav-item{position:relative;isolation:isolate;min-height:72px;justify-content:flex-end;gap:5px;padding:7px 2px 3px;border-radius:18px;color:#c0baff;font-weight:900;transition:transform .18s cubic-bezier(.2,.8,.2,1),color .18s,filter .18s}
+.hm-nav .nav-item:before{content:"";position:absolute;z-index:-1;left:50%;top:4px;width:52px;height:43px;transform:translateX(-50%);border-radius:15px;background:radial-gradient(ellipse,rgba(96,80,255,.27),rgba(96,80,255,.04) 68%,transparent 72%);opacity:.72;transition:opacity .18s,transform .18s,filter .18s}
+.hm-nav .nav-item svg{width:27px;height:27px;filter:drop-shadow(0 0 5px currentColor);transition:transform .18s,filter .18s}
+.hm-nav .nav-item:nth-child(1){color:#ff91d4}.hm-nav .nav-item:nth-child(1):before{background:radial-gradient(ellipse,rgba(255,71,184,.3),rgba(255,71,184,.04) 68%,transparent 72%)}
+.hm-nav .nav-item:nth-child(2){color:#70f2d0}.hm-nav .nav-item:nth-child(2):before{background:radial-gradient(ellipse,rgba(40,236,183,.28),rgba(40,236,183,.04) 68%,transparent 72%)}
+.hm-nav .nav-item:nth-child(4){color:#8ce6ff}.hm-nav .nav-item:nth-child(4):before{background:radial-gradient(ellipse,rgba(49,203,255,.3),rgba(49,203,255,.04) 68%,transparent 72%)}
+.hm-nav .nav-item:nth-child(5){color:#bda0ff}.hm-nav .nav-item:nth-child(5):before{background:radial-gradient(ellipse,rgba(161,95,255,.3),rgba(161,95,255,.04) 68%,transparent 72%)}
+.hm-nav .nav-item:hover,.hm-nav .nav-item:focus-visible{filter:brightness(1.25);color:#fff}
+.hm-nav .nav-item:hover:before,.hm-nav .nav-item:focus-visible:before{opacity:1;transform:translateX(-50%) scale(1.16);filter:brightness(1.2)}
+.hm-nav .nav-item:focus-visible{outline:2px solid rgba(121,226,255,.8);outline-offset:1px}
+.hm-nav .nav-item:active,.hm-nav .nav-item.pressed{transform:translateY(2px) scale(.92);filter:brightness(1.5)}
+.hm-nav .nav-item:active svg,.hm-nav .nav-item.pressed svg{transform:scale(.84);filter:drop-shadow(0 0 10px currentColor)}
+.hm-nav .nav-item.center{color:#fff1a6}.hm-nav .nav-orb{transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .18s,filter .18s;box-shadow:0 0 0 2px #ffd249,0 5px 14px rgba(0,0,0,.5),0 0 14px rgba(251,191,36,.42)}
+.hm-nav .nav-item.center:active .nav-orb,.hm-nav .nav-item.center.pressed .nav-orb{transform:scale(.9);filter:brightness(1.16);box-shadow:0 0 0 3px #fff0a8,0 0 25px rgba(255,197,45,.78)}
+@keyframes navTap{0%{transform:scale(.94)}55%{transform:scale(1.055)}100%{transform:scale(1)}}
+.hm-nav .nav-item.pressed{animation:navTap .28s ease-out}
+@media(max-width:380px){.hm-nav .nav-item{font-size:10px;min-height:68px}.hm-nav .nav-item svg{width:25px;height:25px}}
+@media(prefers-reduced-motion:reduce){.hm-nav .nav-item,.hm-nav .nav-item svg,.hm-nav .nav-orb{transition:none!important;animation:none!important}}
 </style>
 
 <style>
@@ -6660,6 +6681,10 @@ $('nav-shop').addEventListener('click', () => hmNote('Mağaza yakında geliyor')
 $('coin-plus').addEventListener('click', e => { e.stopPropagation(); hmNote('Mağaza yakında geliyor'); });
 $('nav-tasks').addEventListener('click', () => hmNote('Görevler yakında geliyor'));
 $('nav-home').addEventListener('click', () => { const n = $('nav-home'); n.classList.remove('bump'); void n.offsetWidth; n.classList.add('bump'); });
+/* Sekme dokunuşlarını görünür kıl */
+document.querySelectorAll('.hm-nav .nav-item').forEach(n=>{
+  n.addEventListener('click',()=>{n.classList.remove('pressed');void n.offsetWidth;n.classList.add('pressed');clearTimeout(n._pressTimer);n._pressTimer=setTimeout(()=>n.classList.remove('pressed'),320);});
+});
 document.addEventListener('pointerdown', e => { if (e.target.closest && e.target.closest('.hm-fx')) buzz(10); }, true);
 
 /* ===== başlangıç ===== */
