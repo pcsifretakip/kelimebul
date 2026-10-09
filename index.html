@@ -6492,324 +6492,125 @@ function drClaim(){
 }
 $('hm-chest').addEventListener('click', () => { drRender().classList.add('show'); });
 
-/* ===== GÜNÜN KELİMESİ: her gün 15:30'da yenilenir, oynayınca pasife geçer ===== */
-var DW_REWARD = 5, KV_TIME = 60, KV_MIN = 3;       // her doğru kelime +5 altın, 1 dakika, en az 3 harf
-function dwCycle(){ const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate(), 0, 0, 0); }
-function dwKey(){ return hmDayKey(dwCycle()); }
-function dwDone(){ return store.get('kb_dw_done') === dwKey(); }
-function dwNextText(){ return 'Yarın yeni harfler'; }
-var KV = null, kvTick = null, kvLastResult = null;
-const KV_TR = s => String(s || '').toLocaleUpperCase('tr-TR');
-/* bugünün 7 harfi: 7 harfli bir kelimeden türetilir (en az bir 7 harfli çözüm garanti), günlük sabit ve karışık */
-function kvLetters(){
-  const pool = [];
-  LEVELS.forEach(l => (l.words || []).forEach(w => { w = KV_TR(w); if (Array.from(w).length === 7 && !/[^A-ZÇĞİÖŞÜ]/.test(w)) pool.push(w); }));
-  const uniq = Array.from(new Set(pool)).sort((x, y) => x.localeCompare(y, 'tr'));
-  const d = new Date(), seed = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
-  const base = uniq.length ? uniq[(seed * 7919) % uniq.length] : 'KİTAPLIK';
-  let arr = Array.from(base).slice(0, 7), x = seed * 9301 + 49297;
-  const rnd = () => { x = (x * 9301 + 49297) % 233280; return x / 233280; };
-  for (let k = 0; k < 3; k++) for (let i = arr.length - 1; i > 0; i--){ const j = Math.floor(rnd() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
-  return arr;
-}
-var kvLevelWords = null;
-var KV_WORDS = new Set("ABA ABANOZ ABAT ABRA ABU ACAR ACI ACIRAK ACUL ACUN ADIL ADLI AĞA AHA AHİ AHİT AHU AİLE AİT AKA AKAR AKI AKIL AKIM AKIN AKIŞ AKIŞMA AKİL AKİS AKİT AKLI AKLİ AKMA AKOR AKORT AKRAN AKS AKSAN AKSİ AKŞAM AKUR ALA ALAN ALAŞIM ALIK ALIM ALIN ALIŞ ALIŞMA ALIŞMAK ALİ ALİL ALKIM ALKIŞ ALMA ALMAK ALMAN ALMAŞ ALMAŞIK ALO ALP ALT ALTI ALTIN ALTO ALTÖRTÜ AMA AMAL AMAN AMOR AMUT ANA ANACIK ANAL ANAM ANAMAL ANCA ANCAK ANI ANIK ANIT ANKA ANLAM ANLAMA ANMA ANT ANTLI AORT APAZ APEL APLİK APLİKE ARA ARACI ARAK ARAP ARAZ ARAZİ ARDIL ARGO ARGON ARI ARICAK ARIK ARIZ ARIZA ARİ ARİZA ARK ARKA ARLI ARMA ARMUT ARP ARPA ART ARTI ARTIN ARZ ASA ASI ASIL ASILI ASIR ASİ ASİT ASK AST ASTİK AŞI AŞIK AŞILMA AŞILMAK AŞIM AŞK AŞLIK AŞMA AŞMAK ATA ATARİ ATASÖZÜ ATE ATEH ATIL ATİ ATİK ATLI ATOL AUT AVAL AVAM AVLAMA AVLANMA AVRET AVRO AZA AZAP AZAR AZAT AZI AZİT AZMA AZOİK AZOT BAĞ BAĞA BAHAİ BAHT BAL BAN BANA BANAZ BAR BARAK BARAN BARK BARKA BARO BARON BAT BATİ BAZ BAZA BEL BELCE BELİ BİAT BİLE BİLEME BİLME BİLMECE BİT BOA BOR BORA BORAN BORAZAN BOZ BOZA BRONZ BUĞRA BUL BULA BULAK BURA BURAK CAKA CAN CANA CAR CEBE CEBEL CEBELİ CELBE CELİ CEM CEMİ CEMİL CEMİLE CER CET CIK CIRNAK CİM CİRİT CÜRET ÇAK ÇAL ÇEK ÇEKER ÇEKİ ÇEKİRGE ÇERGE ÇERİ ÇİR ÇUKA ÇUL DAL DALSI DAR DARI DEK DELİ DEM DEME DEMEK DEMİN DENEK DENİ DENİM DENK DENLİ DENME DENMEK DEV DEVE DEVELİ DİK DİKEN DİKME DİKMEN DİL DİN DİNE DİNEK DİNK DİNME DİNMEK EBE EBELİ ECE ECEL ECİR EDE EDİ EDİK EDİM EDİNME EDİNMEK EFOR EGE EGEMEN EĞE EĞER EĞME EHRAM EKE EKİM EKİN EKİP EKLİ EKME EKO EKSİ EKSİN EKTİ EKÜ EKVATOR ELA ELCİ ELDE ELDEN ELDİVEN ELEK ELEM ELİK ELİM ELİT ELTİ EMEK EMEL EMEN EMİK EMİN ENDEMİK ENEK ENEME ENENME ENGEL ENGEREK ENİK ENİR ENLİ ENTROPİ EPİK ERAT EREK EREN ERG ERGEN ERGENE ERGİ ERİK ERİN ERK ERKE ERKEÇ ERKEN ERME EROİN EROS EROZYON ERTE ESER ESHAM ESİK ESİN ESKİ ESKİL ESLEK ESMA ESRE ESTER ESTET ETEK ETER ETİ ETİK ETİL ETKİ ETLİ ETLİK EVET EVİN EVLİ EVRAK EVRAT EVRE EVRİK FAR FARE FAZ FER FERMA FERMUAR FES FİT FOK FORS FORSEPS FOS FÖTR FRER FUAR GAM GAR GEÇ GEÇE GEÇEK GEÇER GELE GELEN GELENEK GEM GEN GENE GENEL GERÇEK GERÇİ GEREÇ GEREK GEREN GERİ GÖK GÖN GÖRE GÖRENEK GÖRK GRAM GREK GREKÇE GREN GRİ HAB HABİTAT HAF HAFIZ HAM HAMIZ HAMSE HAMSTER HAMT HAR HARE HAREM HARS HART HAS HASET HASRET HAT HATA HATTA HAZ HAZIM HEM HER HIZ HIZMA HİT IHMA IKLAMA ILTAR IRA IRAK IRAMA IRK IRZ ISI ISIL ISTAR İÇRE İÇREK İHATA İKA İKAZ İKEN İKİ İKON İLA İLE İLK İLKE İLLA İLME İMECE İMİK İNEK İNME İNMEK İPEK İPEKA İPKA İRAP İRAT İRİ İRİCE İRMİK İSA İSKELE İSKELET İSKETE İSKOTA İSOT İSTAKOZ İSTEK İTA İTAAT İTAP İTİ JALE JEL JEN JİKLE JİLE KABA KABUK KABUKLU KABUL KAÇ KAĞAN KAİL KAK KAL KALA KALE KALIM KALIŞ KALMA KALP KAM KAMA KAMALI KAMIŞ KAN KANA KANCA KANI KAOS KAP KAR KARA KARACI KARE KARI KARIN KARINCA KARO KART KAS KASA KAST KASTİ KAŞ KAŞIMA KAŞLI KAT KATİ KATRE KAUÇUK KAV KAZ KEÇE KEÇİ KEDİ KEL KELE KELES KEM KEME KENDİ KENE KENGEL KENGER KEP KER KERE KEREVİT KERTE KERTİ KES KESE KESEL KESELİ KESİN KESİT KESTEL KET KETE KIL KILMA KIN KINA KIR KIRAN KIRCA KIŞ KIŞLA KIŞLAMA KİL KİLE KİLS KİM KİMİ KİN KİP KİPE KİR KİREÇ KİRVE KİST KİT KİTLE KİTRE KLİP KOF KONİ KOR KORA KORE KORT KORTE KORVET KOSA KOT KOTA KOTRA KOV KOVA KOZ KOZA KÖMÜR KÖR KÖRE KÖRİ KREM KUKA KUKLA KUL KULA KULAÇ KULAK KULU KULUÇKA KUR KURA KURBAĞA KÜME KÜR KÜRE LAİK LAK LAKA LAKE LAL LAM LAMA LAN LAP LASO LAV LAVA LAVMAN LEB LEKE LEP LİCE LİET LİKA LİM LİME LİR LİRA LİSE LİSTE LİTORAL LOCA LONCA LOR LORT LORTA LOT LOTA MAAŞ MAAŞLI MAHFUZ MAL MALA MALAK MANA MANAV MANGO MANGROV MANO MAPA MARAZ MARN MARON MARS MART MARUF MAS MAŞ MAŞA MAŞALI MAŞALIK MAT MAVAL MAVNA MAZI MEDENİ MEĞER MELCE MEN MENGEN MENGENE MENİ MERA MERT MESH MEST MET META MIH MIZRAP MİDE MİL MİM MİMİK MİMİKRİ MİNE MİNK MİR MİRİM MOR MORG MUAF MUARE MUHAFIZ MURAT MURT MUT MUTA MUZ NACAK NAL NAM NAR NARA NAS NASIL NASIR NATIR NAZ NAZAR NEDİM NEDİME NEKRE NEM NENE NERE NESİ NET NEV NEY NİM NİTE NOM NORM NOT NOTER NOVA OBA OJE OKAR OKSİJEN OKSİT OKTAV OLTA OMA ONA ONAR ONCA ONİKS ONLU ONMA ONS ORA ORAK ORAL ORAN ORG ORGAN ORKİT ORMAN ORTA ORTAK OVA OVMA OZAN OZON ÖCÜ ÖGE ÖĞREN ÖĞRENME ÖKE ÖLÜ ÖMÜR ÖNEM ÖNERGE ÖNERME ÖREK ÖREKE ÖREN ÖRF ÖRFİ ÖRGE ÖRGEN ÖRK ÖRME ÖRMEK ÖRNEK ÖRTÜ ÖRÜ ÖRÜK ÖRÜM ÖRÜMCE ÖRÜMCEK ÖTROFİK ÖZÜT PAK PAL PAPA PAPAĞAN PARA PARAZİT PARTİ PAT PATA PATİ PAZAR PAZI PEK PEKİ PELAJİK PENİ PERİ PERİTON PERON PERT PES PESO PIR PİK PİKAJ PİKE PİL PİR PİRE PİTON PLAJ PLAK POF PORTE POS POT POTİN PRES PRİNT PRİZ PROSES PROTEİN RAB RACA RAF RAHMET RAHT RAKET RAKI RALLİ RAM RAMP RAMPA RANT RANZA RAP RASIT RAST RATE RAY RAZI REHA RENK REPO REST RET REVA REVAK REY REYON RIZA RİNT RNA ROBA ROKA ROKET ROL ROM ROMA ROMAN ROP ROT ROTA ROTİL ROZA ROZE RUAM RUBA RUF RUM SAAT SAC SADIR SAĞ SAĞANAK SAH SAHRE SAHTE SAİK SAK SAKA SAKİ SAKİT SAKO SAL SALDIR SALDIRI SALI SALON SALT SAM SAN SANA SANI SANLI SANRI SARI SARILI SATI SATIN SATIR SAZ SEK SEKEL SEKİ SEKTE SEL SELE SELEK SEM SEMA SEMAH SEMT SEN SER SERA SERE SERF SERHAT SERT SES SET SETER SETİK SETRE SILA SIR SIRA SIRALI SIRAT SIRLI SIRT SIRTLAN SİK SİN SİNE SİNEK SİT SİTE SİZ SKİ SOF SOL SOLCU SOLUCAN SON SONCUL SONE SONLU SOS SÖZ SPOR STAR STER STİL STOK SUAL SUNA SÜT ŞAK ŞAKA ŞAKIMA ŞAL ŞALAK ŞAMA ŞAMALI ŞIK TAAT TAB TABA TABİ TABİAT TAHA TAHT TAHTA TAK TAKOZ TAKSİ TAL TALİ TALİL TAM TAMU TAN TANI TANRI TAPA TAPİ TAPİR TAR TARAZ TARH TARİZ TART TARZ TAS TASA TAT TAV TAY TAZİP TEİN TEK TEKE TEKEL TEKER TEKİL TEKİR TEKLİ TEL TELEK TELEKS TELES TELİS TELSİ TEM TEMA TEMAS TEN TENOR TEORİ TEPİ TEPİR TER TERAS TERE TEREK TERES TERK TERKİ TERS TEST TESTERE TEVEK TEVKİ TIN TIR TIS TİFO TİK TİKE TİKEL TİN TİNER TİP TİPO TİRE TİZ TOK TOKA TOL TON TONER TOP TOR TORAK TORİK TOS TOZ TÖR TÖS TÖZ TRAKE TRANS TRAP TRAS TREN TRİKO TRİO TROFİK TROK TROL TUR TURA TÜL TÜR TÜRE UCA UÇAK UÇLU UÇUK UĞRA UĞRAK UKBA ULA ULAÇ ULAK ULAN ULU UMAR UMRE UMU UMUR UMUT URAY URBA UTMA UYMA UYUM UYUMA UYUR UYUTMA UZAM ÜCRET ÜRAT ÜRE ÜREM ÜRETİCİ ÜRKME ÜST VAGON VAN VANA VAR VARTO VAT VELİ VERE VERİ VERİT VETİRE VETO VİRT VOTKA YAR YAT YEN YER YOZ YUMA YUMRU YUMURTA YURT YUTMA YUTUM ZAİT ZAM ZAN ZAPT ZAR ZARA ZARTA ZAT ZATİ ZEN ZER ZIH ZIMPARA ZIP ZİR ZİRA ZİRAAT ZOKA ZONA ZOR ZORBA ZUM".split(' '));   // TDK listesinden, olası harf setlerine uyan 3-7 harfli kelimeler (+ özel isimler: TAHA)
-function kvValid(w){
-  if (KV_WORDS.has(w)) return true;
-  if (typeof DICT !== 'undefined' && DICT && DICT.has(w)) return true;
-  if (!kvLevelWords){ kvLevelWords = new Set(); LEVELS.forEach(l => (l.words || []).forEach(x => kvLevelWords.add(KV_TR(x)))); }
-  return kvLevelWords.has(w);
-}
-function kvFmt(t){ return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); }
-function kvMsg(t, cls){ const m = $('kv-msg'); if (!m) return; m.textContent = t || ''; m.className = 'kv-msg' + (cls ? ' ' + cls : ''); }
-function kvCardHTML(){
-  return '<div class="dw-card kv-card"><button class="dw-x" aria-label="Kapat">✕</button><h3>Günlük Kelime Avı</h3><p>7 harften en az 3 harfli kelimeler türet · Her kelime +' + DW_REWARD + ' altın</p>' +
-    '<div class="kv-stats"><div class="kv-stat" id="kv-timebox"><small>⏱ SÜRE</small><b id="kv-time">1:00</b></div><div class="kv-stat"><small>🪙 ALTIN</small><b id="kv-gold">0</b></div></div>' +
-    '<div class="kv-letters" id="kv-letters"></div>' +
-    '<div class="kv-input ph" id="kv-input">Harflere dokun</div>' +
-    '<div class="kv-msg" id="kv-msg"></div>' +
-    '<div class="kv-btns"><button class="dw-btn sec" id="kv-del">Sil</button><button class="dw-btn sec" id="kv-clr">Temizle</button><button class="dw-btn" id="kv-ok">Onayla</button></div>' +
-    '<div class="kv-listh"><span>Bulunan kelimeler</span><b id="kv-count">0</b></div><div class="kv-list" id="kv-list"></div></div>';
-}
-function dwOpen(){
-  if (dwDone()){ hmNote('Yeni harfler ' + dwNextText().replace('Yarın yeni harfler', 'yarın') ); return; }
-  loadDict();
-  const o = dwEl('dw-ov', kvCardHTML());
-  o.querySelector('.dw-card').outerHTML = kvCardHTML();
-  o.querySelector('.dw-x').addEventListener('click', () => { kvStop(true); o.classList.remove('show'); });
-  o.onclick = e => { if (e.target === o){ kvStop(true); o.classList.remove('show'); } };
-  const ls = kvLetters().map(ch => ({ ch: ch, used: false }));
-  KV = { letters: ls, sel: [], found: [], gold: 0, left: KV_TIME, over: false, end: Date.now() + KV_TIME * 1000 };
-  store.set('kb_dw_done', dwKey());               // günde bir kez oynanır
-  renderHomeHud();
-  $('kv-letters').onclick = e => { const b = e.target.closest('.kv-key'); if (!b || !KV || KV.over) return; kvPick(+b.dataset.i); };
-  $('kv-del').onclick = kvDel; $('kv-clr').onclick = kvClear; $('kv-ok').onclick = kvSubmit;
-  kvDraw(); kvMsg('');
-  clearInterval(kvTick);
-  kvTick = setInterval(kvTime, 250);
-  kvTime();
-  o.classList.add('show');
-}
-function kvWord(){ return KV.sel.map(i => KV.letters[i].ch).join(''); }
-function kvDraw(){
-  $('kv-letters').innerHTML = KV.letters.map((p, i) => '<button class="kv-key" data-i="' + i + '"' + (p.used ? ' disabled' : '') + '>' + p.ch + '</button>').join('');
-  const w = kvWord(), inp = $('kv-input');
-  inp.textContent = w || 'Harflere dokun';
-  inp.classList.toggle('ph', !w);
-  $('kv-gold').textContent = KV.gold;
-  $('kv-count').textContent = KV.found.length;
-  $('kv-list').innerHTML = KV.found.length ? KV.found.map(x => '<span class="kv-chip">' + x + '</span>').join('') : '<span class="kv-empty">Henüz kelime yok</span>';
-}
-function kvPick(i){
-  if (KV.letters[i].used) return;
-  KV.letters[i].used = true; KV.sel.push(i);
-  try{ audio(); SND.tling(KV.sel.length - 1); }catch(_){}
-  kvMsg(''); kvDraw();
-}
-function kvDel(){ if (!KV || KV.over || !KV.sel.length) return; KV.letters[KV.sel.pop()].used = false; try{ audio(); SND.click(); }catch(_){} kvMsg(''); kvDraw(); }
-function kvClear(){ if (!KV || KV.over || !KV.sel.length) return; KV.sel.forEach(i => KV.letters[i].used = false); KV.sel = []; try{ audio(); SND.click(); }catch(_){} kvMsg(''); kvDraw(); }
-function kvReject(txt, cls){
-  const inp = $('kv-input'); inp.classList.remove('shake'); void inp.offsetWidth; inp.classList.add('shake');
-  setTimeout(() => inp.classList.remove('shake'), 450);
-  kvMsg(txt, cls || 'bad'); buzz([30, 40, 30]); try{ SND.wrong(); }catch(_){}
-  KV.sel.forEach(i => KV.letters[i].used = false); KV.sel = [];
-  kvDraw();
-}
-function kvSubmit(){
-  if (!KV || KV.over) return;
-  const w = kvWord();
-  if (Array.from(w).length < KV_MIN){ kvReject(w ? 'En az ' + KV_MIN + ' harf gerekli' : 'Önce harf seç', 'warn'); return; }
-  if (KV.found.indexOf(w) >= 0){ kvReject('Bu kelimeyi zaten buldun!', 'warn'); return; }
-  if (!kvValid(w)){ kvReject('"' + w + '" geçerli bir kelime değil', 'bad'); return; }
-  KV.found.push(w); KV.gold += DW_REWARD;
-  S.coins += DW_REWARD; updateCoins();
-  const c = document.querySelector('.topbar .coin'); if (c){ c.classList.remove('coin-bump'); void c.offsetWidth; c.classList.add('coin-bump'); }
-  buzz([18, 30, 18]); try{ SND.found(); }catch(e){}
-  const inp = $('kv-input'); inp.classList.add('good'); setTimeout(() => inp.classList.remove('good'), 450);
-  KV.sel.forEach(i => KV.letters[i].used = false); KV.sel = [];
-  kvMsg('Harika! +' + DW_REWARD + ' altın 🎉', '');
-  kvDraw();
-}
-function kvTime(){
-  if (!KV || KV.over) return;
-  KV.left = Math.max(0, Math.ceil((KV.end - Date.now()) / 1000));
-  const t = $('kv-time'); if (t) t.textContent = kvFmt(KV.left);
-  const tb = $('kv-timebox'); if (tb) tb.classList.toggle('low', KV.left <= 15);
-  if (KV.left <= 0) kvFinish();
-}
-function kvStop(silent){
-  clearInterval(kvTick); kvTick = null;
-  if (KV && !KV.over){ KV.over = true; }
-  if (silent) KV = null;
-}
-function kvFinish(){
-  if (!KV || KV.over) return;
-  kvStop(false);
-  kvLastResult = { words: KV.found.length, gold: KV.gold, list: KV.found.slice(), sent: false };
-  try{ SND.win(); }catch(e){} buzz([40, 40, 40]);
-  const o = $('dw-ov'), r = kvLastResult;
-  const emoji = r.words >= 10 ? '🏆' : (r.words >= 5 ? '🌟' : (r.words >= 1 ? '👏' : '⏰'));
-  o.querySelector('.dw-card').innerHTML = '<button class="dw-x" aria-label="Kapat">✕</button><div class="kv-res"><h3>Süre Bitti!</h3><div class="big">' + emoji + '</div><p>' + (r.words ? 'Güzel avdı!' : 'Bu sefer kelime bulamadın.') + '</p>' +
-    '<div class="kv-res-grid"><div><small>Bulunan Kelime</small><b>' + r.words + '</b></div><div><small>Kazanılan Altın</small><b>🪙 ' + r.gold + '</b></div></div>' +
-    (r.words ? '<div class="kv-list" style="margin-bottom:14px">' + r.list.map(x => '<span class="kv-chip">' + x + '</span>').join('') + '</div>' : '') +
-    '<button class="dw-btn" id="kv-lb">Liderlik Tablosuna Ekle</button><button class="dw-btn sec" id="kv-close">Kapat</button></div>';
-  o.querySelector('.dw-x').onclick = () => { o.classList.remove('show'); KV = null; };
-  $('kv-close').onclick = () => { o.classList.remove('show'); KV = null; };
-  $('kv-lb').onclick = kvToBoard;
-  renderHomeHud();
-}
-async function kvToBoard(){
-  const btn = $('kv-lb'), r = kvLastResult; if (!btn || !r || r.sent) return;
-  btn.disabled = true;
-  if (!r.words){ btn.textContent = 'Eklenecek kelime yok'; return; }
-  if (!FIREBASE_CONFIG.apiKey || !USER || !USER.id){ btn.textContent = 'Liderlik tablosu kapalı'; return; }
-  btn.textContent = 'Ekleniyor…';
-  try {
-    const db = await getDb(), ref = db.collection('leaderboard').doc(USER.id);
-    await db.runTransaction(async tx => {
-      const d = await tx.get(ref), o = d.exists ? d.data() : {};
-      const elo = eloOf(o), lvl = Math.max(o.lvl || 0, levelPoints()), hunt = (o.hunt || 0) + r.words;
-      myScore = elo + lvl + hunt;
-      tx.set(ref, { name: USER.name, avatar: avatar || '', elo, lvl, hunt, score: elo + lvl + hunt, wins: o.wins || 0, games: o.games || 0 });
-    });
-    r.sent = true; btn.textContent = '✓ Eklendi (+' + r.words + ' puan)';
-    try{ lbRender(); }catch(_){}
-  } catch(e){ btn.disabled = false; btn.textContent = 'Tekrar dene'; }
-}
-$('hm-word').addEventListener('click', dwOpen);
-setInterval(() => { try{ renderHomeHud(); }catch(e){} }, 30000);
-$('nav-shop').addEventListener('click', () => hmNote('Mağaza yakında geliyor'));
-$('coin-plus').addEventListener('click', e => { e.stopPropagation(); hmNote('Mağaza yakında geliyor'); });
-$('nav-tasks').addEventListener('click', () => hmNote('Görevler yakında geliyor'));
-$('nav-home').addEventListener('click', () => { const n = $('nav-home'); n.classList.remove('bump'); void n.offsetWidth; n.classList.add('bump'); });
-document.addEventListener('pointerdown', e => { if (e.target.closest && e.target.closest('.hm-fx')) buzz(10); }, true);
-
-/* ===== başlangıç ===== */
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('pointerdown', e => {
-  const t = e.target.closest && e.target.closest('.jr-top, .jr-lv, [role="button"]');
-  if (!t || t.closest('button') || t.closest('#grid-container') || t.closest('#intro')) return;
-  audio(); SND.click();
-}, true);
-window.addEventListener('resize', () => { fxResize(); measure(); });
-if ('ResizeObserver' in window) new ResizeObserver(() => { fxResize(); measure(); }).observe(gridEl);
-fxResize(); updateCoins(); updateHome(); refreshSettings(); setView(USER ? 'home' : 'login');
-})();
-</script>
-
-</body>
-</html>/* ===== GÜNLÜK KELİME AVI: 7×7 ızgarada hedef kelimeyi bul ===== */
-var DW_REWARD = 1, KV_TIME = 60, KV_TARGET = 'SAAT', KV_HIDDEN = 4;
-function dwCycle(){ const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate(), 0, 0, 0); }
-function dwKey(){ return hmDayKey(dwCycle()); }
-function dwDone(){ return store.get('kb_dw_done') === dwKey(); }
-function dwNextText(){ return 'Yarın yeni kelimeler'; }
-var KV = null, kvTick = null, kvLastResult = null;
-function kvPathKey(path){ const a=path.join(','), b=path.slice().reverse().join(','); return a < b ? a : b; }
-function kvScan(board, word){
-  const dirs=[[0,1],[1,0],[1,1],[1,-1]], rev=Array.from(word).reverse().join(''), found=new Map();
-  for(let r=0;r<7;r++) for(let c=0;c<7;c++) for(const [dr,dc] of dirs){
-    const er=r+(word.length-1)*dr, ec=c+(word.length-1)*dc;
-    if(er<0||er>=7||ec<0||ec>=7) continue;
-    const path=Array.from({length:word.length},(_,k)=>(r+k*dr)*7+c+k*dc);
-    const text=path.map(i=>board[i]).join('');
-    if(text===word||text===rev) found.set(kvPathKey(path),path);
-  }
-  return found;
+/* ===== GÜNLÜK KELİME AVI: 7×7 ızgarada hedef kelimeyi bul ===== */
+var DW_REWARD=1,KV_TIME=60,KV_TARGET='SAAT',KV_HIDDEN=4;
+function dwCycle(){const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate(),0,0,0);}
+function dwKey(){return hmDayKey(dwCycle());}
+function dwDone(){return store.get('kb_dw_done')===dwKey();}
+function dwNextText(){return 'Yarın yeni kelimeler';}
+var KV=null,kvTick=null,kvLastResult=null;
+function kvPathKey(path){const a=path.join(','),b=path.slice().reverse().join(',');return a<b?a:b;}
+function kvScan(board,word){
+ const dirs=[[0,1],[1,0],[1,1],[1,-1]],rev=Array.from(word).reverse().join(''),found=new Map();
+ for(let r=0;r<7;r++)for(let c=0;c<7;c++)for(const [dr,dc]of dirs){
+  const er=r+(word.length-1)*dr,ec=c+(word.length-1)*dc;if(er<0||er>=7||ec<0||ec>=7)continue;
+  const path=Array.from({length:word.length},(_,k)=>(r+k*dr)*7+c+k*dc),text=path.map(i=>board[i]).join('');
+  if(text===word||text===rev)found.set(kvPathKey(path),path);
+ }
+ return found;
 }
 function kvMakeBoard(){
-  const dirs=[[0,1],[1,0],[1,1],[1,-1]], pool=Array.from(KV_TARGET);
-  let fallback=null;
-  for(let trial=0;trial<1600;trial++){
-    const board=Array(49).fill(null), planted=new Set(); let ok=true;
-    for(let n=0;n<KV_HIDDEN;n++){
-      let placed=false;
-      for(let attempt=0;attempt<120&&!placed;attempt++){
-        const [dr,dc]=dirs[Math.floor(Math.random()*dirs.length)], r=Math.floor(Math.random()*7), c=Math.floor(Math.random()*7);
-        const er=r+(KV_TARGET.length-1)*dr, ec=c+(KV_TARGET.length-1)*dc;
-        if(er<0||er>=7||ec<0||ec>=7) continue;
-        const path=Array.from({length:KV_TARGET.length},(_,k)=>(r+k*dr)*7+c+k*dc);
-        if(path.some(i=>board[i]!=null)) continue;
-        path.forEach((i,k)=>board[i]=pool[k]); planted.add(kvPathKey(path)); placed=true;
-      }
-      if(!placed){ok=false;break;}
-    }
-    if(!ok) continue;
-    for(let i=0;i<49;i++) if(board[i]==null) board[i]=pool[Math.floor(Math.random()*pool.length)];
-    const matches=kvScan(board,KV_TARGET);
-    fallback={board,matches};
-    if(matches.size===planted.size&&Array.from(planted).every(k=>matches.has(k))) return {board,targets:new Set(matches.keys())};
+ const dirs=[[0,1],[1,0],[1,1],[1,-1]],pool=Array.from(KV_TARGET);let fallback=null;
+ for(let trial=0;trial<1600;trial++){
+  const board=Array(49).fill(null),planted=new Set();let ok=true;
+  for(let n=0;n<KV_HIDDEN;n++){
+   let placed=false;
+   for(let attempt=0;attempt<120&&!placed;attempt++){
+    const [dr,dc]=dirs[Math.floor(Math.random()*dirs.length)],r=Math.floor(Math.random()*7),c=Math.floor(Math.random()*7),er=r+(KV_TARGET.length-1)*dr,ec=c+(KV_TARGET.length-1)*dc;
+    if(er<0||er>=7||ec<0||ec>=7)continue;
+    const path=Array.from({length:KV_TARGET.length},(_,k)=>(r+k*dr)*7+c+k*dc);if(path.some(i=>board[i]!=null))continue;
+    path.forEach((i,k)=>board[i]=pool[k]);planted.add(kvPathKey(path));placed=true;
+   }
+   if(!placed){ok=false;break;}
   }
-  return {board:fallback.board,targets:new Set(fallback.matches.keys())};
+  if(!ok)continue;
+  for(let i=0;i<49;i++)if(board[i]==null)board[i]=pool[Math.floor(Math.random()*pool.length)];
+  const matches=kvScan(board,KV_TARGET);fallback={board,matches};
+  if(matches.size===planted.size&&Array.from(planted).every(k=>matches.has(k)))return{board,targets:new Set(matches.keys())};
+ }
+ return{board:fallback.board,targets:new Set(fallback.matches.keys())};
 }
-function kvFmt(t){ return Math.floor(t/60)+':'+String(t%60).padStart(2,'0'); }
-function kvMsg(t,cls){ const m=$('kv-msg'); if(!m)return; m.textContent=t||''; m.className='kv-msg'+(cls?' '+cls:''); }
+function kvFmt(t){return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');}
+function kvMsg(t,cls){const m=$('kv-msg');if(!m)return;m.textContent=t||'';m.className='kv-msg'+(cls?' '+cls:'');}
 function kvCardHTML(){
-  return '<div class="dw-card kv-card"><button class="dw-x" aria-label="Kapat">✕</button><h3>Kelime Avı</h3><p>Izgarada hedef kelimeyi yatay, dikey veya çapraz bulup sürükle.</p>'+
-    '<div class="kv-stats"><div class="kv-stat" id="kv-timebox"><small>SÜRE</small><b id="kv-time">1:00</b></div><div class="kv-stat"><small>BULUNAN</small><b id="kv-count">0 / '+KV_HIDDEN+'</b></div></div>'+
-    '<div class="kv-target"><small>HEDEF</small><b>'+KV_TARGET+'</b><span>+1 🪙</span></div>'+
-    '<div class="kv-grid" id="kv-grid" role="group" aria-label="Yediye yedi harf ızgarası"></div>'+
-    '<div class="kv-msg" id="kv-msg">Kelimenin harflerine basılı tutup sırayla sürükle.</div>'+
-    '<div class="kv-listh"><span>Kazandığın altın</span><b id="kv-gold">0 🪙</b></div></div>';
+ return '<div class="dw-card kv-card"><button class="dw-x" aria-label="Kapat">✕</button><h3>Kelime Avı</h3><p>Izgarada hedef kelimeyi yatay, dikey veya çapraz bulup sürükle.</p>'+
+ '<div class="kv-stats"><div class="kv-stat" id="kv-timebox"><small>SÜRE</small><b id="kv-time">1:00</b></div><div class="kv-stat"><small>BULUNAN</small><b id="kv-count">0 / '+KV_HIDDEN+'</b></div></div>'+
+ '<div class="kv-target"><small>HEDEF</small><b>'+KV_TARGET+'</b><span>+1 🪙</span></div>'+
+ '<div class="kv-grid" id="kv-grid" role="group" aria-label="Yediye yedi harf ızgarası"></div>'+
+ '<div class="kv-msg" id="kv-msg">Kelimenin harflerine basılı tutup sırayla sürükle.</div>'+
+ '<div class="kv-listh"><span>Kazandığın altın</span><b id="kv-gold">0 🪙</b></div></div>';
 }
 function dwOpen(){
-  if(dwDone()){hmNote('Bugünkü Kelime Avı hakkını kullandın. '+dwNextText()+'!');return;}
-  const o=dwEl('dw-ov',kvCardHTML());
-  o.querySelector('.dw-card').outerHTML=kvCardHTML();
-  const x=o.querySelector('.dw-x'); x.addEventListener('click',()=>{kvStop(true);o.classList.remove('show');});
-  o.onclick=e=>{if(e.target===o){kvStop(true);o.classList.remove('show');}};
-  const puzzle=kvMakeBoard();
-  KV={word:KV_TARGET,board:puzzle.board,targets:puzzle.targets,path:[],dir:null,pointer:null,found:[],gold:0,left:KV_TIME,over:false,end:Date.now()+KV_TIME*1000};
-  store.set('kb_dw_done',dwKey());
-  renderHomeHud();
-  const grid=$('kv-grid');
-  grid.innerHTML=KV.board.map((ch,i)=>'<button type="button" class="kv-cell" data-i="'+i+'" aria-label="'+ch+'"></button>').join('');
-  Array.from(grid.children).forEach((b,i)=>{b.textContent=KV.board[i];});
-  grid.onpointerdown=e=>{
-    const cell=e.target.closest('.kv-cell');if(!cell||!KV||KV.over)return;
-    e.preventDefault();KV.path=[];KV.dir=null;KV.pointer=e.pointerId;kvExtend(+cell.dataset.i);
-    try{grid.setPointerCapture(e.pointerId);}catch(_){}
-  };
-  grid.onpointermove=e=>{
-    if(!KV||KV.over||KV.pointer!==e.pointerId)return;
-    const cell=document.elementFromPoint(e.clientX,e.clientY)?.closest('.kv-cell');
-    if(cell)kvExtend(+cell.dataset.i);
-  };
-  const end=e=>{if(!KV||KV.pointer!==e.pointerId)return;KV.pointer=null;kvResolve();try{grid.releasePointerCapture(e.pointerId);}catch(_){}};
-  grid.onpointerup=end;grid.onpointercancel=end;
-  kvDraw();clearInterval(kvTick);kvTick=setInterval(kvTime,250);kvTime();o.classList.add('show');
+ if(dwDone()){hmNote('Bugünkü Kelime Avı hakkını kullandın. '+dwNextText()+'!');return;}
+ const o=dwEl('dw-ov',kvCardHTML());o.querySelector('.dw-card').outerHTML=kvCardHTML();
+ o.querySelector('.dw-x').addEventListener('click',()=>{kvStop(true);o.classList.remove('show');});
+ o.onclick=e=>{if(e.target===o){kvStop(true);o.classList.remove('show');}};
+ const puzzle=kvMakeBoard();
+ KV={word:KV_TARGET,board:puzzle.board,targets:puzzle.targets,path:[],dir:null,pointer:null,found:[],gold:0,left:KV_TIME,over:false,end:Date.now()+KV_TIME*1000};
+ store.set('kb_dw_done',dwKey());renderHomeHud();
+ const grid=$('kv-grid');
+ grid.innerHTML=KV.board.map((ch,i)=>'<button type="button" class="kv-cell" data-i="'+i+'" aria-label="'+ch+'">'+ch+'</button>').join('');
+ grid.onpointerdown=e=>{
+  const cell=e.target.closest('.kv-cell');if(!cell||!KV||KV.over)return;
+  e.preventDefault();KV.path=[];KV.dir=null;KV.pointer=e.pointerId;kvExtend(+cell.dataset.i);
+  try{grid.setPointerCapture(e.pointerId);}catch(_){}
+ };
+ grid.onpointermove=e=>{
+  if(!KV||KV.over||KV.pointer!==e.pointerId)return;
+  const cell=document.elementFromPoint(e.clientX,e.clientY)?.closest('.kv-cell');if(cell)kvExtend(+cell.dataset.i);
+ };
+ const end=e=>{if(!KV||KV.pointer!==e.pointerId)return;KV.pointer=null;kvResolve();try{grid.releasePointerCapture(e.pointerId);}catch(_){}};
+ grid.onpointerup=end;grid.onpointercancel=end;
+ kvDraw();clearInterval(kvTick);kvTick=setInterval(kvTime,250);kvTime();o.classList.add('show');
 }
 function kvDraw(){
-  if(!KV)return;
-  const foundCells=new Set();KV.found.forEach(k=>k.split(',').forEach(i=>foundCells.add(+i)));
-  const grid=$('kv-grid');
-  grid.innerHTML=KV.board.map((ch,i)=>'<button type="button" class="kv-cell'+(foundCells.has(i)?' found':'')+(KV.path.includes(i)?' sel':'')+'" data-i="'+i+'" aria-label="'+ch+'">'+ch+'</button>').join('');
-  $('kv-count').textContent=KV.found.length+' / '+KV.targets.size;
-  $('kv-gold').textContent=KV.gold+' 🪙';
+ if(!KV)return;const foundCells=new Set();KV.found.forEach(k=>k.split(',').forEach(i=>foundCells.add(+i)));
+ const grid=$('kv-grid');
+ grid.innerHTML=KV.board.map((ch,i)=>'<button type="button" class="kv-cell'+(foundCells.has(i)?' found':'')+(KV.path.includes(i)?' sel':'')+'" data-i="'+i+'" aria-label="'+ch+'">'+ch+'</button>').join('');
+ $('kv-count').textContent=KV.found.length+' / '+KV.targets.size;$('kv-gold').textContent=KV.gold+' 🪙';
 }
 function kvExtend(i){
-  if(!KV||KV.over||KV.path.at(-1)===i)return;
-  const last=KV.path.at(-1);
-  if(KV.path.length>1&&KV.path[KV.path.length-2]===i){KV.path.pop();kvDraw();return;}
-  if(KV.path.includes(i)||KV.path.length>=KV.word.length)return;
-  if(last==null){KV.path=[i];kvDraw();return;}
-  const dr=Math.floor(i/7)-Math.floor(last/7),dc=i%7-last%7;
-  if(KV.path.length===1){if(Math.abs(dr)>1||Math.abs(dc)>1||(!dr&&!dc))return;KV.dir={dr,dc};}
-  else if(dr!==KV.dir.dr||dc!==KV.dir.dc)return;
-  KV.path.push(i);kvDraw();
+ if(!KV||KV.over||KV.path.at(-1)===i)return;const last=KV.path.at(-1);
+ if(KV.path.length>1&&KV.path[KV.path.length-2]===i){KV.path.pop();kvDraw();return;}
+ if(KV.path.includes(i)||KV.path.length>=KV.word.length)return;
+ if(last==null){KV.path=[i];kvDraw();return;}
+ const dr=Math.floor(i/7)-Math.floor(last/7),dc=i%7-last%7;
+ if(KV.path.length===1){if(Math.abs(dr)>1||Math.abs(dc)>1||(!dr&&!dc))return;KV.dir={dr,dc};}
+ else if(dr!==KV.dir.dr||dc!==KV.dir.dc)return;
+ KV.path.push(i);kvDraw();
 }
 function kvResolve(){
-  if(!KV||KV.over)return;
-  if(KV.path.length!==KV.word.length){KV.path=[];KV.dir=null;kvDraw();return;}
-  const key=kvPathKey(KV.path);
-  if(!KV.targets.has(key)||KV.found.includes(key)){
-    KV.path=[];KV.dir=null;kvDraw();kvMsg('Bu kelimeyi burada bulamadım. Tekrar dene!','warn');return;
-  }
-  KV.found.push(key);KV.gold+=DW_REWARD;S.coins+=DW_REWARD;updateCoins();kvDraw();
-  kvMsg('Harika! +1 altın ✨');buzz([18,30,18]);try{SND.found();}catch(_){}
-  clearTimeout(kvMsg.t);kvMsg.t=setTimeout(()=>kvMsg(''),1000);
+ if(!KV||KV.over)return;
+ if(KV.path.length!==KV.word.length){KV.path=[];KV.dir=null;kvDraw();return;}
+ const key=kvPathKey(KV.path);
+ if(!KV.targets.has(key)||KV.found.includes(key)){KV.path=[];KV.dir=null;kvDraw();kvMsg('Bu kelimeyi burada bulamadım. Tekrar dene!','warn');return;}
+ KV.found.push(key);KV.gold+=DW_REWARD;S.coins+=DW_REWARD;updateCoins();kvDraw();kvMsg('Harika! +1 altın ✨');buzz([18,30,18]);try{SND.found();}catch(_){}
+ clearTimeout(kvMsg.t);kvMsg.t=setTimeout(()=>kvMsg(''),1000);
 }
 function kvTime(){
-  if(!KV||KV.over)return;
-  KV.left=Math.max(0,Math.ceil((KV.end-Date.now())/1000));
-  const t=$('kv-time');if(t)t.textContent=kvFmt(KV.left);
-  const tb=$('kv-timebox');if(tb)tb.classList.toggle('low',KV.left<=15);
-  if(KV.left<=0)kvFinish();
+ if(!KV||KV.over)return;KV.left=Math.max(0,Math.ceil((KV.end-Date.now())/1000));
+ const t=$('kv-time');if(t)t.textContent=kvFmt(KV.left);const tb=$('kv-timebox');if(tb)tb.classList.toggle('low',KV.left<=15);
+ if(KV.left<=0)kvFinish();
 }
-function kvStop(silent){
-  clearInterval(kvTick);kvTick=null;
-  if(KV&&!KV.over)KV.over=true;
-  if(silent)KV=null;
-}
+function kvStop(silent){clearInterval(kvTick);kvTick=null;if(KV&&!KV.over)KV.over=true;if(silent)KV=null;}
 function kvFinish(){
-  if(!KV||KV.over)return;
-  kvStop(false);
-  kvLastResult={words:KV.found.length,gold:KV.gold,list:Array(KV.found.length).fill(KV.word),sent:false};
-  try{SND.win();}catch(_){}buzz([40,40,40]);
-  const o=$('dw-ov'),r=kvLastResult,emoji=r.words>=4?'🏆':r.words>=2?'🌟':r.words?'👏':'⏰';
-  o.querySelector('.dw-card').innerHTML='<button class="dw-x" aria-label="Kapat">✕</button><div class="kv-res"><h3>Süre Bitti!</h3><div class="big">'+emoji+'</div><p>'+(r.words?'“'+KV_TARGET+'” kelimesinden '+r.words+' tane buldun!':'Bu sefer hedef kelime bulamadın.')+'</p><div class="kv-res-grid"><div><small>Bulunan Kelime</small><b>'+r.words+'</b></div><div><small>Kazanılan Altın</small><b>🪙 '+r.gold+'</b></div></div><button class="dw-btn" id="kv-lb">Liderlik Tablosuna Ekle</button><button class="dw-btn sec" id="kv-close">Kapat</button></div>';
-  o.querySelector('.dw-x').onclick=()=>{o.classList.remove('show');KV=null;};
-  $('kv-close').onclick=()=>{o.classList.remove('show');KV=null;};
-  $('kv-lb').onclick=kvToBoard;
-  renderHomeHud();
+ if(!KV||KV.over)return;kvStop(false);
+ kvLastResult={words:KV.found.length,gold:KV.gold,list:Array(KV.found.length).fill(KV.word),sent:false};
+ try{SND.win();}catch(_){}buzz([40,40,40]);
+ const o=$('dw-ov'),r=kvLastResult,emoji=r.words>=4?'🏆':r.words>=2?'🌟':r.words?'👏':'⏰';
+ o.querySelector('.dw-card').innerHTML='<button class="dw-x" aria-label="Kapat">✕</button><div class="kv-res"><h3>Süre Bitti!</h3><div class="big">'+emoji+'</div><p>'+(r.words?'“'+KV_TARGET+'” kelimesinden '+r.words+' tane buldun!':'Bu sefer hedef kelime bulamadın.')+'</p><div class="kv-res-grid"><div><small>Bulunan Kelime</small><b>'+r.words+'</b></div><div><small>Kazanılan Altın</small><b>🪙 '+r.gold+'</b></div></div><button class="dw-btn" id="kv-lb">Liderlik Tablosuna Ekle</button><button class="dw-btn sec" id="kv-close">Kapat</button></div>';
+ o.querySelector('.dw-x').onclick=()=>{o.classList.remove('show');KV=null;};$('kv-close').onclick=()=>{o.classList.remove('show');KV=null;};$('kv-lb').onclick=kvToBoard;renderHomeHud();
 }
 async function kvToBoard(){
-  const btn=$('kv-lb'),r=kvLastResult;if(!btn||!r||r.sent)return;
-  btn.disabled=true;
-  if(!r.words){btn.textContent='Eklenecek kelime yok';return;}
-  if(!FIREBASE_CONFIG.apiKey||!USER||!USER.id){btn.textContent='Liderlik tablosu kapalı';return;}
-  btn.textContent='Ekleniyor…';
-  try{
-    const db=await getDb(),ref=db.collection('leaderboard').doc(USER.id);
-    await db.runTransaction(async tx=>{
-      const d=await tx.get(ref),o=d.exists?d.data():{};
-      const elo=eloOf(o),lvl=Math.max(o.lvl||0,levelPoints()),hunt=(o.hunt||0)+r.words;
-      myScore=elo+lvl+hunt;
-      tx.set(ref,{name:USER.name,avatar:avatar||'',elo,lvl,hunt,score:elo+lvl+hunt,wins:o.wins||0,games:o.games||0});
-    });
-    r.sent=true;btn.textContent='✓ Eklendi (+'+r.words+' puan)';
-    try{lbRender();}catch(_){}
-  }catch(_){btn.disabled=false;btn.textContent='Tekrar dene';}
+ const btn=$('kv-lb'),r=kvLastResult;if(!btn||!r||r.sent)return;btn.disabled=true;
+ if(!r.words){btn.textContent='Eklenecek kelime yok';return;}
+ if(!FIREBASE_CONFIG.apiKey||!USER||!USER.id){btn.textContent='Liderlik tablosu kapalı';return;}
+ btn.textContent='Ekleniyor…';
+ try{
+  const db=await getDb(),ref=db.collection('leaderboard').doc(USER.id);
+  await db.runTransaction(async tx=>{const d=await tx.get(ref),o=d.exists?d.data():{},elo=eloOf(o),lvl=Math.max(o.lvl||0,levelPoints()),hunt=(o.hunt||0)+r.words;myScore=elo+lvl+hunt;tx.set(ref,{name:USER.name,avatar:avatar||'',elo,lvl,hunt,score:elo+lvl+hunt,wins:o.wins||0,games:o.games||0});});
+  r.sent=true;btn.textContent='✓ Eklendi (+'+r.words+' puan)';try{lbRender();}catch(_){}
+ }catch(_){btn.disabled=false;btn.textContent='Tekrar dene';}
 }
 $('hm-word').addEventListener('click',dwOpen);
 setInterval(() => { try{ renderHomeHud(); }catch(e){} }, 30000);
