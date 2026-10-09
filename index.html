@@ -2824,6 +2824,34 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
 .sh2-wbtn{margin:0 14px 14px auto;width:auto}
 .sh2-sec{margin:6px 2px 0;font-size:13px;font-weight:1000;letter-spacing:.14em;color:#93c5fd}
 .sh2-note{text-align:center;font-size:11px;color:#9aa3d8;font-weight:700;margin-top:4px}
+/* ===== MAĞAZA v3: ana sayfa temasına uygun, kartlar birbirine girmez ===== */
+#shop-ov.shop-ov{background:radial-gradient(120% 55% at 50% -8%,#5233c4 0%,rgba(82,51,196,0) 62%),radial-gradient(90% 45% at 100% 100%,rgba(20,184,166,.24) 0%,rgba(20,184,166,0) 60%),radial-gradient(80% 40% at 0% 70%,rgba(236,72,153,.14) 0%,rgba(236,72,153,0) 60%),linear-gradient(180deg,#1a0f4a,#0c0624)!important}
+#shop-ov .sh2{gap:14px;padding:calc(14px + env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+#shop-ov .sh2>*{flex:none;min-width:0}
+#shop-ov .sh2-wallet{background:rgba(10,6,36,.62);border:1px solid rgba(196,181,253,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 6px 16px rgba(0,0,0,.3)}
+#shop-ov .sh2-bag{background:linear-gradient(145deg,#7c3aed,#4f46e5)}
+#shop-ov .sh2-x{background:rgba(10,6,36,.62);border:1px solid rgba(196,181,253,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+#shop-ov .sh2-title{font-size:34px;color:#fff;text-shadow:0 0 18px rgba(167,139,250,.8),0 4px 0 rgba(0,0,0,.35)}
+#shop-ov .sh2-pill{background:rgba(10,6,36,.62);border:1px solid rgba(196,181,253,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+#shop-ov .sh2-card{display:grid;gap:12px;padding:14px;overflow:visible;border-radius:22px;border:1px solid rgba(204,143,255,.55);background:linear-gradient(110deg,rgba(65,44,142,.98),rgba(122,48,166,.92) 55%,rgba(83,54,170,.98));box-shadow:0 0 0 1px rgba(143,81,255,.18),0 7px 20px rgba(0,0,0,.3),0 0 18px rgba(164,79,255,.18),inset 0 1px 0 rgba(255,255,255,.28)}
+#shop-ov .sh2-card.sh2-popc{border-color:rgba(83,225,255,.75);background:linear-gradient(110deg,rgba(9,126,190,.96),rgba(40,67,174,.96) 48%,rgba(100,54,195,.97));box-shadow:0 0 0 1px rgba(35,104,255,.26),0 8px 24px rgba(0,0,0,.3),0 0 22px rgba(31,180,255,.25),inset 0 1px 0 rgba(255,255,255,.35)}
+#shop-ov .sh2-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+#shop-ov .sh2-head b{display:block;font-size:19px;font-weight:1000;letter-spacing:.02em;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+#shop-ov .sh2-head small{display:block;margin-top:3px;font-size:12px;font-weight:800;line-height:1.35;color:#d9ccff}
+#shop-ov .sh2-badge{flex:none;padding:4px 10px;border:1px solid rgba(255,242,169,.82);border-radius:99px;background:linear-gradient(180deg,#fff1a8,#ffc83e);box-shadow:0 2px 0 #9f6416;color:#3b1d00;font-size:11px;font-weight:1000;font-style:normal;white-space:nowrap}
+#shop-ov .sh2-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#shop-ov .sh2-tiles{display:flex;gap:8px;flex-wrap:nowrap}
+#shop-ov .sh2-tile{width:62px;height:70px;gap:2px;border-radius:14px;background:rgba(10,6,36,.45);border:1px solid rgba(196,181,253,.35)}
+#shop-ov .sh2-tile img{width:36px;height:36px}
+#shop-ov .sh2-tile em{font-size:28px;line-height:36px}
+#shop-ov .sh2-tile span{font-size:16px;font-weight:1000}
+#shop-ov .sh2-price{flex:none;min-width:112px;height:46px;border-radius:99px;padding:0 16px;font-size:18px;border:1px solid rgba(253,224,71,.6);border-bottom:4px solid #89531c;background:linear-gradient(180deg,#fff1a8,#fbbf24 70%,#e99a11);color:#25124d;text-shadow:none;box-shadow:0 0 15px rgba(251,191,36,.25)}
+#shop-ov .sh2-price:active:not(:disabled){transform:translateY(2px);border-bottom-width:2px}
+#shop-ov .sh2-price:disabled{background:rgba(255,255,255,.12);border:1px solid rgba(196,181,253,.3);border-bottom-width:1px;color:#d9ccff;box-shadow:none;opacity:1}
+#shop-ov .sh2-soon{font-size:14px;letter-spacing:.04em}
+#shop-ov .sh2-sec{margin:6px 2px 0;color:#c4b5fd}
+#shop-ov .sh2-note{color:#b9aee8;padding-bottom:6px}
+@media(max-width:360px){#shop-ov .sh2-tile{width:54px;height:64px}#shop-ov .sh2-price{min-width:96px}}
 .wh{align-items:center}
 .wh-stage{position:relative;width:min(92vw,400px);aspect-ratio:1;margin:18px auto 8px}
 .wh-wheel{position:absolute;inset:0;border-radius:50%;filter:drop-shadow(0 10px 18px rgba(0,0,0,.55));will-change:transform}
@@ -6987,7 +7015,6 @@ function renderHomeHud(){
     levelStrip.style.setProperty('background-image', 'linear-gradient(90deg,rgba(40,24,110,.85),rgba(10,6,36,.7))', 'important');
     hmSet('hm-lv-num', e => { e.textContent = '?'; });
     hmSet('hm-lv-name', e => { e.textContent = 'İlerlemeniz burada görünecek'; });
-    hmSet('hm-play-tag', e => { e.textContent = 'Bölüm ' + chapter; });
   } else
   if (levelStrip && bannerFile){
     levelStrip.style.setProperty('background-image', "linear-gradient(90deg,rgba(5,20,30,.88) 0%,rgba(8,11,34,.76) 58%,rgba(9,7,30,.68) 100%),url('" + bannerFile + "?v=2')", 'important');
@@ -6999,7 +7026,8 @@ function renderHomeHud(){
   hmSet('hm-lv-name', e => { e.textContent = '🌿 ' + chapterName; }); }
   hmSet('hm-lv-count', e => { e.textContent = done + ' / ' + total; });
   hmSet('hm-lv-fill', e => { e.style.width = Math.max(4, Math.round(done / total * 100)) + '%'; });
-  hmSet('hm-play-tag', e => { e.textContent = 'Bölüm ' + chapter; });
+  /* Hiç oynamamış oyuncuda "Bölüm" rozeti gizli; oynamaya başlayınca görünür */
+  hmSet('hm-play-tag', e => { e.textContent = 'Bölüm ' + chapter; e.style.display = noProg ? 'none' : ''; });
   hmSet('hm-lv-ch', e => { e.textContent = 'Bölüm ' + chapter; });
   hmSet('home-username', e => { e.textContent = (USER && USER.name) ? USER.name : 'Oyuncu'; });
   const ready = drReady();
@@ -7288,9 +7316,10 @@ $('hm-word').addEventListener('click',dwOpen);$('hm-word').addEventListener('cli
 setInterval(() => { try{ renderHomeHud(); }catch(e){} }, 30000);
 
 /* ===== MAĞAZA: envantere eklenen joker paketleri ===== */
+/* NOT: price:null = fiyat henüz belirlenmedi (buton 'Yakında' gösterir). Fiyat yazmak için sayı gir. */
 const SHOP_ITEMS=[
- {id:'hint',name:'İpucu x3',icon:'💡',desc:'Bir sonraki hamle için 3 ücretsiz ipucu.',qty:3,price:45},
- {id:'magnet',name:'Mıknatıs x1',icon:'🧲',desc:'Tahtadaki boş harfleri temizleyen 1 mıknatıs.',qty:1,price:75}
+ {id:'hint',name:'İpucu x3',icon:'💡',desc:'Bir sonraki hamle için 3 ücretsiz ipucu.',qty:3,price:null},
+ {id:'magnet',name:'Mıknatıs x1',icon:'🧲',desc:'Tahtadaki boş harfleri temizleyen 1 mıknatıs.',qty:1,price:null}
 ];
 function shopInventory(){
  let inv={hint:0,magnet:0};
@@ -7305,9 +7334,9 @@ function shopTryUse(id,cost){
  S.coins-=cost;updateCoins();return true;
 }
 const SHOP_PACKS=[
- {id:'pk1',name:'SÜPER PAKET',give:{hint:3,magnet:2},price:150,ill:'💰'},
- {id:'pk2',name:'MEGA PAKET',give:{hint:8,magnet:5},price:350,ill:'🧲',pop:true},
- {id:'pk3',name:'DEV PAKET',give:{hint:20,magnet:12},price:750,ill:'🎁'}
+ {id:'pk1',name:'SÜPER PAKET',give:{hint:3,magnet:2},price:null,ill:'💰'},
+ {id:'pk2',name:'MEGA PAKET',give:{hint:8,magnet:5},price:null,ill:'🧲',pop:true},
+ {id:'pk3',name:'DEV PAKET',give:{hint:20,magnet:12},price:null,ill:'🎁'}
 ];
 function shopAll(){return SHOP_ITEMS.map(it=>Object.assign({give:{[it.id]:it.qty},ill:it.icon},it)).concat(SHOP_PACKS);}
 function shopRender(){
@@ -7318,29 +7347,31 @@ function shopRender(){
  const tile=(src,fb,n)=>'<div class="sh2-tile">'+img(src,fb)+'<span>'+n+'</span></div>';
  const card=it=>{
   const tiles=(it.give.hint?tile('jk-ipucu.png','💡',it.give.hint):'')+(it.give.magnet?tile('jk-miknatis.png','🧲',it.give.magnet):'');
-  const name=it.pack||it.pop||it.id.indexOf('pk')===0?it.name:it.name;
-  return '<article class="sh2-card">'+(it.pop?'<i class="sh2-ribbon">Popüler</i>':'')
-   +'<div class="sh2-body"><div class="sh2-tiles">'+tiles+'</div><div class="sh2-ill">'+it.ill+'</div></div>'
-   +'<div class="sh2-foot"><b>'+name.toLocaleUpperCase('tr')+'</b><button class="sh2-price" type="button" data-buy="'+it.id+'" '+(S.coins<it.price?'disabled':'')+'>'+img('vic-altin.png','🪙','sh2-pc')+' '+it.price+'</button></div></article>';
+  const desc=(it.id.indexOf('pk')===0)?[(it.give.hint?it.give.hint+' İpucu':''),(it.give.magnet?it.give.magnet+' Mıknatıs':'')].filter(Boolean).join(' + '):(it.desc||'');
+  const hasP=typeof it.price==='number';
+  const btn=hasP?'<button class="sh2-price" type="button" data-buy="'+it.id+'" '+(S.coins<it.price?'disabled':'')+'>'+img('vic-altin.png','🪙','sh2-pc')+' '+it.price+'</button>'
+               :'<button class="sh2-price sh2-soon" type="button" disabled>Yakında</button>';
+  return '<article class="sh2-card'+(it.pop?' sh2-popc':'')+'">'
+   +'<div class="sh2-head"><div><b>'+it.name.toLocaleUpperCase('tr')+'</b><small>'+desc+'</small></div>'+(it.pop?'<i class="sh2-badge">Popüler</i>':'')+'</div>'
+   +'<div class="sh2-row"><div class="sh2-tiles">'+tiles+'</div>'+btn+'</div></article>';
  };
+
  o.innerHTML='<section class="sh2" role="dialog" aria-modal="true" aria-label="Mağaza">'
   +'<div class="sh2-top"><div class="sh2-wallet"><span class="sh2-bag">🛍️</span><b id="shop-coins">'+S.coins+'</b>'+img('vic-altin.png','🪙','sh2-wc')+'</div><button class="sh2-x" type="button" aria-label="Kapat">✕</button></div>'
   +'<h2 class="sh2-title">MAĞAZA</h2>'
   +'<div class="sh2-inv"><div class="sh2-pill">'+img('jk-ipucu.png','💡')+'<b>'+inv.hint+'</b></div><div class="sh2-pill">'+img('jk-miknatis.png','🧲')+'<b>'+inv.magnet+'</b></div></div>'
-  +'<article class="sh2-card sh2-wcard"><div class="sh2-body"><div class="sh2-wtxt"><h3>ÇARKI ÇEVİR</h3><p>Her gün bedava altın kazan!</p><small>Bugünkü haklar: '+Math.max(0,WHEEL_MAX-ws.n)+' / '+WHEEL_MAX+'</small></div><div class="sh2-ill">🎡</div></div>'
-  +'<button class="sh2-price sh2-wbtn" type="button" id="sh2-wheel">ÇEVİR</button></article>'
   +SHOP_PACKS.map(card).join('')
   +'<div class="sh2-sec">TEKLİ ÜRÜNLER</div>'
   +SHOP_ITEMS.map(it=>card(Object.assign({give:{[it.id]:it.qty},ill:it.icon},it))).join('')
   +'<div class="sh2-note">Satın alınan jokerler hesabında saklanır ve oyunda kullanılır.</div></section>';
  o.querySelector('.sh2-x').onclick=()=>o.classList.remove('show');
  o.querySelectorAll('[data-buy]').forEach(btn=>btn.onclick=()=>shopBuy(btn.dataset.buy));
- $('sh2-wheel').onclick=()=>wheelOpen();
  return o;
 }
 function shopRefresh(){const o=$('shop-ov');if(o&&o.classList.contains('show'))shopRender();refreshJokers();}
 function shopBuy(id){
  const item=shopAll().find(x=>x.id===id);if(!item)return;
+ if(typeof item.price!=='number'){toast('Fiyat yakında belirlenecek');return;}
  if(S.coins<item.price){SND.miss();return;}
  S.coins-=item.price;updateCoins();
  const inv=shopInventory();Object.keys(item.give).forEach(k=>{inv[k]=(inv[k]||0)+item.give[k];});shopSaveInventory(inv);
