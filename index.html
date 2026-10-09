@@ -3207,10 +3207,12 @@ const store = {
 const TEST_UNLOCK_ALL = false;    // TEST: tüm bölümler açık — test bitince false yap
 const TEST_INF_COINS = false;    // TEST: sınırsız altın — test bitince false yap
 const HINT_COST = 20;               // ipucu fiyatı
-const levelBonus = i => i === LEVELS.length - 1 ? 100 : (i >= 5 ? 15 : 10);   // bölüm bitirme ödülü: 1-5 → 10, 6-9 → 15, 10 → 100
+const START_COINS = 80;   // yeni hesabın başlangıç altını
+const LEVEL_COIN = 3, CHAPTER_END_COIN = 30;   // her bölüm 3 altın; 10. bölüm bitince ayrıca +30
+const levelBonus = i => LEVEL_COIN + ((i % CHAPTER_SIZE) === CHAPTER_SIZE - 1 ? CHAPTER_END_COIN : 0);
 const SHOW_NOTICES = false;     // bilgilendirme toast'ları kapalı
 const S = {
-  levelIndex: 0, maxOpen: 0, done: {}, partial: {}, coins: 100, sound: true,
+  levelIndex: 0, maxOpen: 0, done: {}, partial: {}, coins: START_COINS, sound: true,
   level: null, found: new Set(), colorOf: {}, caps: [],
   cells: [], chips: {}, token: 0, playing: false,
   selecting: false, sel: null, dragCap: null,
@@ -3220,7 +3222,7 @@ const S = {
   const c = parseInt(store.get('wow_search_coins'), 10);
   if (!isNaN(c)) S.coins = c;
   /* Tek seferlik coin sıfırlama: test coinlerini siler, herkes 100 ile başlar */
-  if (store.get('kb_coin_reset_v1') !== '1'){ S.coins = 100; store.set('wow_search_coins', 100); store.set('kb_coin_reset_v1', '1'); }
+  if (store.get('kb_coin_reset_v1') !== '1'){ S.coins = START_COINS; store.set('wow_search_coins', START_COINS); store.set('kb_coin_reset_v1', '1'); }
   const last = MAX_PLAY;
   /* Yeni Amazon 10 bölüm x 10 alt bölüm sistemi. Eski 10 seviyelik kayıtları bir kez sıfırla. */
   if (store.get('cidahl_amazon_100_v1') !== '1'){
@@ -3470,8 +3472,8 @@ async function syncCoinsFromCloud(){
   try{
     const db = await getDb(), ref = db.collection('users').doc(USER.id), snap = await ref.get();
     if (store.get('kb_coin_reset_cloud_v1') !== '1'){            // tek seferlik sıfırlama: buluttaki coini de 100 yap
-      S.coins = 100; store.set('kb_coin_reset_cloud_v1', '1');
-      await ref.set({name:USER.name || '', coins:100},{merge:true});
+      S.coins = START_COINS; store.set('kb_coin_reset_cloud_v1', '1');
+      await ref.set({name:USER.name || '', coins:START_COINS},{merge:true});
       updateCoins();
     }else if (snap.exists && snap.data().coins != null){
       S.coins = Math.max(0, Number(snap.data().coins) || 0);
@@ -3677,7 +3679,7 @@ function renderWords(){
     chip.style.setProperty('--c', S.colorOf[w]);
     chip.innerHTML = '<svg class="i"><use href="#i-check"/></svg><span></span>';
     chip.lastChild.textContent = w;
-    if (S.level.hidden.includes(w)){ chip.lastChild.textContent = [...w][0] + '.'.repeat([...w].length - 1); chip.classList.add('masked'); }
+    { const a = [...w], mid = Math.floor(a.length / 2); chip.lastChild.textContent = a.map((ch, i) => i === mid ? ch : '?').join(''); chip.classList.add('masked'); }   /* yalnız ortadaki harf görünür; bulununca kelime açılır */
     wordListEl.appendChild(chip); S.chips[w] = chip;
   });
 }
@@ -3924,7 +3926,7 @@ function onFound(word, path){
   S.streak = (S.streak || 0) + 1;
   if (S.streak % 3 === 0 && S.found.size < S.level.words.length){ showCombo('MÜKEMMEL!'); try { buzz([30, 40, 30]); } catch(_){} }
   if (!R) savePartialProgress();
-  if (!R && S.coinOk) awardWordCoin(path);
+  /* kelime başı altın kaldırıldı: altın bölüm bitince verilir */
 
   // Kelime bulunduğunda bağlantı SABİT kalır. Hareket, kıvılcım ve patlama yok.
   S.caps.push({ word, path, el: makeCap(path, 'new', color) });
@@ -4242,7 +4244,7 @@ function victory(){
   const idx = S.levelIndex, prev = S.done[idx];
   const isChapterFinal = (idx % CHAPTER_SIZE) === CHAPTER_SIZE - 1;
   const bonus = prev ? 0 : levelBonus(idx);   // bölüm bitirme ödülü (ilk bitirişte)
-  const reward = prev ? 0 : S.level.words.length + bonus;   // kelime coinleri oynarken verildi; burada yalnız gösterim
+  const reward = prev ? 0 : bonus;   // kelime coinleri oynarken verildi; burada yalnız gösterim
   if (bonus){ S.coins += bonus; } updateCoins();
   const elapsed = S.level.mode === 'time' ? (S.level.timeLimit - S.seconds) : S.seconds;
   const per = elapsed / S.level.words.length;
@@ -4250,7 +4252,7 @@ function victory(){
   S.done[idx] = {
     stars: Math.max(stars, prev ? prev.stars : 0),
     time: prev && prev.time ? Math.min(prev.time, elapsed) : elapsed,
-    gold: prev ? (prev.gold != null ? prev.gold : (LEVELS[idx].words.length + levelBonus(idx))) : reward   // bölümün ilk bitiriş altını (final ekranı toplamı için)
+    gold: prev ? (prev.gold != null ? prev.gold : levelBonus(idx)) : reward   // bölümün ilk bitiriş altını (final ekranı toplamı için)
   };
   delete S.partial[idx];
   const oldMax = S.maxOpen;
@@ -4340,7 +4342,7 @@ function showChapterEnd(chapterIndex){
   let gold = 0, time = 0;
   for (let i = st; i <= en; i++){
     const d = S.done[i];
-    if (d){ gold += (d.gold != null ? d.gold : (LEVELS[i].words.length + levelBonus(i))); time += d.time || 0; }
+    if (d){ gold += (d.gold != null ? d.gold : levelBonus(i)); time += d.time || 0; }
   }
   $('ce-time').textContent = fmt(time);
   const fl = $('ce-flies');
@@ -4863,7 +4865,7 @@ async function registerUser(type, name){          // name yoksa sadece ID üreti
         const n = nRef ? await tx.get(nRef) : null;
         if (n && n.exists) throw new Error('taken');
         if (u.exists) throw new Error('idtaken');
-        tx.set(uRef, { name: name || '', type, coins: 100, created: firebase.firestore.FieldValue.serverTimestamp() });
+        tx.set(uRef, { name: name || '', type, coins: START_COINS, created: firebase.firestore.FieldValue.serverTimestamp() });
         if (nRef) tx.set(nRef, { id, name });
       });
       return id;
@@ -6160,7 +6162,7 @@ function renderHomeHud(){
   const ready = drReady();
   hmSet('hm-chest', e => e.classList.toggle('ready', ready));
   hmSet('hm-chest-v', e => { e.textContent = ready ? 'Ödülünü al' : 'Haftalık takvim'; });
-  hmSet('hm-word-v', e => { e.textContent = dwDone() ? 'Bugün tamamlandı' : '2 dk · +' + DW_REWARD + '/kelime'; });
+  hmSet('hm-word-v', e => { e.textContent = dwDone() ? 'Bugün tamamlandı' : '1 dk · +' + DW_REWARD + '/kelime'; });
   hmSet('hm-word', e => e.classList.remove('off'));
 }
 function hmNote(msg){
@@ -6216,7 +6218,7 @@ function drClaim(){
 $('hm-chest').addEventListener('click', () => { drRender().classList.add('show'); });
 
 /* ===== GÜNÜN KELİMESİ: her gün 15:30'da yenilenir, oynayınca pasife geçer ===== */
-var DW_REWARD = 5, KV_TIME = 120, KV_MIN = 3;       // her doğru kelime +5 altın, 2 dakika, en az 3 harf
+var DW_REWARD = 5, KV_TIME = 60, KV_MIN = 3;       // her doğru kelime +5 altın, 1 dakika, en az 3 harf
 function dwCycle(){ const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate(), 0, 0, 0); }
 function dwKey(){ return hmDayKey(dwCycle()); }
 function dwDone(){ return store.get('kb_dw_done') === dwKey(); }
@@ -6236,7 +6238,9 @@ function kvLetters(){
   return arr;
 }
 var kvLevelWords = null;
+var KV_WORDS = new Set("ABA ABANOZ ABAT ABRA ABU ACAR ACI ACIRAK ACUL ACUN ADIL ADLI AĞA AHA AHİ AHİT AHU AİLE AİT AKA AKAR AKI AKIL AKIM AKIN AKIŞ AKIŞMA AKİL AKİS AKİT AKLI AKLİ AKMA AKOR AKORT AKRAN AKS AKSAN AKSİ AKŞAM AKUR ALA ALAN ALAŞIM ALIK ALIM ALIN ALIŞ ALIŞMA ALIŞMAK ALİ ALİL ALKIM ALKIŞ ALMA ALMAK ALMAN ALMAŞ ALMAŞIK ALO ALP ALT ALTI ALTIN ALTO ALTÖRTÜ AMA AMAL AMAN AMOR AMUT ANA ANACIK ANAL ANAM ANAMAL ANCA ANCAK ANI ANIK ANIT ANKA ANLAM ANLAMA ANMA ANT ANTLI AORT APAZ APEL APLİK APLİKE ARA ARACI ARAK ARAP ARAZ ARAZİ ARDIL ARGO ARGON ARI ARICAK ARIK ARIZ ARIZA ARİ ARİZA ARK ARKA ARLI ARMA ARMUT ARP ARPA ART ARTI ARTIN ARZ ASA ASI ASIL ASILI ASIR ASİ ASİT ASK AST ASTİK AŞI AŞIK AŞILMA AŞILMAK AŞIM AŞK AŞLIK AŞMA AŞMAK ATA ATARİ ATASÖZÜ ATE ATEH ATIL ATİ ATİK ATLI ATOL AUT AVAL AVAM AVLAMA AVLANMA AVRET AVRO AZA AZAP AZAR AZAT AZI AZİT AZMA AZOİK AZOT BAĞ BAĞA BAHAİ BAHT BAL BAN BANA BANAZ BAR BARAK BARAN BARK BARKA BARO BARON BAT BATİ BAZ BAZA BEL BELCE BELİ BİAT BİLE BİLEME BİLME BİLMECE BİT BOA BOR BORA BORAN BORAZAN BOZ BOZA BRONZ BUĞRA BUL BULA BULAK BURA BURAK CAKA CAN CANA CAR CEBE CEBEL CEBELİ CELBE CELİ CEM CEMİ CEMİL CEMİLE CER CET CIK CIRNAK CİM CİRİT CÜRET ÇAK ÇAL ÇEK ÇEKER ÇEKİ ÇEKİRGE ÇERGE ÇERİ ÇİR ÇUKA ÇUL DAL DALSI DAR DARI DEK DELİ DEM DEME DEMEK DEMİN DENEK DENİ DENİM DENK DENLİ DENME DENMEK DEV DEVE DEVELİ DİK DİKEN DİKME DİKMEN DİL DİN DİNE DİNEK DİNK DİNME DİNMEK EBE EBELİ ECE ECEL ECİR EDE EDİ EDİK EDİM EDİNME EDİNMEK EFOR EGE EGEMEN EĞE EĞER EĞME EHRAM EKE EKİM EKİN EKİP EKLİ EKME EKO EKSİ EKSİN EKTİ EKÜ EKVATOR ELA ELCİ ELDE ELDEN ELDİVEN ELEK ELEM ELİK ELİM ELİT ELTİ EMEK EMEL EMEN EMİK EMİN ENDEMİK ENEK ENEME ENENME ENGEL ENGEREK ENİK ENİR ENLİ ENTROPİ EPİK ERAT EREK EREN ERG ERGEN ERGENE ERGİ ERİK ERİN ERK ERKE ERKEÇ ERKEN ERME EROİN EROS EROZYON ERTE ESER ESHAM ESİK ESİN ESKİ ESKİL ESLEK ESMA ESRE ESTER ESTET ETEK ETER ETİ ETİK ETİL ETKİ ETLİ ETLİK EVET EVİN EVLİ EVRAK EVRAT EVRE EVRİK FAR FARE FAZ FER FERMA FERMUAR FES FİT FOK FORS FORSEPS FOS FÖTR FRER FUAR GAM GAR GEÇ GEÇE GEÇEK GEÇER GELE GELEN GELENEK GEM GEN GENE GENEL GERÇEK GERÇİ GEREÇ GEREK GEREN GERİ GÖK GÖN GÖRE GÖRENEK GÖRK GRAM GREK GREKÇE GREN GRİ HAB HABİTAT HAF HAFIZ HAM HAMIZ HAMSE HAMSTER HAMT HAR HARE HAREM HARS HART HAS HASET HASRET HAT HATA HATTA HAZ HAZIM HEM HER HIZ HIZMA HİT IHMA IKLAMA ILTAR IRA IRAK IRAMA IRK IRZ ISI ISIL ISTAR İÇRE İÇREK İHATA İKA İKAZ İKEN İKİ İKON İLA İLE İLK İLKE İLLA İLME İMECE İMİK İNEK İNME İNMEK İPEK İPEKA İPKA İRAP İRAT İRİ İRİCE İRMİK İSA İSKELE İSKELET İSKETE İSKOTA İSOT İSTAKOZ İSTEK İTA İTAAT İTAP İTİ JALE JEL JEN JİKLE JİLE KABA KABUK KABUKLU KABUL KAÇ KAĞAN KAİL KAK KAL KALA KALE KALIM KALIŞ KALMA KALP KAM KAMA KAMALI KAMIŞ KAN KANA KANCA KANI KAOS KAP KAR KARA KARACI KARE KARI KARIN KARINCA KARO KART KAS KASA KAST KASTİ KAŞ KAŞIMA KAŞLI KAT KATİ KATRE KAUÇUK KAV KAZ KEÇE KEÇİ KEDİ KEL KELE KELES KEM KEME KENDİ KENE KENGEL KENGER KEP KER KERE KEREVİT KERTE KERTİ KES KESE KESEL KESELİ KESİN KESİT KESTEL KET KETE KIL KILMA KIN KINA KIR KIRAN KIRCA KIŞ KIŞLA KIŞLAMA KİL KİLE KİLS KİM KİMİ KİN KİP KİPE KİR KİREÇ KİRVE KİST KİT KİTLE KİTRE KLİP KOF KONİ KOR KORA KORE KORT KORTE KORVET KOSA KOT KOTA KOTRA KOV KOVA KOZ KOZA KÖMÜR KÖR KÖRE KÖRİ KREM KUKA KUKLA KUL KULA KULAÇ KULAK KULU KULUÇKA KUR KURA KURBAĞA KÜME KÜR KÜRE LAİK LAK LAKA LAKE LAL LAM LAMA LAN LAP LASO LAV LAVA LAVMAN LEB LEKE LEP LİCE LİET LİKA LİM LİME LİR LİRA LİSE LİSTE LİTORAL LOCA LONCA LOR LORT LORTA LOT LOTA MAAŞ MAAŞLI MAHFUZ MAL MALA MALAK MANA MANAV MANGO MANGROV MANO MAPA MARAZ MARN MARON MARS MART MARUF MAS MAŞ MAŞA MAŞALI MAŞALIK MAT MAVAL MAVNA MAZI MEDENİ MEĞER MELCE MEN MENGEN MENGENE MENİ MERA MERT MESH MEST MET META MIH MIZRAP MİDE MİL MİM MİMİK MİMİKRİ MİNE MİNK MİR MİRİM MOR MORG MUAF MUARE MUHAFIZ MURAT MURT MUT MUTA MUZ NACAK NAL NAM NAR NARA NAS NASIL NASIR NATIR NAZ NAZAR NEDİM NEDİME NEKRE NEM NENE NERE NESİ NET NEV NEY NİM NİTE NOM NORM NOT NOTER NOVA OBA OJE OKAR OKSİJEN OKSİT OKTAV OLTA OMA ONA ONAR ONCA ONİKS ONLU ONMA ONS ORA ORAK ORAL ORAN ORG ORGAN ORKİT ORMAN ORTA ORTAK OVA OVMA OZAN OZON ÖCÜ ÖGE ÖĞREN ÖĞRENME ÖKE ÖLÜ ÖMÜR ÖNEM ÖNERGE ÖNERME ÖREK ÖREKE ÖREN ÖRF ÖRFİ ÖRGE ÖRGEN ÖRK ÖRME ÖRMEK ÖRNEK ÖRTÜ ÖRÜ ÖRÜK ÖRÜM ÖRÜMCE ÖRÜMCEK ÖTROFİK ÖZÜT PAK PAL PAPA PAPAĞAN PARA PARAZİT PARTİ PAT PATA PATİ PAZAR PAZI PEK PEKİ PELAJİK PENİ PERİ PERİTON PERON PERT PES PESO PIR PİK PİKAJ PİKE PİL PİR PİRE PİTON PLAJ PLAK POF PORTE POS POT POTİN PRES PRİNT PRİZ PROSES PROTEİN RAB RACA RAF RAHMET RAHT RAKET RAKI RALLİ RAM RAMP RAMPA RANT RANZA RAP RASIT RAST RATE RAY RAZI REHA RENK REPO REST RET REVA REVAK REY REYON RIZA RİNT RNA ROBA ROKA ROKET ROL ROM ROMA ROMAN ROP ROT ROTA ROTİL ROZA ROZE RUAM RUBA RUF RUM SAAT SAC SADIR SAĞ SAĞANAK SAH SAHRE SAHTE SAİK SAK SAKA SAKİ SAKİT SAKO SAL SALDIR SALDIRI SALI SALON SALT SAM SAN SANA SANI SANLI SANRI SARI SARILI SATI SATIN SATIR SAZ SEK SEKEL SEKİ SEKTE SEL SELE SELEK SEM SEMA SEMAH SEMT SEN SER SERA SERE SERF SERHAT SERT SES SET SETER SETİK SETRE SILA SIR SIRA SIRALI SIRAT SIRLI SIRT SIRTLAN SİK SİN SİNE SİNEK SİT SİTE SİZ SKİ SOF SOL SOLCU SOLUCAN SON SONCUL SONE SONLU SOS SÖZ SPOR STAR STER STİL STOK SUAL SUNA SÜT ŞAK ŞAKA ŞAKIMA ŞAL ŞALAK ŞAMA ŞAMALI ŞIK TAAT TAB TABA TABİ TABİAT TAHA TAHT TAHTA TAK TAKOZ TAKSİ TAL TALİ TALİL TAM TAMU TAN TANI TANRI TAPA TAPİ TAPİR TAR TARAZ TARH TARİZ TART TARZ TAS TASA TAT TAV TAY TAZİP TEİN TEK TEKE TEKEL TEKER TEKİL TEKİR TEKLİ TEL TELEK TELEKS TELES TELİS TELSİ TEM TEMA TEMAS TEN TENOR TEORİ TEPİ TEPİR TER TERAS TERE TEREK TERES TERK TERKİ TERS TEST TESTERE TEVEK TEVKİ TIN TIR TIS TİFO TİK TİKE TİKEL TİN TİNER TİP TİPO TİRE TİZ TOK TOKA TOL TON TONER TOP TOR TORAK TORİK TOS TOZ TÖR TÖS TÖZ TRAKE TRANS TRAP TRAS TREN TRİKO TRİO TROFİK TROK TROL TUR TURA TÜL TÜR TÜRE UCA UÇAK UÇLU UÇUK UĞRA UĞRAK UKBA ULA ULAÇ ULAK ULAN ULU UMAR UMRE UMU UMUR UMUT URAY URBA UTMA UYMA UYUM UYUMA UYUR UYUTMA UZAM ÜCRET ÜRAT ÜRE ÜREM ÜRETİCİ ÜRKME ÜST VAGON VAN VANA VAR VARTO VAT VELİ VERE VERİ VERİT VETİRE VETO VİRT VOTKA YAR YAT YEN YER YOZ YUMA YUMRU YUMURTA YURT YUTMA YUTUM ZAİT ZAM ZAN ZAPT ZAR ZARA ZARTA ZAT ZATİ ZEN ZER ZIH ZIMPARA ZIP ZİR ZİRA ZİRAAT ZOKA ZONA ZOR ZORBA ZUM".split(' '));   // TDK listesinden, olası harf setlerine uyan 3-7 harfli kelimeler (+ özel isimler: TAHA)
 function kvValid(w){
+  if (KV_WORDS.has(w)) return true;
   if (typeof DICT !== 'undefined' && DICT && DICT.has(w)) return true;
   if (!kvLevelWords){ kvLevelWords = new Set(); LEVELS.forEach(l => (l.words || []).forEach(x => kvLevelWords.add(KV_TR(x)))); }
   return kvLevelWords.has(w);
@@ -6245,7 +6249,7 @@ function kvFmt(t){ return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, 
 function kvMsg(t, cls){ const m = $('kv-msg'); if (!m) return; m.textContent = t || ''; m.className = 'kv-msg' + (cls ? ' ' + cls : ''); }
 function kvCardHTML(){
   return '<div class="dw-card kv-card"><button class="dw-x" aria-label="Kapat">✕</button><h3>Günlük Kelime Avı</h3><p>7 harften en az 3 harfli kelimeler türet · Her kelime +' + DW_REWARD + ' altın</p>' +
-    '<div class="kv-stats"><div class="kv-stat" id="kv-timebox"><small>⏱ SÜRE</small><b id="kv-time">2:00</b></div><div class="kv-stat"><small>🪙 ALTIN</small><b id="kv-gold">0</b></div></div>' +
+    '<div class="kv-stats"><div class="kv-stat" id="kv-timebox"><small>⏱ SÜRE</small><b id="kv-time">1:00</b></div><div class="kv-stat"><small>🪙 ALTIN</small><b id="kv-gold">0</b></div></div>' +
     '<div class="kv-letters" id="kv-letters"></div>' +
     '<div class="kv-input ph" id="kv-input">Harflere dokun</div>' +
     '<div class="kv-msg" id="kv-msg"></div>' +
