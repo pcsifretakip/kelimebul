@@ -1554,6 +1554,12 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #smenu.smenu{position:fixed!important;left:50vw!important;right:auto!important;top:50dvh!important;margin:0!important;box-sizing:border-box!important;width:min(92vw,430px)!important;max-width:calc(100vw - 24px)!important;max-height:calc(100dvh - 24px)!important;transform:translate(-50%,-50%) scale(.97)!important}
 #smenu.smenu.show{transform:translate(-50%,-50%) scale(1)!important}
 @media(max-width:380px){#smenu.smenu{width:min(94vw,430px)!important;max-width:calc(100vw - 20px)!important;max-height:calc(100dvh - 20px)!important}}
+/* Extra daily missions and chapter art behind the progress strip */
+.tasks-card{max-height:calc(100dvh - 28px);overflow:auto}
+.tasks-overview{display:flex;justify-content:space-between;align-items:center;margin:2px 2px 8px;padding:0 2px;color:#a9a1d6;font-size:9px;font-weight:1000;letter-spacing:.13em}
+.tasks-overview b{padding:4px 8px;border:1px solid rgba(103,232,249,.25);border-radius:999px;background:rgba(34,211,238,.08);color:#88eaff;font-size:10px;letter-spacing:.04em}
+.hm-level{background-blend-mode:normal!important;background-clip:padding-box!important}
+.hm-level>*{position:relative;z-index:1}
 </style>
 
 <style>
@@ -3822,7 +3828,7 @@ function setSoundIcon(){
 
 function startLevel(index, def, seed){
   const review = !def && !!S.done[index];             // tamamlanmÄ±ÅŸ bÃ¶lÃ¼m: bitmiÅŸ hali gÃ¶sterilir, puan/altÄ±n yok
-  if (!review){ S.games++; store.set('kb_games', S.games); }
+  if (!review){ S.games++; store.set('kb_games', S.games); taskRecord('played2'); }
   app.classList.toggle('on-review', review);
   S.coinOk = !def && !review;      // kelime baÅŸÄ±na coin yalnÄ±zca ilk oynayÄ±ÅŸta
   $('status-txt').textContent = review ? 'âœ” Mod tamamlandÄ± â€¢ tekrar puan kazanÄ±lmaz' : 'Harflerin Ã¼zerinden parmaÄŸÄ±nÄ± kaldÄ±rmadan sÃ¼rÃ¼kle!';
@@ -4432,7 +4438,7 @@ function awardWordCoin(path){
   };
 }
 function onFound(word, path){
-  taskRecord('words');
+  taskRecordMany(['words','words15']);
   const tok = S.token, color = S.colorOf[word], n = S.level.size;
   S.found.add(word);
   S.streak = (S.streak || 0) + 1;
@@ -4475,6 +4481,7 @@ $('btn-hint').addEventListener('click', () => {
   if (!left.length) return;
   if (S.coins < HINT_COST){ toast('Yeterli altÄ±nÄ±n yok!'); SND.miss(); return; }
   const w = left[0], pl = S.level.placements[w], n = S.level.size;
+  taskRecord('hint');
   S.coins -= HINT_COST; updateCoins(); SND.hint();
   const el = S.cells[pl.r * n + pl.c];
 
@@ -4745,7 +4752,7 @@ function victory(){
   const idx = S.levelIndex, prev = S.done[idx];
   const isChapterFinal = (idx % CHAPTER_SIZE) === CHAPTER_SIZE - 1;
   const bonus = prev ? 0 : levelBonus(idx);
-  if (!prev) taskRecord('level');   // bÃ¶lÃ¼m bitirme Ã¶dÃ¼lÃ¼ (ilk bitiriÅŸte)
+  if (!prev) taskRecordMany(['level','levels3']);   // bÃ¶lÃ¼m bitirme Ã¶dÃ¼lÃ¼ (ilk bitiriÅŸte)
   const reward = prev ? 0 : bonus;   // kelime coinleri oynarken verildi; burada yalnÄ±z gÃ¶sterim
   if (bonus){ S.coins += bonus; } updateCoins();
   const elapsed = S.level.mode === 'time' ? (S.level.timeLimit - S.seconds) : S.seconds;
@@ -6652,6 +6659,14 @@ function renderHomeHud(){
   const activeLevel = LEVELS[Math.min(S.maxOpen, LEVELS.length - 1)] || LEVELS[0];
   const chapter = activeLevel && activeLevel.group != null ? activeLevel.group + 1 : 1;
   const chapterName = (typeof JOURNEY_CARDS !== 'undefined' && JOURNEY_CARDS[chapter - 1]) ? JOURNEY_CARDS[chapter - 1].name : (activeLevel ? activeLevel.category : 'Amazon YaÄŸmur OrmanlarÄ±');
+  const bannerFile = chapter === 1 ? 'banneramazon.png' : (typeof BANNER_FILES !== 'undefined' && JOURNEY_CARDS[chapter - 1] ? BANNER_FILES[JOURNEY_CARDS[chapter - 1].key] : '');
+  const levelStrip = document.querySelector('.hm-level');
+  if (levelStrip && bannerFile){
+    levelStrip.style.setProperty('background-image', "linear-gradient(90deg,rgba(5,20,30,.88) 0%,rgba(8,11,34,.76) 58%,rgba(9,7,30,.68) 100%),url('" + bannerFile + "?v=2')", 'important');
+    levelStrip.style.setProperty('background-size', 'cover,cover', 'important');
+    levelStrip.style.setProperty('background-position', 'center,center', 'important');
+    levelStrip.style.setProperty('background-repeat', 'no-repeat,no-repeat', 'important');
+  }
   hmSet('hm-lv-num', e => { e.textContent = chapter; });
   hmSet('hm-lv-name', e => { e.textContent = 'ğŸŒ¿ ' + chapterName; });
   hmSet('hm-lv-count', e => { e.textContent = done + ' / ' + total; });
@@ -6719,9 +6734,13 @@ $('hm-chest').addEventListener('click', () => { drRender().classList.add('show')
 
 /* ===== GÃœNLÃœK GÃ–REVLER ===== */
 const TASKS=[
- {id:'words',icon:'ğŸ”',title:'Kelime AvcÄ±sÄ±',desc:'BugÃ¼n 5 kelime bul',goal:5,reward:10},
- {id:'level',icon:'ğŸ†',title:'BÃ¶lÃ¼m UstasÄ±',desc:'Bir bÃ¶lÃ¼mÃ¼ tamamla',goal:1,reward:15},
- {id:'hunt',icon:'âš¡',title:'HÄ±zlÄ± Av',desc:'GÃ¼nlÃ¼k Kelime AvÄ± oyna',goal:1,reward:8}
+ {id:'words',icon:'🔎',title:'Kelime Avcısı',desc:'Bugün 5 kelime bul',goal:5,reward:10},
+ {id:'words15',icon:'✨',title:'Kelime Koleksiyoncusu',desc:'Bugün 15 kelime bul',goal:15,reward:22},
+ {id:'level',icon:'🏆',title:'Bölüm Ustası',desc:'Bir bölümü tamamla',goal:1,reward:15},
+ {id:'levels3',icon:'🌟',title:'Seri Tamamlama',desc:'Bugün 3 bölümü bitir',goal:3,reward:30},
+ {id:'played2',icon:'🎮',title:'Maceraya Devam',desc:'İki kez bölüm oyna',goal:2,reward:12},
+ {id:'hint',icon:'💡',title:'Akıllı Hamle',desc:'Bir ipucu kullan',goal:1,reward:5},
+ {id:'hunt',icon:'⚡',title:'Hızlı Av',desc:'Günlük Kelime Avı turunu bitir',goal:1,reward:8}
 ];
 function taskState(){
  const today=hmDayKey();let s;
@@ -6732,18 +6751,20 @@ function taskState(){
 }
 function taskSave(s){store.set('kb_daily_tasks',JSON.stringify(s));}
 function taskProgress(id){const s=taskState();return Math.min(TASKS.find(t=>t.id===id).goal,Number(s[id])||0);}
-function taskRecord(id,amount=1){
- const s=taskState(),task=TASKS.find(t=>t.id===id);if(!task)return;
- s[id]=Math.min(task.goal,(Number(s[id])||0)+amount);taskSave(s);
+function taskRecordMany(ids,amount=1){
+ const s=taskState();
+ ids.forEach(id=>{const task=TASKS.find(t=>t.id===id);if(task)s[id]=Math.min(task.goal,(Number(s[id])||0)+amount);});
+ taskSave(s);
  const ov=$('tasks-ov');if(ov&&ov.classList.contains('show'))taskRender();
 }
+function taskRecord(id,amount=1){taskRecordMany([id],amount);}
 function taskRender(){
  let o=$('tasks-ov');
  if(!o){o=document.createElement('div');o.id='tasks-ov';o.className='dw-ov';document.body.appendChild(o);
   o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');});
  }
  const s=taskState(),streak=hmStreak(),ready=drReady(),todayReward=DR_REW[drToday()];
- o.innerHTML='<div class="dw-card tasks-card"><button class="dw-x" type="button" aria-label="Kapat">âœ•</button><div class="tasks-kicker">GÃœNLÃœK SERÃœVEN</div><h3>GÃ¶revler</h3><p class="tasks-sub">Her gÃ¼n yenilenir Â· '+streak+' gÃ¼nlÃ¼k giriÅŸ serisi ğŸ”¥</p><button class="tasks-login" id="tasks-login"><span class="tasks-login-icon">ğŸ</span><span><b>GÃ¼nlÃ¼k giriÅŸ Ã¶dÃ¼lÃ¼</b><small>'+(ready?'BugÃ¼n alabileceÄŸin':'BugÃ¼nkÃ¼ Ã¶dÃ¼l alÄ±ndÄ±')+'</small></span><strong>'+(ready?'+'+todayReward:'âœ“')+'</strong></button><div class="tasks-list">'+TASKS.map(t=>{const n=Math.min(t.goal,Number(s[t.id])||0),claimed=s.claimed.includes(t.id),done=n>=t.goal;return '<article class="task-row '+(claimed?'claimed':done?'complete':'')+'"><div class="task-icon">'+t.icon+'</div><div class="task-main"><b>'+t.title+'</b><small>'+t.desc+'</small><div class="task-progress"><i style="width:'+Math.round(n/t.goal*100)+'%"></i></div><small class="task-count">'+n+' / '+t.goal+'</small></div><button class="task-claim" data-task="'+t.id+'" '+(!done||claimed?'disabled':'')+'>'+(claimed?'ALINDI':done?'+'+t.reward+' ğŸª™':'ğŸ”’')+'</button></article>';}).join('')+'</div><div class="tasks-foot">GÃ¶rev Ã¶dÃ¼lleri altÄ±n bakiyene eklenir.</div></div>';
+ o.innerHTML='<div class="dw-card tasks-card"><button class="dw-x" type="button" aria-label="Kapat">âœ•</button><div class="tasks-kicker">GÃœNLÃœK SERÃœVEN</div><h3>GÃ¶revler</h3><p class="tasks-sub">Her gÃ¼n yenilenir Â· '+streak+' gÃ¼nlÃ¼k giriÅŸ serisi ğŸ”¥</p><button class="tasks-login" id="tasks-login"><span class="tasks-login-icon">ğŸ</span><span><b>GÃ¼nlÃ¼k giriÅŸ Ã¶dÃ¼lÃ¼</b><small>'+(ready?'BugÃ¼n alabileceÄŸin':'BugÃ¼nkÃ¼ Ã¶dÃ¼l alÄ±ndÄ±')+'</small></span><strong>'+(ready?'+'+todayReward:'âœ“')+'</strong></button><div class="tasks-overview"><span>BUGÜNÜN GÖREVLERİ</span><b>'+s.claimed.filter(id=>TASKS.some(t=>t.id===id)).length+' / '+TASKS.length+'</b></div><div class="tasks-list">'+TASKS.map(t=>{const n=Math.min(t.goal,Number(s[t.id])||0),claimed=s.claimed.includes(t.id),done=n>=t.goal;return '<article class="task-row '+(claimed?'claimed':done?'complete':'')+'"><div class="task-icon">'+t.icon+'</div><div class="task-main"><b>'+t.title+'</b><small>'+t.desc+'</small><div class="task-progress"><i style="width:'+Math.round(n/t.goal*100)+'%"></i></div><small class="task-count">'+n+' / '+t.goal+'</small></div><button class="task-claim" data-task="'+t.id+'" '+(!done||claimed?'disabled':'')+'>'+(claimed?'ALINDI':done?'+'+t.reward+' ğŸª™':'ğŸ”’')+'</button></article>';}).join('')+'</div><div class="tasks-foot">GÃ¶rev Ã¶dÃ¼lleri altÄ±n bakiyene eklenir.</div></div>';
  o.querySelector('.dw-x').onclick=()=>o.classList.remove('show');
  o.querySelector('#tasks-login').onclick=()=>{o.classList.remove('show');drRender().classList.add('show');};
  o.querySelectorAll('.task-claim').forEach(btn=>btn.onclick=()=>taskClaim(btn.dataset.task));
