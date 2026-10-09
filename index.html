@@ -2944,12 +2944,17 @@ const FIXED_LEVEL_WORDS = [
   [['GEN DNA ALEL GENOM RNA',5,'hv',''], ['ORMAN ÇÖL DENİZ GÖL NEHİR',5,'hv',''], ['TÜR CİNS AİLE TAKIM SINIF ŞUBE',6,'hv',''], ['KORUMA REZERV İZLEME PARK KORU YABAN MİRAS',6,'easy','KORUMA'], ['EROZYON YANGIN İSTİLA KURAK KİRLİ ÇÖP SEL',7,'easy','EROZYON YANGIN'], ['GÖZLEM İZLEME ANALİZ DENEY ÖRNEK SAYIM ANKET',7,'medium','GÖZLEM İZLEME ANALİZ'], ['HASSAS KRİTİK TEHDİT AZALAN NADİR RİSK ÖZEL',8,'medium','HASSAS KRİTİK TEHDİT'], ['SİSTEM HÜCRE ORGAN FLORA DOKU GEN TÜR',8,'hard','SİSTEM HÜCRE ORGAN FLORA'], ['ATMOSFER LİTOSFER BİYOSFER HABİTAT KARBON BİYOM DÖNGÜ',8,'hard','ATMOSFER LİTOSFER BİYOSFER HABİTAT'], ['TAKIM SINIF CİNS AİLE ŞUBE ALEM TÜR',8,'hard','TAKIM SINIF CİNS AİLE ŞUBE']],
   [['BOTO EJDER DEV PERİ CİN',5,'hv',''], ['ŞAMAN RUH TÖREN BÜYÜ İNANÇ',5,'hv',''], ['MAĞARA ZİRVE KÖY GÖL ADA DAĞ',6,'hv',''], ['ŞAMAN ŞİFACI BÜYÜCÜ KAHİN İLAÇ OT BİTKİ',6,'easy','ŞİFACI'], ['TILSIM BOYNUZ TÜY TAŞ MASKE MUSKA KEMİK',7,'easy','TILSIM BOYNUZ'], ['MIZRAK KALKAN BORAZAN OK YAY BALTA TUZAK',7,'medium','BORAZAN MIZRAK KALKAN'], ['KURBAN BOYAMA ŞARKI TÖREN DANS ADAK ATEŞ',8,'medium','KURBAN BOYAMA ŞARKI'], ['SÖYLENCE ATASÖZÜ BİLMECE EFSANE DESTAN HİKAYE MASAL',8,'hard','SÖYLENCE ATASÖZÜ BİLMECE EFSANE'], ['GELENEK GÖRENEK KÜLTÜR RİTÜEL KABİLE TOPLUM İNANÇ',8,'hard','GELENEK GÖRENEK KÜLTÜR RİTÜEL'], ['ANAKONDA TOLTEK YAĞMUR AZTEK OLMEK ALTIN İNKA',8,'hard','ANAKONDA TOLTEK YAĞMUR AZTEK OLMEK']]
 ];
+/* Bölüm 1-4: yatay+dikey+çapraz karışık, tersten yok/az. Sonra çapraz ve tersten kelime oranı ile harf karışıklığı artar. */
+const LEVEL_DIAG = [0.34, 0.34, 0.34, 0.40, 0.45, 0.50, 0.55, 0.55, 0.60, 0.65];
+const LEVEL_REV  = [0,    0,    0,    0.15, 0.25, 0.35, 0.45, 0.50, 0.55, 0.60];
+const LEVEL_MIX  = [0,    0,    0,    0.30, 0.40, 0.50, 0.60, 0.65, 0.70, 0.80];
 const LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => {
   const [wordStr, size, dirs, hide] = FIXED_LEVEL_WORDS[gi][j];
   const words = wordStr.split(' ').map(TR);
   return {
     category:l[0], group:gi, lv:j, info:undefined,
     size, dirs, mode:'classic', hide:hide || null,
+    diag:LEVEL_DIAG[j], rev:LEVEL_REV[j], mix:LEVEL_MIX[j],
     subtitle:(j < 3 ? 'KOLAY' : (j < 6 ? 'ORTA' : 'ZOR')) + ' • ' + words.length + ' KELİME',
     words, beginner:false
   };
@@ -2977,65 +2982,62 @@ function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t
 
 function buildLevel(def, index){
   const words = (Array.isArray(def.words) ? def.words : String(def.words || '').split(/\s+/).filter(Boolean)).map(TR);
-  /* Bölüm standardı 6x6'dır; ızgara boyutu en fazla 6x6'dır. */
-  const requestedSize = Number(def.size) || 6;
-  const size = Math.max(1, Math.min(requestedSize, 8));
-  const dirs = DIRS[def.dirs] || DIRS.medium;
+  const size = Math.max(1, Math.min(Number(def.size) || 6, 8));   /* ızgara en fazla 8x8 */
+  const diagShare = def.diag == null ? 0.34 : def.diag;           /* çapraz yerleşecek kelime oranı */
+  const revProb   = def.rev  == null ? 0    : def.rev;            /* tersten (sağdan sola / aşağıdan yukarı) oranı */
+  const mixProb   = def.mix  == null ? 0    : def.mix;            /* boş kutuları kelime harfleriyle doldurma oranı (karışıklık) */
   const order = [...words].sort((a,b) => b.length - a.length);
+  const SET = { H:[[0,1]], Hr:[[0,-1]], V:[[1,0]], Vr:[[-1,0]], D:[[1,1],[1,-1]], Dr:[[-1,-1],[-1,1]] };
+  const ALL8 = [[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]];
+  const pool = [...words.join('')];
+  const pick = (arr, rnd) => arr[Math.floor(rnd() * arr.length)];
 
-  /* İlk 3 alt bölüm de kolay kalsın; ancak kelimeler sadece alt alta değil,
-     yatay, dikey ve çapraz yönlerde karışık yerleşsin. */
-  if (def.beginner){
-    const beginnerDirs = [[0,1],[1,0],[1,1],[1,-1]];
-    for (let attempt = 0; attempt < 400; attempt++){
-      const rnd = mulberry32((index + 1) * 7919 + attempt * 104729);
-      const grid = Array.from({length:size}, () => Array(size).fill(''));
-      const placements = {};
-      let ok = true;
-
-      for (const w of order){
-        const L = [...w];
-        let placed = false;
-        for (let t = 0; t < 400 && !placed; t++){
-          const [dr, dc] = beginnerDirs[Math.floor(rnd() * beginnerDirs.length)];
-          const r0 = Math.floor(rnd() * size), c0 = Math.floor(rnd() * size);
-          const r1 = r0 + dr * (L.length - 1), c1 = c0 + dc * (L.length - 1);
+  /* kelimenin ızgarada, kendi yerleşimi dışında kalan fazladan bir kopyası var mı? */
+  function hasExtraCopy(grid, placements){
+    const cellsOf = p => { const s = new Set(); for (let i = 0; i < p.len; i++) s.add((p.r + p.dr*i) * 20 + (p.c + p.dc*i)); return s; };
+    const sets = Object.values(placements).map(cellsOf);
+    for (const w of words){
+      const L = [...w];
+      for (let r = 0; r < size; r++) for (let c = 0; c < size; c++){
+        for (const [dr, dc] of ALL8){
+          const r1 = r + dr*(L.length-1), c1 = c + dc*(L.length-1);
           if (r1 < 0 || r1 >= size || c1 < 0 || c1 >= size) continue;
-
-          let fit = true;
-          for (let i = 0; i < L.length; i++){
-            const g = grid[r0 + dr*i][c0 + dc*i];
-            if (g !== '' && g !== L[i]) { fit = false; break; }
-          }
-          if (!fit) continue;
-
-          for (let i = 0; i < L.length; i++) grid[r0 + dr*i][c0 + dc*i] = L[i];
-          placements[w] = {r:r0,c:c0,dr,dc,len:L.length};
-          placed = true;
+          let m = true;
+          for (let i = 0; i < L.length; i++) if (grid[r+dr*i][c+dc*i] !== L[i]) { m = false; break; }
+          if (!m) continue;
+          const cells = []; for (let i = 0; i < L.length; i++) cells.push((r + dr*i) * 20 + (c + dc*i));
+          if (!sets.some(S => cells.every(x => S.has(x)))) return true;
         }
-        if (!placed){ ok = false; break; }
-      }
-
-      if (ok){
-        for (let r=0;r<size;r++) for (let c=0;c<size;c++)
-          if (grid[r][c] === '') grid[r][c] = FILLER[Math.floor(rnd()*FILLER.length)];
-        return { id:index + 1, category:def.category, group:def.group, lv:def.lv, subtitle:def.subtitle, mode:def.mode, size, words, grid, placements, hidden:(Array.isArray(def.hide) ? def.hide : String(def.hide || '').split(/\s+/).filter(Boolean)).map(TR) };
       }
     }
+    return false;
   }
 
-  for (let attempt = 0; attempt < 400; attempt++){
+  let fallback = null;
+  for (let attempt = 0; attempt < 600; attempt++){
     const rnd = mulberry32((index + 1) * 7919 + attempt * 104729);
     const grid = Array.from({length:size}, () => Array(size).fill(''));
     const placements = {};
-    let ok = true;
-    const diagWord = def.dirs === 'hvr1' ? order[Math.floor(rnd() * order.length)] : null;
 
-    for (const w of order){
-      const L = [...w];
+    /* her kelimeye bir yön türü ata: çapraz oranı kadar D, kalanı dönüşümlü H / V */
+    const n = order.length;
+    const nd = Math.min(n, Math.max(1, Math.round(diagShare * n)));
+    const key = order.map(w => ([...w].length >= size ? 1 : 0) + rnd() * 0.9);   /* tam boy kelimeler çapraza zor sığar: çaprazı önce kısa kelimelere ver */
+    const idx = order.map((_, i) => i).sort((a, b) => key[a] - key[b]);
+    const kind = Array(n).fill('');
+    idx.forEach((wi, k) => { kind[wi] = k < nd ? 'D' : ((k - nd) % 2 === 0 ? 'H' : 'V'); });
+
+    let ok = true;
+    for (let wi = 0; wi < n; wi++){
+      const w = order[wi], L = [...w];
       let placed = false;
-      for (let t = 0; t < 400 && !placed; t++){
-        const [dr, dc] = (w === diagWord) ? [[1,1],[-1,-1],[1,-1],[-1,1]][Math.floor(rnd() * 4)] : dirs[Math.floor(rnd() * dirs.length)];
+      for (let t = 0; t < 500 && !placed; t++){
+        let dir;
+        if (t < 300){
+          const k = kind[wi] + (rnd() < revProb ? 'r' : '');
+          dir = pick(SET[k], rnd);
+        } else dir = pick(revProb > 0 ? ALL8 : [[0,1],[1,0],[1,1],[1,-1]], rnd);
+        const [dr, dc] = dir;
         const r0 = Math.floor(rnd() * size), c0 = Math.floor(rnd() * size);
         const r1 = r0 + dr * (L.length - 1), c1 = c0 + dc * (L.length - 1);
         if (r1 < 0 || r1 >= size || c1 < 0 || c1 >= size) continue;
@@ -3055,10 +3057,19 @@ function buildLevel(def, index){
 
     for (let r = 0; r < size; r++)
       for (let c = 0; c < size; c++)
-        if (grid[r][c] === '') grid[r][c] = FILLER[Math.floor(rnd() * FILLER.length)];
+        if (grid[r][c] === '')
+          grid[r][c] = (rnd() < mixProb) ? pick(pool, rnd) : FILLER[Math.floor(rnd() * FILLER.length)];
 
-    return { id:index + 1, category:def.category, group:def.group, lv:def.lv, subtitle:def.subtitle, mode:def.mode, size, words, grid, placements, hidden:(Array.isArray(def.hide) ? def.hide : String(def.hide || '').split(/\s+/).filter(Boolean)).map(TR) };
+    const res = { id:index + 1, category:def.category, group:def.group, lv:def.lv, subtitle:def.subtitle, mode:def.mode, size, words, grid, placements, hidden:(Array.isArray(def.hide) ? def.hide : String(def.hide || '').split(/\s+/).filter(Boolean)).map(TR) };
+    if (hasExtraCopy(grid, placements)) continue;
+    /* kalite şartı: yeterince çapraz kelime olsun, tersten kelime fazla olmasın */
+    const P = Object.values(placements);
+    const dCount = P.filter(p => p.dr && p.dc).length;
+    const rCount = P.filter(p => p.dr < 0 || (p.dr === 0 && p.dc < 0)).length;
+    if (dCount >= Math.max(1, Math.floor(diagShare * n)) && rCount <= Math.ceil(revProb * n) + 1) return res;
+    if (!fallback) fallback = res;
   }
+  if (fallback) return fallback;
   throw new Error('Izgara üretilemedi: ' + def.category);
 }
 
