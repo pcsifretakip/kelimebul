@@ -1,0 +1,341 @@
+1. DOĞA UNSURLARI
+
+1. Mutfak Teknolojisi  [5x5, yatay+dikey]
+BIÇAK, OCAK, FIRIN, TAVA, TAS
+
+2. Kırtasiye Ve Büro  [5x5, yatay+dikey]
+KALEM, SİLGİ, MAKAS, ZIMBA, DOSYA
+
+3. Temizlik Ve Hijyen  [6x6, yatay+dikey]
+SABUN, HAVLU, PASPAS, BEZ, JEL, KOVA
+
+4. Kamp Ve Doğa Sporları  [6x6, +çapraz]
+ÇADIR, MATARA*, FENER, PUSULA, KAMP, İP, ÇANTA
+
+5. Terzi Ve Tekstil  [7x7, +çapraz]
+FERMUAR*, MEZURA*, İĞNE, İPLİK, DÜĞME, TEĞEL, KUMAŞ
+
+6. Bahçe Ve Tarım  [7x7, +tersten]
+TIRMIK*, SULAMA*, KÜREK*, TOHUM, GÜBRE, ÇAPA, FİDAN
+
+7. Marangoz Ve Sanayi  [8x8, +tersten]
+TESTERE*, ZIMPARA*, MENGENE*, PLANYA, VERNİK, ÇEKİÇ, KESER
+
+8. El Aletleri Ve Sanayi  [8x8, tüm yönler]
+MATKAP*, BALYOZ*, PERÇİN*, PENSE*, KESKİ, ÇEKİÇ, EĞE
+
+9. Ameliyathane Malzemeleri  [8x8, tüm yönler]
+ENJEKTÖR*, ELDİVEN*, FORSEPS*, NEŞTER*, MASKE, ÖNLÜK, SERUM
+
+10. Oto Tamir Ve Ağır Sanayi  [8x8, tüm yönler]
+ŞANZIMAN*, LASTİK*, BİJON*, KRİKO*, EGZOZ*, MOTOR, FREN
+
+---
+
+2. ORMAN YAŞAMI
+
+1. Ağaç Türleri  [5x5, yatay+dikey]
+KAYIN, ÇINAR, MEŞE, ÇAM, DUT
+
+2. Yaban Meyveleri  [5x5, yatay+dikey]
+KİRAZ, İNCİR, ERİK, ÜZÜM, AYVA
+
+3. Orman Mantarları  [6x6, yatay+dikey]
+MANTAR, PORÇİN, TRÜF, KÜF, SAP, SPOR
+
+4. Orman Sürüngenleri  [6x6, +çapraz]
+YILAN, GEKO, KOBRA, PİTON, BOA, AGAMA, KAYMAN*
+
+5. Orman Kemirgenleri  [7x7, +çapraz]
+HAMSTER*, KUNDUZ*, SİNCAP, FARE, SIÇAN, KOBAY, DİŞ
+
+6. Orman Avcıları  [7x7, +tersten]
+SIRTLAN*, LEOPAR*, KAPLAN*, PARS, PUMA, ÇAKAL, VAŞAK
+
+7. Ormancı Ekipmanları  [8x8, +tersten]
+TESTERE*, TELSİZ*, PUSULA*, BALTA, HALAT, KAZMA, BIÇAK
+
+8. Orman Zararlıları  [8x8, tüm yönler]
+ÇEKİRGE*, KARINCA*, ÖRÜMCEK*, TIRTIL*, SİNEK, KENE, GÜVE
+
+9. Orman Koruma Terimleri  [8x8, tüm yönler]
+FİDANLIK*, MUHAFIZ*, REZERV*, KORUMA*, YANGIN, NÖBET, ORMAN
+
+10. Ekolojik Sistem Terimleri  [8x8, tüm yönler]
+MİKORİZA*, BESLENME*, HABİTAT*, OKSİJEN*, TOPRAK*, ZİNCİR, BİYOM
+
+---
+
+3. NEHIR EKOSISTEMI
+
+1. Tatlı Su Balıkları  [5x5, yatay+dikey]
+SAZAN, YAYIN, TURNA, ÇAPAK, KEFAL
+
+2. Nehir Taşıtları  [5x5, yatay+dikey]
+KANO, KAYIK, SAL, VAPUR, YAT
+
+3. Su Kıyısı Bitkileri  [6x6, yatay+dikey]
+SAZ, KAMIŞ, ZAMBAK, ÇÖVEN, OT, ALG
+
+4. Nehir Kuşları  [6x6, +çapraz]
+ÖRDEK, KAZ, İBİS, KUĞU, LEYLEK*, TURNA, MARTI
+
+5. Tatlı Su Kabukluları  [7x7, +çapraz]
+YENGEÇ, KEREVİT*, KABUKLU*, İSTAKOZ, MİDYE, SÜLÜK, KABUK
+
+6. Akarsu Terimleri  [7x7, +tersten]
+KAYNAK*, AKINTI*, ÇAY, DERE, IRMAK*, DELTA, TORTU
+
+7. Nehir Amfibileri  [8x8, +tersten]
+SEMENDER*, AKSOLOTL*, KURBAĞA*, İRİBAŞ, KOVALA, SALDIR, SESSİZ
+
+8. Hidroloji Terimleri  [8x8, tüm yönler]
+İSKELET*, DRENAJ*, YAĞIŞ*, SIZMA*, HAVZA, KEMİK, BUHAR
+
+9. Tatlı Su Ekosistemi  [8x8, tüm yönler]
+BATAKLIK*, KAYNAK*, TAŞKIN*, GÖLET*, SULAK, NEHİR, GÖL
+
+10. Limnoloji Bilimi Terimleri  [8x8, tüm yönler]
+PELAJİK*, LİTORAL*, ÖTROFİK*, BENTİK*, TROFİK*, KATMAN, DERİN
+
+---
+
+4. VAHŞI SAKINLER
+
+1. Otçul Memeliler  [5x5, yatay+dikey]
+GEYİK, ZEBRA, FİL, KEÇİ, DEVE
+
+2. Gece Canlıları  [5x5, yatay+dikey]
+TİLKİ, ÇAKAL, KİRPİ, PUHU, GECE
+
+3. Vahşi Sürüngenler  [6x6, yatay+dikey]
+KOMODO, PYTHON, KOBRA, İGUANA, TİMSAH, VARAN
+
+4. Vahşi Kuş Türleri  [6x6, +çapraz]
+KARTAL*, ŞAHİN, DOĞAN, AKBABA, BAYKUŞ, TUKAN, PUHU
+
+5. Sürü Yaşamı Terimleri  [7x7, +çapraz]
+ALFA, BETA, OMEGA*, BÖLGE*, SÜRÜ, LİDER, ALAN
+
+6. Vahşi Yaşam Savunması  [7x7, +tersten]
+MİMİKRİ*, TOKSİN*, SALDIRI*, DİKEN, KAÇIŞ, SÜRÜ, KOKU
+
+7. Vahşi Avlanma Stratejileri  [8x8, +tersten]
+KOVALAMA*, KOVALA*, SALDIR*, SESSİZ, TUZAK, BOĞMA, PUSU
+
+8. Hayvan Anatomisi Terimleri  [8x8, tüm yönler]
+İSKELET*, TIRNAK*, BOYNUZ*, KUYRUK*, PENÇE, KANAT, KEMİK
+
+9. Etoloji (Davranış Bilimi)  [8x8, tüm yönler]
+İLETİŞİM*, ÖĞRENME*, KIŞLAMA*, İÇGÜDÜ*, ÖĞREN, YAVRU, DÜRTÜ
+
+10. Biyolojik Sınıflandırma  [8x8, tüm yönler]
+TAKIM*, SINIF*, CİNS*, AİLE*, ŞUBE*, ALEM, TÜR
+
+---
+
+5. TROPIKAL ZENGINLIK
+
+1. Tropikal Meyveler  [5x5, yatay+dikey]
+MUZ, MANGO, GUAVA, LİME, KİVİ
+
+2. Tropikal Baharatlar  [5x5, yatay+dikey]
+BİBER, NANE, KÖRİ, TUZ, ACI
+
+3. Tropikal İklim Unsurları  [6x6, yatay+dikey]
+NEM, MUSON, BUHAR, RÜZGAR, TAYFUN, DOLU
+
+4. Çiçekli Bitki Türleri  [6x6, +çapraz]
+ORKİDE*, ÇİÇEK, TAÇ, GÜL, LALE, NERGİS, LİLİUM
+
+5. Endemik Ağaç Türleri  [7x7, +çapraz]
+MANGROV*, KAUÇUK*, ABANOZ, SEKOYA, KAPOK, TİK, MAUN
+
+6. Tropikal Yağmur Yapısı  [7x7, +tersten]
+SAĞANAK*, DUŞ, MUSON*, SİS, ÇİY, NEM, BUHAR*
+
+7. Tarımsal Üretim Terimleri  [8x8, +tersten]
+İLAÇLAMA*, SULAMA*, BUDAMA*, HASAT, KAKAO, KAHVE, EKİM
+
+8. Orman Katmanları  [8x8, tüm yönler]
+ALTÖRTÜ*, KANOPİ*, GÖKNAR*, TOPRAK*, TABAN, ZEMİN, ÖRTÜ
+
+9. Biyoçeşitlilik Terimleri  [8x8, tüm yönler]
+HABİTAT*, ENDEMİK*, FLORA*, FAUNA*, DENGE, ÇEŞİT, DOĞA
+
+10. Klimatoloji Ve Coğrafya  [8x8, tüm yönler]
+ATMOSFER*, EKVATOR*, TROPİK*, BASINÇ*, RÜZGAR*, MUSON, İKLİM
+
+---
+
+6. YIRTICILAR VE KUŞLAR
+
+1. Yırtıcı Kuşlar  [5x5, yatay+dikey]
+ŞAHİN, DOĞAN, PUHU, KUŞ, GAGA
+
+2. Yırtıcı Memeliler  [5x5, yatay+dikey]
+ASLAN, ÇİTA, KURT, AYI, PUMA
+
+3. Renkli Kuş Türleri  [6x6, yatay+dikey]
+TUKAN, MAKAV, KUŞ, GAGA, TÜY, RENK
+
+4. Gece Yırtıcıları  [6x6, +çapraz]
+BAYKUŞ*, YARASA, LEOPAR, TİLKİ, PUMA, ÇAKAL, VAŞAK
+
+5. Kuş Anatomisi Terimleri  [7x7, +çapraz]
+KUYRUK*, İSKELET*, KANAT, TÜY, PENÇE, GÖZ, GAGA
+
+6. Yırtıcı Sürüngenler  [7x7, +tersten]
+TİMSAH*, KOMODO*, ENGEREK*, KAYMAN, PİTON, KOBRA, VARAN
+
+7. Avlanma Araçları Ve Organları  [8x8, +tersten]
+TIRNAK*, KISKAÇ*, PENÇE*, KANCA, ZEHER, GAGA, DİŞ
+
+8. Ornitoloji (Kuş Bilimi)  [8x8, tüm yönler]
+KIŞLAMA*, KULUÇKA*, GÖZLEM*, HALKA*, YAVRU, YUVA, ÖTÜŞ
+
+9. Yırtıcı Davranışları  [8x8, tüm yönler]
+KOVALAMA*, AVLANMA*, SALDIRI*, KOVALA*, BÖLGE, PUSU, YEME
+
+10. Taksonomik Sınıflandırma  [8x8, tüm yönler]
+SINIF*, TAKIM*, ALEM*, ŞUBE*, AİLE*, CİNS, TÜR
+
+---
+
+7. ORMAN CANLILARI
+
+1. Omurgasız Hayvanlar  [5x5, yatay+dikey]
+AKREP, PİRE, KENE, BİT, AKAR
+
+2. Otçul Orman Canlıları  [5x5, yatay+dikey]
+GEYİK, KİRPİ, FİL, KEÇİ, KUZU
+
+3. Orman Eklem Bacaklıları  [6x6, yatay+dikey]
+BÖCEK, AKREP, ÇIYAN, YENGEÇ, ARI, KOZA
+
+4. Orman Sinek Türleri  [6x6, +çapraz]
+ARI, SİNEK*, ÇEÇE, SİVRİ, LARVA, KANAT, KAN
+
+5. Sürüngen Canlılar  [7x7, +çapraz]
+TİMSAH*, İGUANA*, YILAN, VARAN, GEKO, KOBRA, PİTON
+
+6. Sosyal Böcekler  [7x7, +tersten]
+KARINCA*, TERMİT*, KOLONİ*, ARI, KOVAN, PETEK, BAL
+
+7. Ağaç Yaşamına Uyumlu Canlılar  [8x8, +tersten]
+PAPAĞAN*, SİNCAP*, MAYMUN*, YARASA, KOALA, TUKAN, YUVA
+
+8. Ekosistem Rolleri  [8x8, tüm yönler]
+TÜKETİCİ*, SİMBİYOZ*, ÜRETİCİ*, PARAZİT*, LEŞÇİL, TOZLAŞ, OTÇUL
+
+9. Parazit Ve Asalak Canlılar  [8x8, tüm yönler]
+SOLUCAN*, MANTAR*, KANCA*, SÜLÜK*, KENE, PİRE, GÜVE
+
+10. Biyokültürel Orman Canlıları  [8x8, tüm yönler]
+BAYKUŞ*, YARASA*, SİNCAP*, TİLKİ*, GEYİK*, KURT, AYI
+
+---
+
+8. SÜRÜNGENLER VE DOĞA
+
+1. Zehirli Yılanlar  [5x5, yatay+dikey]
+KOBRA, MAMBA, KRAİT, BOA, DİŞ
+
+2. Su Sürüngenleri  [5x5, yatay+dikey]
+VARAN, SU, GÖL, PUL, YÜZ
+
+3. Kertenkele Türleri  [6x6, yatay+dikey]
+İGUANA, GEKO, VARAN, SKİNK, AGAMA, DİL
+
+4. Sürüngen Anatomisi  [6x6, +çapraz]
+PUL, KABUK, DERİ, DİL, DİŞ, PENÇE, KUYRUK*
+
+5. Sürüngen Çevre Uyuşumu  [7x7, +çapraz]
+MİMİKRİ*, RENK, DERİ, GÜNEŞ*, ISI, GÖLGE, KUM
+
+6. Yılan Türleri  [7x7, +tersten]
+ENGEREK*, TAİPAN*, PİTON*, BOA, KOBRA, MAMBA, KRAİT
+
+7. Sürüngen Üreme Terimleri  [8x8, +tersten]
+YUMURTA*, KULUÇKA*, MEVSİM*, YAVRU, ERKEK, KABUK, DİŞİ
+
+8. Herpetoloji (Sürüngen Bilimi)  [8x8, tüm yönler]
+TAKIM*, SINIF*, CİNS*, AİLE*, ŞUBE, ALEM, TÜR
+
+9. Zehir Fizyolojisi Terimleri  [8x8, tüm yönler]
+PROTEİN*, TOKSİN*, ZEHİR*, ENZİM*, ETKİ, KAN, DİŞ
+
+10. Sürüngen Biyolojisi Terimleri  [8x8, tüm yönler]
+OMURGA*, KABUK*, KLOAK*, YILAN*, DERİ*, PUL, ISI
+
+---
+
+9. BIYOLOJIK ÇEŞITLILIK
+
+1. Genetik Unsurlar  [5x5, yatay+dikey]
+GEN, DNA, ALEL, GENOM, RNA
+
+2. Yaşam Alanları  [5x5, yatay+dikey]
+ORMAN, ÇÖL, DENİZ, GÖL, NEHİR
+
+3. Tür Düzeyleri  [6x6, yatay+dikey]
+TÜR, CİNS, AİLE, TAKIM, SINIF, ŞUBE
+
+4. Çevre Koruma Terimleri  [6x6, +çapraz]
+KORUMA*, REZERV, İZLEME, PARK, KORU, YABAN, MİRAS
+
+5. Ekolojik Tehditler  [7x7, +çapraz]
+EROZYON*, YANGIN*, İSTİLA, KURAK, KİRLİ, ÇÖP, SEL
+
+6. Araştırma Yöntemleri  [7x7, +tersten]
+GÖZLEM*, İZLEME*, ANALİZ*, DENEY, ÖRNEK, SAYIM, ANKET
+
+7. Koruma Statüleri  [8x8, +tersten]
+HASSAS*, KRİTİK*, TEHDİT*, AZALAN, NADİR, RİSK, ÖZEL
+
+8. Biyoloji Terimleri  [8x8, tüm yönler]
+SİSTEM*, HÜCRE*, ORGAN*, FLORA*, DOKU, GEN, TÜR
+
+9. Biyosfer Sistemleri  [8x8, tüm yönler]
+ATMOSFER*, LİTOSFER*, BİYOSFER*, HABİTAT*, KARBON, BİYOM, DÖNGÜ
+
+10. Taksonomi Ve Biyoçeşitlilik  [8x8, tüm yönler]
+TAKIM*, SINIF*, CİNS*, AİLE*, ŞUBE*, ALEM, TÜR
+
+---
+
+10. AMAZON EFSANELERI
+
+1. Mitolojik Varlıklar  [5x5, yatay+dikey]
+BOTO, EJDER, DEV, PERİ, CİN
+
+2. Kabile İnançları  [5x5, yatay+dikey]
+ŞAMAN, RUH, TÖREN, BÜYÜ, İNANÇ
+
+3. Efsanevi Mekanlar  [6x6, yatay+dikey]
+MAĞARA, ZİRVE, KÖY, GÖL, ADA, DAĞ
+
+4. Kabile Şifacıları  [6x6, +çapraz]
+ŞAMAN, ŞİFACI*, BÜYÜCÜ, KAHİN, İLAÇ, OT, BİTKİ
+
+5. Söylence Nesneleri  [7x7, +çapraz]
+TILSIM*, BOYNUZ*, TÜY, TAŞ, MASKE, MUSKA, KEMİK
+
+6. Amazon Savaşçıları  [7x7, +tersten]
+MIZRAK*, KALKAN*, BORAZAN*, OK, YAY, BALTA, TUZAK
+
+7. Kabile Ritüelleri  [8x8, +tersten]
+KURBAN*, BOYAMA*, ŞARKI*, TÖREN, DANS, ADAK, ATEŞ
+
+8. Sözlü Kültür Terimleri  [8x8, tüm yönler]
+SÖYLENCE*, ATASÖZÜ*, BİLMECE*, EFSANE*, DESTAN, HİKAYE, MASAL
+
+9. Antropoloji Ve Etnografya  [8x8, tüm yönler]
+GELENEK*, GÖRENEK*, KÜLTÜR*, RİTÜEL*, KABİLE, TOPLUM, İNANÇ
+
+10. Amazon Mitolojisi Ve Uygarlıklar  [8x8, tüm yönler]
+ANAKONDA*, TOLTEK*, YAĞMUR*, AZTEK*, OLMEK*, ALTIN, İNKA
+
+---
+
+* = oyunda gizli gösterilir (ilk harf + noktalar, örn. P....)
