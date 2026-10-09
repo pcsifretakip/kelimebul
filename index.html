@@ -3669,17 +3669,18 @@ const TUT = {
   grid: ['ELMAP', 'KTMYO', 'İRAUD', 'BŞZCZ', 'NARGH'],
   steps: [
     { word: 'ELMA',  path: [[0,0],[0,1],[0,2],[0,3]],         guide: true,  color: '#22b35e',
-      msg: '<b>1/4 • Sürükle</b><br>Listede kelimenin sadece <b>ortadaki harfi</b> görünür: <b>M</b>. Kelime <b>ELMA</b>. E harfine bas, parmağını kaldırmadan <b>L → M → A</b> harflerinden geçerek sürükle.' },
+      msg: '<b>1/4 • Sürükle</b><br>Listedeki kelime: <b>ELMA</b>. E harfine bas, parmağını kaldırmadan <b>L → M → A</b> harflerinden geçerek sürükle.' },
     { word: 'KİRAZ', path: [[1,0],[2,0],[2,1],[2,2],[3,2]],   guide: true,  color: '#ef4b6c',
       msg: '<b>2/4 • Yılan kelime</b><br>Kelimeler kıvrılabilir: <b>sağa, sola, yukarı, aşağı</b>. Yılan kelimelerde çapraz geçiş olmaz! <b>KİRAZ</b> kelimesini numaraları izleyerek bul.' },
     { word: 'MUZ',   path: [[1,2],[2,3],[3,4]],               guide: true,  color: '#f59e0b',
       msg: '<b>3/4 • Çapraz kelime</b><br>Bazı kelimeler <b>çapraz</b> gider ama hep tek bir düz çizgide, kıvrılmaz. <b>MUZ</b> kelimesini numaraları izleyerek bul.' },
     { word: 'NAR',   path: [[4,0],[4,1],[4,2]],               guide: false, color: '#0ea5e9',
-      msg: '<b>4/4 • Şimdi sen!</b><br>Kategori <b>Meyveler</b>. Listede hep ortadaki harf görünür: <b>3 harfli, ortası A</b> olan kelimeyi kendin bul.' }
+      msg: '<b>4/4 • Şimdi sen!</b><br>Kategori <b>Meyveler</b>. Listedeki <b>NAR</b> kelimesini kendin bul.' }
   ]
 };
 function ttNeeded(){
   let seen = store.get('kb_tut_v1'); try { if (!seen) seen = ckGet('kb_tut_v1'); } catch(_){}
+  if (/[?&]egitim=1/.test(location.search)) return true;
   return !seen && !(S.maxOpen > 0) && !Object.keys(S.done || {}).length && !store.get('cidahl_ch1_tut');
 }
 function runTutorial(done){
@@ -3931,7 +3932,6 @@ function renderWords(){
     chip.style.setProperty('--c', S.colorOf[w]);
     chip.innerHTML = '<svg class="i"><use href="#i-check"/></svg><span></span>';
     chip.lastChild.textContent = w;
-    { const a = [...w], mid = Math.floor(a.length / 2); chip.lastChild.textContent = a.map((ch, i) => i === mid ? ch : '?').join(''); chip.classList.add('masked'); }   /* yalnız ortadaki harf görünür; bulununca kelime açılır */
     wordListEl.appendChild(chip); S.chips[w] = chip;
   });
 }
