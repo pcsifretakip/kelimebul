@@ -1482,6 +1482,34 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #olbox .ol-footnote span{color:#71e6ff}
 @media(max-width:380px){#olbox{padding:10px}#olbox .ol-card{padding:20px 13px 14px;border-radius:25px}#olbox .ol-head h3{font-size:20px}#olbox .ol-bal{font-size:14px;padding:6px 9px}#olbox .ol-sz button,#olbox .ol-stake button{height:56px}#olbox .ol-play .btn-main{font-size:14px}#olbox .ol-play .ol-duel-btn{font-size:12px}}
 @media(prefers-reduced-motion:reduce){#olbox .ol-card *,#olbox .ol-card *:before{transition:none!important;animation:none!important}}
+/* ===== Yeni yolculuk yükleme ekranı ===== */
+.jm-loading{isolation:isolate!important;overflow:hidden!important;gap:0!important;background:radial-gradient(ellipse at 50% 28%,rgba(95,73,212,.45),transparent 34%),radial-gradient(ellipse at 8% 82%,rgba(22,163,120,.35),transparent 34%),radial-gradient(ellipse at 100% 65%,rgba(20,161,213,.28),transparent 38%),linear-gradient(155deg,#07182b 0%,#101044 48%,#10133a 72%,#071d2e 100%)!important;color:#fff}
+.jm-loading:before,.jm-loading:after{content:"";position:absolute;z-index:0;pointer-events:none;border-radius:50%;filter:blur(42px);opacity:.48}
+.jm-loading:before{width:58vw;height:58vw;left:-26vw;top:-24vw;background:radial-gradient(circle,rgba(30,207,174,.42),transparent 68%);animation:jmAuroraA 9s ease-in-out infinite alternate}
+.jm-loading:after{width:64vw;height:64vw;right:-34vw;bottom:-26vw;background:radial-gradient(circle,rgba(119,89,255,.5),transparent 68%);animation:jmAuroraB 11s ease-in-out infinite alternate}
+@keyframes jmAuroraA{to{transform:translate(14vw,12vh) scale(1.12);opacity:.7}}
+@keyframes jmAuroraB{to{transform:translate(-14vw,-10vh) scale(1.1);opacity:.72}}
+.jm-ld-orbs{z-index:0!important;opacity:.68!important}
+.jm-ld-orbs span{opacity:0;filter:saturate(.8)}
+.jm-ld-center{z-index:2!important;width:min(88vw,440px)!important;gap:16px!important;padding:28px clamp(17px,5vw,30px) 23px;border:1px solid rgba(177,194,255,.23);border-radius:30px;background:linear-gradient(145deg,rgba(34,38,94,.78),rgba(14,20,61,.77));box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 24px 68px rgba(0,0,0,.38),0 0 40px rgba(92,108,255,.17);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.jm-ld-center:before{content:"";position:absolute;inset:6px;border:1px solid rgba(255,255,255,.055);border-radius:24px;pointer-events:none}
+.jm-ld-brand{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 0 1px;color:#a9edff}
+.jm-ld-brand span{display:grid;place-items:center;width:34px;height:34px;border:1px solid rgba(117,229,255,.36);border-radius:12px;background:linear-gradient(145deg,rgba(48,201,226,.2),rgba(131,104,255,.22));font-size:19px;box-shadow:0 0 17px rgba(66,203,255,.16)}
+.jm-ld-brand small{font-size:9px;font-weight:1000;letter-spacing:.2em;text-shadow:0 0 12px rgba(70,220,255,.26)}
+.jm-ld-ring{display:none!important}
+.jm-ld-text{width:100%;gap:4px!important;justify-content:center;font-size:clamp(13px,4.4vw,20px)!important;color:#fff!important;text-shadow:none!important}
+.jm-ld-text span{flex:1 1 0;max-width:36px;aspect-ratio:1/1;display:grid!important;place-items:center;border-radius:22%;font-weight:1000!important;--a:#75dcff;--b:#318ce9;--e:#1858a7;background:linear-gradient(180deg,var(--a),var(--b))!important;border:1px solid rgba(201,245,255,.65);box-shadow:inset 0 2px 0 rgba(255,255,255,.62),inset 0 -3px 0 rgba(0,0,0,.16),0 4px 0 var(--e),0 9px 14px rgba(0,0,0,.3),0 0 12px rgba(73,186,255,.12);text-shadow:0 2px 0 rgba(0,0,0,.24),0 0 7px rgba(255,255,255,.3)}
+.jm-ld-text span:nth-child(4n+2){--a:#c39aff;--b:#8053e8;--e:#4b329b}
+.jm-ld-text span:nth-child(4n+3){--a:#ffe28a;--b:#edaa31;--e:#9b6210}
+.jm-ld-text span:nth-child(4n+4){--a:#ff9cbd;--b:#e94f82;--e:#98284d}
+.jm-ld-sub{font-size:11px!important;letter-spacing:.15em!important;color:#d7d5ff!important;text-shadow:0 2px 12px rgba(130,114,255,.6)!important}
+.jm-bar{position:relative;width:100%;height:18px!important;margin-top:2px;border-radius:99px;background:rgba(5,9,36,.7)!important;border:1px solid rgba(173,167,255,.54)!important;overflow:hidden;box-shadow:inset 0 3px 7px rgba(0,0,0,.5),0 5px 12px rgba(0,0,0,.2)!important}
+.jm-bar i{position:relative;height:100%;border-radius:inherit;background:linear-gradient(90deg,#22c8e8 0%,#7183ff 48%,#b279ff 100%)!important;box-shadow:inset 0 2px 0 rgba(255,255,255,.46),0 0 15px rgba(104,129,255,.65)!important}
+.jm-bar i:after{content:"";position:absolute;top:2px;left:5px;right:5px;height:35%;border-radius:99px;background:linear-gradient(90deg,rgba(255,255,255,.48),rgba(255,255,255,.06))}
+.jm-ld-tip{display:flex;align-items:center;gap:7px;margin-top:-3px;color:#aaaedb;font-size:9px;font-weight:900;letter-spacing:.12em}
+.jm-ld-tip i{width:6px;height:6px;border-radius:50%;background:#68eaff;box-shadow:0 0 9px #68eaff}
+@media(max-width:400px){.jm-ld-center{width:min(91vw,440px)!important;padding:23px 14px 19px;border-radius:25px;gap:14px!important}.jm-ld-text{gap:3px!important}.jm-ld-text span{max-width:33px}.jm-ld-brand small{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.jm-loading:before,.jm-loading:after,.jm-ld-text span,.jm-ld-orbs span{animation:none!important}}
 </style>
 
 <style>
@@ -6323,10 +6351,12 @@ function ensureJourneyMap(){
       <div class="jm-ld-rays"></div>
       <div class="jm-ld-orbs">${Array.from({length:18},(_,i)=>`<span style="--x:${(i*53)%100}%;--s:${4+(i*7)%9}px;--d:${5+(i*3)%6}s;--dl:${-(i*0.7).toFixed(1)}s;--h:${[48,160,300,42,190,330][i%6]}"></span>`).join('')}</div>
       <div class="jm-ld-center">
+        <div class="jm-ld-brand"><span aria-hidden="true">🧭</span><small>YENİ BÖLGEYE GİRİŞ</small></div>
         <div class="jm-ld-ring"><div class="jm-ld-core"><svg class="i"><use href="#i-star"/></svg></div></div>
         <div class="jm-ld-text">${'YÜKLENİYOR'.split('').map((c,i)=>`<span style="--i:${i}">${c}</span>`).join('')}</div>
         <div class="jm-ld-sub">Macera hazırlanıyor<em>.</em><em>.</em><em>.</em></div>
         <div class="jm-bar"><i></i></div>
+        <div class="jm-ld-tip"><i></i> KELİMELER YERİNE YERLEŞİYOR</div>
       </div>
     </div>
   `;
