@@ -3728,11 +3728,10 @@ function runTutorial(done){
 
   /* kelime kutuları: oyundaki gibi sadece ortadaki harf */
   const chips = TUT.steps.map(s => {
-    const a = [...s.word], mid = Math.floor(a.length / 2);
-    const chip = document.createElement('div'); chip.className = 'chip masked';
+    const chip = document.createElement('div'); chip.className = 'chip';
     chip.style.setProperty('--c', s.color);
     chip.innerHTML = '<svg class="i"><use href="#i-check"/></svg><span></span>';
-    chip.lastChild.textContent = a.map((ch, i) => i === mid ? ch : '?').join('');
+    chip.lastChild.textContent = s.word;
     chipsT.appendChild(chip); return chip;
   });
 
