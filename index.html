@@ -1538,6 +1538,18 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 @keyframes lpSparks{0%{opacity:0;transform:translate(-50%,-50%) scale(.08)}16%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1.15)}}
 @media(max-width:380px){.lp-screen{padding:16px}.lp-screen .lp-banner{padding:23px 17px 18px;border-radius:25px}.lp-screen .lp-crown{width:67px;height:67px;border-radius:22px;font-size:34px}}
 @media(prefers-reduced-motion:reduce){.lp-screen,.lp-screen:before,.lp-screen:after,.lp-screen .lp-banner,.lp-screen .lp-banner:before,.lp-screen .lp-banner:after,.lp-screen .lp-crown,.lp-screen .lp-st{animation:none!important}.lp-screen:after,.lp-screen .lp-banner:before,.lp-screen .lp-banner:after{display:none}}
+/* Liderlik kupası çevresi: üst boşluğu dengeli sıkıştır, amblemi sahnele */
+#lbbox .lb-card{padding-top:23px!important}
+#lbbox .lb-hero{padding-top:9px!important;padding-bottom:12px!important}
+#lbbox .lb-orbit{position:relative;isolation:isolate;width:68px;height:68px;margin-bottom:9px;border-radius:23px;background:radial-gradient(circle at 50% 42%,rgba(255,217,112,.38),rgba(255,198,62,.15) 46%,rgba(130,70,255,.14));box-shadow:0 0 0 5px rgba(255,210,92,.055),0 0 26px rgba(255,197,72,.24),inset 0 0 20px rgba(255,222,135,.13);animation:lbCupArrive .62s cubic-bezier(.18,.85,.24,1.18) both}
+#lbbox .lb-orbit:before,#lbbox .lb-orbit:after{position:absolute;z-index:-1;color:#ffe68a;font-size:14px;line-height:1;text-shadow:0 0 10px rgba(255,219,100,.9);pointer-events:none}
+#lbbox .lb-orbit:before{content:"✦";left:-15px;top:7px;animation:lbCupSpark 2.3s ease-in-out infinite}
+#lbbox .lb-orbit:after{content:"✧";right:-15px;bottom:6px;font-size:17px;animation:lbCupSpark 2.3s .55s ease-in-out infinite}
+#lbbox .lb-hero h3{margin-top:4px}
+@keyframes lbCupArrive{from{opacity:0;transform:translateY(-8px) scale(.84)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes lbCupSpark{50%{opacity:.45;transform:scale(.78) rotate(12deg)}}
+@media(max-width:420px){#lbbox .lb-card{padding-top:19px!important}#lbbox .lb-hero{padding-top:7px!important}#lbbox .lb-orbit{width:62px;height:62px}}
+@media(prefers-reduced-motion:reduce){#lbbox .lb-orbit,#lbbox .lb-orbit:before,#lbbox .lb-orbit:after{animation:none!important}}
 </style>
 
 <style>
