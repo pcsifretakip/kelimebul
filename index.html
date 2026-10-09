@@ -2492,6 +2492,10 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 #ad-reward-ov .ad-watch:active:not(:disabled){transform:translateY(3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 1px 0 #183d85}
 #ad-reward-ov .ad-watch:disabled{opacity:.62;filter:saturate(.55)}
 #ad-reward-ov .ad-foot{margin-top:12px;color:#a9a5ce;font-size:10px;font-weight:700}
+
+#smenu #s-privacy{min-height:50px;justify-content:center;padding:0 16px;border:1px solid rgba(89,224,255,.54);border-radius:16px;background:linear-gradient(100deg,#087e9e,#2d6bd1 55%,#6745ca)!important;color:#fff!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 4px 0 #123d73,0 0 17px rgba(42,190,255,.2);font-size:12px;letter-spacing:.08em;text-shadow:0 1px 4px rgba(0,0,0,.35);transition:transform .18s,filter .18s,box-shadow .18s}
+#smenu #s-privacy:hover,#smenu #s-privacy:focus-visible{filter:brightness(1.16);transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 4px 0 #123d73,0 0 24px rgba(42,190,255,.4)}
+#smenu #s-privacy:active{transform:translateY(3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.24),0 1px 0 #123d73}
 </style>
 
 </head>
@@ -2725,6 +2729,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
     <button class="srow settings-action" id="s-vib"><span class="srow-ic vib"><svg class="i"><use href="#i-vibrate"/></svg></span><span>TİTREŞİM</span><b id="s-vib-v">AÇIK</b></button>
     <button class="srow c" id="s-help">YARDIM</button>
     <button class="srow c" id="s-report">SORUN BİLDİR</button>
+    <button class="srow c" id="s-privacy">GİZLİLİK POLİTİKASI</button>
     <button class="srow c" id="s-rate">★ BİZİ PUANLA</button>
     <button class="srow c" id="s-home">ANA MENÜ</button>
     <button class="srow settings-action logout-row" id="s-logout" aria-label="Çıkış yap" title="Çıkış yap"><span>ÇIKIŞ YAP</span><span class="row-ic logout"><svg class="i"><use href="#i-logout"/></svg></span></button>
@@ -5289,6 +5294,7 @@ const DEV_EMAIL = '';                                   // istersen buraya e-pos
 const rpBox = $('reportbox'), rpErr = $('rp-err'); let rpLast = 0;
 function rpMsg(m, ok){ rpErr.style.color = ok ? '#86efac' : ''; rpErr.textContent = m; }
 $('s-report').addEventListener('click', () => { closeMenu(); rpMsg(''); rpBox.classList.add('show'); });
+$('s-privacy').addEventListener('click', () => { closeMenu(); location.href = new URL('privacy.html', location.href).href; });
 $('rp-close').addEventListener('click', () => rpBox.classList.remove('show'));
 $('rp-send').addEventListener('click', async () => {
   const t = $('rp-text').value.trim();
