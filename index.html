@@ -1550,6 +1550,10 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 @keyframes lbCupSpark{50%{opacity:.45;transform:scale(.78) rotate(12deg)}}
 @media(max-width:420px){#lbbox .lb-card{padding-top:19px!important}#lbbox .lb-hero{padding-top:7px!important}#lbbox .lb-orbit{width:62px;height:62px}}
 @media(prefers-reduced-motion:reduce){#lbbox .lb-orbit,#lbbox .lb-orbit:before,#lbbox .lb-orbit:after{animation:none!important}}
+/* Ayarlar panelini ekranın gerçek merkezine sabitle */
+#smenu.smenu{position:fixed!important;left:50vw!important;right:auto!important;top:50dvh!important;margin:0!important;box-sizing:border-box!important;width:min(92vw,430px)!important;max-width:calc(100vw - 24px)!important;max-height:calc(100dvh - 24px)!important;transform:translate(-50%,-50%) scale(.97)!important}
+#smenu.smenu.show{transform:translate(-50%,-50%) scale(1)!important}
+@media(max-width:380px){#smenu.smenu{width:min(94vw,430px)!important;max-width:calc(100vw - 20px)!important;max-height:calc(100dvh - 20px)!important}}
 </style>
 
 <style>
