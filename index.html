@@ -2445,6 +2445,37 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 #smenu .srow:focus-visible,#smenu .smenu-close:focus-visible{outline:2px solid #9df4ff;outline-offset:3px}
 @media(max-width:380px){#smenu.smenu{width:min(94vw,430px)!important;padding:18px 12px 13px;gap:8px}#smenu #s-help,#smenu #s-report,#smenu #s-rate,#smenu #s-home,#smenu #s-logout{min-height:50px}}
 @media(prefers-reduced-motion:reduce){#smenu *{scroll-behavior:auto!important;transition:none!important}}
+
+/* Compact timed word-hunt board and coin payout */
+#dw-ov .kv-card{width:min(100%,450px);max-height:calc(100dvh - 24px);overflow:hidden;padding:14px 14px 12px;border-radius:25px;display:flex;flex-direction:column;align-items:stretch;gap:0;border:1px solid rgba(139,123,255,.78);background:radial-gradient(ellipse at 50% 0%,rgba(54,190,255,.18),transparent 43%),radial-gradient(ellipse at 100% 100%,rgba(188,74,255,.2),transparent 42%),linear-gradient(155deg,#1a1748,#110d32 58%,#0d1029);box-shadow:0 0 0 1px rgba(69,213,255,.14),0 20px 60px rgba(0,0,0,.72),0 0 28px rgba(118,80,255,.28)}
+#dw-ov .kv-card h3{margin:0 38px 8px;font-size:24px;line-height:1.2;letter-spacing:.035em}
+#dw-ov .kv-card .dw-x{z-index:3;width:34px;height:34px;right:10px;top:10px;border:1px solid rgba(210,194,255,.55);background:linear-gradient(145deg,#8e69ff,#5735cf);font-size:19px;box-shadow:0 0 12px rgba(139,92,246,.36)}
+#dw-ov .kv-stats{gap:8px;margin:0 0 8px}
+#dw-ov .kv-stat{min-height:46px;padding:5px 4px;gap:6px;border-radius:13px;background:rgba(6,8,31,.55);border-color:rgba(121,111,220,.5)}
+#dw-ov .kv-stat small{font-size:10px}
+#dw-ov .kv-stat b{font-size:21px}
+#dw-ov .kv-target{margin:0 auto 4px;padding:6px 12px;gap:8px;border-color:rgba(104,227,255,.56);background:linear-gradient(100deg,rgba(37,116,199,.3),rgba(112,70,198,.32));box-shadow:0 0 15px rgba(69,174,255,.12)}
+#dw-ov .kv-target small{font-size:10px;color:#7eeaff}
+#dw-ov .kv-target b{font-size:25px;color:#fff0aa}
+#dw-ov .kv-target span{font-size:11px;color:#ffe287}
+#dw-ov .kv-grid{width:min(82vw,410px);max-width:100%;margin:4px auto 3px;gap:4px;flex:none}
+#dw-ov .kv-cell{border-radius:9px;font-size:clamp(15px,5vw,23px);touch-action:none}
+#dw-ov .kv-msg{min-height:16px;margin:0;font-size:11px;line-height:16px}
+#dw-ov .kv-listh{display:none}
+#dw-ov .kv-res{padding:10px 0 2px}
+#dw-ov .kv-res h3{margin:0 0 8px;color:#fff;text-shadow:0 0 14px rgba(116,91,255,.65)}
+#dw-ov .kv-res-words{margin:0 auto 12px;color:#c9c4ff;font-size:13px;font-weight:1000;letter-spacing:.14em}
+#dw-ov .kv-bonus-total{display:flex;align-items:center;justify-content:center;gap:9px;width:max-content;min-width:190px;margin:0 auto 15px;padding:12px 20px;border:1px solid rgba(255,211,83,.66);border-radius:18px;background:linear-gradient(110deg,rgba(255,186,49,.18),rgba(123,85,255,.22));box-shadow:0 0 22px rgba(255,195,57,.2),inset 0 1px 0 rgba(255,255,255,.18)}
+#dw-ov .kv-bonus-total span{font-size:26px;filter:drop-shadow(0 0 7px rgba(255,205,61,.65))}
+#dw-ov .kv-bonus-total b{font-size:30px;color:#ffe78a;text-shadow:0 0 14px rgba(255,203,60,.55)}
+#dw-ov .kv-bonus-total small{font-size:11px;font-weight:1000;letter-spacing:.1em;color:#fff0b4}
+#dw-ov .kv-res .dw-btn.sec{width:100%;margin:0;padding:12px;border-radius:14px;border:1px solid rgba(166,147,255,.55);background:linear-gradient(100deg,#337fe2,#704ae1 58%,#923ee0);box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 4px 0 #35226d;color:#fff;font-size:13px;font-weight:1000;letter-spacing:.12em}
+#dw-ov .kv-res .dw-btn.sec:active{transform:translateY(3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 1px 0 #35226d}
+.kv-flight-coin{position:fixed;z-index:1000;pointer-events:none;font-size:24px;line-height:1;filter:drop-shadow(0 0 8px rgba(255,214,79,.95))}
+@keyframes kvWalletBump{35%{transform:scale(1.24);filter:brightness(1.35)}100%{transform:scale(1);filter:none}}
+.topbar .coin.kv-wallet-bump{animation:kvWalletBump .45s cubic-bezier(.2,1.4,.4,1)}
+@media(max-height:700px){#dw-ov .kv-card{padding:10px 12px 8px}#dw-ov .kv-card h3{font-size:21px;margin-bottom:5px}#dw-ov .kv-grid{width:min(76vw,360px);margin-top:2px}#dw-ov .kv-stats{margin-bottom:5px}#dw-ov .kv-target{margin-bottom:2px}}
+@media(prefers-reduced-motion:reduce){.kv-flight-coin{display:none!important}.topbar .coin.kv-wallet-bump{animation:none!important}}
 </style>
 
 </head>
@@ -6537,7 +6568,7 @@ function drClaim(){
 $('hm-chest').addEventListener('click', () => { drRender().classList.add('show'); });
 
 /* ===== GÜNLÜK KELİME AVI: 7×7 ızgarada hedef kelimeyi bul ===== */
-var DW_REWARD=1,KV_TIME=60,KV_TARGET='',KV_HIDDEN=4;
+var DW_REWARD=3,KV_TIME=30,KV_TARGET='',KV_MAX_WORDS=10;
 function kvTargetOfDay(){
  const pool=new Set();
  LEVELS.forEach(l=>(l.words||[]).forEach(w=>{
@@ -6552,7 +6583,7 @@ function dwCycle(){const n=new Date();return new Date(n.getFullYear(),n.getMonth
 function dwKey(){return hmDayKey(dwCycle());}
 function dwDone(){return store.get('kb_dw_done')===dwKey();}
 function dwNextText(){return 'Yarın yeni kelimeler';}
-var KV=null,kvTick=null,kvLastResult=null;
+var KV=null,kvTick=null;
 function kvPathKey(path){const a=path.join(','),b=path.slice().reverse().join(',');return a<b?a:b;}
 function kvScan(board,word){
  const dirs=[[0,1],[1,0],[1,1],[1,-1]],rev=Array.from(word).reverse().join(''),found=new Map();
@@ -6564,35 +6595,42 @@ function kvScan(board,word){
  return found;
 }
 function kvMakeBoard(){
- const dirs=[[0,1],[1,0],[1,1],[1,-1]],pool=Array.from(KV_TARGET);let fallback=null;
- for(let trial=0;trial<1600;trial++){
+ const dirs=[[0,1],[1,0],[1,1],[1,-1]],pool=Array.from(KV_TARGET),paths=[];
+ for(const [dr,dc] of dirs)for(let r=0;r<7;r++)for(let c=0;c<7;c++){
+  const er=r+(KV_TARGET.length-1)*dr,ec=c+(KV_TARGET.length-1)*dc;
+  if(er<0||er>=7||ec<0||ec>=7)continue;
+  paths.push(Array.from({length:KV_TARGET.length},(_,k)=>(r+k*dr)*7+c+k*dc));
+ }
+ let fallback=null;
+ for(let trial=0;trial<240;trial++){
   const board=Array(49).fill(null),planted=new Set();let ok=true;
-  for(let n=0;n<KV_HIDDEN;n++){
+  for(let n=0;n<KV_MAX_WORDS;n++){
    let placed=false;
-   for(let attempt=0;attempt<120&&!placed;attempt++){
-    const [dr,dc]=dirs[Math.floor(Math.random()*dirs.length)],r=Math.floor(Math.random()*7),c=Math.floor(Math.random()*7),er=r+(KV_TARGET.length-1)*dr,ec=c+(KV_TARGET.length-1)*dc;
-    if(er<0||er>=7||ec<0||ec>=7)continue;
-    const path=Array.from({length:KV_TARGET.length},(_,k)=>(r+k*dr)*7+c+k*dc);if(path.some(i=>board[i]!=null))continue;
+   for(let attempt=0;attempt<500&&!placed;attempt++){
+    const path=paths[Math.floor(Math.random()*paths.length)];
+    if(path.some(i=>board[i]!=null))continue;
     path.forEach((i,k)=>board[i]=pool[k]);planted.add(kvPathKey(path));placed=true;
    }
    if(!placed){ok=false;break;}
   }
   if(!ok)continue;
-  for(let i=0;i<49;i++)if(board[i]==null)board[i]=pool[Math.floor(Math.random()*pool.length)];
-  const matches=kvScan(board,KV_TARGET);fallback={board,matches};
-  if(matches.size===planted.size&&Array.from(planted).every(k=>matches.has(k)))return{board,targets:new Set(matches.keys())};
+  for(let fill=0;fill<32;fill++){
+   const candidate=board.slice();
+   for(let i=0;i<49;i++)if(candidate[i]==null)candidate[i]=pool[Math.floor(Math.random()*pool.length)];
+   const matches=kvScan(candidate,KV_TARGET);fallback={board:candidate,matches};
+   if(matches.size===KV_MAX_WORDS&&Array.from(planted).every(k=>matches.has(k)))return{board:candidate,targets:new Set(matches.keys())};
+  }
  }
- return{board:fallback.board,targets:new Set(fallback.matches.keys())};
+ if(!fallback)throw new Error('Kelime Avı tahtası oluşturulamadı');
+ return{board:fallback.board,targets:new Set(Array.from(fallback.matches.keys()).slice(0,KV_MAX_WORDS))};
 }
 function kvFmt(t){return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');}
 function kvMsg(t,cls){const m=$('kv-msg');if(!m)return;m.textContent=t||'';m.className='kv-msg'+(cls?' '+cls:'');}
 function kvCardHTML(){
- return '<div class="dw-card kv-card"><button class="dw-x" aria-label="Kapat">✕</button><h3>Kelime Avı</h3><p>Izgarada hedef kelimeyi yatay, dikey veya çapraz bulup sürükle.</p>'+
- '<div class="kv-stats"><div class="kv-stat" id="kv-timebox"><small>SÜRE</small><b id="kv-time">1:00</b></div><div class="kv-stat"><small>BULUNAN</small><b id="kv-count">0 / '+KV_HIDDEN+'</b></div></div>'+
- '<div class="kv-target"><small>HEDEF</small><b>'+KV_TARGET+'</b><span>+1 🪙</span></div>'+
- '<div class="kv-grid" id="kv-grid" role="group" aria-label="Yediye yedi harf ızgarası"></div>'+
- '<div class="kv-msg" id="kv-msg">Kelimenin harflerine basılı tutup sırayla sürükle.</div>'+
- '<div class="kv-listh"><span>Kazandığın altın</span><b id="kv-gold">0 🪙</b></div></div>';
+ return '<div class="dw-card kv-card"><button class="dw-x" aria-label="Kapat">✕</button><h3>Kelime Avı</h3>'+
+ '<div class="kv-stats"><div class="kv-stat" id="kv-timebox"><small>SÜRE</small><b id="kv-time">0:30</b></div><div class="kv-stat"><small>BULUNAN</small><b id="kv-count">0 / '+KV_MAX_WORDS+'</b></div></div>'+
+ '<div class="kv-target"><small>HEDEF</small><b>'+KV_TARGET+'</b><span>+3 🪙</span></div>'+
+ '<div class="kv-grid" id="kv-grid" role="group" aria-label="Yediye yedi harf ızgarası"></div><div class="kv-msg" id="kv-msg"></div></div>';
 }
 function dwOpen(){
  if(dwDone()){hmNote('Bugünkü Kelime Avı hakkını kullandın. '+dwNextText()+'!');return;}
@@ -6622,7 +6660,7 @@ function kvDraw(){
  if(!KV)return;const foundCells=new Set();KV.found.forEach(k=>k.split(',').forEach(i=>foundCells.add(+i)));
  const grid=$('kv-grid');
  grid.innerHTML=KV.board.map((ch,i)=>'<button type="button" class="kv-cell'+(foundCells.has(i)?' found':'')+(KV.path.includes(i)?' sel':'')+'" data-i="'+i+'" aria-label="'+ch+'">'+ch+'</button>').join('');
- $('kv-count').textContent=KV.found.length+' / '+KV.targets.size;$('kv-gold').textContent=KV.gold+' 🪙';
+ $('kv-count').textContent=KV.found.length+' / '+KV_MAX_WORDS;
 }
 function kvExtend(i){
  if(!KV||KV.over||KV.path.at(-1)===i)return;const last=KV.path.at(-1);
@@ -6638,9 +6676,10 @@ function kvResolve(){
  if(!KV||KV.over)return;
  if(KV.path.length!==KV.word.length){KV.path=[];KV.dir=null;kvDraw();return;}
  const key=kvPathKey(KV.path);
- if(!KV.targets.has(key)||KV.found.includes(key)){KV.path=[];KV.dir=null;kvDraw();kvMsg('Bu kelimeyi burada bulamadım. Tekrar dene!','warn');return;}
- KV.found.push(key);KV.gold+=DW_REWARD;S.coins+=DW_REWARD;updateCoins();kvDraw();kvMsg('Harika! +1 altın ✨');buzz([18,30,18]);try{SND.found();}catch(_){}
- clearTimeout(kvMsg.t);kvMsg.t=setTimeout(()=>kvMsg(''),1000);
+ if(!KV.targets.has(key)||KV.found.includes(key)){KV.path=[];KV.dir=null;kvDraw();kvMsg('Tekrar dene','warn');return;}
+ KV.found.push(key);KV.gold+=DW_REWARD;kvDraw();kvMsg('+3 ALTIN','');buzz([18,30,18]);try{SND.found();}catch(_){}
+ clearTimeout(kvMsg.t);kvMsg.t=setTimeout(()=>kvMsg(''),700);
+ if(KV.found.length>=KV_MAX_WORDS){kvFinish();}
 }
 function kvTime(){
  if(!KV||KV.over)return;KV.left=Math.max(0,Math.ceil((KV.end-Date.now())/1000));
@@ -6648,26 +6687,33 @@ function kvTime(){
  if(KV.left<=0)kvFinish();
 }
 function kvStop(silent){clearInterval(kvTick);kvTick=null;if(KV&&!KV.over)KV.over=true;if(silent)KV=null;}
+function kvFlyToWallet(wordCount){
+ if(!wordCount)return;
+ const from=$('kv-bonus-icon'),wallet=document.querySelector('.topbar .coin');
+ if(!from||!wallet)return;
+ const a=from.getBoundingClientRect(),b=wallet.getBoundingClientRect();
+ const sx=a.left+a.width/2,sy=a.top+a.height/2,dx=b.left+b.width/2-sx,dy=b.top+b.height/2-sy;
+ for(let i=0;i<Math.min(wordCount,10);i++){
+  const coin=document.createElement('span');coin.className='kv-flight-coin';coin.textContent='🪙';
+  coin.style.left=sx+'px';coin.style.top=sy+'px';document.body.appendChild(coin);
+  const anim=coin.animate([{transform:'translate(-50%,-50%) scale(1)',opacity:1},{transform:'translate(calc(-50% + '+dx+'px),calc(-50% + '+dy+'px)) scale(.35)',opacity:.15}],{duration:850,delay:i*65,easing:'cubic-bezier(.18,.72,.28,1)',fill:'forwards'});
+  anim.onfinish=()=>coin.remove();
+ }
+ wallet.classList.remove('kv-wallet-bump');void wallet.offsetWidth;wallet.classList.add('kv-wallet-bump');
+ setTimeout(()=>wallet.classList.remove('kv-wallet-bump'),850);
+}
 function kvFinish(){
  if(!KV||KV.over)return;kvStop(false);
- kvLastResult={words:KV.found.length,gold:KV.gold,list:Array(KV.found.length).fill(KV.word),sent:false};
+ const r={words:KV.found.length,gold:KV.gold};
+ if(r.gold>0){S.coins+=r.gold;updateCoins();}
  try{SND.win();}catch(_){}buzz([40,40,40]);
- const o=$('dw-ov'),r=kvLastResult,emoji=r.words>=4?'🏆':r.words>=2?'🌟':r.words?'👏':'⏰';
- o.querySelector('.dw-card').innerHTML='<button class="dw-x" aria-label="Kapat">✕</button><div class="kv-res"><h3>Süre Bitti!</h3><div class="big">'+emoji+'</div><p>'+(r.words?'“'+KV_TARGET+'” kelimesinden '+r.words+' tane buldun!':'Bu sefer hedef kelime bulamadın.')+'</p><div class="kv-res-grid"><div><small>Bulunan Kelime</small><b>'+r.words+'</b></div><div><small>Kazanılan Altın</small><b>🪙 '+r.gold+'</b></div></div><button class="dw-btn" id="kv-lb">Liderlik Tablosuna Ekle</button><button class="dw-btn sec" id="kv-close">Kapat</button></div>';
- o.querySelector('.dw-x').onclick=()=>{o.classList.remove('show');KV=null;};$('kv-close').onclick=()=>{o.classList.remove('show');KV=null;};$('kv-lb').onclick=kvToBoard;renderHomeHud();
+ const o=$('dw-ov'),card=o.querySelector('.dw-card'),headline=r.words>=KV_MAX_WORDS?'HEPSİNİ BULDUN!':'SÜRE BİTTİ!';
+ card.innerHTML='<button class="dw-x" aria-label="Kapat">✕</button><div class="kv-res"><h3>'+headline+'</h3><div class="kv-res-words">'+r.words+' / '+KV_MAX_WORDS+' KELİME</div><div class="kv-bonus-total"><span id="kv-bonus-icon">🪙</span><b>+'+r.gold+'</b><small>ALTIN</small></div><button class="dw-btn sec" id="kv-close">KAPAT</button></div>';
+ const close=()=>{o.classList.remove('show');KV=null;};
+ card.querySelector('.dw-x').onclick=close;$('kv-close').onclick=close;renderHomeHud();
+ requestAnimationFrame(()=>kvFlyToWallet(r.words));
 }
-async function kvToBoard(){
- const btn=$('kv-lb'),r=kvLastResult;if(!btn||!r||r.sent)return;btn.disabled=true;
- if(!r.words){btn.textContent='Eklenecek kelime yok';return;}
- if(!FIREBASE_CONFIG.apiKey||!USER||!USER.id){btn.textContent='Liderlik tablosu kapalı';return;}
- btn.textContent='Ekleniyor…';
- try{
-  const db=await getDb(),ref=db.collection('leaderboard').doc(USER.id);
-  await db.runTransaction(async tx=>{const d=await tx.get(ref),o=d.exists?d.data():{},elo=eloOf(o),lvl=Math.max(o.lvl||0,levelPoints()),hunt=(o.hunt||0)+r.words;myScore=elo+lvl+hunt;tx.set(ref,{name:USER.name,avatar:avatar||'',elo,lvl,hunt,score:elo+lvl+hunt,wins:o.wins||0,games:o.games||0});});
-  r.sent=true;btn.textContent='✓ Eklendi (+'+r.words+' puan)';try{lbRender();}catch(_){}
- }catch(_){btn.disabled=false;btn.textContent='Tekrar dene';}
-}
-$('hm-word').addEventListener('click',dwOpen);
+$('hm-word').addEventListener('click',dwOpen);$('hm-word').addEventListener('click',dwOpen);
 setInterval(() => { try{ renderHomeHud(); }catch(e){} }, 30000);
 $('nav-shop').addEventListener('click', () => hmNote('Mağaza yakında geliyor'));
 $('coin-plus').addEventListener('click', e => { e.stopPropagation(); hmNote('Mağaza yakında geliyor'); });
