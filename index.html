@@ -2768,6 +2768,27 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .lc-screen{background:#000!important}
 .lc-screen:before{display:none!important}
 .lc-card{padding-top:20px!important}
+
+#coin-pop{position:fixed;left:0;top:0;width:100%;height:100%;z-index:99999;pointer-events:none;display:grid;place-items:center}
+#coin-pop .cp-main{display:flex;align-items:center;gap:10px;grid-area:1/1}
+#coin-pop .cp-coin,#coin-pop .cp-main em{width:92px;height:92px;font-size:78px;line-height:92px;font-style:normal;object-fit:contain;filter:drop-shadow(0 6px 10px rgba(0,0,0,.55)) drop-shadow(0 0 16px rgba(255,200,60,.8))}
+#coin-pop .cp-num{font-size:60px;font-weight:1000;color:#ffe27a;letter-spacing:.02em;-webkit-text-stroke:2px #8a4b00;paint-order:stroke fill;text-shadow:0 5px 0 #8a4b00,0 0 18px rgba(255,200,60,.8)}
+#coin-pop.neg .cp-num{color:#fecaca;-webkit-text-stroke:2px #7f1d1d;text-shadow:0 5px 0 #7f1d1d}
+#coin-pop .cp-mini{position:absolute;left:50%;top:50%;width:28px;height:28px;font-size:24px;line-height:28px;font-style:normal;object-fit:contain;opacity:0;filter:drop-shadow(0 0 6px rgba(255,200,60,.8))}
+#ad-reward-ov .ad-card{padding:24px 20px 18px!important;border:2px solid #fbbf24!important;border-radius:26px!important;background:linear-gradient(180deg,#2d1d7a,#160d44)!important}
+#ad-reward-ov .ad-coinbig{position:relative;width:104px;height:104px;margin:0 auto 6px;display:grid;place-items:center}
+#ad-reward-ov .ad-coinbig img,#ad-reward-ov .ad-coinbig em{width:96px;height:96px;font-size:84px;line-height:96px;font-style:normal;object-fit:contain;filter:drop-shadow(0 0 16px rgba(255,200,60,.75));animation:adCoin 1.6s ease-in-out infinite alternate}
+@keyframes adCoin{from{transform:scale(1) rotate(-4deg)}to{transform:scale(1.1) rotate(4deg)}}
+#ad-reward-ov .ad-badge{position:absolute;right:-14px;top:-2px;padding:3px 10px;border-radius:99px;background:#22c55e;border:2px solid #fff;color:#fff;font-weight:1000;font-size:16px;transform:rotate(8deg)}
+#ad-reward-ov .ad-card h3{font-size:24px!important;margin:4px 0 4px!important;color:#ffe27a!important;text-shadow:0 3px 0 #8a4b00!important}
+#ad-reward-ov .ad-card .ad-copy{margin:0 0 10px!important;font-size:14px!important}
+#ad-reward-ov .ad-watch{padding:15px 12px!important;border:0!important;border-radius:16px!important;background:linear-gradient(180deg,#4ade80,#16a34a)!important;box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 5px 0 #0f6b30!important;font-size:17px!important;letter-spacing:.06em!important;color:#fff!important;text-shadow:0 2px 0 rgba(0,0,0,.3)}
+#ad-reward-ov .ad-watch:active:not(:disabled){transform:translateY(4px);box-shadow:inset 0 2px 0 rgba(255,255,255,.3),0 1px 0 #0f6b30!important}
+#ad-reward-ov .ad-watch:disabled{background:linear-gradient(180deg,#6b7280,#4b5563)!important;box-shadow:0 5px 0 #2f3744!important;opacity:.85!important;filter:none!important}
+
+/* buton basma efekti */
+button,[role="button"],.hm-fx,.nav-item,.action-card,.lb-row{-webkit-tap-highlight-color:transparent;transition:transform .09s ease,filter .09s ease}
+button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:active,.action-card:active,.lb-row:active{transform:scale(.93)!important;filter:brightness(1.18)}
 </style>
 </head>
 <body>
@@ -3779,7 +3800,14 @@ const SND = {
     }catch(e){ SND.win(); }
   }
 };
-function buzz(p){ try{ if (S.vib !== false && navigator.vibrate) navigator.vibrate(p); }catch(e){} }
+function buzz(p){
+  try{
+    if (S.vib === false || !navigator.vibrate) return;
+    /* titreşim süreleri güçlü hissedilsin diye uzatılır (telefon şiddeti ayarlanamaz, süre ayarlanabilir) */
+    const up = v => Math.min(400, Math.max(40, Math.round(v * 2.4)));
+    navigator.vibrate(Array.isArray(p) ? p.map((v, i) => i % 2 === 0 ? up(v) : Math.max(25, v)) : up(p));
+  }catch(e){}
+}
 
 /* =====================================================
    FX  (parçacıklar: kıvılcım, konfeti, halka)
@@ -4530,7 +4558,15 @@ gridEl.addEventListener('pointermove', e => {
   SND.tling(path.length - 1);
   S.dragCap._path = path.map(p => ({r:p.r,c:p.c}));
   renderElectricCap(S.dragCap, S.dragCap._path);
-
+  /* hedef kelime tamamlanınca parmak kalkmadan hemen kabul et (fazla harf sayılmaz) */
+  if (path.length > 1){
+    const w = path.map(p => S.level.grid[p.r][p.c]).join(''), rv = [...w].reverse().join('');
+    const hitW = S.level.words.find(x => !S.found.has(x) && (x === w || x === rv));
+    if (hitW){
+      const longer = S.level.words.some(x => !S.found.has(x) && x !== hitW && (x.startsWith(w) || x.startsWith(rv)));
+      if (!longer) endSel(e);
+    }
+  }
 });
 const endSel = e => {
   if (!S.selecting) return;
@@ -5631,7 +5667,7 @@ menuEl.addEventListener('click', e => e.stopPropagation());
 document.addEventListener('click', closeMenu);
 document.querySelectorAll('#smenu button.srow').forEach(b=>b.addEventListener('click',()=>{b.classList.remove('setting-pressed');void b.offsetWidth;b.classList.add('setting-pressed');clearTimeout(b._settingsPressTimer);b._settingsPressTimer=setTimeout(()=>b.classList.remove('setting-pressed'),360);}));
 $('s-sound').addEventListener('click', toggleSound);
-$('s-vib').addEventListener('click', () => { S.vib = !S.vib; store.set('kb_vib', S.vib ? '1' : '0'); refreshSettings(); if (S.vib) buzz(30); });
+$('s-vib').addEventListener('click', () => { S.vib = !S.vib; store.set('kb_vib', S.vib ? '1' : '0'); refreshSettings(); if (S.vib) buzz([40, 40, 40]); });
 $('s-help').addEventListener('click', () => { closeMenu(); helpEl.classList.add('show'); });
 /* ----- Sorun bildir ----- */
 const DEV_EMAIL = '';                                   // istersen buraya e-posta yaz: Firebase yoksa/başarısızsa e-posta uygulaması açılır
@@ -7023,10 +7059,35 @@ function taskClaim(id){
  taskCoinToast(task.reward);
 }
 function taskCoinToast(n){
- const old=document.getElementById('task-coin-toast');if(old)old.remove();
- const el=document.createElement('div');el.id='task-coin-toast';el.textContent=(n<0?'−'+(-n):'+'+n)+' 🪙';if(n<0)el.className='neg';
- document.body.appendChild(el);
- setTimeout(()=>{if(el.parentNode)el.remove();},1500);
+ const old=document.getElementById('coin-pop');if(old)old.remove();
+ const neg=n<0, abs=Math.abs(n);
+ const box=document.createElement('div');box.id='coin-pop';if(neg)box.className='neg';
+ const fb="this.outerHTML='<em>🪙</em>'";
+ box.innerHTML='<div class="cp-main"><img class="cp-coin" src="vic-altin.png" alt="" draggable="false" onerror="'+fb+'"><b class="cp-num">'+(neg?'−':'+')+abs+'</b></div>';
+ document.body.appendChild(box);
+ const main=box.firstChild;
+ main.animate([
+  {transform:'scale(0) rotate(-25deg)',opacity:0},
+  {transform:'scale(1.35) rotate(6deg)',opacity:1,offset:.28},
+  {transform:'scale(1) rotate(0deg)',opacity:1,offset:.45},
+  {transform:'scale(1) translateY(0)',opacity:1,offset:.8},
+  {transform:'scale(1.05) translateY(-60px)',opacity:0}
+ ],{duration:1500,easing:'cubic-bezier(.2,.9,.3,1)',fill:'forwards'});
+ if(!neg){
+  const cnt=10;
+  for(let k=0;k<cnt;k++){
+   const c=document.createElement('img');c.className='cp-mini';c.src='vic-altin.png';c.alt='';
+   c.onerror=function(){const e=document.createElement('em');e.className='cp-mini';e.textContent='🪙';this.replaceWith(e);};
+   box.appendChild(c);
+   const ang=(k/cnt)*Math.PI*2+Math.random()*.4, d=90+Math.random()*70;
+   c.animate([
+    {transform:'translate(-50%,-50%) scale(.2)',opacity:0},
+    {transform:'translate(calc(-50% + '+Math.cos(ang)*d*.6+'px),calc(-50% + '+Math.sin(ang)*d*.6+'px)) scale(1)',opacity:1,offset:.3},
+    {transform:'translate(calc(-50% + '+Math.cos(ang)*d+'px),calc(-50% + '+(Math.sin(ang)*d+30)+'px)) scale(.6)',opacity:0}
+   ],{duration:1100,delay:120+k*20,easing:'ease-out',fill:'both'});
+  }
+ }
+ setTimeout(()=>{if(box.parentNode)box.remove();},1700);
 }
 function taskOpen(){taskRender().classList.add('show');}
 
@@ -7224,7 +7285,7 @@ function adRewardModal(){
   document.body.appendChild(o);
   o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');});
  }
- o.innerHTML='<div class="dw-card ad-card"><button class="dw-x" type="button" aria-label="Kapat">✕</button><div class="ad-orb">▶</div><small class="ad-kicker">ÖDÜLLÜ REKLAM</small><h3>Altın Kazan</h3><p class="ad-copy">Bir video reklamı tamamla,<br><b>+20 altın</b> kazan.</p><div class="ad-status" id="ad-status"></div><button class="dw-btn ad-watch" id="ad-watch" type="button">REKLAM İZLE</button><div class="ad-foot">Ödül, reklam tamamlandığında eklenir.</div></div>';
+ o.innerHTML='<div class="dw-card ad-card"><button class="dw-x" type="button" aria-label="Kapat">✕</button><div class="ad-coinbig"><img src="vic-altin.png" alt="" draggable="false" onerror="this.outerHTML=\'<em>🪙</em>\'"><span class="ad-badge">+20</span></div><h3>Bedava Altın</h3><p class="ad-copy">Kısa bir video izle, <b>+20 altın</b> kazan!</p><div class="ad-status" id="ad-status"></div><button class="dw-btn ad-watch" id="ad-watch" type="button">▶ REKLAM İZLE</button><div class="ad-foot">Ödül, reklam tamamlandığında eklenir.</div></div>';
  const close=()=>o.classList.remove('show');
  o.querySelector('.dw-x').onclick=close;
  const status=$('ad-status'),btn=$('ad-watch');let showAdFn=null,viewed=false;
