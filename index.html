@@ -2675,6 +2675,34 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 </style>
 
 
+
+<style>
+/* Ayarlar: daha oyunvari, parlak ve dengeli görünüm */
+#smenu.smenu{gap:9px;padding:17px 16px 15px;border-color:rgba(120,222,255,.55);background:radial-gradient(ellipse at 50% -8%,rgba(91,120,255,.3),transparent 42%),radial-gradient(circle at 0 42%,rgba(35,205,226,.11),transparent 30%),radial-gradient(circle at 100% 68%,rgba(210,71,255,.14),transparent 34%),linear-gradient(155deg,#17183e 0%,#121033 54%,#0c102b 100%);box-shadow:0 0 0 1px rgba(133,121,255,.16),0 22px 60px rgba(0,0,0,.72),0 0 42px rgba(54,186,255,.2),0 0 60px rgba(131,65,255,.17)}
+#smenu.smenu:before{inset:0 9% auto;height:2px;background:linear-gradient(90deg,transparent,#6cf2ff 30%,#bd8bff 72%,transparent);box-shadow:0 0 18px rgba(93,224,255,.85)}
+#smenu .smenu-title{display:flex;flex-direction:column;align-items:center;gap:3px;margin:0 42px 3px;font-size:28px;letter-spacing:.18em}
+#smenu .smenu-title:before{content:"⚙";display:grid;place-items:center;width:34px;height:34px;margin-bottom:2px;border:1px solid rgba(170,143,255,.62);border-radius:12px;background:linear-gradient(145deg,rgba(88,195,255,.22),rgba(141,81,255,.32));color:#c8f6ff;font-size:20px;box-shadow:0 0 0 4px rgba(112,92,255,.08),0 0 22px rgba(103,206,255,.22),inset 0 1px 0 rgba(255,255,255,.25)}
+#smenu .smenu-title:after{content:"OYUN DENEYİMİNİ KİŞİSELLEŞTİR";color:#88eaff;font-size:8px;line-height:1.3;letter-spacing:.17em;text-shadow:0 0 12px rgba(89,224,255,.52)}
+#smenu .account-row{border-color:rgba(94,222,255,.42);background:linear-gradient(105deg,rgba(25,150,188,.17),rgba(53,47,125,.42) 52%,rgba(28,22,70,.72));box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 17px rgba(41,190,255,.1)}
+#smenu .account-row #s-acc{padding:7px 11px;border-radius:11px}
+#smenu #s-sound,#smenu #s-vib{position:relative;overflow:hidden;min-height:52px;border-color:rgba(92,224,255,.42);background:linear-gradient(105deg,rgba(21,147,182,.26),rgba(42,56,129,.48),rgba(76,51,143,.36));box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 4px 0 rgba(6,15,47,.78),0 0 20px rgba(38,197,238,.12)}
+#smenu #s-vib{border-color:rgba(202,130,255,.43);background:linear-gradient(105deg,rgba(113,58,164,.29),rgba(46,51,122,.48),rgba(85,50,153,.38));box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 4px 0 rgba(21,9,53,.8),0 0 20px rgba(172,97,255,.12)}
+#smenu .srow-ic{box-shadow:0 0 16px rgba(65,216,255,.2),inset 0 1px 0 rgba(255,255,255,.14)}
+#smenu .srow-ic.vib{box-shadow:0 0 16px rgba(181,96,255,.2),inset 0 1px 0 rgba(255,255,255,.14)}
+#smenu #s-help,#smenu #s-report,#smenu #s-privacy,#smenu #s-rate,#smenu #s-home{min-height:51px;display:flex;align-items:center;justify-content:center;gap:9px;border-radius:16px;letter-spacing:.1em;transition:transform .18s cubic-bezier(.2,.8,.2,1),filter .18s,box-shadow .18s}
+#smenu #s-help:after,#smenu #s-report:after,#smenu #s-privacy:after,#smenu #s-rate:after,#smenu #s-home:after{display:grid;place-items:center;width:25px;height:25px;border:1px solid rgba(255,255,255,.22);border-radius:9px;background:rgba(255,255,255,.13);font-size:13px;line-height:1;filter:drop-shadow(0 0 5px rgba(255,255,255,.3))}
+#smenu #s-help:after{content:"?"}
+#smenu #s-report:after{content:"✦"}
+#smenu #s-privacy:after{content:"◆";font-size:11px}
+#smenu #s-rate:after{content:"★"}
+#smenu #s-home:after{content:"⌂";font-size:18px}
+#smenu #s-help:hover,#smenu #s-report:hover,#smenu #s-privacy:hover,#smenu #s-rate:hover,#smenu #s-home:hover{transform:translateY(-2px);filter:brightness(1.12)}
+#smenu #s-logout{min-height:52px;border-radius:16px}
+#smenu #s-delete{align-self:flex-start;margin-top:2px;padding:4px 7px;color:#ff8ab4;text-shadow:0 0 12px rgba(255,82,148,.42);text-decoration:none;border-radius:9px;transition:background .18s,transform .18s}
+#smenu #s-delete:hover{background:rgba(255,78,141,.12);transform:translateX(2px)}
+@media(max-height:700px){#smenu.smenu{gap:7px;padding-top:13px;padding-bottom:12px}#smenu .smenu-title:before{width:28px;height:28px}}
+@media(max-width:380px){#smenu.smenu{gap:8px;padding:15px 12px 13px}#smenu .smenu-title{font-size:25px}#smenu #s-help,#smenu #s-report,#smenu #s-privacy,#smenu #s-rate,#smenu #s-home{min-height:48px}}
+</style>
 </head>
 <body>
 
