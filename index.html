@@ -6493,7 +6493,17 @@ function drClaim(){
 $('hm-chest').addEventListener('click', () => { drRender().classList.add('show'); });
 
 /* ===== GÜNLÜK KELİME AVI: 7×7 ızgarada hedef kelimeyi bul ===== */
-var DW_REWARD=1,KV_TIME=60,KV_TARGET='SAAT',KV_HIDDEN=4;
+var DW_REWARD=1,KV_TIME=60,KV_TARGET='',KV_HIDDEN=4;
+function kvTargetOfDay(){
+ const pool=new Set();
+ LEVELS.forEach(l=>(l.words||[]).forEach(w=>{
+  w=String(w).toLocaleUpperCase('tr-TR');
+  if(Array.from(w).length===4&&/^[A-ZÇĞİÖŞÜ]+$/.test(w))pool.add(w);
+ }));
+ const words=Array.from(pool).sort((a,b)=>a.localeCompare(b,'tr'));
+ return words.length?words[(hmDayNum()*7919)%words.length]:'SAAT';
+}
+KV_TARGET=kvTargetOfDay();
 function dwCycle(){const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate(),0,0,0);}
 function dwKey(){return hmDayKey(dwCycle());}
 function dwDone(){return store.get('kb_dw_done')===dwKey();}
@@ -6542,6 +6552,7 @@ function kvCardHTML(){
 }
 function dwOpen(){
  if(dwDone()){hmNote('Bugünkü Kelime Avı hakkını kullandın. '+dwNextText()+'!');return;}
+ KV_TARGET=kvTargetOfDay();
  const o=dwEl('dw-ov',kvCardHTML());o.querySelector('.dw-card').outerHTML=kvCardHTML();
  o.querySelector('.dw-x').addEventListener('click',()=>{kvStop(true);o.classList.remove('show');});
  o.onclick=e=>{if(e.target===o){kvStop(true);o.classList.remove('show');}};
