@@ -2494,7 +2494,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
       </div>
 
       <div class="status">
-        <span class="txt" id="status-txt">Harfleri parmağınla sürükleyip kelimeyi bul!</span>
+        <span class="txt" id="status-txt">Komşu harflerden geçerek yılan gibi sürükle!</span>
         <div class="prog"><i id="prog-fill"></i></div>
         <span id="found-progress">0 / 0</span>
       </div>
@@ -2596,7 +2596,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
     <div class="hcard">
       <h3>NASIL OYNANIR?</h3>
       <p>• Tahtadaki gizli kelimeleri bul: harflerin üzerinden parmağını sürükle.</p>
-      <p>• Kelimeler yatay, dikey ve çapraz, ileri veya geri gizlenmiş olabilir.</p>
+      <p>• Kelimeler yılan gibi kıvrılarak gizlenmiştir: parmağını kaldırmadan yan yana, çapraz komşu harflerden geçerek sürükle.</p>
       <p>• Takılırsan ampul butonuyla altın karşılığı ipucu al.</p>
       <p>• Tüm kelimeleri bulunca kategori tamamlanır, yıldız ve altın kazanırsın.</p>
       <button class="btn-main" id="help-ok">TAMAM</button>
@@ -3043,6 +3043,34 @@ const FILLER = 'AAAAAAAEEEEEEİİİİİNNNNNRRRRLLLLIIIIDDDKKKMMMYYUUUTTTSSSOOOB
 
 function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 
+/* ===== YILAN KELİMELER: harfler 8 yönde komşu kutulardan, kıvrılarak ilerler ===== */
+const NB8 = [[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]];
+const plCells = pl => pl.cells ? pl.cells : Array.from({ length: pl.len }, (_, k) => ({ r: pl.r + pl.dr * k, c: pl.c + pl.dc * k }));
+function snakePlace(grid, L, size, rnd){
+  const N = L.length, used = new Set(), path = [];
+  const shuf = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  let nodes = 0;
+  const dfs = (r, c, i) => {
+    if (++nodes > 4000) return false;
+    const g = grid[r][c];
+    if (g !== '' && g !== L[i]) return false;
+    const k = r * size + c; if (used.has(k)) return false;
+    used.add(k); path.push({ r, c });
+    if (i === N - 1) return true;
+    for (const [dr, dc] of shuf(NB8.slice())){
+      const r2 = r + dr, c2 = c + dc;
+      if (r2 >= 0 && c2 >= 0 && r2 < size && c2 < size && dfs(r2, c2, i + 1)) return true;
+    }
+    used.delete(k); path.pop(); return false;
+  };
+  const starts = []; for (let r = 0; r < size; r++) for (let c = 0; c < size; c++) starts.push([r, c]);
+  shuf(starts);
+  for (const [r, c] of starts){
+    nodes = 0; used.clear(); path.length = 0;
+    if (dfs(r, c, 0)){ path.forEach((q, i) => { grid[q.r][q.c] = L[i]; }); return path.map(q => ({ r:q.r, c:q.c })); }
+  }
+  return null;
+}
 function buildLevel(def, index){
   const words = (Array.isArray(def.words) ? def.words : String(def.words || '').split(/\s+/).filter(Boolean)).map(TR);
   const size = Math.max(1, Math.min(Number(def.size) || 6, 8));   /* ızgara en fazla 8x8 */
@@ -3055,82 +3083,50 @@ function buildLevel(def, index){
   const pool = [...words.join('')];
   const pick = (arr, rnd) => arr[Math.floor(rnd() * arr.length)];
 
-  /* kelimenin ızgarada, kendi yerleşimi dışında kalan fazladan bir kopyası var mı? */
+  /* kelimenin ızgarada, kendi yerleşimi dışında kalan fazladan bir kopyası var mı? (yılan yolları dahil) */
   function hasExtraCopy(grid, placements){
-    const cellsOf = p => { const s = new Set(); for (let i = 0; i < p.len; i++) s.add((p.r + p.dr*i) * 20 + (p.c + p.dc*i)); return s; };
-    const sets = Object.values(placements).map(cellsOf);
+    const sets = Object.values(placements).map(p => new Set(p.cells.map(q => q.r * size + q.c)));
     for (const w of words){
-      const L = [...w];
-      for (let r = 0; r < size; r++) for (let c = 0; c < size; c++){
-        for (const [dr, dc] of ALL8){
-          const r1 = r + dr*(L.length-1), c1 = c + dc*(L.length-1);
-          if (r1 < 0 || r1 >= size || c1 < 0 || c1 >= size) continue;
-          let m = true;
-          for (let i = 0; i < L.length; i++) if (grid[r+dr*i][c+dc*i] !== L[i]) { m = false; break; }
-          if (!m) continue;
-          const cells = []; for (let i = 0; i < L.length; i++) cells.push((r + dr*i) * 20 + (c + dc*i));
-          if (!sets.some(S => cells.every(x => S.has(x)))) return true;
+      const L = [...w], seen = new Set(), path = [];
+      let extra = false;
+      const dfs = (r, c, i) => {
+        if (extra || grid[r][c] !== L[i]) return;
+        const k = r * size + c; if (seen.has(k)) return;
+        seen.add(k); path.push(k);
+        if (i === L.length - 1){ if (!sets.some(S => path.every(x => S.has(x)))) extra = true; }
+        else for (const [dr, dc] of ALL8){
+          const r2 = r + dr, c2 = c + dc;
+          if (r2 >= 0 && c2 >= 0 && r2 < size && c2 < size) dfs(r2, c2, i + 1);
         }
-      }
+        seen.delete(k); path.pop();
+      };
+      for (let r = 0; r < size && !extra; r++) for (let c = 0; c < size && !extra; c++) dfs(r, c, 0);
+      if (extra) return true;
     }
     return false;
   }
 
   let fallback = null;
-  for (let attempt = 0; attempt < 600; attempt++){
+  for (let attempt = 0; attempt < 400; attempt++){
     const rnd = mulberry32((index + 1) * 7919 + attempt * 104729);
     const grid = Array.from({length:size}, () => Array(size).fill(''));
     const placements = {};
-
-    /* her kelimeye bir yön türü ata: çapraz oranı kadar D, kalanı dönüşümlü H / V */
-    const n = order.length;
-    const nd = Math.min(n, Math.max(1, Math.round(diagShare * n)));
-    const key = order.map(w => ([...w].length >= size ? 1 : 0) + rnd() * 0.9);   /* tam boy kelimeler çapraza zor sığar: çaprazı önce kısa kelimelere ver */
-    const idx = order.map((_, i) => i).sort((a, b) => key[a] - key[b]);
-    const kind = Array(n).fill('');
-    idx.forEach((wi, k) => { kind[wi] = k < nd ? 'D' : ((k - nd) % 2 === 0 ? 'H' : 'V'); });
-
     let ok = true;
-    for (let wi = 0; wi < n; wi++){
-      const w = order[wi], L = [...w];
-      let placed = false;
-      for (let t = 0; t < 500 && !placed; t++){
-        let dir;
-        if (t < 300){
-          const k = kind[wi] + (rnd() < revProb ? 'r' : '');
-          dir = pick(SET[k], rnd);
-        } else dir = pick(revProb > 0 ? ALL8 : [[0,1],[1,0],[1,1],[1,-1]], rnd);
-        const [dr, dc] = dir;
-        const r0 = Math.floor(rnd() * size), c0 = Math.floor(rnd() * size);
-        const r1 = r0 + dr * (L.length - 1), c1 = c0 + dc * (L.length - 1);
-        if (r1 < 0 || r1 >= size || c1 < 0 || c1 >= size) continue;
-        let fit = true;
-        for (let i = 0; i < L.length; i++){
-          const g = grid[r0 + dr*i][c0 + dc*i];
-          if (g !== '' && g !== L[i]) { fit = false; break; }
-        }
-        if (!fit) continue;
-        for (let i = 0; i < L.length; i++) grid[r0 + dr*i][c0 + dc*i] = L[i];
-        placements[w] = { r:r0, c:c0, dr, dc, len:L.length };
-        placed = true;
-      }
-      if (!placed) { ok = false; break; }
+    for (const w of order){
+      const cells = snakePlace(grid, [...w], size, rnd);
+      if (!cells){ ok = false; break; }
+      placements[w] = { cells, r:cells[0].r, c:cells[0].c, len:cells.length };
     }
     if (!ok) continue;
-
-    for (let r = 0; r < size; r++)
-      for (let c = 0; c < size; c++)
-        if (grid[r][c] === '')
-          grid[r][c] = (rnd() < mixProb) ? pick(pool, rnd) : FILLER[Math.floor(rnd() * FILLER.length)];
-
-    const res = { id:index + 1, category:def.category, group:def.group, lv:def.lv, subtitle:def.subtitle, mode:def.mode, size, words, grid, placements, hidden:(Array.isArray(def.hide) ? def.hide : String(def.hide || '').split(/\s+/).filter(Boolean)).map(TR) };
-    if (hasExtraCopy(grid, placements)) continue;
-    /* kalite şartı: yeterince çapraz kelime olsun, tersten kelime fazla olmasın */
-    const P = Object.values(placements);
-    const dCount = P.filter(p => p.dr && p.dc).length;
-    const rCount = P.filter(p => p.dr < 0 || (p.dr === 0 && p.dc < 0)).length;
-    if (dCount >= Math.max(1, Math.floor(diagShare * n)) && rCount <= Math.ceil(revProb * n) + 1) return res;
-    if (!fallback) fallback = res;
+    const blanks = [];
+    for (let r = 0; r < size; r++) for (let c = 0; c < size; c++) if (grid[r][c] === '') blanks.push([r, c]);
+    for (let f = 0; f < 12; f++){
+      const g = grid.map(row => row.slice());
+      blanks.forEach(([r, c]) => { g[r][c] = (rnd() < mixProb) ? pick(pool, rnd) : FILLER[Math.floor(rnd() * FILLER.length)]; });
+      const res = { id:index + 1, category:def.category, group:def.group, lv:def.lv, subtitle:def.subtitle, mode:def.mode, size, words, grid:g, placements, hidden:(Array.isArray(def.hide) ? def.hide : String(def.hide || '').split(/\s+/).filter(Boolean)).map(TR) };
+      if (!hasExtraCopy(g, placements)) return res;
+      if (!fallback) fallback = res;
+    }
   }
   if (fallback) return fallback;
   throw new Error('Izgara üretilemedi: ' + def.category);
@@ -3556,7 +3552,7 @@ function startLevel(index, def, seed){
   if (!review){ S.games++; store.set('kb_games', S.games); }
   app.classList.toggle('on-review', review);
   S.coinOk = !def && !review;      // kelime başına coin yalnızca ilk oynayışta
-  $('status-txt').textContent = review ? '✔ Mod tamamlandı • tekrar puan kazanılmaz' : 'Harfleri parmağınla sürükleyip kelimeyi bul!';
+  $('status-txt').textContent = review ? '✔ Mod tamamlandı • tekrar puan kazanılmaz' : 'Komşu harflerden geçerek yılan gibi sürükle!';
   S.token++; stopTimer();
   { const t = document.querySelector('.hid-tut'); if (t) t.remove(); }
   const tok = S.token;
@@ -3581,7 +3577,7 @@ function startLevel(index, def, seed){
       if (chip){ revealChip(w); chip.classList.add('found'); }
       const pl = S.level.placements[w];
       if (!pl) return;
-      const path = Array.from({ length: pl.len }, (_, k) => ({ r: pl.r + pl.dr * k, c: pl.c + pl.dc * k }));
+      const path = plCells(pl).map(q => ({ r: q.r, c: q.c }));
       path.forEach(q => S.cells[q.r * n + q.c].classList.add('found'));
       S.caps.push({ word: w, path, el: makeCap(path, '', S.colorOf[w]) });
     });
@@ -3786,6 +3782,34 @@ function cellAt(p){
   if (r < 0 || c < 0 || r >= n || c >= n) return null;
   return { r, c };
 }
+function cellNear(p){   /* parmağın tam üstündeki kutu (kutu köşelerinde boş) */
+  const n = S.level.size, g = S.geo;
+  const c = Math.round((p.x - g.x0) / g.px), r = Math.round((p.y - g.y0) / g.py);
+  if (r < 0 || c < 0 || r >= n || c >= n) return null;
+  const A = center(r, c);
+  if (Math.hypot((p.x - A.x) / g.px, (p.y - A.y) / g.py) > .62) return null;
+  return { r, c };
+}
+function extendSel(p){
+  const n = S.level.size, sel = S.sel, path = sel.path.slice();
+  const from = sel.lastP || p;
+  const dist = Math.hypot(p.x - from.x, p.y - from.y);
+  const step = Math.max(2, Math.min(S.geo.px, S.geo.py) / 5);
+  const cnt = Math.max(1, Math.ceil(dist / step));
+  for (let s = 1; s <= cnt; s++){
+    const cell = cellNear({ x: from.x + (p.x - from.x) * s / cnt, y: from.y + (p.y - from.y) * s / cnt });
+    if (!cell) continue;
+    const last = path[path.length - 1];
+    if (cell.r === last.r && cell.c === last.c) continue;
+    if (path.length > 1){ const pv = path[path.length - 2]; if (pv.r === cell.r && pv.c === cell.c){ path.pop(); continue; } }
+    if (path.some(q => q.r === cell.r && q.c === cell.c)) continue;
+    if (Math.abs(cell.r - last.r) > 1 || Math.abs(cell.c - last.c) > 1) continue;
+    if (S.cells[cell.r * n + cell.c].classList.contains('dim')) continue;
+    path.push(cell);
+  }
+  sel.lastP = p;
+  return path;
+}
 function computeSel(start, p){
   const n = S.level.size, g = S.geo, A = center(start.r, start.c);
   const vx = p.x - A.x, vy = p.y - A.y;
@@ -3835,7 +3859,7 @@ gridEl.addEventListener('pointerdown', e => {
   try { gridEl.setPointerCapture(e.pointerId); } catch(_) {}
   S.selecting = true;
   const path = [start];
-  S.sel = { start, path: [] };
+  S.sel = { start, path: [], lastP: pointerPos(e) };
   paintSel(path);
   S.sel.path = path;
   updateLiveSelection(path);
@@ -3846,7 +3870,7 @@ gridEl.addEventListener('pointerdown', e => {
 gridEl.addEventListener('pointermove', e => {
   if (!S.selecting) return;
   e.preventDefault();
-  const path = computeSel(S.sel.start, pointerPos(e));
+  const path = extendSel(pointerPos(e));
   const old = S.sel.path;
   if (path.length === old.length && path[path.length - 1].r === old[old.length - 1].r && path[path.length - 1].c === old[old.length - 1].c) return;
   paintSel(path);
@@ -4020,27 +4044,16 @@ function shuffleBoard(){
   const L = S.level, n = L.size, left = L.words.filter(w => !S.found.has(w));
   if (!left.length) return;
   const def = LEVELS[S.levelIndex] || {};
-  const dirs = DIRS[def.dirs] || Object.values(DIRS)[0];
   const fixed = Array.from({ length: n }, () => Array(n).fill(false));
-  S.found.forEach(w => { const pl = L.placements[w]; if (!pl) return; for (let i = 0; i < pl.len; i++) fixed[pl.r + pl.dr * i][pl.c + pl.dc * i] = true; });
+  S.found.forEach(w => { const pl = L.placements[w]; if (!pl) return; plCells(pl).forEach(q => { fixed[q.r][q.c] = true; }); });
   const order = [...left].sort((a, b) => b.length - a.length);
   for (let attempt = 0; attempt < 60; attempt++){
     const g = L.grid.map((row, r) => row.map((ch, c) => fixed[r][c] ? ch : ''));
     const pls = {}; let ok = true;
     for (const w of order){
-      const A = [...w]; let placed = false;
-      for (let t = 0; t < 300 && !placed; t++){
-        const [dr, dc] = dirs[Math.floor(Math.random() * dirs.length)];
-        const r0 = Math.floor(Math.random() * n), c0 = Math.floor(Math.random() * n);
-        const r1 = r0 + dr * (A.length - 1), c1 = c0 + dc * (A.length - 1);
-        if (r1 < 0 || r1 >= n || c1 < 0 || c1 >= n) continue;
-        let fit = true;
-        for (let i = 0; i < A.length; i++){ const q = g[r0 + dr * i][c0 + dc * i]; if (q !== '' && q !== A[i]){ fit = false; break; } }
-        if (!fit) continue;
-        for (let i = 0; i < A.length; i++) g[r0 + dr * i][c0 + dc * i] = A[i];
-        pls[w] = { r: r0, c: c0, dr, dc, len: A.length }; placed = true;
-      }
-      if (!placed){ ok = false; break; }
+      const cells = snakePlace(g, [...w], n, Math.random);
+      if (!cells){ ok = false; break; }
+      pls[w] = { cells, r: cells[0].r, c: cells[0].c, len: cells.length };
     }
     if (!ok) continue;
     for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (g[r][c] === '') g[r][c] = FILLER[Math.floor(Math.random() * FILLER.length)];
@@ -4067,7 +4080,7 @@ function useMagnet(){
   if (S.found.size >= L.words.length) return;
   // hiçbir kelimeye ait olmayan, henüz solmamış harfler
   const used = new Set();
-  Object.values(L.placements).forEach(pl => { for (let i = 0; i < pl.len; i++) used.add((pl.r + pl.dr * i) * n + (pl.c + pl.dc * i)); });
+  Object.values(L.placements).forEach(pl => { plCells(pl).forEach(q => used.add(q.r * n + q.c)); });
   const cand = [];
   S.cells.forEach((el, i) => { if (!used.has(i) && !el.classList.contains('dim')) cand.push(i); });
   if (!cand.length){ toast('Solacak harf kalmadı'); return; }
