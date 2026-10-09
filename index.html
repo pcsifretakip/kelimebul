@@ -1378,6 +1378,37 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 @media (prefers-reduced-motion:reduce){
   .hm-play,.hm-shine::after,.hm-tile.ready,.hm-tile.ready svg,#view-home.enter .hm-level,#view-home.enter .home-top,#view-home.enter .hm-tiles,#view-home.enter .home-actions,#view-home.enter .hm-nav{animation:none!important}
 }
+
+/* Neon leaderboard modal */
+#lbbox{padding:18px 14px;background:rgba(5,3,22,.78);backdrop-filter:blur(12px)}
+#lbbox .lb-card{position:relative;width:min(440px,94vw);max-height:min(88vh,760px);overflow:auto;padding:0 18px 18px;border:1px solid rgba(128,105,255,.62);border-radius:28px;background:radial-gradient(ellipse at 50% 0%,rgba(91,54,205,.44),transparent 48%),linear-gradient(155deg,#171033 0%,#100b27 58%,#0c1028 100%);box-shadow:0 0 0 1px rgba(42,226,255,.1),0 0 28px rgba(124,58,237,.38),0 24px 70px rgba(0,0,0,.62)}
+#lbbox .lb-card:before{content:"";position:absolute;inset:0 12% auto;height:1px;background:linear-gradient(90deg,transparent,#55eaff,#d66bff,transparent);box-shadow:0 0 14px #8b5cf6}
+#lbbox .lb-hero{position:relative;text-align:center;padding:22px 8px 14px}
+#lbbox .lb-orbit{display:grid;place-items:center;width:64px;height:64px;margin:0 auto 10px;border-radius:22px;border:1px solid rgba(255,213,91,.75);background:radial-gradient(circle,rgba(255,198,62,.24),rgba(130,70,255,.12));font-size:34px;filter:drop-shadow(0 0 13px rgba(255,194,54,.55));box-shadow:0 0 24px rgba(255,197,72,.16),inset 0 0 18px rgba(153,119,255,.2)}
+#lbbox .lb-kicker{font-size:9px;font-weight:1000;letter-spacing:.24em;color:#75eaff;text-shadow:0 0 12px rgba(58,220,255,.65)}
+#lbbox .lb-hero h3{margin:5px 0 2px;font-size:27px;font-weight:1000;letter-spacing:.08em;color:#fff;text-shadow:0 0 8px rgba(170,113,255,.8),0 0 22px rgba(106,67,255,.5)}
+#lbbox .lb-hero p{margin:0;color:#bbb6df;font-size:12px;font-weight:700}
+#lbbox .lb-live{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:6px 10px;border:1px solid rgba(52,226,177,.3);border-radius:999px;background:rgba(16,185,129,.09);color:#83f4d0;font-size:9px;font-weight:1000;letter-spacing:.14em}
+#lbbox .lb-live i{width:6px;height:6px;border-radius:50%;background:#4fffc3;box-shadow:0 0 9px #4fffc3;animation:lbPulse 1.5s infinite}
+@keyframes lbPulse{50%{opacity:.4;box-shadow:0 0 2px #4fffc3}}
+#lbbox .lb-section{padding:13px 11px 10px;border:1px solid rgba(142,121,231,.2);border-radius:19px;background:rgba(7,8,29,.54);box-shadow:inset 0 0 22px rgba(71,50,143,.12)}
+#lbbox .lb-section-title{display:flex;align-items:center;gap:7px;margin:0 2px 10px;color:#d9d3ff;font-size:10px;font-weight:1000;letter-spacing:.12em}
+#lbbox .lb-section-title>span{font-size:14px;filter:drop-shadow(0 0 5px #b68cff)}
+#lbbox .lb-section-title small{margin-left:auto;padding:4px 7px;border-radius:7px;background:rgba(125,90,255,.16);color:#b9a8ff;font-size:8px;letter-spacing:.13em}
+#lbbox .lb-row{min-height:42px;margin:5px 0;padding:7px 10px;border:1px solid rgba(140,125,207,.12);border-radius:13px;background:linear-gradient(100deg,rgba(67,50,119,.24),rgba(28,27,62,.38));gap:9px;font-size:13px;transition:transform .18s,border-color .18s,box-shadow .18s}
+#lbbox .lb-row:nth-child(1){border-color:rgba(255,211,91,.54);background:linear-gradient(100deg,rgba(185,130,32,.2),rgba(53,41,91,.42));box-shadow:inset 0 0 18px rgba(250,190,58,.08),0 0 13px rgba(255,198,62,.08)}
+#lbbox .lb-row:nth-child(2){border-color:rgba(177,198,255,.3)}#lbbox .lb-row:nth-child(3){border-color:rgba(226,145,111,.28)}
+#lbbox .lb-row .rk{width:26px;height:26px;display:grid;place-items:center;border-radius:9px;background:rgba(125,105,217,.15);font-size:12px;color:#d9d1ff}
+#lbbox .lb-row:nth-child(1) .rk{background:rgba(255,201,65,.15);filter:drop-shadow(0 0 5px rgba(255,196,62,.4))}
+#lbbox .lb-row .lav{width:26px;height:26px;display:grid;place-items:center;border-radius:9px;background:rgba(120,102,190,.18);font-size:16px}
+#lbbox .lb-row .nm{font-size:13px;color:#eeeaff}
+#lbbox .lb-row b{padding:5px 8px;border:1px solid rgba(251,191,36,.23);border-radius:9px;background:rgba(251,191,36,.09);color:#ffe48a;font-size:12px;text-shadow:0 0 9px rgba(255,214,95,.38)}
+#lbbox .lb-row.me{border-color:rgba(62,226,255,.64);background:linear-gradient(100deg,rgba(15,129,158,.22),rgba(72,47,139,.28));box-shadow:0 0 15px rgba(33,211,255,.12)}
+#lbbox .lb-empty{padding:18px 8px;color:#c3bee8}
+#lbbox .lb-close-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin:13px 0 0;padding:12px;border:1px solid rgba(154,123,255,.38);border-radius:14px;background:linear-gradient(100deg,rgba(104,72,199,.2),rgba(38,35,82,.55));color:#e4deff;font-weight:1000;letter-spacing:.12em;box-shadow:0 0 16px rgba(117,78,255,.1)}
+#lbbox .lb-close-btn span{color:#a89bea;font-size:12px}
+@media(max-width:420px){#lbbox .lb-card{padding:0 12px 13px;border-radius:23px}#lbbox .lb-hero{padding-top:17px}#lbbox .lb-orbit{width:56px;height:56px;font-size:30px}#lbbox .lb-row{min-height:39px;margin:4px 0;padding:6px 8px}}
+@media(prefers-reduced-motion:reduce){#lbbox .lb-live i{animation:none}}
 </style>
 
 <style>
@@ -2665,10 +2696,10 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
     </div>
   </div>
   <div class="help" id="lbbox">
-    <div class="hcard">
-      <h3>🏆 LİDERLİK</h3>
-      <div id="lb-full"></div>
-      <button class="nm-cancel" id="lb-close">KAPAT</button>
+    <div class="hcard lb-card">
+      <div class="lb-hero"><span class="lb-orbit">🏆</span><div class="lb-kicker">SÖZCÜK AVI ARENASI</div><h3>LİDERLİK</h3><p>En iyi oyuncular burada buluşuyor</p><div class="lb-live"><i></i> CANLI SIRALAMA</div></div>
+      <div class="lb-section"><div class="lb-section-title"><span>⭐</span> EN İYİ OYUNCULAR <small>İLK 10</small></div><div id="lb-full"></div></div>
+      <button class="nm-cancel lb-close-btn" id="lb-close">KAPAT <span>✕</span></button>
     </div>
   </div>
   <div class="help" id="raceres">
