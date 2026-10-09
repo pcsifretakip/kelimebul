@@ -2731,6 +2731,36 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 #smenu #s-delete:hover{background:rgba(255,78,141,.12);transform:translateX(2px)}
 @media(max-height:700px){#smenu.smenu{gap:7px;padding-top:13px;padding-bottom:12px}#smenu .smenu-title:before{width:28px;height:28px}}
 @media(max-width:380px){#smenu.smenu{gap:8px;padding:15px 12px 13px}#smenu .smenu-title{font-size:25px}#smenu #s-help,#smenu #s-report,#smenu #s-privacy,#smenu #s-rate,#smenu #s-home{min-height:48px}}
+
+/* ===== AYARLAR: küçük, düz, efektsiz (performans) ===== */
+#smenu.smenu{width:min(84vw,330px)!important;max-width:calc(100vw - 32px)!important;max-height:min(78dvh,560px)!important;padding:14px 12px 10px!important;gap:6px!important;border-radius:18px!important;border:1px solid #4a3fa0!important;background:#1b1550!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;animation:none!important;transition:none!important;overflow-y:auto}
+#smenu.smenu:before,#smenu.smenu:after{display:none!important}
+#smenu *{box-shadow:none!important;text-shadow:none!important;filter:none!important;animation:none!important;transition:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+#smenu .srow:before,#smenu .srow:after{display:none!important}
+#smenu .smenu-title{margin:2px 40px 4px!important;font-size:19px!important;letter-spacing:.1em!important}
+#smenu .smenu-close{top:8px!important;right:8px!important;width:32px!important;height:32px!important;font-size:22px!important;background:#6d4df0!important;border:1px solid #a78bfa!important;transform:none!important}
+#smenu .account-row{min-height:36px!important;padding:0 10px!important;border-radius:11px!important;background:#251d66!important;border:1px solid #3d3490!important}
+#smenu .srow-label{font-size:11px!important}
+#smenu .srow b#s-acc{max-width:120px!important;font-size:12px!important;padding:3px 8px!important;background:#1b1550!important;border:1px solid #3d3490!important}
+#smenu #s-sound,#smenu #s-vib{min-height:42px!important;padding:0 8px 0 8px!important;border-radius:12px!important;font-size:12px!important;background:#251d66!important;border:1px solid #3d3490!important}
+#smenu .srow-ic{width:28px!important;height:28px!important;border-radius:9px!important;background:#322a80!important;border:0!important}
+#smenu .srow-ic svg{width:15px!important;height:15px!important}
+#smenu #s-sound b,#smenu #s-vib b{width:46px!important;height:26px!important;background:#22c993!important;border:0!important}
+#smenu #s-sound b::after,#smenu #s-vib b::after{top:3px!important;right:3px!important;width:20px!important;height:20px!important}
+#smenu #s-sound b.off,#smenu #s-vib b.off,#smenu #s-sound-v.off,#smenu #s-vib-v.off{background:#4a4670!important}
+#smenu #s-sound b.off::after,#smenu #s-vib b.off::after{right:auto!important;left:3px!important}
+#smenu #s-help,#smenu #s-report,#smenu #s-privacy,#smenu #s-rate,#smenu #s-home,#smenu #s-logout{min-height:38px!important;padding:0 12px!important;border-radius:11px!important;font-size:12px!important;letter-spacing:.06em!important;border:0!important;color:#fff!important}
+#smenu #s-help{background:#1f8fb5!important}
+#smenu #s-report{background:#5b5be0!important}
+#smenu #s-privacy{background:#2a6fb8!important}
+#smenu #s-rate{background:#c8892b!important}
+#smenu #s-home{background:#2766c8!important}
+#smenu #s-logout{background:#c0345a!important}
+#smenu #s-help .i,#smenu #s-logout .i{width:16px!important;height:16px!important}
+#smenu .s-grow{min-height:0!important;flex:0!important}
+#smenu .s-del-link{padding:4px!important;font-size:11px!important}
+#smenu button.srow:active,#smenu button.srow.setting-pressed{transform:none!important;opacity:.8}
+.sback{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(5,3,20,.6)!important;transition:none!important}
 </style>
 </head>
 <body>
