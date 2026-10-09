@@ -1430,6 +1430,33 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .hm-nav .nav-item.pressed{animation:navTap .28s ease-out}
 @media(max-width:380px){.hm-nav .nav-item{font-size:10px;min-height:68px}.hm-nav .nav-item svg{width:25px;height:25px}}
 @media(prefers-reduced-motion:reduce){.hm-nav .nav-item,.hm-nav .nav-item svg,.hm-nav .nav-orb{transition:none!important;animation:none!important}}
+
+/* Custom home action buttons, matched to the night-sky backdrop */
+#view-home .home-actions{width:min(88%,390px)!important;max-width:390px!important;gap:13px!important;margin:4px auto 0}
+#view-home .action-card{position:relative;isolation:isolate;display:flex;align-items:center;gap:14px;width:100%;min-height:82px;padding:13px 18px;margin:0;overflow:hidden;text-align:left;border-radius:22px;color:#fff;transform:translateZ(0);transition:transform .2s cubic-bezier(.2,.8,.2,1),filter .2s,box-shadow .2s,border-color .2s;}
+#view-home .action-card:before{content:"";position:absolute;inset:1px;border-radius:20px;z-index:-1;background:linear-gradient(110deg,rgba(255,255,255,.12),transparent 42%);pointer-events:none}
+#view-home .action-card:after{content:"";position:absolute;top:-80%;left:-34%;width:25%;height:260%;transform:rotate(24deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:left .55s ease;pointer-events:none}
+#view-home .journey-card{border:1px solid rgba(83,225,255,.78);background:linear-gradient(110deg,rgba(9,126,190,.96),rgba(40,67,174,.96) 48%,rgba(100,54,195,.97));box-shadow:0 0 0 1px rgba(35,104,255,.28),0 8px 24px rgba(0,0,0,.3),0 0 24px rgba(31,180,255,.25),inset 0 1px 0 rgba(255,255,255,.38)}
+#view-home .online-card{width:92%;min-height:72px;margin:0 auto;border:1px solid rgba(204,143,255,.7);background:linear-gradient(110deg,rgba(65,44,142,.98),rgba(122,48,166,.96) 52%,rgba(83,54,170,.98));box-shadow:0 0 0 1px rgba(143,81,255,.2),0 7px 20px rgba(0,0,0,.3),0 0 20px rgba(164,79,255,.2),inset 0 1px 0 rgba(255,255,255,.3)}
+#view-home .action-icon{flex:none;display:grid;place-items:center;width:49px;height:49px;border:1px solid rgba(255,255,255,.42);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.24),rgba(255,255,255,.06));box-shadow:inset 0 1px 5px rgba(255,255,255,.18),0 0 14px rgba(73,222,255,.16)}
+#view-home .online-card .action-icon{width:44px;height:44px;border-radius:15px;background:linear-gradient(145deg,rgba(255,255,255,.23),rgba(255,255,255,.07));box-shadow:inset 0 1px 5px rgba(255,255,255,.18),0 0 13px rgba(225,158,255,.16)}
+#view-home .action-icon svg{width:27px;height:27px;fill:none;stroke:#d9f9ff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px rgba(83,226,255,.68))}
+#view-home .online-card .action-icon svg{stroke:#f2dcff;filter:drop-shadow(0 0 5px rgba(226,165,255,.65))}
+#view-home .action-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+#view-home .action-title{font-size:clamp(15px,4.5vw,19px);font-weight:1000;letter-spacing:.035em;line-height:1.15;text-shadow:0 2px 4px rgba(5,10,45,.65)}
+#view-home .action-sub{font-size:9px;font-weight:900;letter-spacing:.14em;color:#bcefff;text-shadow:0 0 8px rgba(74,224,255,.44)}
+#view-home .online-card .action-sub{color:#f0d0ff;text-shadow:0 0 8px rgba(230,143,255,.4)}
+#view-home .action-arrow{flex:none;display:grid;place-items:center;width:29px;height:29px;border-radius:50%;background:rgba(255,255,255,.13);color:#e7fcff;font-size:26px;line-height:20px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.17);transition:transform .2s,background .2s}
+#view-home .hm-play-tag{top:-7px;right:14px;padding:4px 10px;border:1px solid rgba(255,242,169,.82);border-radius:99px;background:linear-gradient(180deg,#fff1a8,#ffc83e);box-shadow:0 2px 0 #9f6410,0 0 12px rgba(255,203,63,.55);font-size:10px;transform:rotate(2deg)}
+#view-home .action-card:hover,#view-home .action-card:focus-visible{filter:brightness(1.13);transform:translateY(-2px);box-shadow:0 0 0 1px rgba(255,255,255,.32),0 12px 27px rgba(0,0,0,.35),0 0 30px rgba(69,199,255,.36)}
+#view-home .online-card:hover,#view-home .online-card:focus-visible{box-shadow:0 0 0 1px rgba(255,255,255,.3),0 11px 25px rgba(0,0,0,.34),0 0 27px rgba(192,103,255,.38)}
+#view-home .action-card:hover:after,#view-home .action-card:focus-visible:after{left:120%}
+#view-home .action-card:hover .action-arrow,#view-home .action-card:focus-visible .action-arrow{transform:translateX(3px);background:rgba(255,255,255,.23)}
+#view-home .action-card:focus-visible{outline:2px solid #a8f4ff;outline-offset:3px}
+#view-home .action-card:active,#view-home .action-card.action-pressed{transform:scale(.965);filter:brightness(1.2)}
+#view-home .action-card:active .action-icon,#view-home .action-card.action-pressed .action-icon{transform:scale(.9);box-shadow:0 0 20px rgba(98,235,255,.45)}
+@media(max-width:380px){#view-home .home-actions{width:90%!important;gap:10px!important}#view-home .action-card{min-height:74px;padding:11px 13px;gap:11px;border-radius:19px}#view-home .action-icon{width:43px;height:43px}#view-home .online-card{min-height:67px}}
+@media(prefers-reduced-motion:reduce){#view-home .action-card,#view-home .action-card:after,#view-home .action-arrow{transition:none!important}}
 </style>
 
 <style>
@@ -2516,8 +2543,16 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
       </div>
 
       <div class="home-actions">
-        <button id="btn-levels" class="hm-play hm-fx" aria-label="Yolculuğa Başla"><img src="btn-yolculuk.png?v=2" alt="Yolculuğa Başla" draggable="false"><span class="hm-shine"></span><span class="hm-play-tag" id="hm-play-tag">Bölüm 1</span></button>
-        <button id="btn-online" class="hm-online hm-fx" aria-label="Online Mod"><img src="btn-online.png?v=2" alt="Online Mod" draggable="false"></button>
+        <button id="btn-levels" class="hm-play hm-fx action-card journey-card" aria-label="Yolculuğa Başla">
+          <span class="action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5M5.5 9v11h13V9M9.5 20v-7h5v7"/></svg></span>
+          <span class="action-copy"><strong class="action-title">Yolculuğa Başla</strong><small class="action-sub">MACERANA DEVAM ET</small></span>
+          <span class="action-arrow" aria-hidden="true">›</span><span class="hm-play-tag" id="hm-play-tag">Bölüm 1</span>
+        </button>
+        <button id="btn-online" class="hm-online hm-fx action-card online-card" aria-label="Online Mod">
+          <span class="action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2.5 20v-1.5A5.5 5.5 0 0 1 8 13h2a5.5 5.5 0 0 1 5.5 5.5V20zM16 4.5a3.5 3.5 0 0 1 0 6.8M17 14h1a4 4 0 0 1 4 4v2h-4"/></svg></span>
+          <span class="action-copy"><strong class="action-title">Online Mod</strong><small class="action-sub">ARKADAŞLARINLA OYNA</small></span>
+          <span class="action-arrow" aria-hidden="true">›</span>
+        </button>
       </div>
 
       <nav class="hm-nav" aria-label="Ana menü">
@@ -6681,6 +6716,7 @@ $('nav-shop').addEventListener('click', () => hmNote('Mağaza yakında geliyor')
 $('coin-plus').addEventListener('click', e => { e.stopPropagation(); hmNote('Mağaza yakında geliyor'); });
 $('nav-tasks').addEventListener('click', () => hmNote('Görevler yakında geliyor'));
 $('nav-home').addEventListener('click', () => { const n = $('nav-home'); n.classList.remove('bump'); void n.offsetWidth; n.classList.add('bump'); });
+document.querySelectorAll('#view-home .action-card').forEach(b=>b.addEventListener('click',()=>{b.classList.remove('action-pressed');void b.offsetWidth;b.classList.add('action-pressed');setTimeout(()=>b.classList.remove('action-pressed'),280);}));
 /* Sekme dokunuşlarını görünür kıl */
 document.querySelectorAll('.hm-nav .nav-item').forEach(n=>{
   n.addEventListener('click',()=>{n.classList.remove('pressed');void n.offsetWidth;n.classList.add('pressed');clearTimeout(n._pressTimer);n._pressTimer=setTimeout(()=>n.classList.remove('pressed'),320);});
