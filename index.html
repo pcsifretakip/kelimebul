@@ -2765,6 +2765,9 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 #task-coin-toast{position:fixed;left:50%;top:50%;z-index:99999;pointer-events:none;padding:14px 26px;border-radius:18px;background:#2a1a74;border:2px solid #fbbf24;color:#ffe27a;font-weight:1000;font-size:30px;letter-spacing:.04em;white-space:nowrap;transform:translate(-50%,-50%);animation:tctPop 1.4s ease-out forwards}
 @keyframes tctPop{0%{opacity:0;transform:translate(-50%,-30%) scale(.7)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}25%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-80%) scale(1)}}
 #task-coin-toast.neg{border-color:#f87171;color:#fecaca}
+.lc-screen{background:#000!important}
+.lc-screen:before{display:none!important}
+.lc-card{padding-top:20px!important}
 </style>
 </head>
 <body>
@@ -4931,7 +4934,7 @@ function victory(){
 function showLevelPass(idx, reward, stars, elapsed){
   const old=document.querySelector('.lc-screen, .lp-screen');if(old)old.remove();
   stars=Math.max(1,Math.min(3,stars||1));
-  const HOLD=3200;
+  const HOLD=2600;
   const titles=['','GÜZEL!','HARİKA!','SÜPERSİN!'];
   const starSvg=on=>'<svg class="lc-star '+(on?'on':'off')+'" viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,6 62,38 96,38 69,59 80,92 50,72 20,92 31,59 4,38 38,38" fill="url(#'+(on?'lcGold':'lcGrey')+')" stroke="'+(on?'#b45309':'#1a1445')+'" stroke-width="6" stroke-linejoin="round"/>'+(on?'<polygon points="50,16 58,40 82,40 63,55 50,40" fill="rgba(255,255,255,.35)"/>':'')+'</svg>';
   let starsHtml='';
@@ -4947,14 +4950,13 @@ function showLevelPass(idx, reward, stars, elapsed){
   screen.setAttribute('role','status');screen.setAttribute('aria-live','polite');
   screen.innerHTML=
     '<svg class="lc-defs" aria-hidden="true"><defs><linearGradient id="lcGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3a6"/><stop offset=".55" stop-color="#ffc83e"/><stop offset="1" stop-color="#f59e0b"/></linearGradient><linearGradient id="lcGrey" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a529f"/><stop offset="1" stop-color="#2b2566"/></linearGradient></defs></svg>'+
-    '<div class="lc-card"><div class="lc-medal"><span>🏆</span></div>'+
+    '<div class="lc-card">'+
     '<div class="lc-ribbon">BÖLÜM '+(pos+1)+'</div>'+
     '<div class="lc-kick">BÖLÜM TAMAMLANDI</div>'+
-    '<h2 class="lc-title">'+titles[stars]+'</h2>'+
     '<div class="lc-stars" aria-label="'+stars+' yıldız">'+starsHtml+'</div>'+
     '<div class="lc-chips">'+coinChip+timeChip+'</div>'+
     '<div class="lc-pips" aria-hidden="true">'+pips+'</div>'+
-    '<div class="lc-foot"><p>DEVAM ETMEK İÇİN DOKUN</p><div class="lc-bar"><i style="--t:'+(HOLD/1000)+'s"></i></div></div></div>';
+    '<div class="lc-foot"><p>DEVAM ETMEK İÇİN DOKUN</p></div></div>';
   document.body.appendChild(screen);
   try{SND.win();}catch(_){}
   buzz([30,40,30]);
@@ -4979,9 +4981,8 @@ function showLevelPass(idx, reward, stars, elapsed){
       $('btn-next-level').click();
     },260);
   };
-  timer=setTimeout(go,HOLD);
   const born=Date.now();
-  screen.addEventListener('click',()=>{ if(Date.now()-born>900) go(); });
+  screen.addEventListener('click',()=>{ if(Date.now()-born>700) go(); });
 }
 
 const JR_MONKEY_BACK = 'monkey-back.png?v=2';
@@ -6175,7 +6176,7 @@ async function lbOwn(){
 }
 function lbRowHTML(r, i){
   const me = USER && r.id === USER.id;
-  return '<div class="lb-row' + (me ? ' me' : '') + '"><span class="rk">' + (i < 3 ? ['🥇','🥈','🥉'][i] : (i + 1)) + '</span><span class="lav">' + esc(r.avatar || '') + '</span><span class="nm">' + esc(r.name || '-') + '</span><b>' + (r.score || 0) + '</b></div>';
+  return '<div class="lb-row' + (me ? ' me' : '') + '" data-i="' + i + '" style="cursor:pointer"><span class="rk">' + (i < 3 ? ['🥇','🥈','🥉'][i] : (i + 1)) + '</span><span class="lav">' + esc(r.avatar || '') + '</span><span class="nm">' + esc(r.name || '-') + '</span><b>' + (r.score || 0) + '</b></div>';
 }
 function lbRender(){
   const mine = USER && lbRows.find(r => r.id === USER.id), sc = mine ? mine.score : myScore;
@@ -6197,6 +6198,29 @@ async function lbStart(){
   } catch(e){ fail(); }
   lbBusy = false;
 }
+/* Liderlik tablosunda oyuncuya dokununca salt-okunur profil (arkadaşlık isteği yok) */
+function lbShowPlayer(r){
+  if(!r) return;
+  const g = r.games || 0, w = r.wins || 0, rate = g ? Math.round(w / g * 100) : 0;
+  let o = document.getElementById('lbp-ov');
+  if(!o){
+    o = document.createElement('div'); o.id = 'lbp-ov'; o.className = 'dw-ov'; o.style.zIndex = '600';
+    document.body.appendChild(o);
+    o.addEventListener('click', e => { if(e.target === o || e.target.closest('.dw-x')) o.classList.remove('show'); });
+  }
+  const tile = (ic, v, l) => '<div class="ph-tile"><span class="ic">' + ic + '</span><b>' + v + '</b><small>' + l + '</small></div>';
+  o.innerHTML = '<div class="dw-card" style="max-width:340px;width:100%"><button class="dw-x" type="button" aria-label="Kapat">✕</button>'
+    + '<div style="text-align:center;margin:4px 0 12px"><div style="font-size:46px;line-height:1.1">' + esc(r.avatar || '👤') + '</div>'
+    + '<h3 style="margin:6px 0 0">' + esc(r.name || '-') + '</h3></div>'
+    + '<div class="ph-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+    + tile('⭐', r.score || 0, 'PUAN') + tile('🥇', w, 'KAZANILAN') + tile('🎮', g, 'TOPLAM OYUN') + tile('🎯', '%' + rate, 'KAZANMA ORANI')
+    + '</div></div>';
+  o.classList.add('show');
+}
+document.addEventListener('click', e => {
+  const row = e.target.closest && e.target.closest('#lb-full .lb-row'); if(!row) return;
+  lbShowPlayer(lbRows[+row.dataset.i]);
+});
 let lbTok = 0; const lbSeen = new Map();
 async function lbAlive(rows){
   const db = await getDb(), now = Date.now();
