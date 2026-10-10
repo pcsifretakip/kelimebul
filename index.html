@@ -2940,6 +2940,33 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
 #view-home .cengel-card .action-sub{color:#ffe9a8;text-shadow:0 0 8px rgba(255,200,70,.45)}
 #view-home .cengel-card:hover,#view-home .cengel-card:focus-visible{box-shadow:0 0 0 1px rgba(255,255,255,.3),0 11px 25px rgba(0,0,0,.34),0 0 27px rgba(255,190,60,.42)}
 @media(max-width:380px){#view-home .cengel-card{min-height:58px;padding:8px 12px}#view-home .cengel-card .action-icon{width:38px;height:38px}}
+#modebox .mode-card{position:relative;max-width:350px;padding:22px 16px 18px;overflow:hidden;text-align:center;border-color:rgba(255,216,110,.5);background:radial-gradient(120% 70% at 50% 0%,#4a2cc0 0%,#2a1a74 45%,#150d42 100%);box-shadow:0 24px 60px rgba(0,0,0,.65),0 0 44px rgba(124,77,255,.4),inset 0 1px 0 rgba(255,255,255,.25)}
+#modebox.show .mode-card{animation:mbPop .5s cubic-bezier(.2,1.3,.4,1)}
+@keyframes mbPop{0%{transform:perspective(700px) translateY(40px) scale(.7) rotateX(22deg);opacity:0}100%{transform:none;opacity:1}}
+#modebox .mode-card>*{position:relative;z-index:1}
+#modebox .mode-card>.mb-orb{position:absolute;z-index:0;border-radius:50%;filter:blur(18px);pointer-events:none;animation:mbDrift 6s ease-in-out infinite}
+#modebox .mb-orb.o1{width:150px;height:150px;top:-50px;left:-40px;background:radial-gradient(circle,rgba(255,170,50,.55),transparent 70%)}
+#modebox .mb-orb.o2{width:170px;height:170px;bottom:-60px;right:-50px;background:radial-gradient(circle,rgba(69,199,255,.5),transparent 70%);animation-delay:-3s}
+@keyframes mbDrift{50%{transform:translate(14px,10px) scale(1.15)}}
+#modebox .mode-card>.mb-star{position:absolute;z-index:0;color:#ffe08a;font-size:14px;font-style:normal;pointer-events:none;animation:mbTwinkle 2.2s ease-in-out infinite;text-shadow:0 0 8px #ffc83a}
+#modebox .mb-star.s1{top:16px;left:18px}#modebox .mb-star.s2{top:70px;right:16px;font-size:10px;animation-delay:-.8s}#modebox .mb-star.s3{bottom:18px;left:24px;font-size:11px;animation-delay:-1.5s}
+@keyframes mbTwinkle{0%,100%{opacity:.25;transform:scale(.7) rotate(0)}50%{opacity:1;transform:scale(1.25) rotate(25deg)}}
+#modebox .mb-x{position:absolute!important;top:10px;right:12px;z-index:2;width:30px;height:30px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.3);color:#fff;font-size:13px;font-weight:900}
+#modebox .mb-title{margin:0 24px 4px;font-size:24px;font-weight:1000;letter-spacing:.5px;background:linear-gradient(180deg,#fff7c2,#ffc83a 55%,#f08a10);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 #6a2a00) drop-shadow(0 0 12px rgba(255,190,60,.5))}
+#modebox .mode-btn{position:relative;display:flex;align-items:center;gap:12px;width:100%;min-height:74px;margin:14px 0 0;padding:10px 14px;border-radius:20px;text-align:left;color:#fff;overflow:hidden;font:inherit;border:2px solid rgba(255,255,255,.38)}
+#modebox .mode-btn.on{cursor:pointer;background:linear-gradient(160deg,#ffbd3a,#ec5d0e 58%,#b3380a);box-shadow:0 6px 0 #6b2105,0 14px 24px rgba(0,0,0,.45),inset 0 2px 0 rgba(255,255,255,.6),inset 0 -8px 14px rgba(120,30,0,.35),0 0 26px rgba(255,170,50,.5);animation:mbFloat 3s ease-in-out infinite}
+#modebox .mode-btn.on:after{content:"";position:absolute;top:-80%;left:-40%;width:22%;height:260%;transform:rotate(24deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);animation:mbShine 2.8s ease-in-out infinite}
+@keyframes mbFloat{50%{transform:translateY(-3px)}}
+@keyframes mbShine{0%,35%{left:-40%}80%,100%{left:140%}}
+#modebox .mode-btn.on:active{box-shadow:0 2px 0 #6b2105,0 6px 12px rgba(0,0,0,.4),inset 0 2px 0 rgba(255,255,255,.5)}
+#modebox .mode-btn.off{cursor:not-allowed;filter:saturate(.3) brightness(.85);background:linear-gradient(160deg,#5d5987,#363358);border-color:rgba(255,255,255,.14);box-shadow:0 5px 0 #1d1b36,0 10px 18px rgba(0,0,0,.4),inset 0 2px 0 rgba(255,255,255,.18)}
+#modebox .mi{flex:none;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:rgba(0,0,0,.28);box-shadow:inset 0 2px 5px rgba(0,0,0,.4),0 1px 0 rgba(255,255,255,.3)}
+#modebox .mt{flex:1;min-width:0}
+#modebox .mt strong{display:block;font-size:18px;font-weight:900;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+#modebox .mt small{display:block;margin-top:2px;font-size:10.5px;font-weight:800;letter-spacing:.6px;opacity:.85}
+#modebox .ma{font-size:30px;font-weight:900;line-height:1;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+#modebox .soon{position:absolute;top:9px;right:-28px;width:104px;transform:rotate(36deg);padding:4px 0;text-align:center;font-style:normal;font-size:9.5px;font-weight:900;letter-spacing:.6px;color:#4a2500;background:linear-gradient(#ffd84d,#f59e0b);box-shadow:0 2px 4px rgba(0,0,0,.45)}
+@media(prefers-reduced-motion:reduce){#modebox *{animation:none!important}}
 #cengel-overlay{position:fixed;inset:0;z-index:100010;background:#1b2a4a}
 #cengel-overlay[hidden]{display:none}
 #cengel-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#1b2a4a}
@@ -3059,9 +3086,9 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
           <span class="action-copy"><strong class="action-title">Online Mod</strong><small class="action-sub">ARKADAŞLARINLA OYNA</small></span>
           <span class="action-arrow" aria-hidden="true">›</span>
         </button>
-        <button id="btn-cengel" class="hm-fx action-card cengel-card" aria-label="Farklı Oyun Oyna">
+        <button id="btn-cengel" class="hm-fx action-card cengel-card" aria-label="Mod Seç ve Oyna">
           <span class="action-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M3.5 9.2h17M3.5 14.8h17M9.2 3.5v17M14.8 3.5v17"/></svg></span>
-          <span class="action-copy"><strong class="action-title">Farklı Oyun Oyna</strong><small class="action-sub">ÇENGEL BULMACA</small></span>
+          <span class="action-copy"><strong class="action-title">Mod Seç ve Oyna</strong><small class="action-sub">FARKLI OYUNLARI KEŞFET</small></span>
           <span class="action-arrow" aria-hidden="true">›</span>
         </button>
       </div>
@@ -3232,6 +3259,17 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
       <div class="ol-list" id="ol-inv"></div>
       <div class="ol-list" id="ol-fr"></div>
       <div class="ol-footnote"><span>✦</span> Seçimlerini yap ve arenaya katıl</div>
+    </div>
+  </div>
+  <div class="help" id="modebox">
+    <div class="hcard mode-card">
+      <i class="mb-orb o1"></i><i class="mb-orb o2"></i><i class="mb-star s1">✦</i><i class="mb-star s2">✦</i><i class="mb-star s3">✦</i>
+      <button class="mb-x" id="mode-close" aria-label="Kapat">✕</button>
+      <h3 class="mb-title">OYUN SEÇ VE OYNA</h3>
+      <p class="nm-sub">Bir oyun seç, eğlenceye başla!</p>
+      <button class="mode-btn on" id="mode-cengel"><span class="mi"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M3.5 9.2h17M3.5 14.8h17M9.2 3.5v17M14.8 3.5v17"/></svg></span><span class="mt"><strong>Çengel Bulmaca</strong><small>OYNAMAK İÇİN DOKUN</small></span><span class="ma" aria-hidden="true">›</span></button>
+      <div class="mode-btn off" aria-disabled="true"><span class="mi"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18" stroke-width="1"/><text x="4.6" y="8" font-size="5" fill="#fff" stroke="none" font-weight="900">5</text><text x="10.6" y="14" font-size="5" fill="#fff" stroke="none" font-weight="900">3</text><text x="16.6" y="20" font-size="5" fill="#fff" stroke="none" font-weight="900">8</text></svg></span><span class="mt"><strong>Sudoku</strong><small>ÇOK YAKINDA</small></span><em class="soon">YAKINDA</em></div>
+      <div class="mode-btn off" aria-disabled="true"><span class="mi"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="8" width="5.5" height="8" rx="1.5"/><rect x="9.2" y="8" width="5.5" height="8" rx="1.5"/><rect x="15.9" y="8" width="5.5" height="8" rx="1.5"/><text x="3.6" y="14.2" font-size="5.2" fill="#fff" stroke="none" font-weight="900">K</text><text x="10.4" y="14.2" font-size="5.2" fill="#fff" stroke="none" font-weight="900">E</text><text x="17.2" y="14.2" font-size="5.2" fill="#fff" stroke="none" font-weight="900">L</text></svg></span><span class="mt"><strong>Kelime Türet</strong><small>ÇOK YAKINDA</small></span><em class="soon">YAKINDA</em></div>
     </div>
   </div>
   <div class="help" id="delbox">
@@ -3931,9 +3969,9 @@ const SND = {
     const f = 523.25 * Math.pow(2, (sc[k % 5] + 12 * Math.floor(k / 5)) / 12);
     tone(f, 0, .32, 'sine', .13); tone(f * 2.01, 0, .22, 'sine', .05); tone(f * 3.99, 0, .1, 'sine', .018);
   },
-  click(){        // oyun ekranı dışında click.mp3, oyun içinde eski ses
+  click(force){   // oyun ekranı dışında (ve ayar menüsünde) click.mp3, oyun içinde eski ses
     const g = document.getElementById('view-game'), inGame = !!g && !g.classList.contains('off');
-    if (!inGame && S.sound){
+    if ((force || !inGame) && S.sound){
       try{
         if (!SND._ck){ SND._ck = new Audio('click.mp3'); SND._ck.preload = 'auto'; }
         const a = SND._ck.cloneNode(); a.volume = 1;
@@ -5762,7 +5800,7 @@ function refreshSettings(){
 }
 function toggleSound(){
   S.sound = !S.sound; store.set('kb_sound', S.sound ? '1' : '0'); refreshSettings();
-  if (S.sound){ audio(); SND.hint(); }
+  if (S.sound){ audio(); SND.click(true); }
   try { ambSync(); } catch(e){}
 }
 function setUser(u){
@@ -6838,7 +6876,7 @@ $('prof-close').addEventListener('click', pfClean);
 profEl.addEventListener('click', e => { if (e.target === profEl) pfClean(); });
 
 /* tüm butonlara tıklama sesi (Ayarlar > SES kapalıysa çalmaz) */
-document.addEventListener('pointerdown', e => { if (e.target.closest && e.target.closest('button')){ audio(); SND.click(); } }, true);
+document.addEventListener('pointerdown', e => { if (e.target.closest && e.target.closest('button')){ audio(); SND.click(!!e.target.closest('#smenu')); } }, true);
 
 /* ===== giriş ekranı arka planı: sözcük avı tahtası + büyüteç + hedef (SVG) ===== */
 (function buildLoginBg(){
@@ -8057,9 +8095,10 @@ function tone(freq,duration=0.055,type='sine',volume=0.035,delay=0){
  }catch(e){}
 }
 let ckAud=null;
-function playClick(){
+function playClick(force){
+ try{if(localStorage.getItem('kb_sound')==='0')return}catch(e){}
  const inGame=$('sG').classList.contains('on')&&!$('win').classList.contains('on');
- if(!inGame){try{if(!ckAud){ckAud=new Audio('click.mp3');ckAud.preload='auto'}
+ if(force||!inGame){try{if(!ckAud){ckAud=new Audio('click.mp3');ckAud.preload='auto'}
   const a=ckAud.cloneNode();a.volume=1;const p=a.play();if(p&&p.catch)p.catch(()=>tone(780,.045,'triangle',.025));return}catch(e){}}
  tone(780,.045,'triangle',.025)}
 function playKey(){tone(590+Math.random()*220,.035,'triangle',.018)}
@@ -8088,7 +8127,7 @@ function unlockFx(c){if(fxBusy)return;const btn=document.querySelector(`#mG [dat
  },700)}
 const spend=n=>{if(S.coins<n){toast('Yeterli coin yok');return 0}S.coins-=n;save();upd();return 1};
 $('mG').onclick=e=>{const b=e.target.closest('.lv');if(b&&!b.disabled&&!fxBusy){playClick();open(+b.dataset.c,+b.dataset.n)}};
-$('bH').onclick=menu;
+$('bH').onclick=()=>{playClick(true);menu()};
 $('bX').onclick=()=>{playClick();try{parent.postMessage('cengel-exit','*')}catch(e){}};
 if(window.parent!==window)$('cg').classList.add('emb');
 $('gG').onclick=e=>{const q=e.target.closest('.q'),l=e.target.closest('.l');let id=-1;
@@ -8135,9 +8174,15 @@ function bg(i){if(i>10)return;setTimeout(()=>{pz(i);bg(i+1)},i==2?900:350)}
     ov.hidden=false;
   }
   function closeCengel(){ov.hidden=true}
-  if(btn)btn.addEventListener('click',openCengel);
+  var mb=document.getElementById('modebox');
+  function openModes(){if(mb)mb.classList.add('show')}
+  function closeModes(){if(mb)mb.classList.remove('show')}
+  if(btn)btn.addEventListener('click',function(e){e.stopPropagation();openModes()});
+  var mc=document.getElementById('mode-cengel');if(mc)mc.addEventListener('click',function(){closeModes();openCengel()});
+  var mx=document.getElementById('mode-close');if(mx)mx.addEventListener('click',closeModes);
+  if(mb)mb.addEventListener('click',function(e){if(e.target===mb)closeModes()});
   window.addEventListener('message',function(e){if(e.data==='cengel-exit')closeCengel()});
-  window.addEventListener('keydown',function(e){if(e.key==='Escape'&&!ov.hidden)closeCengel()});
+  window.addEventListener('keydown',function(e){if(e.key==='Escape'){if(!ov.hidden)closeCengel();else closeModes()}});
 })();
 </script>
 </body>
