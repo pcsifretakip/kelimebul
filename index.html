@@ -2967,9 +2967,9 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
 #modebox .ma{font-size:30px;font-weight:900;line-height:1;text-shadow:0 2px 0 rgba(0,0,0,.35)}
 #modebox .soon{position:absolute;top:9px;right:-28px;width:104px;transform:rotate(36deg);padding:4px 0;text-align:center;font-style:normal;font-size:9.5px;font-weight:900;letter-spacing:.6px;color:#4a2500;background:linear-gradient(#ffd84d,#f59e0b);box-shadow:0 2px 4px rgba(0,0,0,.45)}
 @media(prefers-reduced-motion:reduce){#modebox *{animation:none!important}}
-#cengel-overlay{position:fixed;inset:0;z-index:100010;background:#1b2a4a}
-#cengel-overlay[hidden]{display:none}
-#cengel-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#1b2a4a}
+#cengel-overlay,#sudoku-overlay{position:fixed;inset:0;z-index:100010;background:#1b2a4a}
+#cengel-overlay[hidden],#sudoku-overlay[hidden]{display:none}
+#cengel-frame,#sudoku-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#1b2a4a}
 </style>
 </head>
 <body>
@@ -3268,7 +3268,7 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
       <h3 class="mb-title">OYUN SEÇ VE OYNA</h3>
       <p class="nm-sub">Bir oyun seç, eğlenceye başla!</p>
       <button class="mode-btn on" id="mode-cengel"><span class="mi"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M3.5 9.2h17M3.5 14.8h17M9.2 3.5v17M14.8 3.5v17"/></svg></span><span class="mt"><strong>Çengel Bulmaca</strong><small>OYNAMAK İÇİN DOKUN</small></span><span class="ma" aria-hidden="true">›</span></button>
-      <div class="mode-btn off" aria-disabled="true"><span class="mi"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18" stroke-width="1"/><text x="4.6" y="8" font-size="5" fill="#fff" stroke="none" font-weight="900">5</text><text x="10.6" y="14" font-size="5" fill="#fff" stroke="none" font-weight="900">3</text><text x="16.6" y="20" font-size="5" fill="#fff" stroke="none" font-weight="900">8</text></svg></span><span class="mt"><strong>Sudoku</strong><small>ÇOK YAKINDA</small></span><em class="soon">YAKINDA</em></div>
+      <button class="mode-btn on" id="mode-sudoku"><span class="mi"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18" stroke-width="1"/><text x="4.6" y="8" font-size="5" fill="#fff" stroke="none" font-weight="900">5</text><text x="10.6" y="14" font-size="5" fill="#fff" stroke="none" font-weight="900">3</text><text x="16.6" y="20" font-size="5" fill="#fff" stroke="none" font-weight="900">8</text></svg></span><span class="mt"><strong>Sudoku</strong><small>OYNAMAK İÇİN DOKUN</small></span><span class="ma" aria-hidden="true">›</span></button>
       <div class="mode-btn off" aria-disabled="true"><span class="mi"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="8" width="5.5" height="8" rx="1.5"/><rect x="9.2" y="8" width="5.5" height="8" rx="1.5"/><rect x="15.9" y="8" width="5.5" height="8" rx="1.5"/><text x="3.6" y="14.2" font-size="5.2" fill="#fff" stroke="none" font-weight="900">K</text><text x="10.4" y="14.2" font-size="5.2" fill="#fff" stroke="none" font-weight="900">E</text><text x="17.2" y="14.2" font-size="5.2" fill="#fff" stroke="none" font-weight="900">L</text></svg></span><span class="mt"><strong>Kelime Türet</strong><small>ÇOK YAKINDA</small></span><em class="soon">YAKINDA</em></div>
     </div>
   </div>
@@ -7813,6 +7813,7 @@ fxResize(); updateCoins(); updateHome(); refreshSettings(); setView(USER ? 'home
 
 <!-- Çengel Bulmaca: ana sayfadaki "Farklı Oyun Oyna" butonuna basılınca yüklenir -->
 <div id="cengel-overlay" hidden></div>
+<div id="sudoku-overlay" hidden></div>
 <script type="text/plain" id="cengel-src"><!DOCTYPE html>
 <html lang="tr"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
@@ -8227,6 +8228,144 @@ function bg(i){if(i>10)return;setTimeout(()=>{pz(i);bg(i+1)},i==2?900:350)}
 })();
 <\/script></body></html>
 </script>
+<!-- Sudoku: "Farklı Oyun Oyna" menüsünden yüklenir -->
+<script type="text/plain" id="sudoku-src"><!DOCTYPE html>
+<html lang="tr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&display=swap" rel="stylesheet">
+<title>Sudoku</title><meta name="theme-color" content="#5bb7f2">
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#1b2a4a;overscroll-behavior:none}
+#sd{position:fixed;inset:0;max-width:520px;margin:0 auto;display:flex;flex-direction:column;background:#bfe6ff;font-family:"Nunito","Nunito Variable",system-ui,sans-serif;color:#3a1c82;-webkit-user-select:none;user-select:none;touch-action:manipulation;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+#sd *{box-sizing:border-box}#sd button{font:inherit;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.scr{display:none;flex:1;min-height:0;flex-direction:column}.scr.on{display:flex}
+#mM{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 12% 8%,rgba(255,255,255,.42) 0 2px,transparent 4px),radial-gradient(ellipse at 82% 20%,rgba(255,220,77,.42) 0 3px,transparent 6px),radial-gradient(ellipse at 20% 62%,rgba(255,255,255,.22) 0 2px,transparent 5px),radial-gradient(ellipse at 90% 78%,rgba(255,215,55,.26) 0 3px,transparent 7px),radial-gradient(ellipse at 50% 115%,#143c91 0%,transparent 52%),linear-gradient(155deg,#1685e8 0%,#42b9f5 42%,#b5eaff 72%,#287bd5 100%)}
+#mM:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% 25%,rgba(255,255,255,.18),transparent 48%),repeating-linear-gradient(135deg,transparent 0 38px,rgba(255,255,255,.035) 39px 41px)}
+#bX{position:absolute;left:12px;top:10px;z-index:5;height:40px;padding:0 15px 0 11px;border-radius:20px;background:linear-gradient(#fff16b,#ffbf00);color:#45209a;border:3px solid #4a1fa5;box-shadow:0 4px 0 #27106b;font-weight:900;font-size:15px}
+#bX:active{transform:translateY(3px);box-shadow:0 1px 0 #27106b}
+.hero{padding:70px 12px 16px;text-align:center;line-height:1}
+.hero b{display:inline-block;font-size:62px;font-weight:900;color:#ffd21f;transform:translateY(var(--d)) rotate(var(--r));-webkit-text-stroke:7px #4a1fa5;paint-order:stroke fill;text-shadow:0 5px 0 #2a0f6b}
+.hero p{margin:14px 0 0;color:#fff;font-weight:900;font-size:15px;text-shadow:0 2px 0 #1d4f9f}
+.menu{display:flex;flex-direction:column;gap:14px;padding:8px 18px 30px;overflow-y:auto}
+.lv{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;text-align:left;width:100%;min-height:88px;padding:12px 16px;border:2px solid rgba(255,255,255,.85)!important;border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(220,242,255,.94));box-shadow:0 7px 0 #16448f,0 12px 20px rgba(10,44,108,.22)}
+.lv:before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:linear-gradient(#ffe95c,#ffad00)}
+.lv:active{transform:translateY(4px);box-shadow:0 3px 0 #16448f}
+.lv .n{flex:none;width:56px;height:56px;border-radius:50%;border:3px solid #4a1fa5;background:linear-gradient(145deg,#fff06b,#ffbd00 65%,#ff8a00);color:#442099;font:900 27px/50px "Nunito",system-ui;text-align:center;font-style:normal;box-shadow:0 4px 0 #2b126d}
+.lv span{display:block;font-size:19px;font-weight:900;color:#173d82;text-shadow:0 1px 0 #fff}.lv small{display:block;margin-top:4px;font-size:13px;font-weight:800;color:#3476b9}
+.top{display:flex;align-items:center;gap:6px;padding:3px 8px;flex:none;background:linear-gradient(#5b2bbf,#3f1d99);border-bottom:2px solid #ffd21f}
+.top h2{flex:1;margin:0;text-align:center;font-size:14px;font-weight:900;color:#ffd21f;text-shadow:0 1px 0 #2a0f6b}
+.back{width:26px;height:26px;padding:0;border-radius:50%;background:#ffd21f;color:#4a1fa5;border:2px solid #2a0f6b!important;box-shadow:0 2px 0 #2a0f6b;font-size:14px;font-weight:900;line-height:1}
+.chip{background:#ffd21f;color:#4a1fa5;border:2px solid #2a0f6b;box-shadow:0 2px 0 #2a0f6b;border-radius:20px;padding:1px 9px;font-weight:900;font-size:13px}
+#hr{color:#dc2626;letter-spacing:1px}
+#bw{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(#5bb7f2,#bfe6ff);overflow:hidden}
+#bd{display:grid;grid-template-columns:repeat(9,1fr);flex:none;background:#5b4a9a;border:3px solid #4a1fa5;border-radius:8px;box-shadow:0 3px 0 #2a0f6b;overflow:hidden}
+.c{display:flex;align-items:center;justify-content:center;min-width:0;background:#f6f0e4;color:#5b2bbf;font-weight:900;font-size:var(--fs);line-height:1;cursor:pointer;border-right:1px solid #cbbfe3;border-bottom:1px solid #cbbfe3}
+.c.r2{border-right:2px solid #4a1fa5}.c.b2{border-bottom:2px solid #4a1fa5}
+.c.g{color:#2b1a66}.c.h{background:#e6dcff}.c.m{background:#ffe9a3}.c.e{color:#dc2626;background:#ffd6d6}.c.s{background:#ffd84d;color:#4a1fa5}.c.s.e{color:#dc2626}
+.nt{display:grid;grid-template-columns:repeat(3,1fr);place-items:center;width:100%;height:100%;font-size:var(--ns);font-weight:800;color:#6b4fc0}
+.kw{flex:none;display:flex;flex-direction:column;gap:10px;padding:8px 4px 9px;background:linear-gradient(#6a47d1,#4a2fa0);border-top:3px solid #ffd21f}
+.row{display:flex;gap:4px;justify-content:center;padding:0 2px}
+.key{position:relative;flex:1;max-width:46px;height:50px;padding:0;border-radius:8px;background:#fff;color:#3a1c82;box-shadow:0 3px 0 #2a0f6b;font-size:26px;font-weight:900;-webkit-text-stroke:1px currentColor}
+.key:active{background:#e6dcff}.key.z{opacity:.3;pointer-events:none}
+.key i{position:absolute;right:3px;bottom:1px;font:800 9px/1 "Nunito",sans-serif;color:#6b4fc0;font-style:normal;-webkit-text-stroke:0}
+.bt{display:flex;gap:12px;justify-content:center}
+.bt button{position:relative;flex:0 1 76px;height:44px;padding:0;border-radius:12px;border:2px solid #2a0f6b!important;box-shadow:0 3px 0 #2a0f6b;color:#fff;font-weight:900;font-size:12px;line-height:1.05;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.bt button:active{transform:translateY(2px)}
+#bE{background:linear-gradient(#fbbf24,#f59e0b)}#bN{background:linear-gradient(#c084fc,#9333ea)}#bH{background:linear-gradient(#4ade80,#16a34a)}#bR{background:linear-gradient(#f87171,#dc2626)}
+#bN.on{outline:3px solid #ffd21f;filter:brightness(1.15)}
+.bt small{position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);background:#2a0f6b;color:#ffd21f;border:1.5px solid #ffd21f;border-radius:10px;padding:0 6px;font-size:10px;font-weight:900;white-space:nowrap}
+#ov{position:fixed;inset:0;z-index:70;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;color:#fff;background:radial-gradient(ellipse at 50% 42%,#ffbd23 0%,#7b16d5 44%,#10052e 100%)}
+#ov.on{display:flex}
+#ov h1{margin:0;font-size:46px;font-weight:900;color:#ffd21f;-webkit-text-stroke:7px #4a1fa5;paint-order:stroke fill;text-shadow:0 5px 0 #2a0f6b}
+#ov p{margin:0 0 8px;font-size:18px;font-weight:900;text-shadow:0 2px 0 #2a0f6b}
+.pb{min-width:210px;padding:13px 20px;border-radius:16px;border:3px solid #4a1fa5!important;background:linear-gradient(#fff16b,#ffbf00);color:#45209a;font-weight:900;font-size:18px;box-shadow:0 5px 0 #27106b}
+.pb.s{background:linear-gradient(#8d22ed,#4b0eae);color:#fff;border-color:#ffd84d!important;box-shadow:0 4px 0 #26005e}
+.sh{animation:sh .35s}@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+</style></head><body>
+<div id="sd">
+ <div class="scr on" id="mM"><button id="bX" type="button">&#8592; ANA MENÜ</button><div class="hero"><div id="hh"></div><p>Rakamları yerleştir, zekânı göster!</p></div><div class="menu" id="mn"></div></div>
+ <div class="scr" id="gM">
+  <div class="top"><button class="back" id="bk" type="button">&#8592;</button><h2 id="tt"></h2><span class="chip" id="hr"></span><span class="chip" id="tm">0:00</span></div>
+  <div id="bw"><div id="bd"></div></div>
+  <div class="kw"><div class="row" id="kb"></div><div class="bt"><button id="bE" type="button">&#9003;<br>SİL</button><button id="bN" type="button">&#9998;<br>NOT<small id="nb">KAPALI</small></button><button id="bH" type="button">&#128161;<br>İPUCU<small id="hb">3</small></button><button id="bR" type="button">&#8635;<br>YENİ</button></div></div>
+ </div>
+ <div id="ov"><h1 id="o1"></h1><p id="o2"></p><button class="pb" id="o3" type="button"></button><button class="pb s" id="o4" type="button">ANA MENÜ</button></div>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const BI=i=>((i/27|0)*3)+((i%9/3)|0);
+const PC=new Uint8Array(512);for(let i=1;i<512;i++)PC[i]=PC[i>>1]+(i&1);
+const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+function solve(g,lim,rnd){
+ const R=new Int16Array(9),C=new Int16Array(9),B=new Int16Array(9);
+ for(let i=0;i<81;i++)if(g[i]){const b=1<<(g[i]-1);R[i/9|0]|=b;C[i%9]|=b;B[BI(i)]|=b}
+ let n=0;
+ (function rec(){
+  let k=-1,bc=10,bm=0;
+  for(let i=0;i<81;i++)if(!g[i]){const m=~(R[i/9|0]|C[i%9]|B[BI(i)])&511,c=PC[m];if(c<bc){bc=c;k=i;bm=m;if(c<2)break}}
+  if(k<0){n++;return n>=lim}
+  if(!bc)return false;
+  const ds=[];for(let d=0;d<9;d++)if(bm&(1<<d))ds.push(d);
+  if(rnd)shuf(ds);
+  const r=k/9|0,c=k%9,x=BI(k);
+  for(const d of ds){const b=1<<d;g[k]=d+1;R[r]|=b;C[c]|=b;B[x]|=b;
+   const done=rec();
+   if(done&&rnd)return true;
+   g[k]=0;R[r]&=~b;C[c]&=~b;B[x]&=~b;
+   if(done)return true}
+  return false})();
+ return n}
+function gen(cl){const s=new Int8Array(81);solve(s,1,true);const p=s.slice();let left=81;
+ for(const i of shuf([...Array(81).keys()])){if(left<=cl)break;const v=p[i];p[i]=0;if(solve(p.slice(),2)===1)left--;else p[i]=v}
+ return [p,s]}
+const LV=[['KOLAY','Başlangıç için ideal',42],['ORTA','Biraz düşünmek gerek',34],['ZOR','Gerçek ustalar için',28]];
+let P,S,V,N,sel=-1,note=0,mist=0,hint=3,lvl=0,sec=0,over=0,tmr,cs;
+$('hh').innerHTML='SUDOKU'.split('').map((c,i)=>`<b style="--d:${[0,-5,3,-4,2,-3][i]}px;--r:${[-4,3,-2,4,-3,2][i]}deg">${c}</b>`).join('');
+$('mn').innerHTML=LV.map((l,i)=>`<button class="lv" type="button" data-l="${i}"><i class="n">${i+1}</i><div><span>${l[0]}</span><small>${l[1]}</small></div></button>`).join('');
+$('kb').innerHTML=[1,2,3,4,5,6,7,8,9].map(d=>`<button class="key" type="button" data-d="${d}">${d}<i>9</i></button>`).join('');
+const base=i=>{const r=i/9|0,c=i%9;return 'c'+(c%3==2&&c<8?' r2':'')+(r%3==2&&r<8?' b2':'')};
+const nt=m=>'<div class="nt">'+[1,2,3,4,5,6,7,8,9].map(d=>`<span>${m&(1<<(d-1))?d:''}</span>`).join('')+'</div>';
+function fit(){const a=$('bw').getBoundingClientRect(),s=Math.floor(Math.min(a.width-12,a.height-12)/9)*9;if(s<=0)return;const b=$('bd');b.style.width=b.style.height=s+'px';b.style.setProperty('--fs',(s/9*.56)+'px');b.style.setProperty('--ns',(s/9*.26)+'px')}
+window.addEventListener('resize',fit);
+function tick(){$('tm').textContent=Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0')}
+function render(){
+ for(let i=0;i<81;i++){const e=cs[i],v=V[i];let k=base(i);
+  if(P[i])k+=' g';
+  if(v&&!P[i]&&v!=S[i])k+=' e';
+  if(sel>=0){if(i==sel)k+=' s';else if(v&&v==V[sel])k+=' m';else if((i/9|0)==(sel/9|0)||i%9==sel%9||BI(i)==BI(sel))k+=' h'}
+  e.className=k;e.innerHTML=v?v:(N[i]?nt(N[i]):'')}
+ for(let d=1;d<=9;d++){let n=0;for(let i=0;i<81;i++)if(V[i]==d&&V[i]==S[i])n++;const b=$('kb').children[d-1];b.classList.toggle('z',n>=9);b.lastChild.textContent=Math.max(0,9-n)}
+ $('hr').textContent='♥'.repeat(3-mist)+'♡'.repeat(mist);$('hb').textContent=hint;$('nb').textContent=note?'AÇIK':'KAPALI';$('bN').classList.toggle('on',!!note)}
+function clean(i,d){const b=~(1<<(d-1));for(let j=0;j<81;j++)if((j/9|0)==(i/9|0)||j%9==i%9||BI(j)==BI(i))N[j]&=b}
+function end(w){over=1;clearInterval(tmr);$('o1').textContent=w?'TEBRİKLER!':'OYUN BİTTİ';$('o2').textContent=w?`Süre: ${$('tm').textContent} · Hata: ${mist}`:'3 hata yaptın, tekrar dene!';$('o3').textContent=w?'YENİ OYUN':'TEKRAR DENE';setTimeout(()=>$('ov').classList.add('on'),w?350:500)}
+function won(){return V.every((v,i)=>v==S[i])}
+function put(d){
+ if(over||sel<0||P[sel]||(V[sel]&&V[sel]==S[sel]))return;
+ if(note){if(V[sel])return;N[sel]^=1<<(d-1);return render()}
+ V[sel]=d;N[sel]=0;
+ if(d!=S[sel]){mist++;const b=$('bd');b.classList.remove('sh');void b.offsetWidth;b.classList.add('sh');render();if(mist>=3)end(0);return}
+ clean(sel,d);render();if(won())end(1)}
+function start(l){
+ lvl=l;[P,S]=gen(LV[l][2]);V=Int8Array.from(P);N=new Int16Array(81);sel=-1;note=0;mist=0;hint=3;sec=0;over=0;
+ $('ov').classList.remove('on');$('mM').classList.remove('on');$('gM').classList.add('on');$('tt').textContent='SUDOKU · '+LV[l][0];
+ let h='';for(let i=0;i<81;i++)h+=`<div class="${base(i)}" data-i="${i}"></div>`;$('bd').innerHTML=h;cs=$('bd').children;
+ fit();tick();render();clearInterval(tmr);tmr=setInterval(()=>{if(!over&&!document.hidden){sec++;tick()}},1000)}
+function menu(){clearInterval(tmr);$('ov').classList.remove('on');$('gM').classList.remove('on');$('mM').classList.add('on')}
+$('mn').onclick=e=>{const b=e.target.closest('.lv');if(b)start(+b.dataset.l)};
+$('bd').onclick=e=>{const c=e.target.closest('.c');if(!c||over)return;sel=+c.dataset.i;render()};
+$('kb').onclick=e=>{const b=e.target.closest('.key');if(b)put(+b.dataset.d)};
+$('bE').onclick=()=>{if(over||sel<0||P[sel]||V[sel]==S[sel])return;V[sel]=0;N[sel]=0;render()};
+$('bN').onclick=()=>{note^=1;render()};
+$('bH').onclick=()=>{if(over||hint<=0)return;let t=-1;const ok=i=>!P[i]&&V[i]!=S[i];
+ if(sel>=0&&ok(sel))t=sel;else{const l=[];for(let i=0;i<81;i++)if(ok(i))l.push(i);if(l.length)t=l[Math.random()*l.length|0]}
+ if(t<0)return;hint--;sel=t;V[t]=S[t];N[t]=0;clean(t,S[t]);render();if(won())end(1)};
+$('bR').onclick=()=>start(lvl);
+$('bk').onclick=menu;$('o3').onclick=()=>start(lvl);$('o4').onclick=menu;
+$('bX').onclick=()=>{try{parent.postMessage('sudoku-exit','*')}catch(e){}};
+})();
+<\/script></body></html>
+</script>
 <script>
 (function(){
   var btn=document.getElementById('btn-cengel'),ov=document.getElementById('cengel-overlay'),fr=null;
@@ -8239,15 +8378,26 @@ function bg(i){if(i>10)return;setTimeout(()=>{pz(i);bg(i+1)},i==2?900:350)}
     ov.hidden=false;
   }
   function closeCengel(){ov.hidden=true}
+  var sov=document.getElementById('sudoku-overlay'),sfr=null;
+  function openSudoku(){
+    if(!sfr){
+      var ssrc=document.getElementById('sudoku-src').textContent.split('<\\/script').join('</script');
+      sfr=document.createElement('iframe');sfr.id='sudoku-frame';sfr.title='Sudoku';
+      sfr.setAttribute('allow','autoplay');sfr.srcdoc=ssrc;sov.appendChild(sfr);
+    }
+    sov.hidden=false;
+  }
+  function closeSudoku(){sov.hidden=true}
   var mb=document.getElementById('modebox');
   function openModes(){if(mb)mb.classList.add('show')}
   function closeModes(){if(mb)mb.classList.remove('show')}
   if(btn)btn.addEventListener('click',function(e){e.stopPropagation();openModes()});
   var mc=document.getElementById('mode-cengel');if(mc)mc.addEventListener('click',function(){closeModes();openCengel()});
+  var ms=document.getElementById('mode-sudoku');if(ms)ms.addEventListener('click',function(){closeModes();openSudoku()});
   var mx=document.getElementById('mode-close');if(mx)mx.addEventListener('click',closeModes);
   if(mb)mb.addEventListener('click',function(e){if(e.target===mb)closeModes()});
-  window.addEventListener('message',function(e){if(e.data==='cengel-exit')closeCengel()});
-  window.addEventListener('keydown',function(e){if(e.key==='Escape'){if(!ov.hidden)closeCengel();else closeModes()}});
+  window.addEventListener('message',function(e){if(e.data==='cengel-exit')closeCengel();if(e.data==='sudoku-exit')closeSudoku()});
+  window.addEventListener('keydown',function(e){if(e.key==='Escape'){if(!ov.hidden)closeCengel();else if(!sov.hidden)closeSudoku();else closeModes()}});
 })();
 </script>
 </body>
