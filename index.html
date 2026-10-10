@@ -2922,6 +2922,16 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
 .wh-stage.img .wh-hub circle{display:none}
 .wh-msg{font-size:15px}
 </style>
+
+<style id="wheel-nums">
+.wh-stage{container-type:inline-size}
+.wh-nums{position:absolute;inset:0;pointer-events:none}
+.wh-stage:not(.img) .wh-nums{display:none}
+.wh-n{position:absolute;left:0;top:0;width:100%;height:100%}
+.wh-nv{position:absolute;left:50%;top:var(--wn-top,9%);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0}
+.wh-nv img{width:8cqw;height:8cqw;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))}
+.wh-nv b{font-size:9cqw;line-height:1;font-weight:1000;color:#fff;-webkit-text-stroke:.8cqw rgba(0,0,0,.55);paint-order:stroke fill;text-shadow:0 .5cqw 0 rgba(0,0,0,.35)}
+</style>
 </head>
 <body>
 
@@ -7626,7 +7636,7 @@ function wheelOpen(){
  if(!wheelAudio){try{wheelAudio=new Audio('cark.mp3');wheelAudio.preload='auto';wheelAudio.load();}catch(_){}}
  o.innerHTML='<section class="sh2 wh" role="dialog" aria-modal="true" aria-label="Şans çarkı">'
   +'<div class="sh2-top"><div class="sh2-wallet"><span class="sh2-bag">🛍️</span><b id="wh-coins">'+(wheelShown!=null?wheelShown:S.coins)+'</b><img class="sh2-wc" src="vic-altin.png" alt="" draggable="false" onerror="this.outerHTML=\'<em>🪙</em>\'"></div><button class="sh2-x" type="button" aria-label="Kapat">✕</button></div>'
-  +'<div class="wh-stage"><div class="wh-wheel" id="wh-wheel" style="transform:rotate('+wheelRot+'deg)"><img src="cark.png" alt="" draggable="false" onload="this.closest(\'.wh-stage\').classList.add(\'img\')" onerror="this.outerHTML=wheelSvg()"></div>'
+  +'<div class="wh-stage"><div class="wh-wheel" id="wh-wheel" style="transform:rotate('+wheelRot+'deg)"><img src="cark.png" alt="" draggable="false" onload="this.closest(\'.wh-stage\').classList.add(\'img\')" onerror="this.outerHTML=wheelSvg()"><div class="wh-nums">'+WHEEL_PRIZES.map((p,i)=>'<div class="wh-n" style="transform:rotate('+(i*45)+'deg)"><div class="wh-nv"><img src="vic-altin.png" alt="" draggable="false" onerror="this.style.display=\'none\'"><b>'+p+'</b></div></div>').join('')+'</div></div>'
   +'<svg class="wh-hub" viewBox="-60 -125 120 190"><path d="M-17 -34 L0 -118 L17 -34 Z" fill="#fbbf24" stroke="#b45309" stroke-width="3"/><circle r="46" fill="#6d73f5" stroke="#4b4fd1" stroke-width="6"/><circle r="30" fill="#fbbf24" stroke="#b45309" stroke-width="4"/><circle r="12" fill="#fde68a"/></svg></div>'
   +'<div class="wh-msg" id="wh-msg"></div></section>';
  o.querySelector('.sh2-x').onclick=()=>{if(!wheelBusy)o.classList.remove('show');};
