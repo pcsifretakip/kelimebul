@@ -1690,10 +1690,18 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 @keyframes bombShake{0%,100%{translate:0 0}25%{translate:-6px 3px}75%{translate:6px -3px}}
 </style>
 <style>
-#view-home .hm-tiles{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
-#view-home .hm-tile{padding:8px 2px}
-#view-home .hm-tile b{font-size:10.5px}
-#view-home .hm-tile em{font-size:13px}
+/* ===== ALT MENÜ ORTA BUTON: ŞANS ÇARKI (sans.png) ===== */
+.app .hm-nav #nav-wheel .nav-orb{background:none!important;box-shadow:none!important;border:0!important;width:64px!important;height:64px!important;margin-top:-30px!important;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}
+.app .hm-nav #nav-wheel .nav-orb img{width:100%;height:100%;object-fit:contain;pointer-events:none;-webkit-user-drag:none}
+.app .hm-nav #nav-wheel.ready .nav-orb{animation:navWheelPulse 1.6s ease-in-out infinite}
+@keyframes navWheelPulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 6px rgba(255,200,60,.5)) drop-shadow(0 4px 8px rgba(0,0,0,.5))}50%{transform:scale(1.08);filter:drop-shadow(0 0 16px rgba(255,210,70,.95)) drop-shadow(0 4px 8px rgba(0,0,0,.5))}}
+#nav-wheel-v{white-space:nowrap}
+</style>
+<style>
+/* ===== ANA SAYFA: sadece hediye paketi ===== */
+#view-home .hm-tiles{grid-template-columns:1fr!important;justify-items:center}
+#view-home .hm-tile#hm-chest{width:104px;min-height:0;padding:12px 0}
+#view-home .hm-tile#hm-chest svg.hm-gift{width:58px;height:58px;margin:0}
 </style>
 <style>
 /* ===== GİZLİ KELİME bölümü ===== */
@@ -2996,17 +3004,8 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
       <div class="hm-tiles">
         <button class="hm-tile hm-fx" id="hm-chest" aria-label="Günlük ödül">
           <i class="hm-dot"></i>
-          <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="13" width="24" height="15" rx="3" fill="#a855f7"/><rect x="4" y="13" width="24" height="6" rx="2" fill="#c084fc"/><rect x="14" y="13" width="4" height="15" fill="#fbbf24"/><path d="M16 13c-2-7-10-6-9-2 1 3 5 2 9 2zm0 0c2-7 10-6 9-2-1 3-5 2-9 2z" fill="#fbbf24"/></svg>
-          <b>Günlük ödül</b><em id="hm-chest-v">Ödülünü al</em>
-        </button>
-        <button class="hm-tile hm-fx" id="hm-wheel" aria-label="Şans Çarkı">
-          <i class="hm-dot"></i>
-          <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" fill="#7b21b5" stroke="#fbbf24" stroke-width="2"/><path d="M16 16L16 3A13 13 0 0 1 25.2 6.8Z" fill="#e0900c"/><path d="M16 16L29 16A13 13 0 0 1 25.2 25.2Z" fill="#0f9d76"/><path d="M16 16L16 29A13 13 0 0 1 6.8 25.2Z" fill="#b3202c"/><path d="M16 16L3 16A13 13 0 0 1 6.8 6.8Z" fill="#0e8fc7"/><circle cx="16" cy="16" r="4" fill="#fde68a" stroke="#b45309" stroke-width="1.5"/><path d="M16 1.5L13.5 6h5Z" fill="#fff"/></svg>
-          <b>Şans Çarkı</b><em id="hm-wheel-v">Çevir!</em>
-        </button>
-        <button class="hm-tile hm-fx" id="hm-word" aria-label="Günlük Kelime Avı">
-          <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="3" width="26" height="26" rx="7" fill="#2dd4bf"/><rect x="3" y="3" width="26" height="12" rx="7" fill="rgba(255,255,255,.25)"/><text x="16" y="23.5" text-anchor="middle" font-size="19" font-weight="900" fill="#053b36">K</text></svg>
-          <b>Kelime Avı</b><em id="hm-word-v">Oyna</em>
+          <svg class="hm-gift" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="13" width="24" height="15" rx="3" fill="#a855f7"/><rect x="4" y="13" width="24" height="6" rx="2" fill="#c084fc"/><rect x="14" y="13" width="4" height="15" fill="#fbbf24"/><path d="M16 13c-2-7-10-6-9-2 1 3 5 2 9 2zm0 0c2-7 10-6 9-2-1 3-5 2-9 2z" fill="#fbbf24"/></svg>
+          
         </button>
       </div>
 
@@ -3026,7 +3025,7 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
       <nav class="hm-nav" aria-label="Ana menü">
         <button class="nav-item hm-fx" id="nav-shop" aria-label="Mağaza"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg><span>Mağaza</span></button>
         <button class="nav-item hm-fx" id="nav-tasks" aria-label="Görevler"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 10l1.5 1.5L13.5 8.5M9 16h6"/></svg><span>Görevler</span></button>
-        <button class="nav-item center on hm-fx" id="nav-home" aria-label="Ana Sayfa"><span class="nav-orb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11.5 12 4l8.5 7.5V20a1 1 0 0 1-1 1H15v-6H9v6H4.5a1 1 0 0 1-1-1z"/></svg></span><span>Ana Sayfa</span></button>
+        <button class="nav-item center hm-fx" id="nav-wheel" aria-label="Şans Çarkı"><span class="nav-orb"><img src="sans.png" alt="" draggable="false"></span><span id="nav-wheel-v">Şans Çarkı</span></button>
         <button class="nav-item hm-fx" id="lb" aria-label="Liderlik tablosu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M12 14v4M8 20h8"/></svg><span>Liderlik</span></button>
         <button class="nav-item hm-fx" id="btn-settings-home" aria-label="Ayarlar"><svg class="i" style="fill:currentColor;stroke:none" aria-hidden="true"><use href="#i-gear"/></svg><span>Ayarlar</span></button>
       </nav>
@@ -7140,9 +7139,6 @@ function renderHomeHud(){
   hmSet('home-username', e => { e.textContent = (USER && USER.name) ? USER.name : 'Oyuncu'; });
   const ready = drReady();
   hmSet('hm-chest', e => e.classList.toggle('ready', ready));
-  hmSet('hm-chest-v', e => { e.textContent = ready ? 'Ödülünü al' : 'Haftalık takvim'; });
-  hmSet('hm-word-v', e => { e.textContent = dwDone() ? 'Bugün tamamlandı' : '1 dk · +1 altın/kelime'; });
-  hmSet('hm-word', e => e.classList.remove('off'));
 }
 function hmNote(msg){
   const n = $('hm-note'); if (!n) return;
@@ -7156,8 +7152,8 @@ function hmFly(txt, el){
   viewHome.appendChild(f); setTimeout(() => f.remove(), 1000);
 }
 var hmRevealT = null;
-/* ===== GÜNLÜK ÖDÜL: 7 günlük takvim (sadece bugün aktif) ===== */
-var DR_REW = [10, 15, 20, 25, 30, 40, 60], DR_DAYS = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+/* ===== GÜNLÜK ÖDÜL: her gün giriş ödülü (hafta içi 5, hafta sonu 10) ===== */
+var DR_REW = [5, 5, 5, 5, 5, 10, 10], DR_DAYS = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];   /* hafta içi 5, hafta sonu 10 altın */
 function drClaimed(){ try{ return JSON.parse(store.get('kb_dr_days') || '[]'); }catch(e){ return []; } }
 function drToday(){ return (new Date().getDay() + 6) % 7; }
 function drWeekKeys(){ const n = new Date(), t = drToday(), out = []; for (let i = 0; i < 7; i++) out.push(hmDayKey(new Date(n.getFullYear(), n.getMonth(), n.getDate() - t + i))); return out; }
@@ -7171,16 +7167,11 @@ function dwEl(id, html){
   return o;
 }
 function drRender(){
-  const o = dwEl('dr-ov', '<div class="dw-card"><button class="dw-x" aria-label="Kapat">✕</button><h3>Günlük Ödül</h3><p>Bugünün kutusuna dokun, ödülünü al</p><div class="dr-grid" id="dr-grid"></div><button class="dw-btn" id="dr-btn"></button></div>');
-  const keys = drWeekKeys(), t = drToday(); let h = '';
-  keys.forEach((k, i) => {
-    const done = drIsClaimed(k), isT = i === t;
-    h += '<button class="dr-cell' + (i === 6 ? ' big' : '') + (isT && !done ? ' today' : '') + (done ? ' done' : '') + '" data-i="' + i + '"' + (isT && !done ? '' : ' disabled') + '><small>' + DR_DAYS[i] + '</small><b>' + (done ? '✓' : '+' + DR_REW[i]) + '</b></button>';
-  });
-  $('dr-grid').innerHTML = h;
-  const btn = $('dr-btn'), ready = drReady();
-  btn.disabled = !ready; btn.textContent = ready ? 'Ödülü Al +' + DR_REW[t] : 'Bugünün ödülünü aldın';
-  $('dr-grid').onclick = e => { const c = e.target.closest('.dr-cell.today'); if (c) drClaim(); };
+  const o = dwEl('dr-ov', '<div class="dw-card"><button class="dw-x" aria-label="Kapat">✕</button><h3>Günlük Ödül</h3><div class="dr-gift" id="dr-gift" style="font-size:78px;line-height:1.1;margin:10px 0 4px;cursor:pointer">🎁</div><p id="dr-amt" style="font-size:22px;font-weight:900;margin:0 0 12px"></p><button class="dw-btn" id="dr-btn"></button></div>');
+  const t = drToday(), btn = $('dr-btn'), ready = drReady();
+  $('dr-amt').textContent = ready ? '+' + DR_REW[t] + ' altın' : 'Yarın tekrar gel!';
+  btn.disabled = !ready; btn.textContent = ready ? 'Ödülü Al' : 'Bugünün ödülünü aldın';
+  $('dr-gift').onclick = () => { if (drReady()) drClaim(); };
   btn.onclick = drClaim;
   return o;
 }
@@ -7420,7 +7411,7 @@ function kvFinish(){
  card.querySelector('.dw-x').onclick=close;$('kv-close').onclick=close;renderHomeHud();
  requestAnimationFrame(()=>kvFlyToWallet(r.words,r.gold));
 }
-$('hm-word').addEventListener('click',dwOpen);$('hm-word').addEventListener('click',dwOpen);
+
 setInterval(() => { try{ renderHomeHud(); }catch(e){} }, 30000);
 
 /* ===== MAĞAZA: envantere eklenen joker paketleri ===== */
@@ -7489,14 +7480,27 @@ function shopBuy(id){
 }
 
 /* ===== ŞANS ÇARKI ===== */
-const WHEEL_PRIZES=[200,5,20,40,10,25,50,15], WHEEL_W=[1,22,14,6,20,12,4,21], WHEEL_COL=['#c2610c','#0f9d76','#3f3fb8','#0e8fc7','#7b21b5','#b3202c','#e0900c','#b81e9e'];
+const WHEEL_PRIZES=[200,10,20,30,15,20,10,30], WHEEL_COL=['#c2610c','#0f9d76','#3f3fb8','#0e8fc7','#7b21b5','#b3202c','#e0900c','#b81e9e'];   // 0. dilim = en yüksek ödül (haftada 2 kez)
 const WHEEL_COOLDOWN=12*60*60*1000;   // 12 saatte bir bedava çevirme
 let wheelRot=0, wheelBusy=false;
 function wheelNext(){return parseInt(store.get('kb_wheel_next')||'0',10)||0;}
 function wheelRemain(){return Math.max(0,wheelNext()-Date.now());}
 function wheelReady(){return wheelRemain()<=0;}
 function wheelFmt(ms){const t=Math.ceil(ms/1000),h=Math.floor(t/3600),m=Math.floor(t%3600/60),sc=t%60;return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0');}
-function wheelPick(){let t=WHEEL_W.reduce((a,b)=>a+b,0),r=Math.random()*t;for(let i=0;i<WHEEL_W.length;i++){r-=WHEEL_W[i];if(r<0)return i;}return 1;}
+function wheelWeekKey(){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function wheelPick(){
+ /* Her hafta (Pzt-Paz) 2 kez en yüksek ödül (200) garanti: haftanın rastgele 2 günü seçilir, o günün ilk çevirmesi büyük ödül olur.
+    Kullanıcı o günlerde oynamazsa haftanın son günlerinde kalan hak kadar büyük ödül verilir. Diğer çevirmeler 10-15-20-30. */
+ let st;try{st=JSON.parse(store.get('kb_wheel_jp')||'null');}catch(_){st=null;}
+ const wk=wheelWeekKey();
+ if(!st||st.week!==wk){const ds=[0,1,2,3,4,5,6].sort(()=>Math.random()-.5).slice(0,2);st={week:wk,days:ds,given:0,last:''};}
+ const now=new Date(),t=(now.getDay()+6)%7,dayKey=now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();
+ let k;
+ if(st.given<2&&st.last!==dayKey&&(st.days.includes(t)||(7-t)<=(2-st.given))){k=0;st.given++;st.last=dayKey;}
+ else k=1+Math.floor(Math.random()*7);
+ store.set('kb_wheel_jp',JSON.stringify(st));
+ return k;
+}
 function wheelSvg(){
  const R=140,rad=d=>d*Math.PI/180;let seg='',txt='';
  for(let i=0;i<8;i++){
@@ -7515,16 +7519,16 @@ function wheelUpdate(msg){
   btn.querySelector('b').textContent=ready?'ÇEVİR':wheelFmt(wheelRemain());
   const ad=btn.querySelector('.wh-ad');if(ad)ad.style.display='none';
   const dots=$('wh-dots');if(dots)dots.style.display='none';
-  const m=$('wh-msg');if(m)m.textContent=msg||(ready?'':'Çark 12 saatte bir açılır.');
+  const m=$('wh-msg');if(m)m.textContent=msg||(ready?'':'Çark 12 saatte bir açılır. Haftada 2 kez büyük ödül!');
   const wc=$('wh-coins');if(wc)wc.textContent=S.coins;
  }
  wheelTile();
 }
 function wheelTile(){
- const t=$('hm-wheel'),v=$('hm-wheel-v');if(!t||!v)return;
+ const t=$('nav-wheel'),v=$('nav-wheel-v');if(!t||!v)return;
  const ready=wheelReady();
  t.classList.toggle('ready',ready&&!wheelBusy);
- v.textContent=wheelBusy?'Dönüyor…':(ready?'Çevir!':wheelFmt(wheelRemain()));
+ v.textContent=wheelBusy?'Dönüyor…':(ready?'Şans Çarkı':wheelFmt(wheelRemain()));
 }
 setInterval(()=>{try{wheelUpdate($('wh-msg')&&wheelBusy?$('wh-msg').textContent:'');}catch(_){}},1000);
 function wheelRun(){
@@ -7610,10 +7614,9 @@ function adFlyReward(){
 }
 loadRewardAds();
 $('coin-plus').addEventListener('click', e => { e.stopPropagation(); });   // altın + butonu artık bir şey yapmaz
-$('hm-wheel').addEventListener('click', () => { audio(); wheelOpen(); });
 wheelTile();
 $('nav-tasks').addEventListener('click', taskOpen);
-$('nav-home').addEventListener('click', () => { const n = $('nav-home'); n.classList.remove('bump'); void n.offsetWidth; n.classList.add('bump'); });
+$('nav-wheel').addEventListener('click', () => { const n = $('nav-wheel'); audio(); n.classList.remove('bump'); void n.offsetWidth; n.classList.add('bump'); wheelOpen(); });
 document.querySelectorAll('#view-home .action-card').forEach(b=>b.addEventListener('click',()=>{b.classList.remove('action-pressed');void b.offsetWidth;b.classList.add('action-pressed');setTimeout(()=>b.classList.remove('action-pressed'),280);}));
 /* Sekme dokunuşlarını görünür kıl */
 document.querySelectorAll('.hm-nav .nav-item').forEach(n=>{
