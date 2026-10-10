@@ -1687,6 +1687,12 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 @keyframes bombFlash{0%{opacity:0;transform:scale(.3)}30%{opacity:1}100%{opacity:0;transform:scale(1.6)}}
 </style>
 <style>
+#view-home .hm-tiles{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
+#view-home .hm-tile{padding:8px 2px}
+#view-home .hm-tile b{font-size:10.5px}
+#view-home .hm-tile em{font-size:13px}
+</style>
+<style>
 /* ===== GİZLİ KELİME bölümü ===== */
 .chip.masked{color:#fde68a;border:1.5px dashed rgba(253,230,138,.7);background:rgba(251,191,36,.1);letter-spacing:.18em}
 .hid-tut{position:absolute;inset:0;z-index:90;background:rgba(3,2,16,.72);display:flex;align-items:center;justify-content:center;padding:0 16px}
@@ -2989,6 +2995,11 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
           <i class="hm-dot"></i>
           <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="13" width="24" height="15" rx="3" fill="#a855f7"/><rect x="4" y="13" width="24" height="6" rx="2" fill="#c084fc"/><rect x="14" y="13" width="4" height="15" fill="#fbbf24"/><path d="M16 13c-2-7-10-6-9-2 1 3 5 2 9 2zm0 0c2-7 10-6 9-2-1 3-5 2-9 2z" fill="#fbbf24"/></svg>
           <b>Günlük ödül</b><em id="hm-chest-v">Ödülünü al</em>
+        </button>
+        <button class="hm-tile hm-fx" id="hm-wheel" aria-label="Şans Çarkı">
+          <i class="hm-dot"></i>
+          <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" fill="#7b21b5" stroke="#fbbf24" stroke-width="2"/><path d="M16 16L16 3A13 13 0 0 1 25.2 6.8Z" fill="#e0900c"/><path d="M16 16L29 16A13 13 0 0 1 25.2 25.2Z" fill="#0f9d76"/><path d="M16 16L16 29A13 13 0 0 1 6.8 25.2Z" fill="#b3202c"/><path d="M16 16L3 16A13 13 0 0 1 6.8 6.8Z" fill="#0e8fc7"/><circle cx="16" cy="16" r="4" fill="#fde68a" stroke="#b45309" stroke-width="1.5"/><path d="M16 1.5L13.5 6h5Z" fill="#fff"/></svg>
+          <b>Şans Çarkı</b><em id="hm-wheel-v">Çevir!</em>
         </button>
         <button class="hm-tile hm-fx" id="hm-word" aria-label="Günlük Kelime Avı">
           <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="3" width="26" height="26" rx="7" fill="#2dd4bf"/><rect x="3" y="3" width="26" height="12" rx="7" fill="rgba(255,255,255,.25)"/><text x="16" y="23.5" text-anchor="middle" font-size="19" font-weight="900" fill="#053b36">K</text></svg>
@@ -7399,7 +7410,7 @@ function shopAll(){return SHOP_ITEMS.map(it=>Object.assign({give:{[it.id]:it.qty
 function shopRender(){
  let o=$('shop-ov');
  if(!o){o=document.createElement('div');o.id='shop-ov';o.className='shop-ov';document.body.appendChild(o);o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');});}
- const inv=shopInventory(), ws=wheelState();
+ const inv=shopInventory();
  const img=(src,fb,cls)=>'<img class="'+(cls||'')+'" src="'+src+'" alt="" draggable="false" onerror="this.outerHTML=\'<em>'+fb+'</em>\'">';
  const tile=(src,fb,n)=>'<div class="sh2-tile">'+img(src,fb)+'<span>'+n+'</span></div>';
  const card=it=>{
@@ -7439,12 +7450,12 @@ function shopBuy(id){
 
 /* ===== ŞANS ÇARKI ===== */
 const WHEEL_PRIZES=[200,5,20,40,10,25,50,15], WHEEL_W=[1,22,14,6,20,12,4,21], WHEEL_COL=['#c2610c','#0f9d76','#3f3fb8','#0e8fc7','#7b21b5','#b3202c','#e0900c','#b81e9e'];
-const WHEEL_MAX=6, WHEEL_FREE=1;   // günde 6 çevirme; ilk WHEEL_FREE tanesi bedava, kalanı ödüllü reklamla
+const WHEEL_COOLDOWN=12*60*60*1000;   // 12 saatte bir bedava çevirme
 let wheelRot=0, wheelBusy=false;
-function wheelState(){
- const d=hmDayKey();
- try{const x=JSON.parse(store.get('kb_wheel')||'{}');return x.day===d?{day:d,n:Math.max(0,parseInt(x.n,10)||0)}:{day:d,n:0};}catch(e){return {day:d,n:0};}
-}
+function wheelNext(){return parseInt(store.get('kb_wheel_next')||'0',10)||0;}
+function wheelRemain(){return Math.max(0,wheelNext()-Date.now());}
+function wheelReady(){return wheelRemain()<=0;}
+function wheelFmt(ms){const t=Math.ceil(ms/1000),h=Math.floor(t/3600),m=Math.floor(t%3600/60),sc=t%60;return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0');}
 function wheelPick(){let t=WHEEL_W.reduce((a,b)=>a+b,0),r=Math.random()*t;for(let i=0;i<WHEEL_W.length;i++){r-=WHEEL_W[i];if(r<0)return i;}return 1;}
 function wheelSvg(){
  const R=140,rad=d=>d*Math.PI/180;let seg='',txt='';
@@ -7457,32 +7468,33 @@ function wheelSvg(){
  return '<svg viewBox="-170 -170 340 340"><circle r="168" fill="#6d73f5"/><circle r="148" fill="#4b4fd1"/>'+seg+txt+dots+'</svg>';
 }
 function wheelUpdate(msg){
- const st=wheelState(),btn=$('wh-spin');if(!btn)return;
- const left=WHEEL_MAX-st.n,needAd=st.n>=WHEEL_FREE;
- btn.disabled=wheelBusy||left<=0;
- btn.querySelector('b').textContent=left<=0?'YARIN GEL':'ÇEVİR';
- btn.querySelector('.wh-ad').style.display=(needAd&&left>0)?'grid':'none';
- let dots='';for(let i=0;i<WHEEL_MAX;i++)dots+='<i class="'+(i<st.n?'used':'')+'"></i>';
- $('wh-dots').innerHTML=dots;
- $('wh-msg').textContent=msg||(left>0&&needAd?'Bu çevirme için kısa bir reklam izlenir.':'');
- const wc=$('wh-coins');if(wc)wc.textContent=S.coins;
+ const btn=$('wh-spin');
+ if(btn){
+  const ready=wheelReady();
+  btn.disabled=wheelBusy||!ready;
+  btn.querySelector('b').textContent=ready?'ÇEVİR':wheelFmt(wheelRemain());
+  const ad=btn.querySelector('.wh-ad');if(ad)ad.style.display='none';
+  const dots=$('wh-dots');if(dots)dots.style.display='none';
+  const m=$('wh-msg');if(m)m.textContent=msg||(ready?'':'Çark 12 saatte bir açılır.');
+  const wc=$('wh-coins');if(wc)wc.textContent=S.coins;
+ }
+ wheelTile();
 }
-function wheelAd(ok,fail){
- if(!kbAdsReady||typeof window.adBreak!=='function'){fail('Reklam hazır değil, biraz sonra tekrar dene.');return;}
- let done=false,viewed=false;const end=m=>{if(done)return;done=true;fail(m);};
- window.adBreak({type:'reward',name:'wheel_spin',
-  beforeReward:show=>{show();},
-  adViewed:()=>{viewed=true;if(!done){done=true;ok();}},
-  adDismissed:()=>end('Reklam tamamlanmadı, çark çevrilmedi.'),
-  adBreakDone:()=>{if(!viewed)end('Şu an uygun reklam yok, sonra tekrar dene.');}});
+function wheelTile(){
+ const t=$('hm-wheel'),v=$('hm-wheel-v');if(!t||!v)return;
+ const ready=wheelReady();
+ t.classList.toggle('ready',ready&&!wheelBusy);
+ v.textContent=wheelBusy?'Dönüyor…':(ready?'Çevir!':wheelFmt(wheelRemain()));
 }
+setInterval(()=>{try{wheelUpdate($('wh-msg')&&wheelBusy?$('wh-msg').textContent:'');}catch(_){}},1000);
 function wheelRun(){
- const st=wheelState();st.n++;store.set('kb_wheel',JSON.stringify(st));
+ store.set('kb_wheel_next',String(Date.now()+WHEEL_COOLDOWN));
  const k=wheelPick(),prize=WHEEL_PRIZES[k];
  S.coins+=prize;updateCoins();try{renderHomeHud();}catch(_){}      // ödül hemen yazılır (çıkıp girerek kaçırılamaz)
  const delta=(((-k*45-wheelRot)%360)+360)%360;
  wheelRot+=360*6+delta+(Math.random()*24-12);
  const el=$('wh-wheel');el.style.transition='transform 4.6s cubic-bezier(.12,.7,.1,1)';el.style.transform='rotate('+wheelRot+'deg)';
+ try{if(S.sound){const ca=new Audio('cark.mp3');ca.volume=1;const pr=ca.play();if(pr&&pr.catch)pr.catch(()=>{});}}catch(_){}   // çark sesi
  wheelUpdate('');
  setTimeout(()=>{
   try{SND.found();}catch(_){}buzz([40,40,60]);taskCoinToast(prize);
@@ -7490,10 +7502,9 @@ function wheelRun(){
  },4700);
 }
 function wheelSpin(){
- if(wheelBusy)return;const st=wheelState();if(st.n>=WHEEL_MAX)return;
+ if(wheelBusy||!wheelReady())return;
  wheelBusy=true;
- if(st.n>=WHEEL_FREE){wheelUpdate('Reklam yükleniyor…');wheelAd(wheelRun,m=>{wheelBusy=false;wheelUpdate(m);});}
- else wheelRun();
+ wheelRun();
 }
 function wheelOpen(){
  let o=$('wheel-ov');
@@ -7558,7 +7569,9 @@ function adFlyReward(){
  anim.onfinish=()=>{coin.remove();wallet.classList.remove('kv-wallet-bump');void wallet.offsetWidth;wallet.classList.add('kv-wallet-bump');setTimeout(()=>wallet.classList.remove('kv-wallet-bump'),850);};
 }
 loadRewardAds();
-$('coin-plus').addEventListener('click', e => { e.stopPropagation(); wheelOpen(); });
+$('coin-plus').addEventListener('click', e => { e.stopPropagation(); });   // altın + butonu artık bir şey yapmaz
+$('hm-wheel').addEventListener('click', () => { audio(); wheelOpen(); });
+wheelTile();
 $('nav-tasks').addEventListener('click', taskOpen);
 $('nav-home').addEventListener('click', () => { const n = $('nav-home'); n.classList.remove('bump'); void n.offsetWidth; n.classList.add('bump'); });
 document.querySelectorAll('#view-home .action-card').forEach(b=>b.addEventListener('click',()=>{b.classList.remove('action-pressed');void b.offsetWidth;b.classList.add('action-pressed');setTimeout(()=>b.classList.remove('action-pressed'),280);}));
