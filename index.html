@@ -1670,6 +1670,23 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 @keyframes jkImgPulse{0%{transform:scale(1)}40%{transform:scale(1.22);filter:drop-shadow(0 0 14px rgba(255,214,90,.95))}100%{transform:scale(1);filter:none}}
 </style>
 <style>
+/* ===== 5 JOKER TEK SATIR + BOMBA ===== */
+.jokers,#view-game .jokers{grid-template-columns:repeat(5,1fr);padding-left:2px;padding-right:2px}
+.jk.jk-img{width:min(18.6vw,80px)}
+.jk.jk-img#jk-bank{width:min(16.4vw,70px)}
+.jk.jk-bomb{aspect-ratio:300/290}
+.jk.jk-bomb img{width:84%;height:auto;margin:0 auto 14%;filter:drop-shadow(0 0 8px rgba(255,140,40,.7)) drop-shadow(0 4px 6px rgba(0,0,0,.45))}
+.jk-lbl{position:absolute;left:50%;bottom:3%;transform:translateX(-50%);padding:2px 8px;border-radius:99px;font-size:clamp(8px,2.4vw,10px);font-weight:1000;letter-spacing:.04em;color:#fff;white-space:nowrap;background:linear-gradient(180deg,#3b1d8f,#1b0c52);border:1.5px solid #f5b83a;box-shadow:0 0 8px rgba(245,184,58,.55)}
+.jk.jk-bomb.dis .jk-lbl{filter:grayscale(.9) brightness(.7)}
+.bomb-fx{position:absolute;inset:0;z-index:30;pointer-events:none;display:flex;align-items:center;justify-content:center;transition:opacity .4s ease}
+.bomb-fx.out{opacity:0}
+.bomb-fx img{width:140px;height:auto;filter:drop-shadow(0 0 16px rgba(255,150,40,.95));animation:bombIn .7s cubic-bezier(.2,1.5,.4,1) both,bombShake .12s linear .7s 4}
+.bomb-fx .bomb-flash{position:absolute;inset:0;background:radial-gradient(circle,rgba(255,240,170,.95),rgba(255,140,40,.55) 40%,rgba(255,80,0,0) 70%);opacity:0;animation:bombFlash .6s ease-out 1.1s both}
+@keyframes bombIn{0%{transform:scale(0) rotate(-40deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes bombShake{0%,100%{translate:0 0}25%{translate:-5px 2px}75%{translate:5px -2px}}
+@keyframes bombFlash{0%{opacity:0;transform:scale(.3)}30%{opacity:1}100%{opacity:0;transform:scale(1.6)}}
+</style>
+<style>
 /* ===== GİZLİ KELİME bölümü ===== */
 .chip.masked{color:#fde68a;border:1.5px dashed rgba(253,230,138,.7);background:rgba(251,191,36,.1);letter-spacing:.18em}
 .hid-tut{position:absolute;inset:0;z-index:90;background:rgba(3,2,16,.72);display:flex;align-items:center;justify-content:center;padding:0 16px}
@@ -3028,6 +3045,7 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
           <button class="jk jk-img" id="jk-shuffle" aria-label="Karıştır"><img src="jk-karistir.png" alt="Karıştır" draggable="false"></button>
           <button class="jk jk-img" id="jk-hint" aria-label="İpucu"><img src="jk-ipucu.png" alt="İpucu" draggable="false"><span class="jk-price">20<svg class="i"><use href="#i-coin"/></svg></span></button>
           <button class="jk jk-img" id="jk-magnet" aria-label="Mıknatıs"><img src="jk-miknatis.png" alt="Mıknatıs" draggable="false"><span class="jk-price">100<svg class="i"><use href="#i-coin"/></svg></span></button>
+          <button class="jk jk-img jk-bomb" id="jk-bomb" aria-label="Bomba"><img src="bomba.png" alt="Bomba" draggable="false"><span class="jk-lbl">BOMBA</span><span class="jk-price">150<svg class="i"><use href="#i-coin"/></svg></span></button>
         </div>
         <button class="jk jk-img" id="jk-bank" aria-label="Kelime Bankası"><img src="jk-kelime-bankasi.png" alt="Kelime Bankası" draggable="false"><span class="jk-badge" id="bank-badge"></span></button>
       </div>
@@ -4798,6 +4816,7 @@ function refreshJokers(){
   const inv=typeof shopInventory==='function'?shopInventory():{hint:0,magnet:0};
   a.classList.toggle('dis', !(inv.hint>0) && S.coins < HINT_COST);
   b.classList.toggle('dis', !(inv.magnet>0) && S.coins < MAGNET_COST);
+  const bm=$('jk-bomb'); if (bm) bm.classList.toggle('dis', S.coins < BOMB_COST);
 }
 $('jk-hint').addEventListener('click', () => $('btn-hint').click());
 
@@ -4894,6 +4913,44 @@ function useMagnet(){
   }, total);
 }
 $('jk-magnet').addEventListener('click', useMagnet);
+
+/* BOMBA: patlar, hiçbir kelimeye ait olmayan TÜM boş harfleri yok eder (mıknatıs 5 harf siler, bomba hepsini) */
+const BOMB_COST = 150;
+function useBomb(){
+  audio();
+  if (!S.playing) return;
+  if (R){ toast('Online modda kullanılamaz'); return; }
+  if (S.magBusy) return;
+  const L = S.level, n = L.size;
+  if (S.found.size >= L.words.length) return;
+  const used = new Set();
+  Object.values(L.placements).forEach(pl => { plCells(pl).forEach(q => used.add(q.r * n + q.c)); });
+  const cand = [];
+  S.cells.forEach((el, i) => { if (!used.has(i) && !el.classList.contains('dim')) cand.push(i); });
+  if (!cand.length){ toast('Patlayacak harf kalmadı'); return; }
+  if (S.coins < BOMB_COST){ toast('Yeterli altının yok!'); SND.miss(); return; }
+  S.coins -= BOMB_COST; updateCoins();
+  S.magBusy = true;
+  const tok = S.token;
+  const fx = document.createElement('div'); fx.className = 'bomb-fx';
+  fx.innerHTML = '<img src="bomba.png" alt="" draggable="false"><div class="bomb-flash"></div>';
+  gridEl.appendChild(fx);
+  try { SND.hint(); } catch(_){}
+  setTimeout(() => {
+    if (tok !== S.token){ fx.remove(); return; }
+    try { SND.miss(); } catch(_){} try { buzz(60); } catch(_){}
+    cand.forEach((idx, k) => {
+      const el = S.cells[idx];
+      el.style.transitionDelay = (Math.random() * 250) + 'ms';
+      el.classList.add('dim');
+    });
+  }, 1100);
+  setTimeout(() => {
+    fx.classList.add('out');
+    setTimeout(() => { fx.remove(); if (tok === S.token) S.magBusy = false; }, 450);
+  }, 2000);
+}
+$('jk-bomb').addEventListener('click', useBomb);
 
 /* Kelime Bankası (şimdilik sadece arayüz; ekstra kelime tanıma sonra bağlanacak: addBankWord('KELİME') çağır) */
 function renderBank(){
