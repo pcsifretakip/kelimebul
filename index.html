@@ -7966,6 +7966,19 @@ html,body{margin:0;height:100%;overflow:hidden;background:#1b2a4a;overscroll-beh
 #bX:active{transform:translateY(3px);box-shadow:0 1px 0 #27106b}
 #cg.emb #bX{display:flex}
 #cg.emb #sM .hero{padding-top:58px}
+/* harf önizleme balonu, başlangıç harfi kalp atışı, alt buton efektleri */
+#kp{position:fixed;z-index:90;min-width:58px;height:66px;padding:0 12px;transform:translate(-50%,-100%) scale(.6);opacity:0;pointer-events:none;display:flex;align-items:center;justify-content:center;border-radius:16px;background:#fff;color:#3a1c82;font:900 40px/1 "Lilita One","Arial Rounded MT Bold",ui-rounded,system-ui,sans-serif;box-shadow:0 6px 0 #2a0f6b,0 10px 22px rgba(0,0,0,.45),0 0 18px rgba(255,216,77,.7);transition:opacity .08s,transform .1s}
+#kp.on{opacity:1;transform:translate(-50%,-100%) scale(1)}
+#kp:after{content:"";position:absolute;left:50%;bottom:-9px;margin-left:-8px;border:8px solid transparent;border-top-color:#fff;border-bottom:0}
+.key.pop{animation:kpop .16s ease-out}
+@keyframes kpop{50%{transform:scale(1.2) translateY(-3px)}}
+.l.hb{position:relative;z-index:3;animation:hbeat 1.25s ease-in-out infinite}
+@keyframes hbeat{0%,100%{transform:scale(1);box-shadow:0 0 3px #00f5d4,inset 0 0 0 2px rgba(0,245,212,.55)}14%{transform:scale(1.16);box-shadow:0 0 8px 2px #00f5d4,0 0 20px 5px rgba(0,245,212,.75),inset 0 0 0 2px #00f5d4}28%{transform:scale(1.02);box-shadow:0 0 4px #00f5d4,inset 0 0 0 2px rgba(0,245,212,.6)}42%{transform:scale(1.1);box-shadow:0 0 7px 1px #00f5d4,0 0 15px 3px rgba(0,245,212,.6),inset 0 0 0 2px #00f5d4}70%{transform:scale(1);box-shadow:0 0 3px #00f5d4,inset 0 0 0 2px rgba(0,245,212,.55)}}
+.bt button{position:relative;overflow:visible}
+.bt .rp{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;border:3px solid #ffe56a;pointer-events:none;box-shadow:0 0 12px #ffd21f,inset 0 0 8px #ffd21f;animation:brp .55s ease-out forwards}
+@keyframes brp{to{transform:scale(6);opacity:0}}
+.bt button.bn{animation:bbn .38s ease-out}
+@keyframes bbn{0%{transform:scale(.88);filter:brightness(1.5) drop-shadow(0 0 10px #ffd21f)}55%{transform:scale(1.18) rotate(-3deg);filter:brightness(1.25) drop-shadow(0 0 14px #ffd21f)}100%{transform:scale(1);filter:none}}
 </style></head><body>
 <div id="cg">
  <div class="scr on" id="sM"><button id="bX" type="button" aria-label="Ana menüye dön">&#8592; ANA MENÜ</button><div class="mtop"><span class="chip" id="mC"></span></div><div class="hero" id="hero"></div><div class="menu" id="mG"></div></div>
@@ -8082,7 +8095,9 @@ function draw(){
 function panel(){
  const w=L.ws[sel],ok=slv.includes(sel);$('gQ').textContent=w?w.q.toUpperCase():'';$('gS').textContent='';
  $('gA').innerHTML=w?Array.from({length:w.a.length},(_,i)=>`<div class="ab${ok?' g':''}">${ok?w.a[i]:buf[i]||''}</div>`).join(''):'';
- if(w&&!ok)for(let i=0;i<w.a.length;i++){const e=document.querySelector(`#gG [data-r="${w.r+(w.d?i:0)}"][data-c="${w.c+(w.d?0:i)}"]`);if(e&&!e.classList.contains('g'))e.textContent=buf[i]||''}}
+ if(w&&!ok)for(let i=0;i<w.a.length;i++){const e=document.querySelector(`#gG [data-r="${w.r+(w.d?i:0)}"][data-c="${w.c+(w.d?0:i)}"]`);if(e&&!e.classList.contains('g'))e.textContent=buf[i]||''}
+ document.querySelectorAll('#gG .hb').forEach(x=>x.classList.remove('hb'));
+ if(w&&!ok&&!buf.length){const e0=document.querySelector(`#gG [data-r="${w.r}"][data-c="${w.c}"]`);if(e0)e0.classList.add('hb')}}
 function solve(id){if(!slv.includes(id))slv.push(id);S.p[K(cur,lv)]=slv;buf='';
  if(slv.length>=L.ws.length){S.coins+=15;if(!S.done.includes(K(cur,lv)))S.done.push(K(cur,lv));save();upd();draw();setTimeout(win,500);return}
  save();upd();const n=L.ws.findIndex((_,i)=>!slv.includes(i)&&i>id);sel=n>=0?n:L.ws.findIndex((_,i)=>!slv.includes(i));draw()}
@@ -8142,6 +8157,16 @@ function chk(){const w=L.ws[sel];if(!w||slv.includes(sel)||buf.length<w.a.length
 $('kb').onclick=e=>{const b=e.target.closest('.key');if(!b||sel<0||slv.includes(sel)||busy)return;const k=b.dataset.k;
  playKey();if(k=='⌫')buf=buf.slice(0,-1);else if(buf.length<L.ws[sel].a.length)buf+=k;panel();
  if(buf.length==L.ws[sel].a.length)setTimeout(chk,200)};
+const kp=document.createElement('div');kp.id='kp';document.body.appendChild(kp);let kpT=0;
+function kpShow(b){clearTimeout(kpT);b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');
+ if(b.dataset.k==='⌫'){kp.classList.remove('on');return}
+ const r=b.getBoundingClientRect();kp.textContent=b.dataset.k;kp.style.left=(r.left+r.width/2)+'px';kp.style.top=(r.top-4)+'px';kp.classList.add('on')}
+function kpHide(){clearTimeout(kpT);kpT=setTimeout(()=>kp.classList.remove('on'),130)}
+$('kb').addEventListener('pointerdown',e=>{const b=e.target.closest('.key');if(b)kpShow(b)});
+['pointerup','pointercancel','pointerleave'].forEach(n=>$('kb').addEventListener(n,kpHide));
+document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('.bt button');if(!b)return;
+ const r=b.getBoundingClientRect(),i=document.createElement('i');i.className='rp';i.style.left=(e.clientX-r.left)+'px';i.style.top=(e.clientY-r.top)+'px';b.appendChild(i);setTimeout(()=>i.remove(),600);
+ b.classList.remove('bn');void b.offsetWidth;b.classList.add('bn')});
 $('bT').onclick=()=>{playClick();const w=L.ws[sel];if(!w||slv.includes(sel)||busy)return;if(spend(50)){toast('Cevap gösterildi');solve(sel)}};
 $('bS').onclick=()=>{playClick();const w=L.ws[sel];if(!w||slv.includes(sel))return;if(spend(5))$('gS').textContent=[...w.a].sort(()=>Math.random()-.5).join(' ')};
 $('bA').onclick=()=>{playClick();const w=L.ws[sel];if(!w||slv.includes(sel)||busy)return;if(!spend(20))return;let k=0;while(k<buf.length&&buf[k]==w.a[k])k++;
