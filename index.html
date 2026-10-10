@@ -2899,6 +2899,29 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
 .wh-dots i.used{background:#2a2f86}
 .wh-msg{min-height:20px;text-align:center;font-size:13px;font-weight:800;color:#cfe0ff;padding:6px 20px}
 </style>
+
+<style id="chest-topbar">
+.app.on-home .topbar .grp:first-child{gap:6px!important}
+.app.on-home .topbar .coin{margin-left:auto!important}
+.hm-chest-top{display:none;position:relative;flex:none;width:40px;height:40px;padding:0;border-radius:50%;align-items:center;justify-content:center;
+  border:1.5px solid #fbbf24;background:linear-gradient(180deg,rgba(124,77,255,.55),rgba(30,16,90,.85));box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 3px 0 rgba(8,4,32,.65);transition:filter .2s,opacity .2s}
+.app.on-home .hm-chest-top{display:flex}
+.hm-chest-top svg.hm-gift{width:24px;height:24px;margin:0}
+.hm-chest-top .hm-dot{display:none;top:-3px;right:-3px;width:13px;height:13px}
+.hm-chest-top.ready{animation:hmGlow 1.7s ease-in-out infinite}
+.hm-chest-top.ready .hm-dot{display:block}
+.hm-chest-top.ready svg{animation:hmWiggle 2.6s ease-in-out infinite}
+.hm-chest-top:not(.ready){opacity:.5;filter:grayscale(1);border-color:rgba(255,255,255,.22);box-shadow:none;pointer-events:none;animation:none}
+.hm-chest-top:not(.ready) svg{animation:none}
+</style>
+
+<style id="wheel-drag">
+.wh-stage{touch-action:none;cursor:grab;-webkit-user-select:none;user-select:none}
+.wh-stage:active{cursor:grabbing}
+.wh-wheel img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;-webkit-user-drag:none}
+.wh-stage.img .wh-hub circle{display:none}
+.wh-msg{font-size:15px}
+</style>
 </head>
 <body>
 
@@ -2944,6 +2967,7 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
       <button class="icon-btn av" id="btn-avatar" aria-label="Profil"></button>
       <span class="home-username" id="home-username">Oyuncu</span>
       <div class="coin"><svg class="i coin-ic"><use href="#i-coin"/></svg><span id="coin-count">100</span><button class="coin-plus hm-fx" id="coin-plus" aria-label="Altın kazan">+</button></div>
+      <button class="hm-chest-top hm-fx" id="hm-chest" aria-label="Günlük ödül"><i class="hm-dot"></i><svg class="hm-gift" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="13" width="24" height="15" rx="3" fill="#a855f7"/><rect x="4" y="13" width="24" height="6" rx="2" fill="#c084fc"/><rect x="14" y="13" width="4" height="15" fill="#fbbf24"/><path d="M16 13c-2-7-10-6-9-2 1 3 5 2 9 2zm0 0c2-7 10-6 9-2-1 3-5 2-9 2z" fill="#fbbf24"/></svg></button>
     </div>
     <div class="level-box"><small>BÖLÜM</small><b id="header-level-num">1</b></div>
     <div class="grp r">
@@ -3001,13 +3025,6 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
       </div>
 
 
-      <div class="hm-tiles">
-        <button class="hm-tile hm-fx" id="hm-chest" aria-label="Günlük ödül">
-          <i class="hm-dot"></i>
-          <svg class="hm-gift" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="13" width="24" height="15" rx="3" fill="#a855f7"/><rect x="4" y="13" width="24" height="6" rx="2" fill="#c084fc"/><rect x="14" y="13" width="4" height="15" fill="#fbbf24"/><path d="M16 13c-2-7-10-6-9-2 1 3 5 2 9 2zm0 0c2-7 10-6 9-2-1 3-5 2-9 2z" fill="#fbbf24"/></svg>
-          
-        </button>
-      </div>
 
       <div class="home-actions">
         <button id="btn-levels" class="hm-play hm-fx action-card journey-card" aria-label="Yolculuğa Başla">
@@ -7185,7 +7202,7 @@ function drClaim(){
   drRender(); renderHomeHud(); hmNote('+' + r + ' altın kazandın!');
   setTimeout(() => { const o = $('dr-ov'); if (o) o.classList.remove('show'); }, 900);
 }
-$('hm-chest').addEventListener('click', () => { drRender().classList.add('show'); });
+$('hm-chest').addEventListener('click', () => { if (!drReady()) return; drRender().classList.add('show'); });
 
 /* ===== GÜNLÜK GÖREVLER ===== */
 const TASKS=[
@@ -7482,7 +7499,7 @@ function shopBuy(id){
 /* ===== ŞANS ÇARKI ===== */
 const WHEEL_PRIZES=[200,10,20,30,15,20,10,30], WHEEL_COL=['#c2610c','#0f9d76','#3f3fb8','#0e8fc7','#7b21b5','#b3202c','#e0900c','#b81e9e'];   // 0. dilim = en yüksek ödül (haftada 2 kez)
 const WHEEL_COOLDOWN=12*60*60*1000;   // 12 saatte bir bedava çevirme
-let wheelRot=0, wheelBusy=false;
+let wheelRot=0, wheelBusy=false, wheelShown=null, wheelAudio=null;
 function wheelNext(){return parseInt(store.get('kb_wheel_next')||'0',10)||0;}
 function wheelRemain(){return Math.max(0,wheelNext()-Date.now());}
 function wheelReady(){return wheelRemain()<=0;}
@@ -7512,16 +7529,9 @@ function wheelSvg(){
  return '<svg viewBox="-170 -170 340 340"><circle r="168" fill="#6d73f5"/><circle r="148" fill="#4b4fd1"/>'+seg+txt+dots+'</svg>';
 }
 function wheelUpdate(msg){
- const btn=$('wh-spin');
- if(btn){
-  const ready=wheelReady();
-  btn.disabled=wheelBusy||!ready;
-  btn.querySelector('b').textContent=ready?'ÇEVİR':wheelFmt(wheelRemain());
-  const ad=btn.querySelector('.wh-ad');if(ad)ad.style.display='none';
-  const dots=$('wh-dots');if(dots)dots.style.display='none';
-  const m=$('wh-msg');if(m)m.textContent=msg||(ready?'':'Çark 12 saatte bir açılır. Haftada 2 kez büyük ödül!');
-  const wc=$('wh-coins');if(wc)wc.textContent=S.coins;
- }
+ const ready=wheelReady();
+ const m=$('wh-msg');if(m)m.textContent=msg||(wheelBusy?'':(ready?'Çarkı parmağınla çevir 👆':'Sonraki çevirme: '+wheelFmt(wheelRemain())));
+ const wc=$('wh-coins');if(wc)wc.textContent=(wheelShown!=null?wheelShown:S.coins);
  wheelTile();
 }
 function wheelTile(){
@@ -7531,36 +7541,120 @@ function wheelTile(){
  v.textContent=wheelBusy?'Dönüyor…':(ready?'Şans Çarkı':wheelFmt(wheelRemain()));
 }
 setInterval(()=>{try{wheelUpdate($('wh-msg')&&wheelBusy?$('wh-msg').textContent:'');}catch(_){}},1000);
-function wheelRun(){
+function wheelPrizeFx(prize,done){
+ const box=document.createElement('div');
+ box.style.cssText='position:fixed;left:50%;top:50%;z-index:99999;pointer-events:none;display:flex;align-items:center;gap:10px;transform:translate(-50%,-50%) scale(0);opacity:0';
+ box.innerHTML='<img src="vic-altin.png" alt="" style="width:84px;height:84px;object-fit:contain;filter:drop-shadow(0 6px 10px rgba(0,0,0,.55)) drop-shadow(0 0 16px rgba(255,200,60,.85))" onerror="this.outerHTML=\'<em style=&quot;font-size:70px;font-style:normal&quot;>🪙</em>\'"><span style="font-size:68px;font-weight:1000;color:#ffe27a;-webkit-text-stroke:2px #8a4b00;paint-order:stroke fill;text-shadow:0 5px 0 #8a4b00,0 0 18px rgba(255,200,60,.85)">+'+prize+'</span>';
+ document.body.appendChild(box);
+ try{SND.found();}catch(_){}buzz([40,40,60]);
+ /* kıvılcımlar */
+ for(let n=0;n<16;n++){
+  const sp=document.createElement('div');sp.textContent=n%2?'✦':'★';
+  sp.style.cssText='position:fixed;left:50%;top:50%;z-index:99998;pointer-events:none;font-size:'+(14+Math.random()*14)+'px;color:#ffd84a;text-shadow:0 0 10px rgba(255,200,60,.95)';
+  document.body.appendChild(sp);
+  const ang=Math.random()*Math.PI*2,dist=110+Math.random()*110;
+  sp.animate([{transform:'translate(-50%,-50%) scale(.2)',opacity:1},{transform:'translate(calc(-50% + '+(Math.cos(ang)*dist)+'px),calc(-50% + '+(Math.sin(ang)*dist)+'px)) scale(1.2) rotate(180deg)',opacity:0}],{duration:800+Math.random()*300,easing:'cubic-bezier(.2,.8,.3,1)',fill:'forwards'}).onfinish=()=>sp.remove();
+ }
+ const pop=box.animate([
+  {transform:'translate(-50%,-50%) scale(0) rotate(-10deg)',opacity:0},
+  {transform:'translate(-50%,-50%) scale(1.4) rotate(4deg)',opacity:1,offset:.6},
+  {transform:'translate(-50%,-50%) scale(1) rotate(0)',opacity:1}
+ ],{duration:560,easing:'cubic-bezier(.2,1.1,.4,1)',fill:'forwards'});
+ pop.onfinish=()=>{
+  const pulse=box.animate([{transform:'translate(-50%,-50%) scale(1)'},{transform:'translate(-50%,-50%) scale(1.08)'},{transform:'translate(-50%,-50%) scale(1)'}],{duration:700,iterations:1,fill:'forwards'});
+  pulse.onfinish=()=>{
+   const w=$('wh-coins'),tgtEl=(w&&w.closest('.sh2-wallet'))||document.querySelector('.topbar .coin')||w;
+   const tr=tgtEl?tgtEl.getBoundingClientRect():{left:innerWidth/2,top:0,width:0,height:0};
+   const dx=tr.left+tr.width/2-innerWidth/2,dy=tr.top+tr.height/2-innerHeight/2;
+   const fly=box.animate([
+    {transform:'translate(-50%,-50%) scale(1)',opacity:1},
+    {transform:'translate(calc(-50% + '+dx+'px),calc(-50% + '+dy+'px)) scale(.16)',opacity:.95}
+   ],{duration:680,easing:'cubic-bezier(.55,0,.85,.35)',fill:'forwards'});
+   fly.onfinish=()=>{
+    box.remove();
+    const bump=el=>{try{el.animate([{transform:'scale(1)',filter:'brightness(1)'},{transform:'scale(1.22)',filter:'brightness(1.6)'},{transform:'scale(1)',filter:'brightness(1)'}],{duration:450,easing:'ease-out'});}catch(_){}};
+    if(tgtEl)bump(tgtEl);
+    const tc=document.querySelector('.topbar .coin');if(tc&&tc!==tgtEl)bump(tc);
+    try{SND.found();}catch(_){}
+    done();
+   };
+  };
+ };
+}
+function wheelRun(dir){
  store.set('kb_wheel_next',String(Date.now()+WHEEL_COOLDOWN));
  const k=wheelPick(),prize=WHEEL_PRIZES[k];
- S.coins+=prize;updateCoins();try{renderHomeHud();}catch(_){}      // ödül hemen yazılır (çıkıp girerek kaçırılamaz)
- const delta=(((-k*45-wheelRot)%360)+360)%360;
- wheelRot+=360*6+delta+(Math.random()*24-12);
- const el=$('wh-wheel');el.style.transition='transform 4.6s cubic-bezier(.12,.7,.1,1)';el.style.transform='rotate('+wheelRot+'deg)';
- try{if(S.sound){const ca=new Audio('cark.mp3');ca.volume=1;const pr=ca.play();if(pr&&pr.catch)pr.catch(()=>{});}}catch(_){}   // çark sesi
+ /* ödül hemen kaydedilir (çıkıp girerek kaçırılamaz), ama ekranda sayaç efekt bitince artar */
+ wheelShown=S.coins;S.coins+=prize;updateCoins();
+ const cc=$('coin-count');if(cc)cc.textContent=wheelShown;
+ const el=$('wh-wheel'),cur=wheelRot,T=-k*45+(Math.random()*24-12);
+ const extra=360*5;
+ const delta=dir>0?((((T-cur)%360)+360)%360+extra):-((((cur-T)%360)+360)%360+extra);
+ /* çark sesi: süre = ses süresi (3-8 sn), çark ve ses aynı anda durur */
+ let D=4600,au=null;
+ if(S.sound){try{
+  au=wheelAudio||(wheelAudio=new Audio('cark.mp3'));
+  if(isFinite(au.duration)&&au.duration>0)D=Math.min(8,Math.max(3,au.duration))*1000;
+  au.loop=true;au.currentTime=0;au.volume=1;const pr=au.play();if(pr&&pr.catch)pr.catch(()=>{});
+ }catch(_){au=null;}}
+ const stopAudio=()=>{if(au){try{au.pause();au.currentTime=0;au.volume=1;}catch(_){}}};
+ el.style.transition='none';
+ const t0=performance.now();
+ const step=now=>{
+  const p=Math.min(1,(now-t0)/D),e=1-Math.pow(1-p,4);
+  wheelRot=cur+delta*e;el.style.transform='rotate('+wheelRot+'deg)';
+  if(au&&p>.88){try{au.volume=Math.max(0,(1-p)/.12);}catch(_){}}
+  if(p<1){requestAnimationFrame(step);return;}
+  stopAudio();
+  wheelPrizeFx(prize,()=>{
+   wheelShown=null;const c2=$('coin-count');if(c2)c2.textContent=S.coins;
+   try{renderHomeHud();}catch(_){}
+   wheelBusy=false;wheelUpdate('');const sh=$('shop-ov');if(sh&&sh.classList.contains('show'))shopRender();
+  });
+ };
  wheelUpdate('');
- setTimeout(()=>{
-  try{SND.found();}catch(_){}buzz([40,40,60]);taskCoinToast(prize);
-  wheelBusy=false;wheelUpdate('');const sh=$('shop-ov');if(sh&&sh.classList.contains('show'))shopRender();
- },4700);
+ requestAnimationFrame(step);
 }
-function wheelSpin(){
+function wheelSpin(dir){
  if(wheelBusy||!wheelReady())return;
  wheelBusy=true;
- wheelRun();
+ wheelRun(dir||1);
 }
 function wheelOpen(){
  let o=$('wheel-ov');
  if(!o){o=document.createElement('div');o.id='wheel-ov';o.className='shop-ov wh-ov';document.body.appendChild(o);}
+ if(!wheelAudio){try{wheelAudio=new Audio('cark.mp3');wheelAudio.preload='auto';wheelAudio.load();}catch(_){}}
  o.innerHTML='<section class="sh2 wh" role="dialog" aria-modal="true" aria-label="Şans çarkı">'
-  +'<div class="sh2-top"><div class="sh2-wallet"><span class="sh2-bag">🛍️</span><b id="wh-coins">'+S.coins+'</b><img class="sh2-wc" src="vic-altin.png" alt="" draggable="false" onerror="this.outerHTML=\'<em>🪙</em>\'"></div><button class="sh2-x" type="button" aria-label="Kapat">✕</button></div>'
-  +'<div class="wh-stage"><div class="wh-wheel" id="wh-wheel" style="transform:rotate('+wheelRot+'deg)">'+wheelSvg()+'</div>'
+  +'<div class="sh2-top"><div class="sh2-wallet"><span class="sh2-bag">🛍️</span><b id="wh-coins">'+(wheelShown!=null?wheelShown:S.coins)+'</b><img class="sh2-wc" src="vic-altin.png" alt="" draggable="false" onerror="this.outerHTML=\'<em>🪙</em>\'"></div><button class="sh2-x" type="button" aria-label="Kapat">✕</button></div>'
+  +'<div class="wh-stage"><div class="wh-wheel" id="wh-wheel" style="transform:rotate('+wheelRot+'deg)"><img src="cark.png" alt="" draggable="false" onload="this.closest(\'.wh-stage\').classList.add(\'img\')" onerror="this.outerHTML=wheelSvg()"></div>'
   +'<svg class="wh-hub" viewBox="-60 -125 120 190"><path d="M-17 -34 L0 -118 L17 -34 Z" fill="#fbbf24" stroke="#b45309" stroke-width="3"/><circle r="46" fill="#6d73f5" stroke="#4b4fd1" stroke-width="6"/><circle r="30" fill="#fbbf24" stroke="#b45309" stroke-width="4"/><circle r="12" fill="#fde68a"/></svg></div>'
-  +'<button class="wh-btn" id="wh-spin" type="button"><span class="wh-ad">🎬</span><b>ÇEVİR</b></button>'
-  +'<div class="wh-dots" id="wh-dots"></div><div class="wh-msg" id="wh-msg"></div></section>';
+  +'<div class="wh-msg" id="wh-msg"></div></section>';
  o.querySelector('.sh2-x').onclick=()=>{if(!wheelBusy)o.classList.remove('show');};
- $('wh-spin').onclick=wheelSpin;
+ /* parmakla çevirme */
+ const stage=o.querySelector('.wh-stage'),wEl=$('wh-wheel');let drag=null;
+ const ang=e=>{const r=stage.getBoundingClientRect();return Math.atan2(e.clientY-(r.top+r.height/2),e.clientX-(r.left+r.width/2))*180/Math.PI;};
+ stage.addEventListener('pointerdown',e=>{
+  if(wheelBusy||!wheelReady())return;
+  try{stage.setPointerCapture(e.pointerId);}catch(_){}
+  drag={a:ang(e),acc:0,rot:wheelRot,pts:[{t:performance.now(),v:0}]};
+  wEl.style.transition='none';
+ });
+ stage.addEventListener('pointermove',e=>{
+  if(!drag)return;
+  const a=ang(e);let d=a-drag.a;if(d>180)d-=360;if(d<-180)d+=360;
+  drag.acc+=d;drag.a=a;wheelRot=drag.rot+drag.acc;wEl.style.transform='rotate('+wheelRot+'deg)';
+  drag.pts.push({t:performance.now(),v:drag.acc});if(drag.pts.length>8)drag.pts.shift();
+ });
+ const end=()=>{
+  if(!drag)return;const dd=drag;drag=null;
+  const p=dd.pts,last=p[p.length-1],first=p[0];
+  const dt=Math.max(1,last.t-first.t),vel=(last.v-first.v)/dt;   // derece/ms
+  if(Math.abs(dd.acc)>=30||Math.abs(vel)>0.3){
+   const dir=Math.abs(vel)>0.05?Math.sign(vel):Math.sign(dd.acc);
+   wheelSpin(dir||1);
+  }
+ };
+ stage.addEventListener('pointerup',end);stage.addEventListener('pointercancel',end);
  wheelUpdate('');
  o.classList.add('show');
 }
