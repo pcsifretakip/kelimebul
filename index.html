@@ -1678,13 +1678,16 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .jk.jk-bomb img{width:84%;height:auto;margin:0 auto 14%;filter:drop-shadow(0 0 8px rgba(255,140,40,.7)) drop-shadow(0 4px 6px rgba(0,0,0,.45))}
 .jk-lbl{position:absolute;left:50%;bottom:3%;transform:translateX(-50%);padding:2px 8px;border-radius:99px;font-size:clamp(8px,2.4vw,10px);font-weight:1000;letter-spacing:.04em;color:#fff;white-space:nowrap;background:linear-gradient(180deg,#3b1d8f,#1b0c52);border:1.5px solid #f5b83a;box-shadow:0 0 8px rgba(245,184,58,.55)}
 .jk.jk-bomb.dis .jk-lbl{filter:grayscale(.9) brightness(.7)}
-.bomb-fx{position:absolute;inset:0;z-index:30;pointer-events:none;display:flex;align-items:center;justify-content:center;transition:opacity .4s ease}
-.bomb-fx.out{opacity:0}
-.bomb-fx img{width:140px;height:auto;filter:drop-shadow(0 0 16px rgba(255,150,40,.95));animation:bombIn .7s cubic-bezier(.2,1.5,.4,1) both,bombShake .12s linear .7s 4}
-.bomb-fx .bomb-flash{position:absolute;inset:0;background:radial-gradient(circle,rgba(255,240,170,.95),rgba(255,140,40,.55) 40%,rgba(255,80,0,0) 70%);opacity:0;animation:bombFlash .6s ease-out 1.1s both}
+.bomb-fx{position:fixed;inset:0;z-index:9000;pointer-events:none;overflow:hidden}
+.bomb-fx .bx-bomb{position:absolute;width:130px;height:auto;margin:-65px 0 0 -65px;filter:drop-shadow(0 0 18px rgba(255,150,40,.95));animation:bombIn .55s cubic-bezier(.2,1.5,.4,1) both,bombShake .09s linear .55s 5}
+.bomb-fx .bx-flash{position:absolute;inset:0;background:radial-gradient(circle at var(--cx) var(--cy),#fff 0,#fff3b0 18%,rgba(255,150,40,.7) 45%,rgba(255,80,0,0) 75%);opacity:0}
+.bomb-fx .bx-big{position:absolute;width:150vmax;height:150vmax;margin:-75vmax 0 0 -75vmax;object-fit:contain;opacity:0;transform:scale(.03)}
+.bomb-fx .bx-ring{position:absolute;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:6px solid rgba(255,230,160,.9);box-shadow:0 0 30px rgba(255,160,50,.9),inset 0 0 20px rgba(255,200,90,.7);opacity:0;transform:scale(.2)}
+.bomb-fx .bx-spark{position:absolute;width:9px;height:9px;margin:-4px 0 0 -4px;border-radius:50%;background:#ffd24a;box-shadow:0 0 10px 3px rgba(255,150,30,.95)}
+.app.bomb-shake{animation:bombScreenShake .7s linear 1}
+@keyframes bombScreenShake{0%,100%{translate:0 0}10%{translate:-14px 8px}20%{translate:12px -10px}30%{translate:-10px -6px}40%{translate:9px 9px}50%{translate:-7px 4px}60%{translate:6px -5px}75%{translate:-3px 2px}90%{translate:2px -1px}}
 @keyframes bombIn{0%{transform:scale(0) rotate(-40deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
-@keyframes bombShake{0%,100%{translate:0 0}25%{translate:-5px 2px}75%{translate:5px -2px}}
-@keyframes bombFlash{0%{opacity:0;transform:scale(.3)}30%{opacity:1}100%{opacity:0;transform:scale(1.6)}}
+@keyframes bombShake{0%,100%{translate:0 0}25%{translate:-6px 3px}75%{translate:6px -3px}}
 </style>
 <style>
 #view-home .hm-tiles{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
@@ -4925,8 +4928,47 @@ function useMagnet(){
 }
 $('jk-magnet').addEventListener('click', useMagnet);
 
-/* BOMBA: patlar, hiçbir kelimeye ait olmayan TÜM boş harfleri yok eder (mıknatıs 5 harf siler, bomba hepsini) */
+/* BOMBA: büyük patlama (patlama.png + duman.png), tüm ekranı kaplar; boş harfleri ortadan dışa dalga halinde yok eder */
 const BOMB_COST = 150;
+function bombBoom(cx, cy, onBoom){
+  const fx = document.createElement('div'); fx.className = 'bomb-fx';
+  fx.style.setProperty('--cx', cx+'px'); fx.style.setProperty('--cy', cy+'px');
+  const at = (el) => { el.style.left = cx+'px'; el.style.top = cy+'px'; return el; };
+  const bomb = at(document.createElement('img')); bomb.className='bx-bomb'; bomb.src='bomba.png'; bomb.draggable=false;
+  const smoke = at(document.createElement('img')); smoke.className='bx-big'; smoke.src='duman.png'; smoke.draggable=false; let smokeFb=false; smoke.onerror=()=>{ if(smokeFb){smoke.style.display='none';return;} smokeFb=true; smoke.src='patlama.png'; };   // duman.png yoksa patlama.png ikinci dalga olarak kullanılır
+  const fire = at(document.createElement('img')); fire.className='bx-big'; fire.src='patlama.png'; fire.draggable=false; fire.onerror=()=>{fire.style.display='none';};
+  const ring = at(document.createElement('div')); ring.className='bx-ring';
+  const flash = document.createElement('div'); flash.className='bx-flash';
+  fx.append(bomb, smoke, fire, ring, flash);
+  document.body.appendChild(fx);
+  const appEl = document.querySelector('.app');
+  const T = 1000;   // fitil süresi: bomba belirir ve titrer, sonra patlar
+  setTimeout(() => {
+    bomb.style.display = 'none';
+    try { SND.miss(); } catch(_){}
+    try { buzz([80,40,120]); } catch(_){}
+    if (appEl){ appEl.classList.remove('bomb-shake'); void appEl.offsetWidth; appEl.classList.add('bomb-shake'); setTimeout(()=>appEl.classList.remove('bomb-shake'), 750); }
+    const ease = 'cubic-bezier(.12,.8,.25,1)';
+    flash.animate([{opacity:0},{opacity:1,offset:.12},{opacity:0}], {duration:500, easing:'ease-out', fill:'forwards'});
+    if (smokeFb){
+      smoke.style.filter = 'hue-rotate(-15deg) saturate(1.2) brightness(.9)';
+      smoke.animate([{opacity:0,transform:'scale(.05) rotate(35deg)'},{opacity:.7,transform:'scale(.5) rotate(50deg)',offset:.3},{opacity:0,transform:'scale(1.15) rotate(70deg)'}], {duration:1500, delay:120, easing:ease, fill:'forwards'});
+    } else {
+      smoke.animate([{opacity:0,transform:'scale(.03)'},{opacity:.95,transform:'scale(.45)',offset:.3},{opacity:0,transform:'scale(1)'}], {duration:1400, easing:ease, fill:'forwards'});
+    }
+    fire.animate([{opacity:1,transform:'scale(.03) rotate(-8deg)'},{opacity:1,transform:'scale(.5) rotate(0)',offset:.35},{opacity:0,transform:'scale(.9) rotate(6deg)'}], {duration:1000, easing:ease, fill:'forwards'});
+    ring.animate([{opacity:1,transform:'scale(.2)'},{opacity:0,transform:'scale(40)'}], {duration:900, easing:'ease-out', fill:'forwards'});
+    for (let i = 0; i < 36; i++){
+      const sp = at(document.createElement('div')); sp.className='bx-spark'; fx.appendChild(sp);
+      const ang = Math.random()*Math.PI*2, d = 120 + Math.random()*Math.max(innerWidth, innerHeight)*0.7;
+      const dx = Math.cos(ang)*d, dy = Math.sin(ang)*d + 60;
+      sp.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${dx}px,${dy}px) scale(.2)`,opacity:0}],
+        {duration:700 + Math.random()*700, easing:'cubic-bezier(.1,.7,.3,1)', fill:'forwards'});
+    }
+    try { onBoom(); } catch(_){}
+  }, T);
+  setTimeout(() => fx.remove(), T + 1600);
+}
 function useBomb(){
   audio();
   if (!S.playing) return;
@@ -4943,23 +4985,21 @@ function useBomb(){
   S.coins -= BOMB_COST; updateCoins();
   S.magBusy = true;
   const tok = S.token;
-  const fx = document.createElement('div'); fx.className = 'bomb-fx';
-  fx.innerHTML = '<img src="bomba.png" alt="" draggable="false"><div class="bomb-flash"></div>';
-  gridEl.appendChild(fx);
+  const gr = gridEl.getBoundingClientRect();
+  const cx = gr.left + gr.width/2, cy = gr.top + gr.height/2;
   try { SND.hint(); } catch(_){}
-  setTimeout(() => {
-    if (tok !== S.token){ fx.remove(); return; }
-    try { SND.miss(); } catch(_){} try { buzz(60); } catch(_){}
-    cand.forEach((idx, k) => {
-      const el = S.cells[idx];
-      el.style.transitionDelay = (Math.random() * 250) + 'ms';
+  bombBoom(cx, cy, () => {
+    if (tok !== S.token) return;
+    const mid = (n - 1) / 2;
+    cand.forEach(idx => {
+      const el = S.cells[idx], r = Math.floor(idx / n), c = idx % n;
+      const dist = Math.hypot(r - mid, c - mid);
+      el.style.transitionDelay = (dist * 90) + 'ms';   // ortadan dışa dalga
       el.classList.add('dim');
     });
-  }, 1100);
-  setTimeout(() => {
-    fx.classList.add('out');
-    setTimeout(() => { fx.remove(); if (tok === S.token) S.magBusy = false; }, 450);
-  }, 2000);
+    setTimeout(() => { cand.forEach(idx => { S.cells[idx].style.transitionDelay = ''; }); }, 900);
+  });
+  setTimeout(() => { if (tok === S.token) S.magBusy = false; }, 2400);
 }
 $('jk-bomb').addEventListener('click', useBomb);
 
