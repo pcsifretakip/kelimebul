@@ -2243,6 +2243,19 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 @keyframes misirGlow{0%,100%{box-shadow:0 0 12px rgba(251,191,36,.55),0 0 26px rgba(34,211,238,.22)}50%{box-shadow:0 0 22px rgba(251,191,36,.95),0 0 46px rgba(240,171,252,.42)}}
 .misir-wrap.misir-burst .journey-card{animation:misirBurst .9s ease-out}
 @keyframes misirBurst{0%{filter:brightness(2.4) saturate(1.6);transform:scale(1.035)}100%{filter:none;transform:none}}
+/* Mısır açılışı: ışık hüzmesi + altın tozlar + parlama + parıltı geçişi */
+.misir-fx{position:absolute;inset:0;pointer-events:none;z-index:7}
+.misir-beam{position:absolute;left:50%;bottom:50%;width:78%;height:min(75vh,520px);transform:translateX(-50%) scaleY(0);transform-origin:50% 100%;opacity:0;mix-blend-mode:screen;
+  background:linear-gradient(to top,rgba(255,248,196,.95),rgba(255,226,120,.55) 35%,rgba(255,226,120,0));clip-path:polygon(41% 0,59% 0,100% 100%,0 100%);animation:misirBeam 3.6s ease-out forwards}
+.misir-beam.b2{width:34%;background:linear-gradient(to top,#fff,rgba(255,255,255,.6) 40%,rgba(255,255,255,0));clip-path:polygon(44% 0,56% 0,100% 100%,0 100%);animation-delay:.12s}
+@keyframes misirBeam{0%{opacity:0;transform:translateX(-50%) scaleY(.05)}16%{opacity:1;transform:translateX(-50%) scaleY(1)}62%{opacity:.9;transform:translateX(-50%) scaleY(1)}100%{opacity:0;transform:translateX(-50%) scaleY(1)}}
+.misir-dust i{position:absolute;left:calc(50% + var(--x));bottom:50%;width:var(--sz);height:var(--sz);border-radius:50%;background:#fff6b0;box-shadow:0 0 6px #ffd54a,0 0 14px #fbbf24;opacity:0;animation:misirDust var(--du) ease-out var(--dl) both}
+@keyframes misirDust{0%{opacity:0;transform:translateY(0)}18%{opacity:1}100%{opacity:0;transform:translateY(-260px)}}
+.misir-flare{position:absolute;inset:-26px;border-radius:34px;pointer-events:none;z-index:7;background:radial-gradient(ellipse at center,rgba(255,236,150,.9),rgba(251,191,36,.35) 45%,rgba(251,191,36,0) 70%);animation:misirFlare 1.3s ease-out forwards}
+@keyframes misirFlare{0%{opacity:0;transform:scale(.7)}25%{opacity:1}100%{opacity:0;transform:scale(1.12)}}
+.misir-shine{position:absolute;inset:0;border-radius:20px;overflow:hidden;pointer-events:none;z-index:8}
+.misir-shine i{position:absolute;top:-25%;bottom:-25%;left:-40%;width:34%;transform:skewX(-20deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);animation:misirShine .95s ease-in-out .1s 2}
+@keyframes misirShine{from{left:-40%}to{left:125%}}
 .coin-fly{position:fixed;z-index:300;pointer-events:none;display:flex;align-items:center;gap:3px;font-weight:1000;font-size:18px;color:#ffe27a;text-shadow:0 2px 0 #7a4a00,0 0 10px rgba(255,214,90,.9)}
 .coin-fly .i{width:28px;height:28px;filter:drop-shadow(0 0 8px rgba(255,200,40,.9))}
 .topbar .coin.coin-bump{animation:coinBump .45s ease-out}
@@ -3969,18 +3982,13 @@ const SND = {
     const f = 523.25 * Math.pow(2, (sc[k % 5] + 12 * Math.floor(k / 5)) / 12);
     tone(f, 0, .32, 'sine', .13); tone(f * 2.01, 0, .22, 'sine', .05); tone(f * 3.99, 0, .1, 'sine', .018);
   },
-  click(force){   // oyun ekranı dışında (ve ayar menüsünde) click.mp3, oyun içinde eski ses
-    const g = document.getElementById('view-game'), inGame = !!g && !g.classList.contains('off');
-    if ((force || !inGame) && S.sound){
-      try{
-        if (!SND._ck){ SND._ck = new Audio('click.mp3'); SND._ck.preload = 'auto'; }
-        const a = SND._ck.cloneNode(); a.volume = 1;
-        const pr = a.play();
-        if (pr && pr.catch) pr.catch(() => SND._clk());
-        return;
-      }catch(e){}
-    }
-    SND._clk();
+  click(){          // tüm arayüz tıklamaları SADECE click.mp3 (ses kapalıysa çalmaz)
+    if (!S.sound) return;
+    try{
+      if (!SND._ck){ SND._ck = new Audio('click.mp3'); SND._ck.preload = 'auto'; }
+      const a = SND._ck.cloneNode(); a.volume = 1;
+      const pr = a.play(); if (pr && pr.catch) pr.catch(() => {});
+    }catch(e){}
   },
   _clk(){ tone(1500, 0, .04, 'triangle', .17, 900); tone(700, .01, .035, 'sine', .09); },
   monkey(){ if (!S.sound) return; tone(620,0,.11,'triangle',.16,420); tone(480,.08,.13,'triangle',.14,310); tone(760,.18,.09,'sine',.11,520); tone(380,.26,.16,'triangle',.12,220); },
@@ -5370,9 +5378,11 @@ function showChapterEnd(chapterIndex){
   if (title) title.textContent = 'TEBRİKLER!';
   const sub = $('chapter-end').querySelector('.ce-sub');
   if (sub) sub.textContent = GROUPS[chapterIndex][0] + ' tamamlandı';
+  const isLastChapter = chapterIndex >= CHAPTER_COUNT - 1;      // 10. bölüm = Amazon Efsaneleri
+  if (sub && isLastChapter) sub.textContent = 'Amazon Yağmur Ormanları tamamlandı';
   const next = $('ce-next');
-  if (next) next.textContent = chapterIndex < CHAPTER_COUNT - 1 ? 'HARİTAYA DÖN' : 'HARİTAYA DÖN';
-  store.set('kb_misir_anim', '1');
+  if (next) next.textContent = isLastChapter ? 'MACERAYA BAŞLA' : 'HARİTAYA DÖN';
+  if (isLastChapter) store.set('kb_misir_anim', '1');          // Mısır banner'ı açılış animasyonu bekliyor
   $('chapter-end').classList.add('show');
   const g = $('ce-gold'), t0 = performance.now(), D = 1300;
   g.textContent = '0';
@@ -5386,24 +5396,29 @@ $('ce-next').addEventListener('click', () => {
   iris.className = 'iris in';
   setTimeout(() => {
     $('chapter-end').classList.remove('show');
-    const nextChapter = Math.min(CHAPTER_COUNT - 1, ch + 1);
-    showJourneyMap(nextChapter, { unlock: nextChapter, noLoading: true });
+    if (ch >= CHAPTER_COUNT - 1){
+      showLevels();                               // Maceraya Başla sayfası -> Mısır banner'ı ışıkla açılır
+    } else {
+      const nextChapter = Math.min(CHAPTER_COUNT - 1, ch + 1);
+      showJourneyMap(nextChapter, { unlock: nextChapter, noLoading: true });
+    }
     requestAnimationFrame(() => { iris.className = 'iris out'; });
     setTimeout(() => { iris.className = 'iris'; irisBusy = false; }, 600);
   }, 520);
 });
 
-function buildMisirCard(jc){
-  const pending = store.get('kb_misir_anim') === '1';
+function buildMisirCard(jc, amazonDone){
+  const pending = !!amazonDone && store.get('kb_misir_anim') === '1';
   const w = document.createElement('div'); w.className = 'misir-wrap';
   const b = document.createElement('button'); b.type = 'button';
   b.style.setProperty('--neon', jc.color); b.dataset.bn = jc.key;
   const setOpen = open => {
     b.className = 'journey-card has-bn ' + (open ? 'misir-open' : 'locked');
-    b.innerHTML = '<span class="journey-num">' + (open ? '🔺' : '🔒') + '</span><span class="journey-info"><span class="journey-name">' + jc.name + '</span></span><span class="journey-state">' + (open ? '<span class="play">YENİ</span>' : '<span class="lock-label2">YAKINDA</span>') + '</span>';
+    b.innerHTML = '<span class="journey-num">' + (open ? '🔺' : '🔒') + '</span><span class="journey-info"><span class="journey-name">' + jc.name + '</span></span><span class="journey-state">' + (open ? '<span class="play">YENİ</span>' : '<span class="lock-label2"><svg class="i"><use href="#i-lock"/></svg>KİLİTLİ</span>') + '</span>';
   };
-  setOpen(!pending);
-  b.addEventListener('click', () => { if (b.classList.contains('misir-open')){ audio(); toast('Mısır Piramitleri çok yakında! 🔺'); } });
+  setOpen(!!amazonDone && !pending);            // animasyon bekliyorsa önce kilitli görünür
+  /* banner açılır ama içine girilmez (Mısır oyunu henüz yok) */
+  b.addEventListener('click', () => { if (b.classList.contains('misir-open')) toast('Mısır Piramitleri çok yakında! 🔺'); });
   const layer = document.createElement('div'); layer.className = 'orbit-layer';
   w.append(b, layer); w._setOpen = setOpen;
   if (pending) w.dataset.pending = '1';
@@ -5414,6 +5429,14 @@ function misirUnlockAnim(w){
   store.set('kb_misir_anim', '0'); delete w.dataset.pending;
   try { w.scrollIntoView({block:'center', behavior:'smooth'}); } catch(e){}
   const b = w.querySelector('.journey-card'), layer = w.querySelector('.orbit-layer');
+  /* ışık hüzmesi: yukarıdan banner'a iner, altın tozlar yükselir */
+  const fx = document.createElement('div'); fx.className = 'misir-fx';
+  let dust = '';
+  for (let k = 0; k < 28; k++){
+    dust += '<i style="--x:' + ((Math.random() - .5) * 64).toFixed(0) + '%;--dl:' + (Math.random() * 1.7).toFixed(2) + 's;--du:' + (1.5 + Math.random() * 1.7).toFixed(2) + 's;--sz:' + (2.5 + Math.random() * 4.5).toFixed(1) + 'px"></i>';
+  }
+  fx.innerHTML = '<div class="misir-beam"></div><div class="misir-beam b2"></div><div class="misir-dust">' + dust + '</div>';
+  w.appendChild(fx); setTimeout(() => fx.remove(), 4300);
   const cols = ['#22d3ee','#f0abfc','#fbbf24','#a3e635','#fb7185','#60a5fa'], N = 14, orbs = [];
   for (let i = 0; i < N; i++){
     const o = document.createElement('i'), c = cols[i % cols.length], sz = (i % 3 ? 8 : 13);
@@ -5436,6 +5459,9 @@ function misirUnlockAnim(w){
     if (!opened && t > 1700){
       opened = true; b.classList.remove('misir-charging'); w._setOpen(true);
       w.classList.add('misir-burst'); buzz([60, 40, 90]); try { SND.level(); } catch(e){}
+      const flare = document.createElement('div'); flare.className = 'misir-flare';
+      const shine = document.createElement('div'); shine.className = 'misir-shine'; shine.innerHTML = '<i></i>';
+      w.append(flare, shine); setTimeout(() => { flare.remove(); shine.remove(); }, 1900);
       setTimeout(() => w.classList.remove('misir-burst'), 1000);
     }
     if (k < 1 && w.isConnected) requestAnimationFrame(frame); else orbs.forEach(o => o.remove());
@@ -5541,26 +5567,36 @@ function renderModes(){
   const list = $('journey-list'); if (!list) return;
   const score = $('jr-score-v'); if (score) score.textContent = chapterStars() + '/' + CHAPTER_COUNT;
   list.innerHTML = '';
+  /* Amazon = 10 bölümün tamamı (Amazon Efsaneleri dahil). Bitince Mısır banner'ı açılır. */
+  let amazonDone = true;
+  for (let k = 0; k < CHAPTER_COUNT; k++) if (!chapterComplete(k)){ amazonDone = false; break; }
+  let misirWrap = null;
   JOURNEY_CARDS.forEach((jc, i) => {
-    const d = LEVELS[chapterStart(i)] || LEVELS[0];
-    const th = themeOf(d);
-    const done = chapterComplete(i);
-    const unlocked = chapterUnlocked(i);
-    const current = unlocked && !done && i === Math.min(i, Math.floor(S.maxOpen / CHAPTER_SIZE));
-    const b = document.createElement('button'); b.type='button';
-    b.className = 'journey-card ' + (done ? 'done' : current ? 'current' : unlocked ? 'open' : 'locked');
-    b.style.setProperty('--neon', th.color);
-    const stars = done ? '<div class="journey-stars"><svg class="i on"><use href="#i-star"/></svg><b class="js-n">10/10</b></div>' : '';
-    const state = !unlocked ? '<span class="lock-label2"><svg class="i"><use href="#i-lock"/></svg>KİLİTLİ</span>' : done ? '<span class="done-label">✓ TAMAMLANDI</span>' : '<span class="play">OYNA</span>';
-    b.innerHTML = '<span class="journey-num">' + (!unlocked ? '🔒' : (done ? '✓' : i + 1)) + '</span>' +
-      '<span class="journey-info"><span class="journey-name">' + jc.name + '</span>' + stars + '</span>' +
-      '<span class="journey-state">' + state + '</span>';
-    if (i === 0) b.classList.add('has-banner');
-    else if (jc.key) { b.classList.add('has-bn'); b.dataset.bn = jc.key; }
-    if (unlocked) b.addEventListener('click', () => { audio(); if (i === 0 && !done) showAmazonIntro(() => showJourneyMap(i)); else showJourneyMap(i); });
+    if (i === 1){ misirWrap = buildMisirCard(jc, amazonDone); list.appendChild(misirWrap); return; }
+    const b = document.createElement('button'); b.type = 'button';
+    if (i === 0){
+      const th = themeOf(LEVELS[0]);
+      b.className = 'journey-card has-banner ' + (amazonDone ? 'done' : 'current');
+      b.style.setProperty('--neon', th.color);
+      const stars = amazonDone ? '<div class="journey-stars"><svg class="i on"><use href="#i-star"/></svg><b class="js-n">10/10</b></div>' : '';
+      const state = amazonDone ? '<span class="done-label">✓ TAMAMLANDI</span>' : '<span class="play">OYNA</span>';
+      b.innerHTML = '<span class="journey-num">' + (amazonDone ? '✓' : 1) + '</span>' +
+        '<span class="journey-info"><span class="journey-name">' + jc.name + '</span>' + stars + '</span>' +
+        '<span class="journey-state">' + state + '</span>';
+      b.addEventListener('click', () => { audio(); if (!chapterComplete(0)) showAmazonIntro(() => showJourneyMap(0)); else showJourneyMap(0); });
+    } else {                                   // diğer maceralar henüz yok: kilitli
+      b.className = 'journey-card locked has-bn';
+      b.style.setProperty('--neon', jc.color); b.dataset.bn = jc.key;
+      b.innerHTML = '<span class="journey-num">🔒</span>' +
+        '<span class="journey-info"><span class="journey-name">' + jc.name + '</span></span>' +
+        '<span class="journey-state"><span class="lock-label2"><svg class="i"><use href="#i-lock"/></svg>KİLİTLİ</span></span>';
+    }
     list.appendChild(b);
   });
   loadBanners();
+  if (misirWrap && misirWrap.dataset.pending === '1'){
+    setTimeout(() => { const vm = $('view-modes'); if (vm && !vm.classList.contains('off')) misirUnlockAnim(misirWrap); }, 1100);
+  }
 }
 /* Harita.png yolu: resim koordinatlarında (940x1672) yol merkez noktaları, alttan üste */
 let JR_ART_H = 1672; // resmin gerçekten dolu olan yüksekliği (altı boş/siyah)
@@ -6877,7 +6913,13 @@ $('prof-close').addEventListener('click', pfClean);
 profEl.addEventListener('click', e => { if (e.target === profEl) pfClean(); });
 
 /* tüm butonlara tıklama sesi (Ayarlar > SES kapalıysa çalmaz) */
-document.addEventListener('pointerdown', e => { if (e.target.closest && e.target.closest('button')){ audio(); SND.click(!!e.target.closest('#smenu')); } }, true);
+document.addEventListener('pointerdown', e => {
+  const bt = e.target.closest && e.target.closest('button'); if (!bt) return;
+  audio();
+  if (bt.closest('#grid-container')) return;                       // harf seçimi = oyun sesi
+  if (bt.classList.contains('jk') && bt.id !== 'jk-bank') return;  // joker kendi oyun sesini çalar
+  SND.click();                                                      // geri kalan her tıklama: click.mp3
+}, true);
 
 /* ===== giriş ekranı arka planı: sözcük avı tahtası + büyüteç + hedef (SVG) ===== */
 (function buildLoginBg(){
@@ -7132,7 +7174,6 @@ function showJourneyMap(chapterIndex, opts){
         mk.style.cursor='grabbing';
         try{ mk.setPointerCapture(e.pointerId); }catch(_){}
         try{ audio(); }catch(_){}
-        try{ SND.monkey(); }catch(_){}
       });
       mk.addEventListener('pointermove', function(e){
         if(!dragging) return;
@@ -7567,10 +7608,10 @@ function shopRefresh(){const o=$('shop-ov');if(o&&o.classList.contains('show'))s
 function shopBuy(id){
  const item=shopAll().find(x=>x.id===id);if(!item)return;
  if(typeof item.price!=='number'){toast('Fiyat yakında belirlenecek');return;}
- if(S.coins<item.price){SND.miss();return;}
+ if(S.coins<item.price){return;}
  S.coins-=item.price;updateCoins();
  const inv=shopInventory();Object.keys(item.give).forEach(k=>{inv[k]=(inv[k]||0)+item.give[k];});shopSaveInventory(inv);
- try{SND.found();buzz([18,28,18]);}catch(_){}
+ try{buzz([18,28,18]);}catch(_){}
  shopRender();renderHomeHud();toast(item.name+' envanterine eklendi!');
  taskCoinToast(-item.price);
 }
