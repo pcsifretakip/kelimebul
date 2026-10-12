@@ -4305,6 +4305,7 @@ function startLevel(index, def, seed){
   const chapterNo = S.level && S.level.group != null ? S.level.group + 1 : 1;
   const chapterName = (typeof JOURNEY_CARDS !== 'undefined' && JOURNEY_CARDS[chapterNo - 1]) ? JOURNEY_CARDS[chapterNo - 1].name : S.level.category;
   $('header-level-num').textContent = (S.level.lv + 1);
+  try { unpinHint(); } catch(_){}
   $('game-top-title').textContent = TR(S.level.category);
   $('game-top-title').dataset.sub = '';
   { const bn = document.querySelector('#view-game .banner'); if (bn){ bn.classList.remove('pop'); void bn.offsetWidth; bn.classList.add('pop'); } }
@@ -4970,10 +4971,23 @@ function onFound(word, path){
 /* =====================================================
    İPUCU
    ===================================================== */
-let hintTitleTimer = null;
+let hintPin = null, hintPinTimer = null;
+function unpinHint(){
+  hintPin = null; clearInterval(hintPinTimer); hintPinTimer = null;
+  const tt = $('game-top-title'); if (!tt) return;
+  tt.style.removeProperty('font-size');
+  if (S.level) tt.textContent = TR(S.level.category);
+}
+(function(){ const bn = document.querySelector('#view-game .banner'); if (bn) bn.addEventListener('click', () => { if (hintPin) unpinHint(); }); })();
 $('btn-hint').addEventListener('click', () => {
   audio();
   if (!S.playing) return;
+  // Sabit ipucu açıkken yeni ipucu için önce başlığa dokunup kapat
+  if (hintPin){
+    const bn = document.querySelector('#view-game .banner');
+    if (bn){ bn.classList.remove('pop'); void bn.offsetWidth; bn.classList.add('pop'); }
+    return;
+  }
   const left = S.level.words.filter(w => !S.found.has(w));
   if (!left.length) return;
   // '....' (gizli) kelime varsa onlardan biri; yoksa kalan kelimelerden biri
@@ -4990,11 +5004,16 @@ $('btn-hint').addEventListener('click', () => {
   const msg = isHiddenHint
     ? '💡 ' + ch[0] + ' ' + ch.slice(1, -1).map(() => '_').join(' ') + ' ' + ch[ch.length - 1]
     : '💡 Baş harf: ' + ch[0];
-  // Not: .toast sınıfı CSS ile gizli olduğu için ipucu, üstteki başlık şeridinde gösterilir
+  // Not: .toast CSS ile gizli olduğu için ipucu başlık şeridinde sabit durur; dokununca kapanır
   const tt = $('game-top-title');
-  tt.textContent = msg;
-  clearTimeout(hintTitleTimer);
-  hintTitleTimer = setTimeout(() => { tt.textContent = TR(S.level.category); }, 3500);
+  tt.textContent = msg + '  ✕';
+  tt.style.setProperty('font-size', 'clamp(15px,4.8vw,23px)', 'important');
+  hintPin = { w, level: S.level };
+  clearInterval(hintPinTimer);
+  hintPinTimer = setInterval(() => {
+    if (!hintPin) return;
+    if (!S.playing || hintPin.level !== S.level || S.found.has(hintPin.w)) unpinHint();
+  }, 250);
 });
 
 /* =====================================================
@@ -5023,10 +5042,12 @@ function shuffleBoard(){
   if (!left.length) return;
   const def = LEVELS[S.levelIndex] || {};
   const fixed = Array.from({ length: n }, () => Array(n).fill(false));
+  const dimmed = Array.from({ length: n }, () => Array(n).fill(false));
+  S.cells.forEach((el, i) => { if (el.classList.contains('dim')) dimmed[Math.floor(i / n)][i % n] = true; });
   S.found.forEach(w => { const pl = L.placements[w]; if (!pl) return; plCells(pl).forEach(q => { fixed[q.r][q.c] = true; }); });
   const order = [...left].sort((a, b) => b.length - a.length);
   for (let attempt = 0; attempt < 60; attempt++){
-    const g = L.grid.map((row, r) => row.map((ch, c) => fixed[r][c] ? ch : ''));
+    const g = L.grid.map((row, r) => row.map((ch, c) => fixed[r][c] ? ch : (dimmed[r][c] ? '#' : '')));
     const pls = {}; let ok = true;
     for (const w of order){
       const cells = (Math.random() < .3 ? diagPlace(g, [...w], n, Math.random) : null) || snakePlace(g, [...w], n, Math.random);
@@ -5034,11 +5055,13 @@ function shuffleBoard(){
       pls[w] = { cells, r: cells[0].r, c: cells[0].c, len: cells.length };
     }
     if (!ok) continue;
-    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (g[r][c] === '') g[r][c] = FILLER[Math.floor(Math.random() * FILLER.length)];
+    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (g[r][c] === '' || g[r][c] === '#') g[r][c] = FILLER[Math.floor(Math.random() * FILLER.length)];
     L.grid = g; Object.assign(L.placements, pls);
     S.cells.forEach((el, i) => {
       const r = Math.floor(i / n), c = i % n; if (fixed[r][c]) return;
-      el.textContent = g[r][c]; el.classList.remove('hint'); el.classList.remove('dim');
+      el.textContent = g[r][c]; el.classList.remove('hint');
+      if (dimmed[r][c]) return;   // solmuş harf solmuş kalır
+      el.classList.remove('dim');
       el.style.setProperty('--d', ((r + c) * 25) + 'ms');
       el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
     });
