@@ -3041,6 +3041,15 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
 .app.on-game #view-game .banner .game-top-title{position:relative;z-index:2;color:#fff!important;font-size:clamp(19px,6.2vw,28px)!important;font-weight:1000!important;letter-spacing:.07em!important;
   text-shadow:0 1px 0 #ede9fe,0 2px 0 #8b5cf6,0 3px 0 #6d28d9,0 4px 0 #5b21b6,0 5px 0 #3b0764,0 9px 10px rgba(0,0,0,.5)!important}
 .app.on-game #view-game .banner .game-top-title::after{display:none!important}
+
+/* ===== İPUCU ŞERİDİ (altın yazı + KAPAT düğmesi) ===== */
+.app.on-game #view-game .banner .game-top-title.hint-on{display:flex!important;align-items:center;justify-content:center;gap:12px;flex-wrap:nowrap;color:#ffe066!important;font-size:clamp(17px,5.2vw,25px)!important;letter-spacing:.04em!important;
+  text-shadow:0 2px 0 #92400e,0 3px 0 #6b2f06,0 4px 0 #3b1a04,0 8px 9px rgba(0,0,0,.5)!important}
+.hint-on .hint-txt{display:inline-flex;align-items:center;gap:.3em;white-space:nowrap}
+.hint-on .hint-txt b{font-weight:1000}
+.hint-on .hb{display:inline-block;width:.62em;height:.17em;border-radius:3px;background:#e9d5ff;box-shadow:0 2px 0 #5b21b6;margin:.35em .02em 0}
+.hint-on .hint-close{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:6px 11px;border-radius:15px;font-size:12px;font-weight:1000;letter-spacing:.06em;color:#fff;
+  background:linear-gradient(180deg,#fb7185,#e11d48 60%,#be123c);border:2px solid #fecdd3;box-shadow:0 3px 0 #7f1d1d,0 6px 10px rgba(0,0,0,.4);text-shadow:0 1px 0 rgba(0,0,0,.45)!important}
 </style>
 </head>
 <body>
@@ -4971,18 +4980,24 @@ function onFound(word, path){
 /* =====================================================
    İPUCU
    ===================================================== */
-let hintPin = null, hintPinTimer = null;
+let hintPin = null, hintPinTimer = null, hintCell = null;
+function clearHintCell(){ if (hintCell){ try { hintCell.el.classList.remove('hint'); } catch(_){} hintCell = null; } }
 function unpinHint(){
-  hintPin = null; clearInterval(hintPinTimer); hintPinTimer = null;
-  const tt = $('game-top-title'); if (!tt) return;
-  tt.style.removeProperty('font-size');
-  if (S.level) tt.textContent = TR(S.level.category);
+  hintPin = null; clearHintCell();
+  const tt = $('game-top-title');
+  if (tt){ tt.classList.remove('hint-on'); tt.style.removeProperty('font-size'); if (S.level) tt.textContent = TR(S.level.category); }
 }
+function hintWatch(){
+  if (hintPin && (!S.playing || hintPin.level !== S.level || S.found.has(hintPin.w))) unpinHint();
+  if (hintCell && (!S.playing || hintCell.level !== S.level || S.found.has(hintCell.w))) clearHintCell();
+  if (!hintPin && !hintCell){ clearInterval(hintPinTimer); hintPinTimer = null; }
+}
+function startHintWatch(){ if (!hintPinTimer) hintPinTimer = setInterval(hintWatch, 250); }
 (function(){ const bn = document.querySelector('#view-game .banner'); if (bn) bn.addEventListener('click', () => { if (hintPin) unpinHint(); }); })();
 $('btn-hint').addEventListener('click', () => {
   audio();
   if (!S.playing) return;
-  // Sabit ipucu açıkken yeni ipucu için önce başlığa dokunup kapat
+  // Başlıkta ipucu açıkken yeni ipucu için önce KAPAT'a basılır
   if (hintPin){
     const bn = document.querySelector('#view-game .banner');
     if (bn){ bn.classList.remove('pop'); void bn.offsetWidth; bn.classList.add('pop'); }
@@ -4999,21 +5014,43 @@ $('btn-hint').addEventListener('click', () => {
   if (!shopTryUse('hint',HINT_COST)) return;
   taskRecord('hint'); SND.hint();
   S.lastHintWord = w;
-  const ch = Array.from(w);
-  // Gizli kelime: ilk ve son harf. Normal kelime: sadece baş harf.
-  const msg = isHiddenHint
-    ? '💡 ' + ch[0] + ' ' + ch.slice(1, -1).map(() => '_').join(' ') + ' ' + ch[ch.length - 1]
-    : '💡 Baş harf: ' + ch[0];
-  // Not: .toast CSS ile gizli olduğu için ipucu başlık şeridinde sabit durur; dokununca kapanır
-  const tt = $('game-top-title');
-  tt.textContent = msg + '  ✕';
-  tt.style.setProperty('font-size', 'clamp(15px,4.8vw,23px)', 'important');
-  hintPin = { w, level: S.level };
-  clearInterval(hintPinTimer);
-  hintPinTimer = setInterval(() => {
-    if (!hintPin) return;
-    if (!S.playing || hintPin.level !== S.level || S.found.has(hintPin.w)) unpinHint();
-  }, 250);
+  clearHintCell();
+
+  if (isHiddenHint){
+    // '....' kelime: ilk ve son harf başlık şeridinde sabit durur, KAPAT ile kapanır
+    const ch = Array.from(w);
+    const blanks = ch.slice(1, -1).map(() => '<i class="hb"></i>').join('');
+    const tt = $('game-top-title');
+    tt.innerHTML = '<span class="hint-txt">💡 <b>' + ch[0] + '</b>' + blanks + '<b>' + ch[ch.length - 1] + '</b></span><span class="hint-close">✕ KAPAT</span>';
+    tt.classList.add('hint-on');
+    hintPin = { w, level: S.level };
+    startHintWatch();
+    return;
+  }
+
+  // '....' olmayan kelime: ampul uçarak kelimenin baş harfine gider ve orayı yakar (kelime bulunana kadar yanık kalır)
+  const pl = S.level.placements[w], n = S.level.size;
+  const el = S.cells[pl.r * n + pl.c];
+  const source = $('jk-hint') || $('btn-hint');
+  const sr = source.getBoundingClientRect(), tr = el.getBoundingClientRect();
+  const sx = sr.left + sr.width / 2, sy = sr.top + sr.height / 2;
+  const tx = tr.left + tr.width / 2, ty = tr.top + tr.height / 2;
+  const fly = document.createElement('img');
+  fly.className = 'hint-fly'; fly.src = 'jk-ipucu.png'; fly.alt = ''; fly.draggable = false;
+  fly.style.left = sx + 'px'; fly.style.top = sy + 'px';
+  document.body.appendChild(fly);
+  const dx = tx - sx, dy = ty - sy;
+  const anim = fly.animate([
+    { transform:'translate(-50%,-50%) scale(.72)', opacity:.15 },
+    { transform:`translate(calc(-50% + ${dx*.48}px), calc(-50% + ${dy*.48}px)) scale(1.08)`, opacity:1, offset:.62 },
+    { transform:`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(.9)`, opacity:1 }
+  ], {duration:700,easing:'cubic-bezier(.2,.9,.25,1)',fill:'forwards'});
+  anim.onfinish = () => {
+    fly.remove();
+    el.classList.remove('hint'); void el.offsetWidth; el.classList.add('hint');
+    hintCell = { w, el, level: S.level };
+    startHintWatch();
+  };
 });
 
 /* =====================================================
