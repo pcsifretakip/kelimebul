@@ -3735,7 +3735,7 @@ const LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => {
   const [wordStr, size, dirs, hide] = FIXED_LEVEL_WORDS[gi][j];
   const words = wordStr.split(' ').map(TR);
   let hideList = hide || null;
-  if (gi >= 5){   /* 6. bölüm ve sonrası: kelimelerin ~%57'si gizli ('....'), 7 kelimeden 4'ü; seçim sabit/deterministik */
+  if (j >= 5){   /* her bölümün 6. seviyesi ve sonrası: gizli kelimeler. 6. bölüm ve sonrası: kelimelerin ~%57'si gizli ('....'), 7 kelimeden 4'ü; seçim sabit/deterministik */
     const k = Math.ceil(words.length * 0.57), rnd = mulberry32(gi * 977 + j * 131 + 7);
     hideList = words.map((w, ix) => ({ w, r: rnd() })).sort((a, b) => a.r - b.r).slice(0, k).map(o => o.w);
   }
@@ -3748,7 +3748,7 @@ const LEVELS = GROUPS.flatMap((g, gi) => g[2].map((l, j) => {
   };
 }));
 const MASK_FROM_GROUP = 5;   // 6. bölüm ve sonrası: gizli kelimeler listede '....' olarak görünür
-const isMaskedLevel = lv => !!lv && lv.group != null && lv.group >= MASK_FROM_GROUP && lv.hidden && lv.hidden.length > 0;
+const isMaskedLevel = lv => !!lv && lv.lv != null && lv.lv >= 5 && lv.hidden && lv.hidden.length > 0;   /* her bölümün 6-10. seviyeleri */
 const LOCKED_LAST = 0;
 const MAX_PLAY = Math.max(0, LEVELS.length - 1 - LOCKED_LAST);
 const CHAPTER_COUNT = GROUPS.length;
