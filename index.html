@@ -4970,25 +4970,31 @@ function onFound(word, path){
 /* =====================================================
    İPUCU
    ===================================================== */
+let hintTitleTimer = null;
 $('btn-hint').addEventListener('click', () => {
   audio();
   if (!S.playing) return;
   const left = S.level.words.filter(w => !S.found.has(w));
   if (!left.length) return;
-  // Önce listede '....' görünen gizli kelimelerden biri; gizli kelime yoksa kalan kelimelerden biri
+  // '....' (gizli) kelime varsa onlardan biri; yoksa kalan kelimelerden biri
   let pool = isMaskedLevel(S.level) ? left.filter(w => S.level.hidden.includes(w)) : [];
-  if (!pool.length) pool = left;
+  const isHiddenHint = pool.length > 0;
+  if (!isHiddenHint) pool = left;
   if (pool.length > 1 && S.lastHintWord) { const p2 = pool.filter(w => w !== S.lastHintWord); if (p2.length) pool = p2; }
   const w = pool[Math.floor(Math.random() * pool.length)];
   if (!shopTryUse('hint',HINT_COST)) return;
   taskRecord('hint'); SND.hint();
   S.lastHintWord = w;
   const ch = Array.from(w);
-  const mid = ch.slice(1, -1).map(() => '_').join(' ');
-  const msg = '💡 ' + ch[0] + ' ' + mid + ' ' + ch[ch.length - 1] + '  (' + ch.length + ' harf)';
-  // Normal toast kapalı olduğu için ipucu mesajı doğrudan gösterilir
-  toastEl.textContent = msg; toastEl.classList.add('show');
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('show'), 3200);
+  // Gizli kelime: ilk ve son harf. Normal kelime: sadece baş harf.
+  const msg = isHiddenHint
+    ? '💡 ' + ch[0] + ' ' + ch.slice(1, -1).map(() => '_').join(' ') + ' ' + ch[ch.length - 1]
+    : '💡 Baş harf: ' + ch[0];
+  // Not: .toast sınıfı CSS ile gizli olduğu için ipucu, üstteki başlık şeridinde gösterilir
+  const tt = $('game-top-title');
+  tt.textContent = msg;
+  clearTimeout(hintTitleTimer);
+  hintTitleTimer = setTimeout(() => { tt.textContent = TR(S.level.category); }, 3500);
 });
 
 /* =====================================================
