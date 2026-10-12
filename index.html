@@ -2439,7 +2439,7 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .jm-chapter-label.cur{transform:translate(calc(-100% - 50px),calc(-50% + 17px))}
 .jm-chapter-label b{color:#ffe66d;margin-right:3px}
 @media(max-width:430px){
-  .jm-chapter-label{max-width:none;padding:6px 8px;font-size:10px;border-radius:10px}
+  .jm-chapter-label{max-width:150px;padding:6px 8px;font-size:10px;border-radius:10px}
 }
 @media(max-width:360px){
   .jm-chapter-label{max-width:116px;font-size:9px;padding:5px 7px}
@@ -3512,19 +3512,19 @@ const DIRS = {
   hvr1:   [[0,1],[1,0],[0,-1],[-1,0]]   /* + tam 1 kelime çapraz */
 };
 const GROUPS = [
-  ['Doğa Unsurları', '#22c55e', [
-    ['Mutfak Teknolojisi',5,'BIÇAK OCAK FIRIN TAVA TAS','','hv'],
-    ['Kırtasiye Ve Büro',5,'KALEM SİLGİ MAKAS ZIMBA DOSYA','','hv'],
-    ['Temizlik Ve Hijyen',6,'SABUN HAVLU PASPAS BEZ JEL KOVA','','hv'],
-    ['Kamp Ve Doğa Sporları',7,'ÇADIR MATARA FENER PUSULA KAMP İP ÇANTA','','hv'],
-    ['Terzi Ve Tekstil',7,'FERMUAR MEZURA İĞNE İPLİK DÜĞME TEĞEL KUMAŞ','','hv'],
-    ['Bahçe Ve Tarım',7,'TIRMIK SULAMA KÜREK TOHUM GÜBRE ÇAPA FİDAN','','hv'],
-    ['Marangoz Ve Sanayi',7,'TESTERE ZIMPARA MENGENE PLANYA VERNİK ÇEKİÇ KESER','','hv'],
-    ['El Aletleri Ve Sanayi',7,'MATKAP BALYOZ PERÇİN PENSE KESKİ ÇEKİÇ EĞE','','hv'],
-    ['Ameliyathane Malzemeleri',7,'ENJEKTÖR ELDİVEN FORSEPS NEŞTER MASKE ÖNLÜK SERUM','','hv'],
-    ['Oto Tamir Ve Ağır Sanayi',7,'ŞANZIMAN LASTİK BİJON KRİKO EGZOZ MOTOR FREN','','hv']
+  ['Ağaçlar ve Bitkiler', '#22c55e', [
+    ['Dev Ağaçlar',5,'KAPOK MAUN CEVİZ SEDİR BAMBU','','hv'],
+    ['Palmiye Türleri',5,'AÇAİ KOKOS HURMA RAFYA SAGO','','hv'],
+    ['Orkideler',6,'ORKİDE VANDA SALEP PAPUÇ OFRİS ÇİÇEK','','hv'],
+    ['Eğrelti ve Yosunlar',7,'EĞRELTİ YOSUN LİKEN SPOR GÖLGE SARMAL YAPRAK','','hv'],
+    ['Sarmaşıklar',7,'SARMAŞIK LİYAN ASMA SARMAL HALAT KANOPİ SALKIM','','hv'],
+    ['Su Bitkileri',7,'NİLÜFER KAMIŞ SAZ ALG LOTUS PAPİRÜS SUCUL','','hv'],
+    ['Orman Çiçekleri',7,'BROMELYA HİBİSKUS KANNA ÇİÇEK TOMURCUK POLEN NEKTAR','','hv'],
+    ['Etçil Bitkiler',7,'NEPENTES DROSERA TUZAK BÖCEK SİNEK SALGI YAPIŞKAN','','hv'],
+    ['Ağaç Parçaları',7,'GÖVDE KABUK YAPRAK KÖK REÇİNE DAMAR BUDAK','','hv'],
+    ['Orman Katmanları',7,'ZEMİN ALTÖRTÜ KANOPİ EMERGENT ÇALILIK HUMUS TABAN','','hv']
   ]],
-  ['Orman Yaşamı', '#10b981', [
+  ['Nehir ve Su Canlıları', '#10b981', [
     ['Ağaç Türleri',5,'KAYIN ÇINAR MEŞE ÇAM DUT','','hv'],
     ['Yaban Meyveleri',5,'KİRAZ İNCİR ERİK ÜZÜM AYVA','','hv'],
     ['Orman Mantarları',6,'MANTAR PORÇİN TRÜF KÜF SAP SPOR','','hv'],
@@ -3536,7 +3536,7 @@ const GROUPS = [
     ['Orman Koruma Terimleri',7,'FİDANLIK MUHAFIZ REZERV KORUMA YANGIN NÖBET ORMAN','','hv'],
     ['Ekolojik Sistem Terimleri',7,'BESLENME HABİTAT OKSİJEN TOPRAK ZİNCİR BİYOM BESİN','','hv']
   ]],
-  ['Nehir Ekosistemi', '#06b6d4', [
+  ['Memeliler', '#06b6d4', [
     ['Tatlı Su Balıkları',5,'SAZAN YAYIN TURNA ÇAPAK KEFAL','','hv'],
     ['Nehir Taşıtları',5,'KANO KAYIK SAL VAPUR YAT','','hv'],
     ['Su Kıyısı Bitkileri',6,'SAZ KAMIŞ ZAMBAK ÇÖVEN OT ALG','','hv'],
@@ -3548,7 +3548,7 @@ const GROUPS = [
     ['Tatlı Su Ekosistemi',7,'BATAKLIK KAYNAK TAŞKIN GÖLET SULAK NEHİR GÖL','','hv'],
     ['Limnoloji Bilimi Terimleri',7,'PELAJİK LİTORAL ÖTROFİK BENTİK TROFİK KATMAN DERİN','','hv']
   ]],
-  ['Vahşi Sakinler', '#f59e0b', [
+  ['Kuşlar', '#f59e0b', [
     ['Otçul Memeliler',5,'GEYİK ZEBRA FİL KEÇİ DEVE','','hv'],
     ['Gece Canlıları',5,'TİLKİ ÇAKAL KİRPİ PUHU GECE','','hv'],
     ['Vahşi Sürüngenler',6,'KOMODO PYTHON KOBRA İGUANA TİMSAH VARAN','','hv'],
@@ -3560,7 +3560,7 @@ const GROUPS = [
     ['Etoloji (Davranış Bilimi)',7,'İLETİŞİM ÖĞRENME KIŞLAMA İÇGÜDÜ ÖĞREN YAVRU DÜRTÜ','','hv'],
     ['Biyolojik Sınıflandırma',7,'TAKIM SINIF CİNS AİLE ŞUBE ALEM TÜR','','hv']
   ]],
-  ['Tropikal Zenginlik', '#f97316', [
+  ['Sürüngenler ve Kurbağalar', '#f97316', [
     ['Tropikal Meyveler',5,'MUZ MANGO GUAVA LİME KİVİ','','hv'],
     ['Tropikal Baharatlar',5,'BİBER NANE KÖRİ TUZ ACI','','hv'],
     ['Tropikal İklim Unsurları',6,'NEM MUSON BUHAR RÜZGAR TAYFUN DOLU','','hv'],
@@ -3572,7 +3572,7 @@ const GROUPS = [
     ['Biyoçeşitlilik Terimleri',7,'HABİTAT ENDEMİK FLORA FAUNA DENGE ÇEŞİT DOĞA','','hv'],
     ['Klimatoloji Ve Coğrafya',7,'ATMOSFER EKVATOR TROPİK BASINÇ RÜZGAR MUSON İKLİM','','hv']
   ]],
-  ['Yırtıcılar Ve Kuşlar', '#ef4444', [
+  ['Böcekler ve Örümcekler', '#ef4444', [
     ['Yırtıcı Kuşlar',5,'ŞAHİN DOĞAN PUHU KUŞ GAGA','','hv'],
     ['Yırtıcı Memeliler',5,'ASLAN ÇİTA KURT AYI PUMA','','hv'],
     ['Renkli Kuş Türleri',6,'TUKAN MAKAV KUŞ GAGA TÜY RENK','','hv'],
@@ -3584,7 +3584,7 @@ const GROUPS = [
     ['Yırtıcı Davranışları',7,'KOVALAMA AVLANMA SALDIRI KOVALA BÖLGE PUSU YEME','','hv'],
     ['Taksonomik Sınıflandırma',7,'SINIF TAKIM ALEM ŞUBE AİLE CİNS TÜR','','hv']
   ]],
-  ['Orman Canlıları', '#a855f7', [
+  ['Tropikal Meyveler ve Baharatlar', '#a855f7', [
     ['Omurgasız Hayvanlar',5,'AKREP PİRE KENE BİT AKAR','','hv'],
     ['Otçul Orman Canlıları',5,'GEYİK KİRPİ FİL KEÇİ KUZU','','hv'],
     ['Orman Eklem Bacaklıları',6,'BÖCEK AKREP ÇIYAN YENGEÇ ARI KOZA','','hv'],
@@ -3596,7 +3596,7 @@ const GROUPS = [
     ['Parazit Ve Asalak Canlılar',7,'SOLUCAN MANTAR KANCA SÜLÜK KENE PİRE GÜVE','','hv'],
     ['Biyokültürel Orman Canlıları',7,'BAYKUŞ YARASA SİNCAP TİLKİ GEYİK KURT AYI','','hv']
   ]],
-  ['Sürüngenler Ve Doğa', '#8b5cf6', [
+  ['Şifalı Bitkiler ve Doğal Ürünler', '#8b5cf6', [
     ['Zehirli Yılanlar',5,'KOBRA MAMBA KRAİT BOA DİŞ','','hv'],
     ['Su Sürüngenleri',5,'VARAN SU GÖL PUL YÜZ','','hv'],
     ['Kertenkele Türleri',6,'İGUANA GEKO VARAN SKİNK AGAMA DİL','','hv'],
@@ -3608,7 +3608,7 @@ const GROUPS = [
     ['Zehir Fizyolojisi Terimleri',7,'PROTEİN TOKSİN ZEHİR ENZİM ETKİ KAN DİŞ','','hv'],
     ['Sürüngen Biyolojisi Terimleri',7,'OMURGA KABUK KLOAK YILAN DERİ PUL ISI','','hv']
   ]],
-  ['Biyolojik Çeşitlilik', '#14b8a6', [
+  ['Yerli Kabileler ve Yaşam', '#14b8a6', [
     ['Genetik Unsurlar',5,'GEN DNA ALEL GENOM RNA','','hv'],
     ['Yaşam Alanları',5,'ORMAN ÇÖL DENİZ GÖL NEHİR','','hv'],
     ['Tür Düzeyleri',6,'TÜR CİNS AİLE TAKIM SINIF ŞUBE','','hv'],
@@ -3716,7 +3716,7 @@ const INFO = [
    Bölüm 1-3: sadece yatay/dikey, gizli kelime yok. Bölüm 4+: çapraz, tersten okuma ve gizli kelimeler artar.
    Bölüm 10 en zor: 5 kelime gizli, 8 yön. Izgara en fazla 8x8, kelimeler en fazla 8 harf. */
 const FIXED_LEVEL_WORDS = [
-  [['BIÇAK OCAK FIRIN TAVA TAS',6,'hv',''], ['KALEM SİLGİ MAKAS ZIMBA DOSYA',6,'hv',''], ['SABUN HAVLU PASPAS BEZ JEL KOVA',6,'hv',''], ['ÇADIR MATARA FENER PUSULA KAMP İP ÇANTA',7,'easy','MATARA'], ['FERMUAR MEZURA İĞNE İPLİK DÜĞME TEĞEL KUMAŞ',7,'easy','FERMUAR MEZURA'], ['TIRMIK SULAMA KÜREK TOHUM GÜBRE ÇAPA FİDAN',7,'medium','TIRMIK SULAMA KÜREK'], ['TESTERE ZIMPARA MENGENE PLANYA VERNİK ÇEKİÇ KESER',8,'medium','TESTERE ZIMPARA MENGENE'], ['MATKAP BALYOZ PERÇİN PENSE KESKİ ÇEKİÇ EĞE',8,'hard','MATKAP BALYOZ PERÇİN PENSE'], ['ENJEKTÖR ELDİVEN FORSEPS NEŞTER MASKE ÖNLÜK SERUM',8,'hard','ENJEKTÖR ELDİVEN FORSEPS NEŞTER'], ['ŞANZIMAN LASTİK BİJON KRİKO EGZOZ MOTOR FREN',8,'hard','ŞANZIMAN LASTİK BİJON KRİKO EGZOZ']],
+  [['KAPOK MAUN CEVİZ SEDİR BAMBU',6,'hv',''], ['AÇAİ KOKOS HURMA RAFYA SAGO',6,'hv',''], ['ORKİDE VANDA SALEP PAPUÇ OFRİS ÇİÇEK',6,'hv',''], ['EĞRELTİ YOSUN LİKEN SPOR GÖLGE SARMAL YAPRAK',7,'easy','LİKEN'], ['SARMAŞIK LİYAN ASMA SARMAL HALAT KANOPİ SALKIM',8,'easy','SARMAŞIK LİYAN'], ['NİLÜFER KAMIŞ SAZ ALG LOTUS PAPİRÜS SUCUL',7,'medium','NİLÜFER KAMIŞ PAPİRÜS'], ['BROMELYA HİBİSKUS KANNA ÇİÇEK TOMURCUK POLEN NEKTAR',8,'medium','BROMELYA HİBİSKUS TOMURCUK'], ['NEPENTES DROSERA TUZAK BÖCEK SİNEK SALGI YAPIŞKAN',8,'hard','NEPENTES DROSERA TUZAK BÖCEK'], ['GÖVDE KABUK YAPRAK KÖK REÇİNE DAMAR BUDAK',8,'hard','GÖVDE KABUK YAPRAK REÇİNE'], ['ZEMİN ALTÖRTÜ KANOPİ EMERGENT ÇALILIK HUMUS TABAN',8,'hard','ZEMİN ALTÖRTÜ EMERGENT ÇALILIK']],
   [['KAYIN ÇINAR MEŞE ÇAM DUT',6,'hv',''], ['KİRAZ İNCİR ERİK ÜZÜM AYVA',6,'hv',''], ['MANTAR PORÇİN TRÜF KÜF SAP SPOR',7,'hv',''], ['YILAN GEKO KOBRA PİTON BOA AGAMA KAYMAN',6,'easy','KAYMAN'], ['HAMSTER KUNDUZ SİNCAP FARE SIÇAN KOBAY DİŞ',7,'easy','HAMSTER KUNDUZ'], ['SIRTLAN LEOPAR KAPLAN PARS PUMA ÇAKAL VAŞAK',7,'medium','SIRTLAN LEOPAR KAPLAN'], ['TESTERE TELSİZ PUSULA BALTA HALAT KAZMA BIÇAK',8,'medium','TESTERE TELSİZ PUSULA'], ['ÇEKİRGE KARINCA ÖRÜMCEK TIRTIL SİNEK KENE GÜVE',8,'hard','ÇEKİRGE KARINCA ÖRÜMCEK TIRTIL'], ['FİDANLIK MUHAFIZ REZERV KORUMA YANGIN NÖBET ORMAN',8,'hard','FİDANLIK MUHAFIZ REZERV KORUMA'], ['BESLENME HABİTAT OKSİJEN TOPRAK ZİNCİR BİYOM BESİN',8,'hard','BESLENME HABİTAT OKSİJEN TOPRAK ZİNCİR']],
   [['SAZAN YAYIN TURNA ÇAPAK KEFAL',6,'hv',''], ['KANO KAYIK SAL VAPUR YAT',6,'hv',''], ['SAZ KAMIŞ ZAMBAK ÇÖVEN OT ALG',6,'hv',''], ['ÖRDEK KAZ İBİS KUĞU LEYLEK TURNA MARTI',6,'easy','LEYLEK'], ['YENGEÇ KEREVİT KABUKLU İSTAKOZ MİDYE SÜLÜK KABUK',8,'easy','KEREVİT KABUKLU'], ['KAYNAK AKINTI ÇAY DERE IRMAK DELTA TORTU',7,'medium','KAYNAK AKINTI IRMAK'], ['SEMENDER KURBAĞA İRİBAŞ AMFİBİ YAVRU NEMLİ BAĞA',8,'medium','SEMENDER KURBAĞA İRİBAŞ'], ['DRENAJ YAĞIŞ SIZMA HAVZA BUHAR AKIŞ DEBİ',8,'hard','DRENAJ YAĞIŞ SIZMA HAVZA'], ['BATAKLIK KAYNAK TAŞKIN GÖLET SULAK NEHİR GÖL',8,'hard','BATAKLIK KAYNAK TAŞKIN GÖLET'], ['PELAJİK LİTORAL ÖTROFİK BENTİK TROFİK KATMAN DERİN',8,'hard','PELAJİK LİTORAL ÖTROFİK BENTİK TROFİK']],
   [['GEYİK ZEBRA FİL KEÇİ DEVE',6,'hv',''], ['TİLKİ ÇAKAL KİRPİ PUHU GECE',6,'hv',''], ['KOMODO PYTHON KOBRA İGUANA TİMSAH VARAN',7,'hv',''], ['KARTAL ŞAHİN DOĞAN AKBABA BAYKUŞ TUKAN PUHU',7,'easy','KARTAL'], ['ALFA BETA OMEGA BÖLGE SÜRÜ LİDER ALAN',7,'easy','OMEGA BÖLGE'], ['MİMİKRİ TOKSİN SALDIRI DİKEN KAÇIŞ SÜRÜ KOKU',8,'medium','MİMİKRİ SALDIRI TOKSİN'], ['KOVALAMA KOVALA SALDIR SESSİZ TUZAK BOĞMA PUSU',8,'medium','KOVALAMA KOVALA SALDIR'], ['İSKELET TIRNAK BOYNUZ KUYRUK PENÇE KANAT KEMİK',8,'hard','İSKELET TIRNAK BOYNUZ KUYRUK'], ['İLETİŞİM ÖĞRENME KIŞLAMA İÇGÜDÜ ÖĞREN YAVRU DÜRTÜ',8,'hard','İLETİŞİM ÖĞRENME KIŞLAMA İÇGÜDÜ'], ['TAKIM SINIF CİNS AİLE ŞUBE ALEM TÜR',8,'hard','TAKIM SINIF CİNS AİLE ŞUBE']],
