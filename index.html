@@ -5899,7 +5899,7 @@ function buildMisirCard(jc, amazonDone){
     if (!b.classList.contains('misir-open')) return;
     buzz(20); audio();
     const goMap = () => showMisirMap({ loading: true });
-    if (!chapterComplete(10)) showAmazonIntro(goMap, 'misir.png?v=1', 'banner-misir.jpg?v=1'); else goMap();
+    if (!chapterComplete(10)) showMisirIntro(goMap); else goMap();
   });
   const layer = document.createElement('div'); layer.className = 'orbit-layer';
   w.append(b, layer); w._setOpen = setOpen;
@@ -6045,6 +6045,59 @@ function showAmazonIntro(cb, imgSrc, fbSrc){
     if (fbSrc && this.getAttribute('src') !== fbSrc){ this.src = fbSrc; o.querySelector('.am-bg').style.backgroundImage = "url('" + fbSrc + "')"; return; }
     finish();
   });   // resim yüklenemezse oyuncu takılı kalmasın
+  o.querySelector('.am-skip').addEventListener('click', () => { try { audio(); } catch(e){} finish(); });
+  app.appendChild(o);
+  requestAnimationFrame(() => o.classList.add('on'));
+  t = setTimeout(() => o.classList.add('hint'), 3500);
+}
+
+/* ===== MISIR PİRAMİTLERİ tanıtım ekranı (resim gerekmez: tamamen çizim) ===== */
+function showMisirIntro(cb){
+  if (document.querySelector('.am-intro')) return;
+  const o = document.createElement('div'); o.className = 'am-intro mi-intro';
+  let stars = '';
+  for (let k = 0; k < 46; k++){
+    const x = (k * 97) % 400, y = (k * 53) % 330, r = .6 + (k % 4) * .35;
+    stars += '<circle class="mi-st" cx="' + x + '" cy="' + y + '" r="' + r.toFixed(2) + '" style="animation-delay:' + ((k % 9) * .35).toFixed(2) + 's"/>';
+  }
+  let blocks = '';
+  [345, 385, 425, 465, 505].forEach(y => {
+    const lx = 120 + (540 - y) * 130 / 240, rx = 380 - (540 - y) * 130 / 240;
+    blocks += '<line x1="' + lx.toFixed(1) + '" y1="' + y + '" x2="' + rx.toFixed(1) + '" y2="' + y + '"/>';
+  });
+  const svg =
+    '<svg viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' +
+    '<defs>' +
+      '<linearGradient id="miSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#070a26"/><stop offset=".38" stop-color="#2d1b66"/><stop offset=".62" stop-color="#c9532d"/><stop offset=".74" stop-color="#ffb04a"/><stop offset="1" stop-color="#3a1f0c"/></linearGradient>' +
+      '<radialGradient id="miSun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6c2"/><stop offset=".35" stop-color="#ffc857" stop-opacity=".95"/><stop offset="1" stop-color="#ff8a2a" stop-opacity="0"/></radialGradient>' +
+      '<linearGradient id="miRay" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff1a8" stop-opacity=".95"/><stop offset="1" stop-color="#fff1a8" stop-opacity="0"/></linearGradient>' +
+      '<linearGradient id="miDune" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a3216"/><stop offset="1" stop-color="#1b0e05"/></linearGradient>' +
+      '<filter id="miBlur"><feGaussianBlur stdDeviation="3"/></filter>' +
+    '</defs>' +
+    '<rect width="400" height="800" fill="url(#miSky)"/>' +
+    '<g fill="#fff">' + stars + '</g>' +
+    '<circle class="mi-sun" cx="250" cy="500" r="170" fill="url(#miSun)"/>' +
+    '<g class="mi-rays" fill="url(#miRay)" filter="url(#miBlur)"><polygon points="250,300 232,0 268,0"/><polygon points="250,300 170,10 200,0"/><polygon points="250,300 300,0 330,10"/></g>' +
+    '<g><polygon points="40,540 110,430 110,540" fill="#d7924a"/><polygon points="110,430 180,540 110,540" fill="#6e4020"/></g>' +
+    '<g><polygon points="300,540 345,455 345,540" fill="#cf8c47"/><polygon points="345,455 390,540 345,540" fill="#5f3719"/></g>' +
+    '<g><polygon points="120,540 250,300 250,540" fill="#e3a458"/><polygon points="250,300 380,540 250,540" fill="#7a4822"/>' +
+      '<g stroke="rgba(60,30,8,.28)" stroke-width="1.2">' + blocks + '</g>' +
+      '<line x1="250" y1="300" x2="250" y2="540" stroke="rgba(255,235,170,.6)" stroke-width="1.2"/>' +
+      '<circle class="mi-cap" cx="250" cy="302" r="7" fill="#fff4b8" filter="url(#miBlur)"/></g>' +
+    '<path d="M0 548 Q90 520 190 548 T400 540 L400 800 L0 800Z" fill="url(#miDune)"/>' +
+    '<path d="M0 610 Q110 570 230 612 T400 596 L400 800 L0 800Z" fill="#26140a"/>' +
+    '</svg>';
+  o.innerHTML = '<div class="mi-art">' + svg + '</div>' +
+    '<div class="mi-txt"><small>FİRAVUNLARIN DİYARI</small><h2>PİRAMİTLERİN<br>SIRRI</h2><p>4500 yıllık gizemi kelimelerle çöz!</p></div>' +
+    '<div class="mi-chips"><span>🔺 10 BÖLÜM</span><span>✨ 100 SEVİYE</span></div>' +
+    '<button type="button" class="am-skip mi-skip"><i class="am-ring"></i><i class="am-ring"></i><i class="am-ring"></i>' +
+    '<span><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><polygon points="12,3 22,20 2,20" fill="#3a2100"/><polygon points="12,3 22,20 12,20" fill="#7a4b0c"/></svg>GEÇ</span></button>';
+  let t = 0, done = false;
+  const finish = () => {
+    if (done) return; done = true; clearTimeout(t);
+    cb();
+    o.classList.remove('on'); setTimeout(() => o.remove(), 300);
+  };
   o.querySelector('.am-skip').addEventListener('click', () => { try { audio(); } catch(e){} finish(); });
   app.appendChild(o);
   requestAnimationFrame(() => o.classList.add('on'));
@@ -7526,15 +7579,20 @@ function misirBurst(i){
   const el = misirMapEl, L = el._L, p = misirNodePx(i), cols = ['#22d3ee','#f0abfc','#fbbf24','#a3e635','#fb7185','#60a5fa','#fff6b0'];
   const fx = document.createElement('div'); fx.className = 'mm-fx'; fx.style.left = p[0] + 'px'; fx.style.top = p[1] + 'px';
   let h = '<span class="mm-flare" style="--d:' + (300 * L.sc) + 'px"></span>';
-  for (let k = 0; k < 9; k++){   /* neon ışık çizgileri yukarı fırlar */
-    const x = (k - 4) * 15 * L.sc, ht = (140 + (k * 37) % 120) * L.sc, c = cols[k % cols.length];
-    h += '<b class="mm-ray" style="--x:' + x.toFixed(0) + 'px;--h:' + ht.toFixed(0) + 'px;--c:' + c + ';--dl:' + (k * .05).toFixed(2) + 's"></b>';
-  }
-  for (let k = 0; k < 46; k++){
-    const a = Math.random() * Math.PI * 2, r = (60 + Math.random() * 130) * L.sc;
-    h += '<i style="--dx:' + (Math.cos(a) * r).toFixed(0) + 'px;--dy:' + (Math.sin(a) * r * .8 - 40 * L.sc).toFixed(0) + 'px;--sz:' + (3 + Math.random() * 6).toFixed(1) + 'px;--c:' + cols[k % cols.length] + ';--dl:' + (Math.random() * .5).toFixed(2) + 's;--du:' + (1 + Math.random() * 1.1).toFixed(2) + 's"></i>';
-  }
   fx.innerHTML = h; el.appendChild(fx); setTimeout(() => fx.remove(), 2600);
+  /* Amazon haritasındaki gibi: taştan yukarı uzanan ışık hüzmesi + yükselen parıltılar */
+  { const bf = document.createElement('div'); bf.className = 'jm-fx mm-beamfx'; bf.style.left = p[0] + 'px'; bf.style.top = p[1] + 'px';
+    const nodeY = Math.max(120, p[1]), bc = ['#ffe14d','#ff5fa2','#5ee6ff','#7dff6a','#ff9a3c','#c78bff','#ffffff'];
+    let bh = '<div class="jm-beam" style="height:' + (nodeY + 60) + 'px"></div><div class="jm-beam b2" style="height:' + (nodeY + 60) + 'px"></div>';
+    for (let k = 0; k < 90; k++){
+      const x0 = (Math.random() - .5) * 120, sy = -(Math.random() * nodeY * .95), dx = (Math.random() - .5) * 70, dy = -(30 + Math.random() * 140), sz = 3 + Math.random() * 6;
+      bh += '<i style="--x0:' + x0.toFixed(0) + 'px;--sy:' + sy.toFixed(0) + 'px;--dx:' + (x0 + dx).toFixed(0) + 'px;--dy:' + dy.toFixed(0) + 'px;--sz:' + sz.toFixed(1) + 'px;--c:' + bc[k % bc.length] + ';--dl:' + (Math.random() * 1.6).toFixed(2) + 's"></i>';
+    }
+    for (let k = 0; k < 70; k++){
+      const sg = k % 2 ? 1 : -1, x0 = sg * (20 + Math.random() * 45), sy = -(Math.random() * nodeY * .9), dx = x0 + sg * (Math.random() * 30), dy = -(70 + Math.random() * 170), sz = 2.5 + Math.random() * 5;
+      bh += '<i style="--x0:' + x0.toFixed(0) + 'px;--sy:' + sy.toFixed(0) + 'px;--dx:' + dx.toFixed(0) + 'px;--dy:' + dy.toFixed(0) + 'px;--sz:' + sz.toFixed(1) + 'px;--c:' + (k % 3 ? '#fff6b0' : bc[k % bc.length]) + ';--dl:' + (Math.random() * 2.2).toFixed(2) + 's;animation-duration:' + (2 + Math.random() * 1.6).toFixed(2) + 's"></i>';
+    }
+    bf.innerHTML = bh; el.appendChild(bf); setTimeout(() => bf.remove(), 4800); }
   const sp = el.querySelectorAll('.mm-sp')[i]; sp.src = 'mm-gold.png?v=1'; sp.hidden = false; sp.classList.remove('pop'); void sp.offsetWidth; sp.classList.add('pop');
   el.querySelectorAll('.mm-lab')[i].classList.remove('lk');
   try { SND.win && SND.win(); } catch(_){}
@@ -7562,6 +7620,7 @@ function showMisirMap(opts){
       '<button type="button" class="mm-hit mm-gear" aria-label="Ayarlar"></button>' +
       '<button type="button" class="mm-hit mm-back" aria-label="Geri"></button>';
     (document.querySelector('.app') || document.body).appendChild(misirMapEl);
+    new MutationObserver(() => { try { ambSync(); } catch(_){} }).observe(misirMapEl, { attributes:true, attributeFilter:['class'] });
     const sayToast = t => { toastEl.textContent = t; toastEl.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2000); };
     misirMapEl.querySelectorAll('.mm-node').forEach(b => b.addEventListener('click', () => {
       const i = +b.dataset.i, t = misirState(i);
@@ -7626,10 +7685,27 @@ function ambFadeTo(target, play){
     a.volume = Math.max(0, Math.min(1, a.volume + (d > 0 ? .03 : -.06)));
   }, 50);
 }
+const ambTracks = {};   /* parça adı -> Audio */
+let ambCur = '';
+function ambWantTrack(){
+  if (!S.sound || document.hidden) return '';
+  if (journeyMapEl && journeyMapEl.classList.contains('show')) return 'amazon.mp3?v=2';
+  if (misirMapEl && misirMapEl.classList.contains('show')) return 'misir.mp3?v=1';   /* Mısır haritası müziği */
+  return '';
+}
 function ambSync(){
-  const want = !!(journeyMapEl && journeyMapEl.classList.contains('show') && S.sound && !document.hidden);
+  const want = ambWantTrack();
+  if (want !== ambCur && ambAudio){ clearInterval(ambFade); try { ambAudio.pause(); ambAudio.volume = 0; } catch(_){} }
+  ambCur = want;
   if (want){
-    if (!ambAudio){ ambAudio = new Audio('amazon.mp3?v=2'); ambAudio.loop = true; ambAudio.preload = 'auto'; ambAudio.volume = 0; }
+    if (!ambTracks[want]){
+      const a = new Audio(want); a.loop = true; a.preload = 'auto'; a.volume = 0;
+      a.addEventListener('error', () => {   /* misir.mp3 henüz yüklenmediyse amazon.mp3'e düş */
+        if (want.indexOf('amazon') < 0 && ambCur === want){ ambTracks[want] = null; const fb = ambTracks['amazon.mp3?v=2'] || (ambTracks['amazon.mp3?v=2'] = Object.assign(new Audio('amazon.mp3?v=2'), { loop:true, preload:'auto', volume:0 })); ambAudio = fb; ambFadeTo(.45, true); }
+      }, { once:true });
+      ambTracks[want] = a;
+    }
+    ambAudio = ambTracks[want];
     ambFadeTo(.45, true);
   } else if (ambAudio) ambFadeTo(0, false);
 }
@@ -9357,6 +9433,28 @@ $('bX').onclick=()=>{try{parent.postMessage('sudoku-exit','*')}catch(e){}};
 <style>
 /* Mısır haritası */
 .misir-map-screen{background:#1a1205}
+.misir-map-screen .mm-beamfx{z-index:6}
+/* Mısır tanıtım ekranı */
+.mi-intro{background:#070a26}
+.mi-art{position:absolute;inset:0}
+.mi-art svg{width:100%;height:100%;display:block}
+.mi-st{opacity:.25;animation:miTw 2.8s ease-in-out infinite}
+@keyframes miTw{50%{opacity:1}}
+.mi-sun{transform-origin:250px 500px;animation:miSun 4s ease-in-out infinite}
+@keyframes miSun{50%{transform:scale(1.08);opacity:.85}}
+.mi-rays{animation:miRays 3.2s ease-in-out infinite}
+@keyframes miRays{50%{opacity:.35}}
+.mi-cap{animation:miCap 1.6s ease-in-out infinite;transform-origin:250px 302px}
+@keyframes miCap{50%{transform:scale(1.7);opacity:.7}}
+.mi-txt{position:absolute;left:0;right:0;top:calc(6% + env(safe-area-inset-top,0px));text-align:center;color:#fff;padding:0 16px;pointer-events:none;animation:miRise .9s ease-out both}
+@keyframes miRise{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
+.mi-txt small{display:block;letter-spacing:.34em;font-weight:900;font-size:clamp(11px,3.1vw,14px);color:#ffd98a;text-shadow:0 2px 6px rgba(0,0,0,.8)}
+.mi-txt h2{margin:.35em 0 0;font-weight:1000;font-size:clamp(34px,11.6vw,58px);line-height:1.02;letter-spacing:.02em;background:linear-gradient(180deg,#fffbd6,#ffd45a 48%,#e58a14);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 3px 0 #6a3a05) drop-shadow(0 0 16px rgba(255,190,60,.65))}
+.mi-txt p{margin:.7em auto 0;max-width:20em;font-weight:800;font-size:clamp(13px,3.9vw,17px);color:#fff4d6;text-shadow:0 2px 8px rgba(0,0,0,.9)}
+.mi-chips{position:absolute;left:0;right:0;bottom:calc(112px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;gap:10px;pointer-events:none}
+.mi-chips span{padding:7px 14px;border-radius:999px;font-weight:900;font-size:13px;letter-spacing:.06em;color:#ffe9a8;background:rgba(20,10,2,.62);border:1.5px solid rgba(255,214,110,.7);box-shadow:0 2px 8px rgba(0,0,0,.5)}
+.mi-skip{background:linear-gradient(180deg,#ffeeb4,#ecb44e 55%,#c4862a)!important;box-shadow:0 5px 0 #7a4b0c,0 8px 18px rgba(0,0,0,.5)!important;color:#3a2100!important}
+.mi-skip span{display:inline-flex;align-items:center;gap:8px}
 .misir-map-screen video.mm-vid{object-fit:cover;background:#1a1205;display:block}
 .misir-map-screen .mm-hit{touch-action:manipulation}
 .misir-map-screen .mm-img{position:absolute;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
