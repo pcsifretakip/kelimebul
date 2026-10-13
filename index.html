@@ -7345,7 +7345,9 @@ function showJourneyMap(chapterIndex, opts){
     if (i === 6) label.style.maxWidth = '140px';
     if (i === 7) label.style.maxWidth = 'min(104px, calc(42vw - 40px))';
     label.style.left = positions[i][0] + '%'; label.style.top = positions[i][1] + '%';
-    label.innerHTML = '<b>' + (i+1) + '.</b> ' + chapterName;
+    /* Haritada kısa ad görünür; oyun içindeki bölüm adları değişmez */
+    const JM_SHORT = ['Şehirler','El Aletleri','Hayvanlar','Yiyecek','Meslekler','Spor','Müzik','Uzay','Tarih','Ülkeler'];
+    label.innerHTML = '<b>' + (i+1) + '.</b> ' + (JM_SHORT[i] || chapterName);
     nodes.appendChild(label);
     if (pendingUnlock) {
       afterLoad = () => {
