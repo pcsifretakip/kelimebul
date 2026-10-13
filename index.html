@@ -1689,6 +1689,10 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .bomb-fx .bx-core{position:absolute;width:260px;height:260px;margin:-130px 0 0 -130px;border-radius:50%;background:radial-gradient(circle,#fff 0,#fff2a8 22%,rgba(255,170,40,.9) 48%,rgba(255,80,0,0) 74%);opacity:0;mix-blend-mode:screen}
 .bomb-fx .bx-ring2{border-color:rgba(255,140,40,.85);box-shadow:0 0 26px rgba(255,90,10,.9)}
 .bomb-fx .bx-fireball{position:absolute;border-radius:50%;opacity:0;mix-blend-mode:screen;filter:blur(2px)}
+.bomb-fx .bx-piece{filter:drop-shadow(0 0 6px rgba(255,140,40,.9))}
+.bomb-fx .bx-shard{position:absolute;margin:-3px 0 0 -4px;background:linear-gradient(135deg,#8b9098,#23262b);box-shadow:0 0 6px rgba(255,150,50,.8)}
+.bomb-fx .bx-smoke{position:absolute;border-radius:50%;opacity:0;background:radial-gradient(circle,rgba(46,40,36,.72) 0,rgba(46,40,36,.4) 45%,rgba(46,40,36,0) 72%);filter:blur(6px)}
+.bomb-fx .bx-tongue{position:absolute;opacity:0;transform-origin:50% 100%;background:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 100' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='o' x1='0' y1='1' x2='0' y2='0'%3E%3Cstop offset='0' stop-color='%23ffe9a0'/%3E%3Cstop offset='.35' stop-color='%23ff9a1a'/%3E%3Cstop offset='.75' stop-color='%23e8400a'/%3E%3Cstop offset='1' stop-color='%238a1a04' stop-opacity='0'/%3E%3C/linearGradient%3E%3ClinearGradient id='i' x1='0' y1='1' x2='0' y2='0'%3E%3Cstop offset='0' stop-color='%23fff'/%3E%3Cstop offset='.5' stop-color='%23ffe066'/%3E%3Cstop offset='1' stop-color='%23ffb21c' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23o)' d='M30 1C33 20 53 33 53 60C53 83 43 98 30 98C17 98 7 83 7 60C7 46 15 38 19 26C22 34 26 37 28 39C26 26 27 12 30 1Z'/%3E%3Cpath fill='url(%23i)' d='M30 34C32 48 42 56 42 71C42 85 37 96 30 96C23 96 18 85 18 71C18 62 23 56 25 48C27 52 28 54 29 55C28 48 28 41 30 34Z'/%3E%3C/svg%3E") center/100% 100% no-repeat;filter:drop-shadow(0 0 10px rgba(255,120,20,.85)) drop-shadow(0 0 22px rgba(255,80,0,.5))}
 .bomb-fx .bx-flame{position:absolute;opacity:0;border-radius:50% 50% 45% 45% / 70% 70% 30% 30%;background:radial-gradient(ellipse at 50% 75%,#fff2a0 0,#ffb21c 32%,#ff5a14 62%,rgba(190,30,0,0) 100%);mix-blend-mode:screen;filter:blur(3px);transform-origin:50% 100%}
 .bomb-fx .bx-ember{position:absolute;border-radius:50%;background:#ffb43a;box-shadow:0 0 8px 2px rgba(255,110,20,.95)}
 .bomb-fx .bx-glow{position:absolute;inset:0;opacity:0;background:radial-gradient(ellipse at var(--cx) var(--cy),rgba(255,120,20,0) 30%,rgba(255,70,0,.38) 75%,rgba(160,20,0,.55) 100%);mix-blend-mode:screen}
@@ -3892,8 +3896,9 @@ const chapterComplete = gi => {
   return true;
 };
 const OPEN_CHAPTERS = 9;   // 1-9. bölümler baştan açık; 10. bölüm 9. bitince açılır
-const levelOpen = i => i < OPEN_CHAPTERS * CHAPTER_SIZE || i <= S.maxOpen;
-const chapterUnlocked = gi => gi < OPEN_CHAPTERS || chapterComplete(gi - 1);
+const TEST_LOCK_CH10 = true;   // TEST: 10. bölüm kapalı — test bitince false yap
+const levelOpen = i => (TEST_LOCK_CH10 && i >= (CHAPTER_COUNT - 1) * CHAPTER_SIZE) ? false : (i < OPEN_CHAPTERS * CHAPTER_SIZE || i <= S.maxOpen);
+const chapterUnlocked = gi => (TEST_LOCK_CH10 && gi === CHAPTER_COUNT - 1) ? false : (gi < OPEN_CHAPTERS || chapterComplete(gi - 1));
 const currentChapter = () => Math.min(CHAPTER_COUNT - 1, Math.floor((S.levelIndex || 0) / CHAPTER_SIZE));
 const MODES = [
   { key:'classic', category:'KLASİK SERBEST', icon:'sprout', color:'#22c55e', subtitle:'Rahatça oyna. Bölümleri seç ve normal kelime bulma modunda ilerle.', available:true }
@@ -5339,17 +5344,54 @@ function bombBoom(cx, cy, onBoom){
       fb.animate([{opacity:0,transform:'translate(0,0) scale(.2)'},{opacity:1,transform:'translate('+(dx*.55)+'px,'+(dy*.55)+'px) scale(1)',offset:.3},{opacity:0,transform:'translate('+dx+'px,'+(dy-80)+'px) scale(1.7)'}],
         {duration:800 + Math.random()*700, delay:Math.random()*160, easing:'cubic-bezier(.15,.7,.3,1)', fill:'forwards'});
     }
-    for (let i = 0; i < 26; i++){       // yukarı yükselen alev dilleri
-      const fl = at(document.createElement('div')); fl.className='bx-flame'; fx.appendChild(fl);
-      const w = 26 + Math.random()*46, h = w*(1.7 + Math.random()*1.3);
-      fl.style.width = w+'px'; fl.style.height = h+'px'; fl.style.margin = (-h*.6)+'px 0 0 '+(-w/2)+'px';
-      const ox = (Math.random()-.5)*Math.min(innerWidth*0.9, 520), oy = (Math.random()-.4)*Math.min(innerHeight*0.5, 380);
-      const rise = 120 + Math.random()*260;
-      fl.animate([{opacity:0,transform:'translate('+ox*.3+'px,'+oy*.3+'px) scale(.2,.2)'},
-                  {opacity:.95,transform:'translate('+ox+'px,'+oy+'px) scale(1,1)',offset:.28},
-                  {opacity:.8,transform:'translate('+(ox+(Math.random()-.5)*60)+'px,'+(oy-rise*.6)+'px) scale(.8,1.25)',offset:.65},
-                  {opacity:0,transform:'translate('+(ox+(Math.random()-.5)*90)+'px,'+(oy-rise)+'px) scale(.3,1.6)'}],
-        {duration:1100 + Math.random()*800, delay:Math.random()*260, easing:'ease-out', fill:'forwards'});
+    /* BOMBA PARÇALANIR: bomba görseli kama biçimli parçalara bölünüp savrulur + metal kıymıklar */
+    const NP = 9, a00 = Math.random()*Math.PI*2;
+    for (let k = 0; k < NP; k++){
+      const a0 = a00 + k*(Math.PI*2/NP), a1 = a00 + (k+1)*(Math.PI*2/NP), am = (a0+a1)/2;
+      const pt = (a, r) => Math.max(0, Math.min(100, 50 + Math.cos(a)*r)).toFixed(1) + '% ' + Math.max(0, Math.min(100, 50 + Math.sin(a)*r)).toFixed(1) + '%';
+      const pc = at(document.createElement('img')); pc.className = 'bx-bomb bx-piece'; pc.src = 'bomba.png'; pc.draggable = false;
+      pc.style.animation = 'none';
+      pc.style.clipPath = 'polygon(50% 50%, ' + pt(a0, 78) + ', ' + pt(am, 38 + Math.random()*40) + ', ' + pt(a1, 78) + ')';
+      fx.appendChild(pc);
+      const d = 90 + Math.random()*vmax*0.34, dx = Math.cos(am)*d, dy = Math.sin(am)*d;
+      pc.animate([{transform:'translate(0,0) rotate(0deg)',opacity:1},
+                  {transform:'translate(' + dx*.7 + 'px,' + (dy*.7 - 30) + 'px) rotate(' + ((Math.random()-.5)*360) + 'deg)',opacity:1,offset:.5},
+                  {transform:'translate(' + dx*.9 + 'px,' + (dy + 260 + Math.random()*180) + 'px) rotate(' + ((Math.random()-.5)*900) + 'deg)',opacity:0}],
+        {duration:900 + Math.random()*500, easing:'cubic-bezier(.1,.7,.35,1)', fill:'forwards'});
+    }
+    for (let i = 0; i < 18; i++){       // metal kıymıklar
+      const sh = at(document.createElement('div')); sh.className = 'bx-shard'; fx.appendChild(sh);
+      const w = 7 + Math.random()*13, h = 4 + Math.random()*8;
+      sh.style.width = w + 'px'; sh.style.height = h + 'px';
+      sh.style.clipPath = 'polygon(0 ' + (Math.random()*40|0) + '%, 100% ' + (Math.random()*60|0) + '%, ' + (30 + Math.random()*50|0) + '% 100%)';
+      const ang = Math.random()*Math.PI*2, d = 120 + Math.random()*vmax*0.6;
+      sh.animate([{transform:'translate(0,0) rotate(0deg)',opacity:1},
+                  {transform:'translate(' + Math.cos(ang)*d + 'px,' + (Math.sin(ang)*d + 200 + Math.random()*200) + 'px) rotate(' + ((Math.random()-.5)*1400) + 'deg)',opacity:0}],
+        {duration:800 + Math.random()*700, easing:'cubic-bezier(.1,.7,.35,1)', fill:'forwards'});
+    }
+    /* DUMAN: alevlerin altında yükselen koyu duman kümeleri */
+    for (let i = 0; i < 9; i++){
+      const sm = at(document.createElement('div')); sm.className = 'bx-smoke'; fx.appendChild(sm);
+      const sz = 120 + Math.random()*140; sm.style.width = sm.style.height = sz + 'px'; sm.style.margin = (-sz/2) + 'px 0 0 ' + (-sz/2) + 'px';
+      const ox = (Math.random()-.5)*Math.min(innerWidth*0.8, 460), oy = (Math.random()-.3)*Math.min(innerHeight*0.35, 260);
+      sm.animate([{opacity:0,transform:'translate(' + ox*.4 + 'px,' + oy + 'px) scale(.4)'},
+                  {opacity:.6,transform:'translate(' + ox + 'px,' + (oy - 90) + 'px) scale(1)',offset:.35},
+                  {opacity:0,transform:'translate(' + (ox + (Math.random()-.5)*80) + 'px,' + (oy - 300 - Math.random()*120) + 'px) scale(1.9)'}],
+        {duration:2200 + Math.random()*900, delay:150 + Math.random()*350, easing:'ease-out', fill:'forwards'});
+    }
+    /* GERÇEKÇİ ALEV: SVG alev dilleri (beyaz-sarı çekirdek, turuncu gövde, kırmızı uç), titreyerek yanar */
+    for (let i = 0; i < 24; i++){
+      const fl = at(document.createElement('div')); fl.className = 'bx-tongue'; fx.appendChild(fl);
+      const big = i < 6, w = big ? 90 + Math.random()*60 : 44 + Math.random()*46, h = w * (1.55 + Math.random()*.7);
+      fl.style.width = w + 'px'; fl.style.height = h + 'px'; fl.style.margin = (-h) + 'px 0 0 ' + (-w/2) + 'px';
+      const ox = (Math.random()-.5)*Math.min(innerWidth*0.86, 500), oy = (Math.random()-.25)*Math.min(innerHeight*0.38, 280);
+      const flip = Math.random() < .5 ? -1 : 1, tr = 'translate(' + ox + 'px,' + oy + 'px) ';
+      const life = 1500 + Math.random()*1100, fr = [{opacity:0,transform:tr + 'scale(' + (.1*flip) + ',.1)',offset:0},{opacity:1,transform:tr + 'scale(' + flip + ',1)',offset:.16}];
+      for (let q = 0; q < 6; q++){
+        fr.push({opacity:.95,transform:tr + 'translateY(' + (-q*6) + 'px) scale(' + ((.82 + Math.random()*.3)*flip) + ',' + (.88 + Math.random()*.38) + ') skewX(' + ((Math.random()-.5)*14) + 'deg)',offset:.16 + (q+1)*.11});
+      }
+      fr.push({opacity:0,transform:tr + 'translateY(-50px) scale(' + (.55*flip) + ',.25)',offset:1});
+      fl.animate(fr, {duration:life, delay:Math.random()*320, easing:'ease-in-out', fill:'forwards'});
     }
     for (let i = 0; i < 46; i++){       // köz ve kor parçaları (yerçekimiyle düşer)
       const em = at(document.createElement('div')); em.className='bx-ember'; fx.appendChild(em);
@@ -5365,7 +5407,7 @@ function bombBoom(cx, cy, onBoom){
     glow.animate([{opacity:0},{opacity:1,offset:.15},{opacity:.55,offset:.5},{opacity:0}], {duration:1700, easing:'ease-out', fill:'forwards'});
     try { onBoom(); } catch(_){}
   }, T);
-  setTimeout(() => fx.remove(), T + 2600);
+  setTimeout(() => fx.remove(), T + 3800);
 }
 function useBomb(){
   audio();
@@ -5878,7 +5920,7 @@ function renderModes(){
   for (let k = 0; k < CHAPTER_COUNT; k++) if (!chapterComplete(k)){ amazonDone = false; break; }
   let misirWrap = null;
   JOURNEY_CARDS.forEach((jc, i) => {
-    if (i === 1){ misirWrap = buildMisirCard(jc, amazonDone); list.appendChild(misirWrap); return; }
+    if (i === 1){ misirWrap = buildMisirCard(jc, amazonDone || (chapterComplete(CHAPTER_COUNT - 1) && chapterUnlocked(CHAPTER_COUNT - 1))); list.appendChild(misirWrap); return; }   /* Mısır: 10. bölüm (Ülkeler) bitince açılır */
     const b = document.createElement('button'); b.type = 'button';
     if (i === 0){
       const th = themeOf(LEVELS[0]);
@@ -7420,7 +7462,7 @@ function showJourneyMap(chapterIndex, opts){
   ];
   const levelCount = Math.min(10, LEVELS.length);
   for (let i=0;i<levelCount;i++){
-    const done = chapterComplete(i);
+    const done = chapterComplete(i) && chapterUnlocked(i);
     const pendingUnlock = (i === unlockIdx);
     const unlocked = chapterUnlocked(i) && !pendingUnlock;
     const b = document.createElement('button');
