@@ -3042,14 +3042,16 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
   text-shadow:0 1px 0 #ede9fe,0 2px 0 #8b5cf6,0 3px 0 #6d28d9,0 4px 0 #5b21b6,0 5px 0 #3b0764,0 9px 10px rgba(0,0,0,.5)!important}
 .app.on-game #view-game .banner .game-top-title::after{display:none!important}
 
-/* ===== İPUCU ŞERİDİ (altın yazı + KAPAT düğmesi) ===== */
-.app.on-game #view-game .banner .game-top-title.hint-on{display:flex!important;align-items:center;justify-content:center;gap:12px;flex-wrap:nowrap;color:#ffe066!important;font-size:clamp(17px,5.2vw,25px)!important;letter-spacing:.04em!important;
-  text-shadow:0 2px 0 #92400e,0 3px 0 #6b2f06,0 4px 0 #3b1a04,0 8px 9px rgba(0,0,0,.5)!important}
-.hint-on .hint-txt{display:inline-flex;align-items:center;gap:.3em;white-space:nowrap}
-.hint-on .hint-txt b{font-weight:1000}
-.hint-on .hb{display:inline-block;width:.62em;height:.17em;border-radius:3px;background:#e9d5ff;box-shadow:0 2px 0 #5b21b6;margin:.35em .02em 0}
-.hint-on .hint-close{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:6px 11px;border-radius:15px;font-size:12px;font-weight:1000;letter-spacing:.06em;color:#fff;
-  background:linear-gradient(180deg,#fb7185,#e11d48 60%,#be123c);border:2px solid #fecdd3;box-shadow:0 3px 0 #7f1d1d,0 6px 10px rgba(0,0,0,.4);text-shadow:0 1px 0 rgba(0,0,0,.45)!important}
+/* ===== İPUCU SATIRI: başlık yerinde kalır, altına altın ipucu + KAPAT eklenir ===== */
+.app.on-game #view-game .banner.hint-on{flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:7px 14px 11px}
+.app.on-game #view-game .banner.hint-on .game-top-title{flex:0 0 auto!important;width:100%;font-size:13px!important;line-height:1.15!important;letter-spacing:.09em!important;opacity:.95;
+  text-shadow:0 1px 0 #6d28d9,0 2px 0 #3b0764,0 4px 5px rgba(0,0,0,.45)!important}
+.hint-row{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:nowrap;max-width:100%}
+.hint-row .hint-txt{display:inline-flex;align-items:center;gap:.3em;white-space:nowrap;font-weight:1000;font-size:clamp(17px,5.2vw,24px);letter-spacing:.04em;color:#ffe066;
+  text-shadow:0 2px 0 #92400e,0 3px 0 #6b2f06,0 4px 0 #3b1a04,0 7px 8px rgba(0,0,0,.5)}
+.hint-row .hb{display:inline-block;width:.62em;height:.17em;border-radius:3px;background:#e9d5ff;box-shadow:0 2px 0 #5b21b6;margin:.35em .02em 0}
+.hint-row .hint-close{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:5px 11px;border-radius:14px;font-size:12px;font-weight:1000;letter-spacing:.06em;color:#fff;cursor:pointer;
+  background:linear-gradient(180deg,#fb7185,#e11d48 60%,#be123c);border:2px solid #fecdd3;box-shadow:0 3px 0 #7f1d1d,0 6px 10px rgba(0,0,0,.4);text-shadow:0 1px 0 rgba(0,0,0,.45)}
 </style>
 </head>
 <body>
@@ -4984,8 +4986,8 @@ let hintPin = null, hintPinTimer = null, hintCell = null;
 function clearHintCell(){ if (hintCell){ try { hintCell.el.classList.remove('hint'); } catch(_){} hintCell = null; } }
 function unpinHint(){
   hintPin = null; clearHintCell();
-  const tt = $('game-top-title');
-  if (tt){ tt.classList.remove('hint-on'); tt.style.removeProperty('font-size'); if (S.level) tt.textContent = TR(S.level.category); }
+  const bn = document.querySelector('#view-game .banner');
+  if (bn){ bn.classList.remove('hint-on'); const r = bn.querySelector('.hint-row'); if (r) r.remove(); }
 }
 function hintWatch(){
   if (hintPin && (!S.playing || hintPin.level !== S.level || S.found.has(hintPin.w))) unpinHint();
@@ -5020,9 +5022,13 @@ $('btn-hint').addEventListener('click', () => {
     // '....' kelime: ilk ve son harf başlık şeridinde sabit durur, KAPAT ile kapanır
     const ch = Array.from(w);
     const blanks = ch.slice(1, -1).map(() => '<i class="hb"></i>').join('');
-    const tt = $('game-top-title');
-    tt.innerHTML = '<span class="hint-txt">💡 <b>' + ch[0] + '</b>' + blanks + '<b>' + ch[ch.length - 1] + '</b></span><span class="hint-close">✕ KAPAT</span>';
-    tt.classList.add('hint-on');
+    const bn = document.querySelector('#view-game .banner');
+    if (bn){
+      const old = bn.querySelector('.hint-row'); if (old) old.remove();
+      const row = document.createElement('div'); row.className = 'hint-row';
+      row.innerHTML = '<span class="hint-txt">💡 <b>' + ch[0] + '</b>' + blanks + '<b>' + ch[ch.length - 1] + '</b></span><span class="hint-close">✕ KAPAT</span>';
+      bn.appendChild(row); bn.classList.add('hint-on');
+    }
     hintPin = { w, level: S.level };
     startHintWatch();
     return;
@@ -7157,6 +7163,8 @@ function jmMonkeyJump(m, from, to, done){
   const box=m.parentNode, W=box.clientWidth, H=box.clientHeight;
   const dx=(to[0]-from[0])/100*W, dy=(to[1]-from[1])/100*H;
   const bw=m.querySelector('.jm-bw'), bd=m.querySelector('.jm-bd'), bd2=m.querySelector('.jm-bd2'), sh=m.querySelector('.jm-sh');
+  let ox=0, oy=0;
+  if (m.dataset.toOff){ const fo=(m.dataset.fromOff||m.dataset.toOff).split(',').map(Number), tf=m.dataset.toOff.split(',').map(Number); m.style.margin=tf[0]+'px 0 0 '+tf[1]+'px'; oy=fo[0]-tf[0]; ox=fo[1]-tf[1]; }
   m.style.left=to[0]+'%'; m.style.top=to[1]+'%';
   const toIdle=()=>{ jmMkPose(m,'idle'); m.classList.remove('walk'); m.classList.add('idle'); };
   if(!m.animate||!bw||!bd2){ toIdle(); done&&done(); return; }
@@ -7181,7 +7189,7 @@ function jmMonkeyJump(m, from, to, done){
   let f=0; jmMkPose(m,JM_MK_WALK[0]);
   const t=setInterval(()=>{ f=(f+1)%JM_MK_WALK.length; jmMkPose(m,JM_MK_WALK[f]); },170);
   const dist=Math.sqrt(dx*dx+dy*dy), dur=Math.max(2000,Math.min(4500,dist/45*1000));
-  run(m,[{transform:'translate('+(-dx)+'px,'+(-dy)+'px)'},{transform:'translate(0,0)'}],{duration:dur,easing:'cubic-bezier(.25,.1,.75,.9)'},()=>{
+  run(m,[{transform:'translate('+(-dx+ox)+'px,'+(-dy+oy)+'px)'},{transform:'translate(0,0)'}],{duration:dur,easing:'cubic-bezier(.25,.1,.75,.9)'},()=>{
     clearInterval(t); m.classList.remove('walk'); jmMkPose(m,'idle');
     setTimeout(()=>{
       /* 2) dön, selam ver, kilit bu sırada açılır */
@@ -7245,7 +7253,7 @@ function showJourneyMap(chapterIndex, opts){
   const nodes = el.querySelector('#jm-nodes');
   nodes.innerHTML = '';
   const positions = [
-    [51,89],[63,78],[47,68],[58,57],[43,47],[61,37],[46,28],[58,19],[44,11],[56,4]
+    [51,89],[63,78],[47,68],[58,57],[43,47],[61,37],[46,29],[58,22],[44,16],[56,10]
   ];
   const levelCount = Math.min(10, LEVELS.length);
   for (let i=0;i<levelCount;i++){
@@ -7303,6 +7311,8 @@ function showJourneyMap(chapterIndex, opts){
     const currentChapterIdx = Math.min(CHAPTER_COUNT - 1, Math.floor(S.maxOpen / CHAPTER_SIZE));
     const start=(unlockIdx>0)?unlockIdx-1:currentChapterIdx;
     mk.style.left=positions[start][0]+'%'; mk.style.top=positions[start][1]+'%';
+    const mkOff = positions.map((p,i) => (i+1 < positions.length && positions[i+1][0] > p[0]) ? [-52,46] : [-74,33]);
+    mk.style.margin = mkOff[start][0] + 'px 0 0 ' + mkOff[start][1] + 'px';
     nodes.appendChild(mk);
 
     /* Maymunu parmakla tutup istediğin yere götür; bırakınca kendi yerine dönsün. */
@@ -7340,7 +7350,7 @@ function showJourneyMap(chapterIndex, opts){
       mk.addEventListener('pointerup',release);
       mk.addEventListener('pointercancel',release);
     })();
-    if (afterLoad && unlockIdx>0) { const fx0=afterLoad; afterLoad=()=>jmMonkeyJump(mk,positions[unlockIdx-1],positions[unlockIdx],fx0); } }
+    if (afterLoad && unlockIdx>0) { const fx0=afterLoad; afterLoad=()=>{ mk.dataset.fromOff=mkOff[unlockIdx-1].join(','); mk.dataset.toOff=mkOff[unlockIdx].join(','); jmMonkeyJump(mk,positions[unlockIdx-1],positions[unlockIdx],fx0); }; } }
   if (opts.noLoading && afterLoad) setTimeout(afterLoad, 550);
   setView('home');
   viewHome.classList.add('off');
