@@ -5760,9 +5760,7 @@ function buildMisirCard(jc, amazonDone){
   /* banner açılır ama içine girilmez (Mısır oyunu henüz yok) */
   b.addEventListener('click', () => {
     if (!b.classList.contains('misir-open')) return;
-    buzz(20);
-    toastEl.textContent = 'Yakında sorular eklenecek! 🔺'; toastEl.classList.add('show');
-    clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2000);
+    buzz(20); audio(); showMisirMap();
   });
   const layer = document.createElement('div'); layer.className = 'orbit-layer';
   w.append(b, layer); w._setOpen = setOpen;
@@ -6098,6 +6096,7 @@ function setView(name){
   viewHome.classList.remove('enter'); if (name === 'home'){ void viewHome.offsetWidth; viewHome.classList.add('enter'); }
   app.classList.toggle('on-journey', false);
   try { if (journeyMapEl) journeyMapEl.classList.remove('show'); } catch(_){}
+  try { if (misirMapEl) misirMapEl.classList.remove('show'); } catch(_){}
   app.classList.toggle('on-game', name === 'game');
   closeMenu();
 }
@@ -7325,6 +7324,49 @@ document.addEventListener('pointerdown', e => {
    Liste ekranı ana seçimdir. Açık bölüme basılınca harita açılır.
    ===================================================== */
 let journeyMapEl = null;
+/* ===== MISIR PİRAMİTLERİ HARİTASI (harita-misir.jpg) ===== */
+let misirMapEl = null;
+const MISIR_MAP = { w:941, h:1672,
+  nodes:[[470,1468],[388,1298],[610,1205],[453,1085],[534,897],[428,747],[545,605],[414,485],[540,378],[430,277]],   /* alttan üste 10 bölüm */
+  gear:[752,63], back:[870,63], star:[150,60] };
+function layoutMisirMap(){
+  const el = misirMapEl; if (!el) return;
+  const W = el.clientWidth || innerWidth, H = el.clientHeight || innerHeight, M = MISIR_MAP;
+  const sc = Math.max(W / M.w, H / M.h), ox = (W - M.w * sc) / 2, oy = (H - M.h * sc) / 2;
+  const img = el.querySelector('.mm-img');
+  img.style.cssText = 'left:' + ox + 'px;top:' + oy + 'px;width:' + (M.w * sc) + 'px;height:' + (M.h * sc) + 'px';
+  const put = (node, q, d) => { node.style.left = (q[0] * sc + ox) + 'px'; node.style.top = (q[1] * sc + oy) + 'px'; node.style.width = node.style.height = (d * sc) + 'px'; };
+  el.querySelectorAll('.mm-node').forEach((b, i) => put(b, M.nodes[i], 130));
+  put(el.querySelector('.mm-gear'), M.gear, 100); put(el.querySelector('.mm-back'), M.back, 100);
+  const sv = el.querySelector('.mm-score'); sv.style.left = (M.star[0] * sc + ox + 38 * sc) + 'px'; sv.style.top = (M.star[1] * sc + oy) + 'px'; sv.style.fontSize = (40 * sc) + 'px';
+}
+function showMisirMap(){
+  leaveGame();
+  if (!misirMapEl){
+    misirMapEl = document.createElement('section');
+    misirMapEl.id = 'misir-map-screen'; misirMapEl.className = 'journey-map-screen misir-map-screen';
+    misirMapEl.innerHTML = '<img class="mm-img" src="harita-misir.jpg?v=1" alt="Mısır Piramitleri haritası" draggable="false">' +
+      '<b class="mm-score">0/10</b>' +
+      MISIR_MAP.nodes.map((_, i) => '<button type="button" class="mm-hit mm-node" data-i="' + i + '" aria-label="Mısır bölüm ' + (i + 1) + '"></button>').join('') +
+      '<button type="button" class="mm-hit mm-gear" aria-label="Ayarlar"></button>' +
+      '<button type="button" class="mm-hit mm-back" aria-label="Geri"></button>';
+    (document.querySelector('.app') || document.body).appendChild(misirMapEl);
+    misirMapEl.querySelectorAll('.mm-node').forEach(b => b.addEventListener('click', () => {
+      buzz(20); toastEl.textContent = 'Yakında sorular eklenecek! 🔺'; toastEl.classList.add('show');
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2000);
+    }));
+    misirMapEl.querySelector('.mm-gear').addEventListener('click', e => { e.stopPropagation(); audio(); refreshSettings(); menuEl.classList.toggle('show'); });
+    misirMapEl.querySelector('.mm-back').addEventListener('click', () => { audio(); misirMapEl.classList.remove('show'); showLevels(); });
+    addEventListener('resize', () => { if (misirMapEl.classList.contains('show')) layoutMisirMap(); });
+  }
+  setView('home'); viewHome.classList.add('off'); viewGame.classList.add('off'); viewLevels.classList.add('off');
+  $('view-modes').classList.add('off'); $('view-login').classList.add('off');
+  app.classList.add('on-journey');
+  misirMapEl.classList.add('show');
+  layoutMisirMap();
+  const img = misirMapEl.querySelector('.mm-img'); if (!img.complete) img.addEventListener('load', layoutMisirMap, {once:true});
+}
+
 /* amazon.mp3: sadece yolculuk haritası ekranı açıkken çalar (oyunda, listede, ana ekranda çalmaz; ses kapalıysa da çalmaz) */
 let ambAudio = null, ambFade = 0;
 function ambFadeTo(target, play){
@@ -9064,6 +9106,13 @@ $('bX').onclick=()=>{try{parent.postMessage('sudoku-exit','*')}catch(e){}};
 .jk.jk-img#jk-bank{width:min(14vw,60px)!important}
 .jk.jk-skip{aspect-ratio:300/290;position:relative;border:0;cursor:pointer;background:transparent}
 .jk.jk-skip .skip-ic{display:flex;align-items:center;justify-content:center;width:78%;aspect-ratio:1;margin:0 auto 18%;border-radius:50%;font-size:clamp(18px,6vw,26px);color:#fff;background:radial-gradient(circle at 35% 28%,#8b6dff,#3b2aa8 60%,#1e1470);border:2px solid #f5b83a;box-shadow:0 0 8px rgba(245,184,58,.55),0 4px 6px rgba(0,0,0,.45)}
+</style>
+<style>
+/* Mısır haritası */
+.misir-map-screen{background:#1a1205}
+.misir-map-screen .mm-img{position:absolute;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
+.misir-map-screen .mm-hit{position:absolute;transform:translate(-50%,-50%);border:0;padding:0;border-radius:50%;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent;z-index:3}
+.misir-map-screen .mm-score{position:absolute;transform:translate(-50%,-50%);color:#fff;font-weight:900;font-variant-numeric:tabular-nums;text-shadow:0 2px 0 rgba(0,0,0,.6);pointer-events:none;z-index:3;line-height:1}
 </style>
 </body>
 </html>
