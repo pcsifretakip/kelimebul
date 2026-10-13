@@ -3351,6 +3351,7 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
           <button class="jk jk-img jk-bomb" id="jk-bomb" aria-label="Bomba"><img src="bomba.png" alt="Bomba" draggable="false"><span class="jk-lbl">BOMBA</span><span class="jk-price">150<svg class="i"><use href="#i-coin"/></svg></span></button>
         </div>
         <button class="jk jk-img" id="jk-bank" aria-label="Kelime Bankası"><img src="jk-kelime-bankasi.png" alt="Kelime Bankası" draggable="false"><span class="jk-badge" id="bank-badge"></span></button>
+        <button class="jk jk-img jk-skip" id="jk-skip" aria-label="Bölümü Geç"><span class="skip-ic">⏭</span><span class="jk-lbl">GEÇ</span></button>
       </div>
       <button class="btn-main review-next" id="btn-review-next">SONRAKİ MOD</button>
     </section>
@@ -3896,7 +3897,7 @@ const chapterComplete = gi => {
   return true;
 };
 const OPEN_CHAPTERS = 9;   // 1-9. bölümler baştan açık; 10. bölüm 9. bitince açılır
-const TEST_LOCK_CH10 = true;   // TEST: 10. bölüm kapalı — test bitince false yap
+const TEST_LOCK_CH10 = false;   // TEST: 10. bölüm kapalı — test bitince false yap
 const levelOpen = i => (TEST_LOCK_CH10 && i >= (CHAPTER_COUNT - 1) * CHAPTER_SIZE) ? false : (i < OPEN_CHAPTERS * CHAPTER_SIZE || i <= S.maxOpen);
 const chapterUnlocked = gi => (TEST_LOCK_CH10 && gi === CHAPTER_COUNT - 1) ? false : (gi < OPEN_CHAPTERS || chapterComplete(gi - 1));
 const currentChapter = () => Math.min(CHAPTER_COUNT - 1, Math.floor((S.levelIndex || 0) / CHAPTER_SIZE));
@@ -5215,6 +5216,8 @@ function shuffleBoard(){
   toast('Karıştırılamadı, tekrar dene');
 }
 $('jk-shuffle').addEventListener('click', shuffleBoard);
+/* TEST: bölümü direkt geçmiş say — test bitince #jk-skip butonunu ve bu satırı sil */
+$('jk-skip').addEventListener('click', () => { audio(); if (!S.playing || R) return; victory(); });
 
 function useMagnet(){
   audio();
@@ -9033,5 +9036,13 @@ $('bX').onclick=()=>{try{parent.postMessage('sudoku-exit','*')}catch(e){}};
   };
 })();
 </script>
+<style>
+/* TEST: GEÇ butonu — 6 joker tek satır */
+.jokers,#view-game .jokers{grid-template-columns:repeat(6,1fr)!important}
+.jk.jk-img{width:min(15.4vw,66px)!important}
+.jk.jk-img#jk-bank{width:min(14vw,60px)!important}
+.jk.jk-skip{aspect-ratio:300/290;position:relative;border:0;cursor:pointer;background:transparent}
+.jk.jk-skip .skip-ic{display:flex;align-items:center;justify-content:center;width:78%;aspect-ratio:1;margin:0 auto 18%;border-radius:50%;font-size:clamp(18px,6vw,26px);color:#fff;background:radial-gradient(circle at 35% 28%,#8b6dff,#3b2aa8 60%,#1e1470);border:2px solid #f5b83a;box-shadow:0 0 8px rgba(245,184,58,.55),0 4px 6px rgba(0,0,0,.45)}
+</style>
 </body>
 </html>
