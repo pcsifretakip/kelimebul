@@ -1708,6 +1708,15 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 <style>
 /* ===== GİZLİ KELİME bölümü ===== */
 .chip.masked{color:#fde68a;border:1.5px dashed rgba(253,230,138,.7);background:rgba(251,191,36,.1);letter-spacing:.18em}
+/* gizli kelime: büyük noktalar + harf sayısı; bulunanlar sola yapışık */
+#view-game .word-list{justify-content:flex-start}
+.chip.masked{letter-spacing:0;padding:5px 11px}
+.chip.masked .mk{display:inline-flex;align-items:center;gap:4px}
+.chip.masked .mk i{display:block;flex:none;width:8px;height:8px;border-radius:50%;background:#fde68a;box-shadow:0 0 5px rgba(253,230,138,.55)}
+.chip.masked .mk b{margin-left:3px;font-size:10px;font-weight:900;line-height:1;color:#fde68a;opacity:.85}
+.word-list.n-md .chip.masked{padding:4px 8px}.word-list.n-md .chip.masked .mk i{width:7px;height:7px}
+.word-list.n-sm .chip.masked,.word-list.n-xs .chip.masked{padding:3px 6px}.word-list.n-sm .chip.masked .mk i,.word-list.n-xs .chip.masked .mk i{width:6px;height:6px}
+.word-list.n-sm .chip.masked .mk,.word-list.n-xs .chip.masked .mk{gap:3px}
 .hid-tut{position:absolute;inset:0;z-index:90;background:rgba(3,2,16,.72);display:flex;align-items:center;justify-content:center;padding:0 16px}
 .hid-tut .ht-arrow{position:absolute;left:50%;width:46px;height:54px;margin-left:-23px;animation:htBob 1s ease-in-out infinite}
 .hid-tut .ht-arrow svg{width:100%;height:100%;fill:#2f9bff;stroke:#1d6fd8;stroke-width:3;stroke-linejoin:round;filter:drop-shadow(0 4px 0 #1456a8)}
@@ -3629,16 +3638,16 @@ const DIRS = {
 };
 const GROUPS = [
   ['Şehirler', '#22c55e', [
-    ['Türkiye Büyük Şehirleri',6,'ANKARA BURSA ADANA İZMİR KONYA','','hv'],
+    ['Türkiye Şehirleri',6,'ANKARA BURSA ADANA İZMİR KONYA','','hv'],
     ['Anadolu Şehirleri',6,'SİVAS RİZE ORDU BOLU ELAZIĞ','','hv'],
     ['Avrupa Başkentleri',7,'ROMA PARİS VİYANA BERLİN LONDRA ATİNA','','hv'],
     ['Avrupa Şehirleri',7,'MİLANO PRAG PORTO LYON OSLO NAPOLİ SEVİLLA','','hv'],
     ['Asya Şehirleri',7,'TOKYO PEKİN SEUL DUBAİ BAKÜ DELHİ BANGKOK','','hv'],
     ['Amerika Şehirleri',7,'MİAMİ BOSTON LİMA DALLAS HAVANA ŞİKAGO BOGOTA','','hv'],
-    ['Afrika ve Okyanusya',7,'KAHİRE LAGOS SİDNEY RABAT NAİROBİ PERTH TUNUS','','hv'],
+    ['Afrika Şehirleri',7,'KAHİRE LAGOS RABAT NAİROBİ TUNUS DAKAR','','hv'],
     ['Liman Şehirleri',7,'TRABZON MERSİN CENOVA HAMBURG MARSİLYA LİZBON','','hv'],
-    ['Tarihi Şehirler',7,'EFES TRUVA PETRA BABİL KARTACA POMPEİ','','hv'],
-    ['Ada ve Turizm Şehirleri',7,'BALİ GİRİT MALTA KAPRİ ANTALYA BODRUM','','hv']
+    ['Tarihi Şehirler',7,'EFES TRUVA SPARTA BABİL BERGAMA KUDÜS','','hv'],
+    ['Turizm Şehirleri',7,'BALİ MALTA ANTALYA BODRUM MARMARİS FETHİYE','','hv']
   ]],
   ['El Aletleri', '#10b981', [
     ['Temel El Aletleri',6,'ÇEKİÇ PENSE KESKİ RENDE MATKAP','','hv'],
@@ -3646,7 +3655,7 @@ const GROUPS = [
     ['Bahçe Aletleri',6,'KÜREK KAZMA TIRMIK ÇAPA HORTUM','','hv'],
     ['Ölçü Aletleri',7,'METRE CETVEL MASTAR PERGEL KUMPAS GONYE TERAZİ','','hv'],
     ['Marangoz Aletleri',7,'TESTERE ZIMPARA MENGENE PUNTA TORNA KALEM ÇİVİ','','hv'],
-    ['Tesisatçı Aletleri',7,'ANAHTAR BORU MUSLUK CONTA SİFON VANA TEFLON','','hv'],
+    ['Su Tesisatçısı El Aletleri',7,'ANAHTAR BORU MUSLUK CONTA SİFON VANA TEFLON','','hv'],
     ['Elektrikçi Aletleri',7,'KABLO PRİZ SİGORTA TESTER LAMBA AMPUL RÖLE','','hv'],
     ['Boya Aletleri',7,'FIRÇA RULO SPATULA SÜNGER TİNER ASTAR','','hv'],
     ['Atölye Makineleri',7,'KAYNAK TAŞLAMA FREZE VİNÇ KRİKO PRES','','hv'],
@@ -3654,7 +3663,7 @@ const GROUPS = [
   ]],
   ['Hayvanlar', '#06b6d4', [
     ['Evcil Hayvanlar',6,'KEDİ KÖPEK İNEK KOYUN KEÇİ','','hv'],
-    ['Orman Hayvanları',6,'KURT TİLKİ GEYİK DOMUZ PORSUK','','hv'],
+    ['Orman Hayvanları',6,'KURT TİLKİ GEYİK AYI PORSUK','','hv'],
     ['Kuşlar',6,'KARTAL BAYKUŞ SERÇE LEYLEK KUĞU','','hv'],
     ['Vahşi Hayvanlar',7,'ASLAN ZEBRA ZÜRAFA ÇİTA PANTER LEOPAR BABUN','','hv'],
     ['Deniz Hayvanları',7,'BALİNA YUNUS AHTAPOT KARİDES MİDYE YENGEÇ ISTAKOZ','','hv'],
@@ -3662,7 +3671,7 @@ const GROUPS = [
     ['Sürüngenler',7,'YILAN TİMSAH KOBRA İGUANA KAMELYON PİTON GEKO','','hv'],
     ['Hayvan Yavruları',7,'KUZU OĞLAK DANA CIVCIV KULUN BUZAĞI','','hv'],
     ['Hayvan Yuvaları',7,'KOVAN YUVA MAĞARA AHIR KÜMES AĞIL','','hv'],
-    ['Çiftlik Hayvanları',7,'EŞEK KATIR TAVŞAN MANDA DEVE ÖKÜZ','','hv']
+    ['Çiftlik Hayvanları',7,'EŞEK KATIR HOROZ MANDA DEVE ÖKÜZ','','hv']
   ]],
   ['Yiyecek ve İçecekler', '#f59e0b', [
     ['Meyveler',6,'ELMA ARMUT ÇİLEK KİRAZ ERİK','','hv'],
@@ -3674,7 +3683,7 @@ const GROUPS = [
     ['Fast Food',7,'PİZZA BURGER SANDVİÇ MAKARNA PATATES TOST NUGGET','','hv'],
     ['Kuruyemişler',7,'FINDIK BADEM FISTIK CEVİZ KESTANE LEBLEBİ','','hv'],
     ['Baharatlar',7,'KEKİK NANE KİMYON SUMAK TARÇIN KARANFİL','','hv'],
-    ['Dünya Mutfağı',7,'SUŞİ TACO PAELLA RAMEN FALAFEL GYROS','','hv']
+    ['Dünya Mutfağı',7,'SUŞİ TACO RAMEN LAZANYA KROASAN TİRAMİSU','','hv']
   ]],
   ['Meslekler', '#f97316', [
     ['Sağlık Meslekleri',6,'DOKTOR ECZACI DİŞÇİ CERRAH TABİP','','hv'],
@@ -3832,10 +3841,10 @@ const INFO = [
    Bölüm 1-3: sadece yatay/dikey, gizli kelime yok. Bölüm 4+: çapraz, tersten okuma ve gizli kelimeler artar.
    Bölüm 10 en zor: 5 kelime gizli, 8 yön. Izgara en fazla 8x8, kelimeler en fazla 8 harf. */
 const FIXED_LEVEL_WORDS = [
-  [['ANKARA BURSA ADANA İZMİR KONYA',6,'hv',''], ['SİVAS RİZE ORDU BOLU ELAZIĞ',6,'hv',''], ['ROMA PARİS VİYANA BERLİN LONDRA ATİNA',7,'hv',''], ['MİLANO PRAG PORTO LYON OSLO NAPOLİ SEVİLLA',7,'easy','NAPOLİ'], ['TOKYO PEKİN SEUL DUBAİ BAKÜ DELHİ BANGKOK',8,'easy','BANGKOK DELHİ'], ['MİAMİ BOSTON LİMA DALLAS HAVANA ŞİKAGO BOGOTA',7,'medium','BOSTON DALLAS HAVANA'], ['KAHİRE LAGOS SİDNEY RABAT NAİROBİ PERTH TUNUS',8,'medium','SİDNEY NAİROBİ KAHİRE'], ['TRABZON MERSİN CENOVA HAMBURG MARSİLYA LİZBON',8,'medium','TRABZON HAMBURG LİZBON'], ['EFES TRUVA PETRA BABİL KARTACA POMPEİ',8,'medium','KARTACA POMPEİ BABİL'], ['BALİ GİRİT MALTA KAPRİ ANTALYA BODRUM',8,'medium','ANTALYA BODRUM GİRİT']],
+  [['ANKARA BURSA ADANA İZMİR KONYA',6,'hv',''], ['SİVAS RİZE ORDU BOLU ELAZIĞ',6,'hv',''], ['ROMA PARİS VİYANA BERLİN LONDRA ATİNA',7,'hv',''], ['MİLANO PRAG PORTO LYON OSLO NAPOLİ SEVİLLA',7,'easy','NAPOLİ'], ['TOKYO PEKİN SEUL DUBAİ BAKÜ DELHİ BANGKOK',8,'easy','BANGKOK DELHİ'], ['MİAMİ BOSTON LİMA DALLAS HAVANA ŞİKAGO BOGOTA',7,'medium','BOSTON DALLAS HAVANA'], ['KAHİRE LAGOS RABAT NAİROBİ TUNUS DAKAR',8,'medium','KAHİRE NAİROBİ DAKAR'], ['TRABZON MERSİN CENOVA HAMBURG MARSİLYA LİZBON',8,'medium','TRABZON HAMBURG LİZBON'], ['EFES TRUVA SPARTA BABİL BERGAMA KUDÜS',8,'medium','SPARTA BABİL BERGAMA'], ['BALİ MALTA ANTALYA BODRUM MARMARİS FETHİYE',8,'medium','ANTALYA BODRUM MARMARİS']],
   [['ÇEKİÇ PENSE KESKİ RENDE MATKAP',6,'hv',''], ['BIÇAK MAKAS BALTA SATIR KESER',6,'hv',''], ['KÜREK KAZMA TIRMIK ÇAPA HORTUM',6,'hv',''], ['METRE CETVEL MASTAR PERGEL KUMPAS GONYE TERAZİ',7,'easy','TERAZİ'], ['TESTERE ZIMPARA MENGENE PUNTA TORNA KALEM ÇİVİ',8,'easy','MENGENE ZIMPARA'], ['ANAHTAR BORU MUSLUK CONTA SİFON VANA TEFLON',7,'medium','ANAHTAR MUSLUK TEFLON'], ['KABLO PRİZ SİGORTA TESTER LAMBA AMPUL RÖLE',8,'medium','SİGORTA TESTER AMPUL'], ['FIRÇA RULO SPATULA SÜNGER TİNER ASTAR',8,'medium','SPATULA SÜNGER'], ['KAYNAK TAŞLAMA FREZE VİNÇ KRİKO PRES',8,'medium','TAŞLAMA KAYNAK'], ['KEPÇE SÜZGEÇ AÇACAK TENCERE TAVA ÇATAL',8,'medium','SÜZGEÇ AÇACAK TENCERE']],
-  [['KEDİ KÖPEK İNEK KOYUN KEÇİ',6,'hv',''], ['KURT TİLKİ GEYİK DOMUZ PORSUK',6,'hv',''], ['KARTAL BAYKUŞ SERÇE LEYLEK KUĞU',6,'hv',''], ['ASLAN ZEBRA ZÜRAFA ÇİTA PANTER LEOPAR BABUN',7,'easy','ASLAN'], ['BALİNA YUNUS AHTAPOT KARİDES MİDYE YENGEÇ ISTAKOZ',8,'easy','BALİNA YUNUS'], ['KARINCA KELEBEK ÖRÜMCEK SİNEK TIRTIL CIRCIR PİRE',7,'medium','KARINCA KELEBEK ÖRÜMCEK'], ['YILAN TİMSAH KOBRA İGUANA KAMELYON PİTON GEKO',8,'medium','YILAN TİMSAH KOBRA'], ['KUZU OĞLAK DANA CIVCIV KULUN BUZAĞI',8,'medium','KUZU OĞLAK DANA'], ['KOVAN YUVA MAĞARA AHIR KÜMES AĞIL',8,'medium','KOVAN YUVA MAĞARA'], ['EŞEK KATIR TAVŞAN MANDA DEVE ÖKÜZ',8,'medium','EŞEK KATIR TAVŞAN']],
-  [['ELMA ARMUT ÇİLEK KİRAZ ERİK',6,'hv',''], ['HAVUÇ BİBER SOĞAN KABAK MARUL',6,'hv',''], ['KAHVE AYRAN SALEP ŞERBET BOZA',6,'hv',''], ['BAKLAVA KÜNEFE SÜTLAÇ LOKUM HALVA KADAYIF REVANİ',7,'easy','BAKLAVA'], ['PEYNİR ZEYTİN REÇEL TEREYAĞ YUMURTA SUCUK SİMİT',8,'easy','PEYNİR ZEYTİN'], ['KEBAP DÖNER PİDE MANTI KÖFTE ÇORBA PİLAV',7,'medium','KEBAP DÖNER PİDE'], ['PİZZA BURGER SANDVİÇ MAKARNA PATATES TOST NUGGET',8,'medium','PİZZA BURGER SANDVİÇ'], ['FINDIK BADEM FISTIK CEVİZ KESTANE LEBLEBİ',8,'medium','FINDIK BADEM FISTIK'], ['KEKİK NANE KİMYON SUMAK TARÇIN KARANFİL',8,'medium','KEKİK NANE KİMYON'], ['SUŞİ TACO PAELLA RAMEN FALAFEL GYROS',8,'medium','SUŞİ TACO PAELLA']],
+  [['KEDİ KÖPEK İNEK KOYUN KEÇİ',6,'hv',''], ['KURT TİLKİ GEYİK AYI PORSUK',6,'hv',''], ['KARTAL BAYKUŞ SERÇE LEYLEK KUĞU',6,'hv',''], ['ASLAN ZEBRA ZÜRAFA ÇİTA PANTER LEOPAR BABUN',7,'easy','ASLAN'], ['BALİNA YUNUS AHTAPOT KARİDES MİDYE YENGEÇ ISTAKOZ',8,'easy','BALİNA YUNUS'], ['KARINCA KELEBEK ÖRÜMCEK SİNEK TIRTIL CIRCIR PİRE',7,'medium','KARINCA KELEBEK ÖRÜMCEK'], ['YILAN TİMSAH KOBRA İGUANA KAMELYON PİTON GEKO',8,'medium','YILAN TİMSAH KOBRA'], ['KUZU OĞLAK DANA CIVCIV KULUN BUZAĞI',8,'medium','KUZU OĞLAK DANA'], ['KOVAN YUVA MAĞARA AHIR KÜMES AĞIL',8,'medium','KOVAN YUVA MAĞARA'], ['EŞEK KATIR HOROZ MANDA DEVE ÖKÜZ',8,'medium','EŞEK KATIR HOROZ']],
+  [['ELMA ARMUT ÇİLEK KİRAZ ERİK',6,'hv',''], ['HAVUÇ BİBER SOĞAN KABAK MARUL',6,'hv',''], ['KAHVE AYRAN SALEP ŞERBET BOZA',6,'hv',''], ['BAKLAVA KÜNEFE SÜTLAÇ LOKUM HALVA KADAYIF REVANİ',7,'easy','BAKLAVA'], ['PEYNİR ZEYTİN REÇEL TEREYAĞ YUMURTA SUCUK SİMİT',8,'easy','PEYNİR ZEYTİN'], ['KEBAP DÖNER PİDE MANTI KÖFTE ÇORBA PİLAV',7,'medium','KEBAP DÖNER PİDE'], ['PİZZA BURGER SANDVİÇ MAKARNA PATATES TOST NUGGET',8,'medium','PİZZA BURGER SANDVİÇ'], ['FINDIK BADEM FISTIK CEVİZ KESTANE LEBLEBİ',8,'medium','FINDIK BADEM FISTIK'], ['KEKİK NANE KİMYON SUMAK TARÇIN KARANFİL',8,'medium','KEKİK NANE KİMYON'], ['SUŞİ TACO RAMEN LAZANYA KROASAN TİRAMİSU',8,'medium','SUŞİ TACO RAMEN']],
   [['DOKTOR ECZACI DİŞÇİ CERRAH TABİP',6,'hv',''], ['HAKİM AVUKAT SAVCI NOTER HOCA',6,'hv',''], ['BERBER TERZİ KASAP BAKKAL MANAV',6,'hv',''], ['ŞOFÖR PİLOT KAPTAN KURYE TAKSİCİ DENİZCİ HOSTES',7,'easy','ŞOFÖR'], ['POLİS ASKER JANDARMA BEKÇİ GARDİYAN KOMUTAN DEDEKTİF',8,'easy','POLİS ASKER'], ['RESSAM OYUNCU YAZAR ŞAİR ŞARKICI DANSÇI MİMAR',7,'medium','RESSAM OYUNCU YAZAR'], ['MÜHENDİS KİMYAGER FİZİKÇİ ASTRONOT PROFESÖR BİLİMCİ BİYOLOG',8,'medium','MÜHENDİS KİMYAGER FİZİKÇİ'], ['AŞÇI GARSON PASTACI FIRINCI ŞEKERCİ SÜTÇÜ',8,'medium','AŞÇI GARSON PASTACI'], ['POSTACI KAPICI ÇİFTÇİ BALIKÇI ÇOBAN ARICI',8,'medium','POSTACI KAPICI ÇİFTÇİ'], ['GAZETECİ SPİKER MUHABİR EDİTÖR YAYINCI SUNUCU',8,'medium','GAZETECİ SPİKER MUHABİR']],
   [['FUTBOL RAGBİ KRİKET HOKEY BASKET',6,'hv',''], ['YÜZME YELKEN DALIŞ KANO SÖRF',6,'hv',''], ['BOKS GÜREŞ JUDO KARATE KUNGFU',6,'hv',''], ['KOŞU ATLAMA GÜLLE CİRİT DİSK MARATON SPRİNT',7,'easy','KOŞU'], ['OFSAYT PENALTI KORNER HAKEM KALECİ FAUL SAHA',8,'easy','OFSAYT PENALTI'], ['RAKET FİLE ELDİVEN KASK SOPA HALTER MAYO',7,'medium','RAKET FİLE ELDİVEN'], ['MADALYA KUPA ŞAMPİYON PODYUM REKOR ALEV BAYRAK',8,'medium','MADALYA KUPA ŞAMPİYON'], ['VOLEYBOL HENTBOL BEYSBOL BİSİKLET TRİATLON ESKRİM',8,'medium','VOLEYBOL HENTBOL BEYSBOL'], ['STADYUM HAVUZ SALON PİST ARENA KORT',8,'medium','STADYUM HAVUZ SALON'], ['ANTRENÖR FORMA ISINMA KAMP ESNEME DİNLENME',8,'medium','ANTRENÖR FORMA ISINMA']],
   [['GİTAR KEMAN ÇELLO KANUN TAMBUR',6,'hv',''], ['FLÜT OBUA ZURNA KAVAL DUDUK',6,'hv',''], ['DAVUL BONGO GONG DEF ZİL',6,'hv',''], ['ROCK BLUES KLASİK FOLK CAZ ARABESK METAL',7,'easy','ROCK'], ['NOTA ARMONİ TEMPO ORKESTRA MELODİ KORO SOLİST',8,'easy','NOTA ARMONİ'], ['PİYANO KLAVYE SAHNE KONSER MİKSER ALBÜM PLAK',7,'medium','PİYANO KLAVYE SAHNE'], ['BAĞLAMA KEMENÇE TULUM DARBUKA CÜMBÜŞ SAZ MEY',8,'medium','BAĞLAMA KEMENÇE TULUM'], ['SİTAR HARP MANDOLİN BANJO UKULELE KONGA',8,'medium','SİTAR HARP MANDOLİN'], ['OKTAV AKOR PERDE ALTO ŞARKI NAĞME',8,'medium','OKTAV AKOR PERDE'], ['TROMPET TROMBON KLARNET SAKSOFON TUBA FAGOT',8,'medium','TROMPET TROMBON KLARNET']],
@@ -4395,7 +4404,7 @@ function startLevel(index, def, seed){
     const n = S.level.size;
     S.found.forEach(w => {
       const chip = S.chips[w];
-      if (chip){ revealChip(w); chip.classList.add('found'); }
+      if (chip){ revealChip(w); chip.classList.add('found'); packFound(chip); }
       const pl = S.level.placements[w];
       if (!pl) return;
       const path = plCells(pl).map(q => ({ r: q.r, c: q.c }));
@@ -4701,6 +4710,17 @@ function closeIntro(){
 function cancelIntro(){ clearTimeout(introTimer); introDone = null; introEl.classList.remove('show'); }
 introEl.addEventListener('pointerdown', () => { if (Date.now() >= introReady) closeIntro(); });
 
+function setMaskedChip(chip, w){
+  const mk = document.createElement('span'); mk.className = 'mk';
+  for (let i = 0; i < w.length; i++) mk.appendChild(document.createElement('i'));
+  const b = document.createElement('b'); b.textContent = w.length; mk.appendChild(b);
+  chip.lastChild.textContent = ''; chip.lastChild.appendChild(mk);
+}
+function packFound(chip){
+  let ref = wordListEl.firstElementChild;
+  while (ref && ref !== chip && ref.classList.contains('found')) ref = ref.nextElementSibling;
+  if (ref && ref !== chip) wordListEl.insertBefore(chip, ref);
+}
 function revealChip(w){ const c = S.chips[w]; if (c && c.classList.contains('masked')){ c.classList.remove('masked'); c.lastChild.textContent = w; } }
 function renderWords(){
   wordListEl.innerHTML = ''; S.chips = {};
@@ -4711,7 +4731,7 @@ function renderWords(){
     chip.style.setProperty('--c', S.colorOf[w]);
     chip.innerHTML = '<svg class="i"><use href="#i-check"/></svg><span></span>';
     chip.lastChild.textContent = w;
-    if (isMaskedLevel(S.level) && S.level.hidden.includes(w) && !S.found.has(w)){ chip.classList.add('masked'); chip.lastChild.textContent = '....'; }
+    if (isMaskedLevel(S.level) && S.level.hidden.includes(w) && !S.found.has(w)){ chip.classList.add('masked'); setMaskedChip(chip, w); }
     wordListEl.appendChild(chip); S.chips[w] = chip;
   });
 }
@@ -5039,7 +5059,7 @@ function onFound(word, path){
   // Kelime listesindeki kelimeyi doğrudan aç; uçan etiket animasyonu yok.
   revealChip(word);
   const chip = S.chips[word];
-  if (chip){ revealChip(word); chip.classList.add('found'); }
+  if (chip){ revealChip(word); chip.classList.add('found'); packFound(chip); }
 
   if (S.found.size === S.level.words.length) {
     setTimeout(() => { if (tok === S.token) victory(); }, 500);
