@@ -2273,8 +2273,8 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
   background:linear-gradient(to top,rgba(255,248,196,.95),rgba(255,226,120,.55) 35%,rgba(255,226,120,0));clip-path:polygon(41% 0,59% 0,100% 100%,0 100%);animation:misirBeam 3.6s ease-out forwards}
 .misir-beam.b2{width:34%;background:linear-gradient(to top,#fff,rgba(255,255,255,.6) 40%,rgba(255,255,255,0));clip-path:polygon(44% 0,56% 0,100% 100%,0 100%);animation-delay:.12s}
 @keyframes misirBeam{0%{opacity:0;transform:translateX(-50%) scaleY(.05)}16%{opacity:1;transform:translateX(-50%) scaleY(1)}62%{opacity:.9;transform:translateX(-50%) scaleY(1)}100%{opacity:0;transform:translateX(-50%) scaleY(1)}}
-.misir-dust i{position:absolute;left:calc(50% + var(--x));bottom:50%;width:var(--sz);height:var(--sz);border-radius:50%;background:#fff6b0;box-shadow:0 0 6px #ffd54a,0 0 14px #fbbf24;opacity:0;animation:misirDust var(--du) ease-out var(--dl) both}
-@keyframes misirDust{0%{opacity:0;transform:translateY(0)}18%{opacity:1}100%{opacity:0;transform:translateY(-260px)}}
+.misir-dust i{position:absolute;left:calc(50% + var(--x));bottom:50%;width:var(--sz);height:var(--sz);border-radius:50%;background:var(--c,#fff6b0);box-shadow:0 0 6px var(--c,#ffd54a),0 0 14px var(--c,#fbbf24);opacity:0;animation:misirDust var(--du) ease-out var(--dl) both}
+@keyframes misirDust{0%{opacity:0;transform:translate(0,0) scale(.6)}15%{opacity:1}60%{opacity:1;transform:translate(calc(var(--dx,0px)*.6),calc(var(--dy,-260px)*.6)) scale(1.1)}100%{opacity:0;transform:translate(var(--dx,0px),var(--dy,-260px)) scale(.4)}}
 .misir-flare{position:absolute;inset:-26px;border-radius:34px;pointer-events:none;z-index:7;background:radial-gradient(ellipse at center,rgba(255,236,150,.9),rgba(251,191,36,.35) 45%,rgba(251,191,36,0) 70%);animation:misirFlare 1.3s ease-out forwards}
 @keyframes misirFlare{0%{opacity:0;transform:scale(.7)}25%{opacity:1}100%{opacity:0;transform:scale(1.12)}}
 .misir-shine{position:absolute;inset:0;border-radius:20px;overflow:hidden;pointer-events:none;z-index:8}
@@ -5718,6 +5718,16 @@ function buildMisirCard(jc, amazonDone){
   if (pending) w.dataset.pending = '1';
   return w;
 }
+let levelUp1Aud = null;
+function playLevelUp1(){
+  if (!S.sound) return;
+  try {
+    if (!levelUp1Aud){ levelUp1Aud = new Audio('levelup1.mp3'); levelUp1Aud.preload = 'auto'; }
+    levelUp1Aud.pause(); levelUp1Aud.currentTime = 0; levelUp1Aud.volume = 1;
+    const pr = levelUp1Aud.play();
+    if (pr && pr.catch) pr.catch(() => { try { SND.level(); } catch(_){} });
+  } catch(e){ try { SND.level(); } catch(_){} }
+}
 function misirUnlockAnim(w){
   if (!w || !w.isConnected) return;
   store.set('kb_misir_anim', '0'); delete w.dataset.pending;
@@ -5726,11 +5736,13 @@ function misirUnlockAnim(w){
   /* ışık hüzmesi: yukarıdan banner'a iner, altın tozlar yükselir */
   const fx = document.createElement('div'); fx.className = 'misir-fx';
   let dust = '';
-  for (let k = 0; k < 28; k++){
-    dust += '<i style="--x:' + ((Math.random() - .5) * 64).toFixed(0) + '%;--dl:' + (Math.random() * 1.7).toFixed(2) + 's;--du:' + (1.5 + Math.random() * 1.7).toFixed(2) + 's;--sz:' + (2.5 + Math.random() * 4.5).toFixed(1) + 'px"></i>';
+  const dcols = ['#22d3ee','#f0abfc','#fbbf24','#a3e635','#fb7185','#60a5fa','#ffffff','#fb923c'];
+  for (let k = 0; k < 64; k++){       // renkli uçan parçacıklar: yukarı ve yanlara savrulur
+    dust += '<i style="--x:' + ((Math.random() - .5) * 70).toFixed(0) + '%;--dl:' + (Math.random() * 1.9).toFixed(2) + 's;--du:' + (1.6 + Math.random() * 2.0).toFixed(2) + 's;--sz:' + (3 + Math.random() * 6).toFixed(1) + 'px;--c:' + dcols[k % dcols.length] + ';--dx:' + ((Math.random() - .5) * 220).toFixed(0) + 'px;--dy:-' + (140 + Math.random() * 260).toFixed(0) + 'px"></i>';
   }
   fx.innerHTML = '<div class="misir-beam"></div><div class="misir-beam b2"></div><div class="misir-dust">' + dust + '</div>';
-  w.appendChild(fx); setTimeout(() => fx.remove(), 4300);
+  w.appendChild(fx); setTimeout(() => fx.remove(), 5600);
+  playLevelUp1();   // ışık hüzmeleriyle birlikte levelup1.mp3
   const cols = ['#22d3ee','#f0abfc','#fbbf24','#a3e635','#fb7185','#60a5fa'], N = 14, orbs = [];
   for (let i = 0; i < N; i++){
     const o = document.createElement('i'), c = cols[i % cols.length], sz = (i % 3 ? 8 : 13);
@@ -5752,7 +5764,7 @@ function misirUnlockAnim(w){
     });
     if (!opened && t > 1700){
       opened = true; b.classList.remove('misir-charging'); w._setOpen(true);
-      w.classList.add('misir-burst'); buzz([60, 40, 90]); try { SND.level(); } catch(e){}
+      w.classList.add('misir-burst'); buzz([60, 40, 90]);
       const flare = document.createElement('div'); flare.className = 'misir-flare';
       const shine = document.createElement('div'); shine.className = 'misir-shine'; shine.innerHTML = '<i></i>';
       w.append(flare, shine); setTimeout(() => { flare.remove(); shine.remove(); }, 1900);
