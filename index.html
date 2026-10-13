@@ -7328,7 +7328,8 @@ let journeyMapEl = null;
 let misirMapEl = null;
 const MISIR_MAP = { w:941, h:1672,
   nodes:[[470,1468],[388,1298],[610,1205],[453,1085],[534,897],[428,747],[545,605],[414,485],[540,378],[430,277]],   /* alttan üste 10 bölüm */
-  gear:[752,63], back:[870,63], star:[150,60] };
+  gear:[752,63], back:[870,63], star:[150,60],
+  names:['Nil Nehri','Mısır Şehirleri','Firavunlar','Piramitler','Antik Meslekler','Hiyeroglif','Mumyalar','Çöl Hayvanları','Mısır Mutfağı','Hazineler'] };
 function layoutMisirMap(){
   const el = misirMapEl; if (!el) return;
   const W = el.clientWidth || innerWidth, H = el.clientHeight || innerHeight, M = MISIR_MAP;
@@ -7337,6 +7338,13 @@ function layoutMisirMap(){
   img.style.cssText = 'left:' + ox + 'px;top:' + oy + 'px;width:' + (M.w * sc) + 'px;height:' + (M.h * sc) + 'px';
   const put = (node, q, d) => { node.style.left = (q[0] * sc + ox) + 'px'; node.style.top = (q[1] * sc + oy) + 'px'; node.style.width = node.style.height = (d * sc) + 'px'; };
   el.querySelectorAll('.mm-node').forEach((b, i) => put(b, M.nodes[i], 130));
+  el.querySelectorAll('.mm-lab').forEach((l, i) => {
+    const q = M.nodes[i], right = q[0] < 500;           /* yol solda ise yazı sağa, sağda ise sola */
+    l.style.left = (q[0] * sc + ox + (right ? 82 : -82) * sc) + 'px'; l.style.top = (q[1] * sc + oy - 6 * sc) + 'px';
+    l.style.transform = 'translate(' + (right ? '0' : '-100%') + ',-50%)'; l.style.fontSize = (31 * sc) + 'px';
+  });
+  { const mk = el.querySelector('.mm-monkey'), q = M.nodes[0];      /* maymun 1. taşın solunda bekler */
+    mk.style.left = (q[0] * sc + ox) + 'px'; mk.style.top = (q[1] * sc + oy) + 'px'; mk.style.margin = '-74px 0 0 -112px'; }
   put(el.querySelector('.mm-gear'), M.gear, 100); put(el.querySelector('.mm-back'), M.back, 100);
   const sv = el.querySelector('.mm-score'); sv.style.left = (M.star[0] * sc + ox + 38 * sc) + 'px'; sv.style.top = (M.star[1] * sc + oy) + 'px'; sv.style.fontSize = (40 * sc) + 'px';
 }
@@ -7345,9 +7353,11 @@ function showMisirMap(){
   if (!misirMapEl){
     misirMapEl = document.createElement('section');
     misirMapEl.id = 'misir-map-screen'; misirMapEl.className = 'journey-map-screen misir-map-screen';
-    misirMapEl.innerHTML = '<img class="mm-img" src="harita-misir.jpg?v=1" alt="Mısır Piramitleri haritası" draggable="false">' +
+    misirMapEl.innerHTML = '<img class="mm-img" src="harita-misir.jpg?v=2" alt="Mısır Piramitleri haritası" draggable="false">' +
       '<b class="mm-score">0/10</b>' +
-      MISIR_MAP.nodes.map((_, i) => '<button type="button" class="mm-hit mm-node" data-i="' + i + '" aria-label="Mısır bölüm ' + (i + 1) + '"></button>').join('') +
+      MISIR_MAP.nodes.map((_, i) => '<div class="mm-lab' + (i ? ' lk' : '') + '"><b>' + (i + 1) + '</b>' + MISIR_MAP.names[i] + '</div>').join('') +
+      MISIR_MAP.nodes.map((_, i) => '<button type="button" class="mm-hit mm-node" data-i="' + i + '" aria-label="' + MISIR_MAP.names[i] + '"></button>').join('') +
+      '<div class="jm-monkey idle mm-monkey"><i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span></div>' +
       '<button type="button" class="mm-hit mm-gear" aria-label="Ayarlar"></button>' +
       '<button type="button" class="mm-hit mm-back" aria-label="Geri"></button>';
     (document.querySelector('.app') || document.body).appendChild(misirMapEl);
@@ -7355,6 +7365,8 @@ function showMisirMap(){
       buzz(20); toastEl.textContent = 'Yakında sorular eklenecek! 🔺'; toastEl.classList.add('show');
       clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2000);
     }));
+    { const mk = misirMapEl.querySelector('.mm-monkey'); jmMkPose(mk, 'idle'); let wt = 0;
+      mk.addEventListener('click', () => { buzz(15); jmMkPose(mk, 'wave'); clearTimeout(wt); wt = setTimeout(() => jmMkPose(mk, 'idle'), 1300); }); }
     misirMapEl.querySelector('.mm-gear').addEventListener('click', e => { e.stopPropagation(); audio(); refreshSettings(); menuEl.classList.toggle('show'); });
     misirMapEl.querySelector('.mm-back').addEventListener('click', () => { audio(); misirMapEl.classList.remove('show'); showLevels(); });
     addEventListener('resize', () => { if (misirMapEl.classList.contains('show')) layoutMisirMap(); });
@@ -9112,6 +9124,10 @@ $('bX').onclick=()=>{try{parent.postMessage('sudoku-exit','*')}catch(e){}};
 .misir-map-screen{background:#1a1205}
 .misir-map-screen .mm-img{position:absolute;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
 .misir-map-screen .mm-hit{position:absolute;transform:translate(-50%,-50%);border:0;padding:0;border-radius:50%;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent;z-index:3}
+.misir-map-screen .mm-lab{position:absolute;z-index:2;display:flex;align-items:center;gap:.35em;padding:.22em .7em .22em .3em;border-radius:999px;white-space:nowrap;pointer-events:none;color:#fff;font-weight:900;letter-spacing:.01em;background:linear-gradient(180deg,rgba(40,28,10,.88),rgba(16,10,3,.9));border:.09em solid #fbbf24;box-shadow:0 .1em .35em rgba(0,0,0,.55),0 0 .6em rgba(251,191,36,.35);text-shadow:0 .06em 0 rgba(0,0,0,.7)}
+.misir-map-screen .mm-lab b{display:inline-grid;place-items:center;min-width:1.5em;height:1.5em;border-radius:50%;background:#fbbf24;color:#3a2400;font-size:.9em;text-shadow:none}
+.misir-map-screen .mm-lab.lk{border-color:rgba(190,196,210,.75);box-shadow:0 .1em .35em rgba(0,0,0,.55);color:#e5e7eb}
+.misir-map-screen .mm-lab.lk b{background:#b6bccb;color:#262b36}
 .misir-map-screen .mm-score{position:absolute;transform:translate(-50%,-50%);color:#fff;font-weight:900;font-variant-numeric:tabular-nums;text-shadow:0 2px 0 rgba(0,0,0,.6);pointer-events:none;z-index:3;line-height:1}
 </style>
 </body>
