@@ -2273,10 +2273,16 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 @keyframes misirBurst{0%{filter:brightness(2.4) saturate(1.6);transform:scale(1.035)}100%{filter:none;transform:none}}
 /* Mısır açılışı: ışık hüzmesi + altın tozlar + parlama + parıltı geçişi */
 .misir-fx{position:absolute;inset:0;pointer-events:none;z-index:7}
-.misir-beam{position:absolute;left:50%;bottom:50%;width:78%;height:min(75vh,520px);transform:translateX(-50%) scaleY(0);transform-origin:50% 100%;opacity:0;mix-blend-mode:screen;
-  background:linear-gradient(to top,rgba(255,248,196,.95),rgba(255,226,120,.55) 35%,rgba(255,226,120,0));clip-path:polygon(41% 0,59% 0,100% 100%,0 100%);animation:misirBeam 3.6s ease-out forwards}
-.misir-beam.b2{width:34%;background:linear-gradient(to top,#fff,rgba(255,255,255,.6) 40%,rgba(255,255,255,0));clip-path:polygon(44% 0,56% 0,100% 100%,0 100%);animation-delay:.12s}
-@keyframes misirBeam{0%{opacity:0;transform:translateX(-50%) scaleY(.05)}16%{opacity:1;transform:translateX(-50%) scaleY(1)}62%{opacity:.9;transform:translateX(-50%) scaleY(1)}100%{opacity:0;transform:translateX(-50%) scaleY(1)}}
+.misir-ropes{position:absolute;left:0;bottom:50%;overflow:visible;pointer-events:none;animation:misirRopesFade 4.4s ease-out forwards}
+@keyframes misirRopesFade{0%,72%{opacity:1}100%{opacity:0}}
+.misir-ropes path{fill:none;stroke-linecap:round}
+.misir-ropes .mr-base{stroke:var(--c);stroke-width:1.6;opacity:.55;stroke-dasharray:1;stroke-dashoffset:1;animation:mrDraw 1s cubic-bezier(.2,.8,.3,1) var(--dl) forwards}
+.misir-ropes .mr-t{stroke-dasharray:.3 1.2;stroke-dashoffset:.3;animation:mrTravel 1.5s linear var(--dl) 3 both}
+.misir-ropes .mr-glow{stroke:var(--c);stroke-width:9;opacity:.8}
+.misir-ropes .mr-mid{stroke:var(--c);stroke-width:4}
+.misir-ropes .mr-core{stroke:#fff;stroke-width:1.8}
+@keyframes mrDraw{to{stroke-dashoffset:0}}
+@keyframes mrTravel{from{stroke-dashoffset:.3}to{stroke-dashoffset:-1.2}}
 .misir-dust i{position:absolute;left:calc(50% + var(--x));bottom:50%;width:var(--sz);height:var(--sz);border-radius:50%;background:var(--c,#fff6b0);box-shadow:0 0 6px var(--c,#ffd54a),0 0 14px var(--c,#fbbf24);opacity:0;animation:misirDust var(--du) ease-out var(--dl) both}
 @keyframes misirDust{0%{opacity:0;transform:translate(0,0) scale(.6)}15%{opacity:1}60%{opacity:1;transform:translate(calc(var(--dx,0px)*.6),calc(var(--dy,-260px)*.6)) scale(1.1)}100%{opacity:0;transform:translate(var(--dx,0px),var(--dy,-260px)) scale(.4)}}
 .misir-flare{position:absolute;inset:-26px;border-radius:34px;pointer-events:none;z-index:7;background:radial-gradient(ellipse at center,rgba(255,236,150,.9),rgba(251,191,36,.35) 45%,rgba(251,191,36,0) 70%);animation:misirFlare 1.3s ease-out forwards}
@@ -5785,7 +5791,22 @@ function misirUnlockAnim(w){
   for (let k = 0; k < 64; k++){       // renkli uçan parçacıklar: yukarı ve yanlara savrulur
     dust += '<i style="--x:' + ((Math.random() - .5) * 70).toFixed(0) + '%;--dl:' + (Math.random() * 1.9).toFixed(2) + 's;--du:' + (1.6 + Math.random() * 2.0).toFixed(2) + 's;--sz:' + (3 + Math.random() * 6).toFixed(1) + 'px;--c:' + dcols[k % dcols.length] + ';--dx:' + ((Math.random() - .5) * 220).toFixed(0) + 'px;--dy:-' + (140 + Math.random() * 260).toFixed(0) + 'px"></i>';
   }
-  fx.innerHTML = '<div class="misir-beam"></div><div class="misir-beam b2"></div><div class="misir-dust">' + dust + '</div>';
+  /* NEON İP: karttan yukarı fırlayan, dalgalı, parlayan neon iplikler */
+  const RW = w.clientWidth || 320, RH = Math.min(innerHeight * .7, 480), RN = 9;
+  const rcols = ['#22d3ee','#f0abfc','#fbbf24','#a3e635','#60a5fa','#fb7185','#22d3ee','#f0abfc','#fbbf24'];
+  let ropes = '';
+  for (let i = 0; i < RN; i++){
+    const f = (i - (RN - 1) / 2) / ((RN - 1) / 2);                 // -1..1
+    const x0 = RW / 2 + f * RW * .12, x1 = RW / 2 + f * RW * .42;
+    const am = (i % 2 ? 1 : -1) * (24 + (i * 13) % 34);
+    const d = 'M' + x0.toFixed(1) + ' ' + RH + ' C' + (x0 + am).toFixed(1) + ' ' + (RH * .68).toFixed(1) + ' ' + (x1 - am).toFixed(1) + ' ' + (RH * .34).toFixed(1) + ' ' + x1.toFixed(1) + ' 0';
+    const g = '--c:' + rcols[i] + ';--dl:' + (i * .09).toFixed(2) + 's';
+    ropes += '<g style="' + g + '"><path class="mr-base" pathLength="1" d="' + d + '"/>' +
+      '<path class="mr-t mr-glow" pathLength="1" filter="url(#mrBlur)" d="' + d + '"/>' +
+      '<path class="mr-t mr-mid" pathLength="1" d="' + d + '"/>' +
+      '<path class="mr-t mr-core" pathLength="1" d="' + d + '"/></g>';
+  }
+  fx.innerHTML = '<svg class="misir-ropes" width="' + RW + '" height="' + RH + '" viewBox="0 0 ' + RW + ' ' + RH + '" aria-hidden="true"><defs><filter id="mrBlur" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="4"/></filter></defs>' + ropes + '</svg><div class="misir-dust">' + dust + '</div>';
   w.appendChild(fx); setTimeout(() => fx.remove(), 5600);
   playLevelUp1();   // ışık hüzmeleriyle birlikte levelup1.mp3
   const cols = ['#22d3ee','#f0abfc','#fbbf24','#a3e635','#fb7185','#60a5fa'], N = 14, orbs = [];
