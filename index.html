@@ -3033,28 +3033,27 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
 
 /* ===== OYUN BAŞLIĞI: 3D kabarık splash, alt yazı yok ===== */
 .app.on-game #view-game .banner{position:relative;overflow:hidden;justify-content:center;margin-bottom:12px;padding:13px 14px 16px;border-radius:26px;
-  background:radial-gradient(130% 150% at 50% 0%,#d8b4fe 0%,#a855f7 30%,#7c3aed 62%,#4c1d95 100%);
+  background:radial-gradient(130% 150% at 50% 0%,#e9d5ff 0%,#c084fc 30%,#9f67f7 62%,#7c3aed 100%);
   border:3px solid #f0abfc;
   box-shadow:0 6px 0 #3b0f7a,0 10px 0 rgba(20,5,50,.55),0 18px 30px rgba(168,85,247,.55),0 0 26px rgba(217,70,239,.45),inset 0 3px 0 rgba(255,255,255,.6),inset 0 -9px 16px rgba(46,16,101,.6)}
 .app.on-game #view-game .banner::before{content:"";position:absolute;left:8px;right:8px;top:4px;height:46%;border-radius:22px 22px 46px 46%/20px 20px 26px 26px;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.05));pointer-events:none;z-index:1}
-.app.on-game #view-game .banner::after{content:"";position:absolute;top:-10%;bottom:-10%;left:-60%;width:38%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-20deg);animation:bnShine 3.8s ease-in-out infinite;pointer-events:none;z-index:3}
+.app.on-game #view-game .banner::after{display:none}
 @keyframes bnShine{0%,55%{left:-60%}100%{left:130%}}
 .app.on-game #view-game .banner.pop{animation:bnPop .55s cubic-bezier(.2,1.6,.35,1)}
 @keyframes bnPop{0%{transform:scale(.82);opacity:.2}100%{transform:scale(1);opacity:1}}
-.app.on-game #view-game .banner .game-top-title{position:relative;z-index:2;color:#fff!important;font-size:clamp(19px,6.2vw,28px)!important;font-weight:1000!important;letter-spacing:.07em!important;
-  text-shadow:0 1px 0 #ede9fe,0 2px 0 #8b5cf6,0 3px 0 #6d28d9,0 4px 0 #5b21b6,0 5px 0 #3b0764,0 9px 10px rgba(0,0,0,.5)!important}
+.app.on-game #view-game .banner .game-top-title{position:relative;z-index:2;color:#150838!important;font-size:clamp(19px,6.2vw,28px)!important;font-weight:1000!important;letter-spacing:.07em!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.55),0 0 10px rgba(255,255,255,.28)!important}
 .app.on-game #view-game .banner .game-top-title::after{display:none!important}
 
 /* ===== İPUCU SATIRI: başlık yerinde kalır, altına altın ipucu + KAPAT eklenir ===== */
 .app.on-game #view-game .banner.hint-on{flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:7px 14px 11px}
 .app.on-game #view-game .banner.hint-on .game-top-title{flex:0 0 auto!important;width:100%;font-size:13px!important;line-height:1.15!important;letter-spacing:.09em!important;opacity:.95;
-  text-shadow:0 1px 0 #6d28d9,0 2px 0 #3b0764,0 4px 5px rgba(0,0,0,.45)!important}
+  text-shadow:0 1px 0 rgba(255,255,255,.5),0 0 8px rgba(255,255,255,.25)!important}
 .hint-row{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:nowrap;max-width:100%}
 .hint-row .hint-txt{display:inline-flex;align-items:center;gap:.3em;white-space:nowrap;font-weight:1000;font-size:clamp(17px,5.2vw,24px);letter-spacing:.04em;color:#ffe066;
   text-shadow:0 2px 0 #92400e,0 3px 0 #6b2f06,0 4px 0 #3b1a04,0 7px 8px rgba(0,0,0,.5)}
 .hint-row .hb{display:inline-block;width:.62em;height:.17em;border-radius:3px;background:#e9d5ff;box-shadow:0 2px 0 #5b21b6;margin:.35em .02em 0}
-.hint-row .hint-close{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:5px 11px;border-radius:14px;font-size:12px;font-weight:1000;letter-spacing:.06em;color:#fff;cursor:pointer;
-  background:linear-gradient(180deg,#fb7185,#e11d48 60%,#be123c);border:2px solid #fecdd3;box-shadow:0 3px 0 #7f1d1d,0 6px 10px rgba(0,0,0,.4);text-shadow:0 1px 0 rgba(0,0,0,.45)}
+.hint-row .hint-close{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:32px;height:32px;padding:0;border-radius:50%;font-size:16px;line-height:1;font-weight:1000;color:#fff;cursor:pointer;background:linear-gradient(180deg,#fb7185,#e11d48 60%,#be123c);border:2px solid #fecdd3;box-shadow:0 3px 0 #7f1d1d,0 6px 10px rgba(0,0,0,.4);text-shadow:0 1px 0 rgba(0,0,0,.45)}
 </style>
 </head>
 <body>
@@ -5094,7 +5093,7 @@ $('btn-hint').addEventListener('click', () => {
     if (bn){
       const old = bn.querySelector('.hint-row'); if (old) old.remove();
       const row = document.createElement('div'); row.className = 'hint-row';
-      row.innerHTML = '<span class="hint-txt">💡 <b>' + ch[0] + '</b>' + blanks + '<b>' + ch[ch.length - 1] + '</b></span><span class="hint-close">✕ KAPAT</span>';
+      row.innerHTML = '<span class="hint-txt">💡 <b>' + ch[0] + '</b>' + blanks + '<b>' + ch[ch.length - 1] + '</b></span><span class="hint-close" aria-label="Kapat">✕</span>';
       bn.appendChild(row); bn.classList.add('hint-on');
     }
     hintPin = { w, level: S.level };
