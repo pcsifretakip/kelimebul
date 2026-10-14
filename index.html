@@ -3184,6 +3184,15 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
 #shop-ov.st .st-m-t b{display:block;font-size:15px;font-weight:1000;line-height:1.1}
 #shop-ov.st .st-m-t small{display:block;margin-top:3px;font-size:9.5px;line-height:1.3;font-weight:800;color:#efe8ff}
 
+/* joker kartları: SATIN AL butonları hep aynı hizada (açıklama kalan boşluğu doldurur) */
+#shop-ov.st .st-jk-d{flex:1 0 auto}
+/* günlük hediye butonu yerine "Daha fazlası yolda" */
+#shop-ov.st .st-gsoon{flex-direction:column;gap:0;line-height:1.15;font-size:10px;text-align:center;pointer-events:none;cursor:default}
+/* alt menü ortası: yuvarlak yerine Ana Sayfaya Dön */
+#shop-ov.st .hm-nav .st-homebtn{color:#ffe27a}
+#shop-ov.st .hm-nav .st-homebtn:before{background:radial-gradient(ellipse,rgba(255,200,40,.3),rgba(255,200,40,.04) 68%,transparent 72%)}
+#shop-ov.st .hm-nav .st-homebtn span{font-size:9.5px;line-height:1.05;text-align:center;white-space:normal}
+
 /* alt menü (ana sayfadakiyle aynı .hm-nav) */
 #shop-ov.st .st-nav{border-radius:26px 26px 0 0;z-index:5}
 #shop-ov.st .hm-nav .nav-item.on{color:#ffe27a}
@@ -6139,6 +6148,16 @@ function showAmazonIntro(cb, imgSrc, fbSrc){
 }
 
 /* ===== MISIR PİRAMİTLERİ tanıtım ekranı (resim gerekmez: tamamen çizim) ===== */
+const MI_FACTS = [
+  'Giza\'daki Büyük Piramit yaklaşık 4500 yıl önce yapıldı. 3800 yıldan uzun süre dünyanın en yüksek insan yapımı yapısı olarak kaldı!',
+  'Büyük Piramit\'te yaklaşık 2,3 milyon taş blok var. Bir bloğun ağırlığı ortalama 2,5 ton, yani koca bir araba kadar!',
+  'Piramitleri çoğunlukla ücretli, iyi beslenen ve örgütlü işçiler inşa etti. Yani sanılanın aksine köleler değil.',
+  'Piramitler ilk yapıldığında parlak beyaz kireçtaşıyla kaplıydı. Güneşte uzaktan ışıl ışıl parlardı.',
+  'Büyük Piramit, Antik Dünyanın Yedi Harikası\'ndan bugüne kadar ayakta kalabilen tek yapı.',
+  'Büyük Piramit\'in dört yüzü neredeyse kusursuzca kuzey, güney, doğu ve batıyı gösterir.',
+  'Hiyeroglifler, 1799\'da bulunan Rosetta Taşı sayesinde yüzyıllar sonra yeniden okunabildi.',
+  'Antik Mısır\'da kediler kutsal sayılırdı. Bir kediye zarar vermek çok ağır bir suçtu.'
+];
 function showMisirIntro(cb){
   if (document.querySelector('.am-intro')) return;
   const o = document.createElement('div'); o.className = 'am-intro mi-intro';
@@ -6152,12 +6171,15 @@ function showMisirIntro(cb){
     const lx = 120 + (540 - y) * 130 / 240, rx = 380 - (540 - y) * 130 / 240;
     blocks += '<line x1="' + lx.toFixed(1) + '" y1="' + y + '" x2="' + rx.toFixed(1) + '" y2="' + y + '"/>';
   });
+  const camel = dx => '<g transform="translate(' + dx + ' 0)"><ellipse cx="14" cy="548" rx="11" ry="5.5"/><ellipse cx="11" cy="542" rx="3.6" ry="4.2"/><ellipse cx="18" cy="543" rx="3" ry="3.6"/><path d="M23 546 Q29 538 30 533 L33 533 Q33 540 27 549Z"/><ellipse cx="34" cy="533" rx="4" ry="2.4"/><path d="M6 552V561M11 553V561M17 553V561M22 552V561" stroke="#1b0e05" stroke-width="1.7" fill="none"/></g>';
+  const palm = (x, y, sc) => '<g transform="translate(' + x + ' ' + y + ') scale(' + sc + ')"><path d="M-2 0 Q-8 -40 2 -78" stroke="#120904" stroke-width="5" fill="none" stroke-linecap="round"/><g fill="#0f1a08" class="mi-palm"><path d="M2 -78 Q-22 -92 -44 -70 Q-20 -82 2 -78Z"/><path d="M2 -78 Q26 -94 48 -72 Q24 -84 2 -78Z"/><path d="M2 -78 Q-14 -106 -36 -104 Q-12 -98 2 -78Z"/><path d="M2 -78 Q18 -108 40 -102 Q16 -96 2 -78Z"/><path d="M2 -78 Q-4 -112 6 -122 Q8 -100 2 -78Z"/></g></g>';
   const svg =
     '<svg viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' +
     '<defs>' +
       '<linearGradient id="miSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#070a26"/><stop offset=".38" stop-color="#2d1b66"/><stop offset=".62" stop-color="#c9532d"/><stop offset=".74" stop-color="#ffb04a"/><stop offset="1" stop-color="#3a1f0c"/></linearGradient>' +
       '<radialGradient id="miSun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6c2"/><stop offset=".35" stop-color="#ffc857" stop-opacity=".95"/><stop offset="1" stop-color="#ff8a2a" stop-opacity="0"/></radialGradient>' +
       '<linearGradient id="miRay" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff1a8" stop-opacity=".95"/><stop offset="1" stop-color="#fff1a8" stop-opacity="0"/></linearGradient>' +
+      '<linearGradient id="miNile" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffcf7a"/><stop offset=".5" stop-color="#3a8fb7"/><stop offset="1" stop-color="#1d4f7a"/></linearGradient>' +
       '<linearGradient id="miDune" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a3216"/><stop offset="1" stop-color="#1b0e05"/></linearGradient>' +
       '<filter id="miBlur"><feGaussianBlur stdDeviation="3"/></filter>' +
     '</defs>' +
@@ -6172,16 +6194,34 @@ function showMisirIntro(cb){
       '<line x1="250" y1="300" x2="250" y2="540" stroke="rgba(255,235,170,.6)" stroke-width="1.2"/>' +
       '<circle class="mi-cap" cx="250" cy="302" r="7" fill="#fff4b8" filter="url(#miBlur)"/></g>' +
     '<path d="M0 548 Q90 520 190 548 T400 540 L400 800 L0 800Z" fill="url(#miDune)"/>' +
+    /* Nil Nehri: gün batımını yansıtan kıvrımlı şerit */
+    '<path d="M0 562 Q100 552 200 566 T400 560 L400 590 Q300 600 200 588 T0 594Z" fill="url(#miNile)"/>' +
+    '<g class="mi-nile" fill="none" stroke="#fff3c4" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="14 26"><path d="M20 572 Q110 566 200 576 T380 570"/><path d="M0 583 Q100 578 210 585 T400 580"/></g>' +
+    /* deve kervanı: dünelerin arkasında yavaşça yürür */
+    '<g class="mi-cam" fill="#1b0e05">' + camel(0) + camel(46) + camel(92) + '</g>' +
     '<path d="M0 610 Q110 570 230 612 T400 596 L400 800 L0 800Z" fill="#26140a"/>' +
+    palm(34, 616, 1.1) + palm(372, 606, .95) + palm(64, 622, .7) +
     '</svg>';
   o.innerHTML = '<div class="mi-art">' + svg + '</div>' +
     '<div class="mi-txt"><small>FİRAVUNLARIN DİYARI</small><h2>PİRAMİTLERİN<br>SIRRI</h2><p>4500 yıllık gizemi kelimelerle çöz!</p></div>' +
+    '<div class="mi-fact" role="note"><b>🔺 BİLİYOR MUYDUN?</b><p></p><div class="mi-dots">' + MI_FACTS.map(() => '<i></i>').join('') + '</div></div>' +
     '<div class="mi-chips"><span>🔺 10 BÖLÜM</span><span>✨ 100 SEVİYE</span></div>' +
     '<button type="button" class="am-skip mi-skip"><i class="am-ring"></i><i class="am-ring"></i><i class="am-ring"></i>' +
     '<span><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><polygon points="12,3 22,20 2,20" fill="#3a2100"/><polygon points="12,3 22,20 12,20" fill="#7a4b0c"/></svg>GEÇ</span></button>';
-  let t = 0, done = false;
+  let t = 0, done = false, fi = 0, ft = 0;
+  const fp = o.querySelector('.mi-fact p'), fd = o.querySelectorAll('.mi-dots i');
+  const showFact = n => {
+    fi = (n + MI_FACTS.length) % MI_FACTS.length;
+    fp.classList.remove('in'); void fp.offsetWidth;
+    fp.textContent = MI_FACTS[fi]; fp.classList.add('in');
+    fd.forEach((d, k) => d.classList.toggle('on', k === fi));
+  };
+  const startFacts = () => { clearInterval(ft); ft = setInterval(() => showFact(fi + 1), 6500); };
+  showFact(0); startFacts();
+  o.querySelector('.mi-fact').addEventListener('click', () => { showFact(fi + 1); startFacts(); });
+  /* Otomatik geçiş YOK: yalnızca GEÇ'e basınca kapanır */
   const finish = () => {
-    if (done) return; done = true; clearTimeout(t);
+    if (done) return; done = true; clearTimeout(t); clearInterval(ft);
     cb();
     o.classList.remove('on'); setTimeout(() => o.remove(), 300);
   };
@@ -8499,7 +8539,7 @@ function shopRender(bumpId){
     +'</article>'
     +'<article class="st-gift">'+art('gift','st-gift-art')
      +'<h3 class="st-gold">GÜNLÜK<br>HEDİYE</h3><p>Her gün bir kez ücretsiz ödülünü al!</p>'
-     +'<button class="st-gbtn'+(giftReady?'':' done')+'" type="button" data-act="gift">'+(giftReady?giftIc+'HEDİYENİ AL':'YARIN GEL')+'</button>'
+     +'<div class="st-gbtn done st-gsoon">DAHA FAZLASI<br>YOLDA!</div>'
     +'</article>'
    +'</section>'
    +'<button class="st-more" type="button" data-act="more">'+art('ban_l','st-m-l')
@@ -8509,7 +8549,7 @@ function shopRender(bumpId){
   +'<nav class="hm-nav st-nav" aria-label="Mağaza menüsü">'
    +'<button class="nav-item on" type="button" data-go="shop" aria-label="Mağaza"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg><span>Mağaza</span></button>'
    +'<button class="nav-item" type="button" data-go="tasks" aria-label="Görevler"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 10l1.5 1.5L13.5 8.5M9 16h6"/></svg><span>Görevler</span></button>'
-   +'<button class="nav-item center" type="button" data-go="wheel" aria-label="Şans Çarkı"><span class="nav-orb"><img src="sans.png" alt="" draggable="false"></span><span class="st-wv">'+shopWheelLabel()+'</span></button>'
+   +'<button class="nav-item st-homebtn" type="button" data-go="home" aria-label="Ana sayfaya dön"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg><span>Ana Sayfaya Dön</span></button>'
    +'<button class="nav-item" type="button" data-go="lb" aria-label="Liderlik tablosu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M12 14v4M8 20h8"/></svg><span>Liderlik</span></button>'
    +'<button class="nav-item" type="button" data-go="settings" aria-label="Ayarlar"><svg class="i" style="fill:currentColor;stroke:none" aria-hidden="true"><use href="#i-gear"/></svg><span>Ayarlar</span></button>'
   +'</nav>'
@@ -8539,6 +8579,7 @@ function shopAct(a){
  else if(a==='more')stToast('Çok yakında!');
 }
 function shopGo(g){
+ if(g==='home'){shopClose();return;}
  if(g==='shop'){const o=$('shop-ov'),s=o&&o.querySelector('.st-scroll');if(s)s.scrollTo({top:0,behavior:'smooth'});return;}
  const map={tasks:'nav-tasks',wheel:'nav-wheel',lb:'lb',settings:'btn-settings-home'},b=$(map[g]);
  shopClose();
@@ -9612,6 +9653,21 @@ $('bX').onclick=()=>{try{parent.postMessage('sudoku-exit','*')}catch(e){}};
 .mi-chips span{padding:7px 14px;border-radius:999px;font-weight:900;font-size:13px;letter-spacing:.06em;color:#ffe9a8;background:rgba(20,10,2,.62);border:1.5px solid rgba(255,214,110,.7);box-shadow:0 2px 8px rgba(0,0,0,.5)}
 .mi-skip{background:linear-gradient(180deg,#ffeeb4,#ecb44e 55%,#c4862a)!important;box-shadow:0 5px 0 #7a4b0c,0 8px 18px rgba(0,0,0,.5)!important;color:#3a2100!important}
 .mi-skip span{display:inline-flex;align-items:center;gap:8px}
+.mi-fact{position:absolute;left:50%;bottom:calc(158px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(92%,420px);box-sizing:border-box;padding:11px 16px 10px;border-radius:18px;text-align:center;color:#fff4d6;background:rgba(20,10,2,.72);border:1.5px solid rgba(255,214,110,.75);box-shadow:0 4px 16px rgba(0,0,0,.55),0 0 18px rgba(255,190,60,.18);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);cursor:pointer;animation:miRise .9s ease-out .5s both}
+.mi-fact b{display:block;font-size:12px;letter-spacing:.14em;font-weight:1000;color:#ffd45a}
+.mi-fact p{margin:6px 0 0;min-height:4.2em;font-size:clamp(13px,3.7vw,15.5px);font-weight:800;line-height:1.4;color:#fff}
+.mi-fact p.in{animation:miFactIn .55s ease-out both}
+@keyframes miFactIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.mi-dots{display:flex;justify-content:center;gap:5px;margin-top:7px}
+.mi-dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,226,122,.3);transition:background .3s,transform .3s}
+.mi-dots i.on{background:#ffd45a;transform:scale(1.35)}
+.mi-nile path{animation:miNile 3s linear infinite}
+@keyframes miNile{to{stroke-dashoffset:-80}}
+.mi-cam{animation:miCam 46s linear infinite}
+@keyframes miCam{from{transform:translateX(-150px)}to{transform:translateX(430px)}}
+.mi-palm{transform-box:fill-box;transform-origin:50% 100%;animation:miPalm 3.6s ease-in-out infinite alternate}
+@keyframes miPalm{from{rotate:-2deg}to{rotate:2.5deg}}
+@media(prefers-reduced-motion:reduce){.mi-cam,.mi-palm,.mi-nile path{animation:none}}
 .misir-map-screen video.mm-vid{object-fit:cover;background:#1a1205;display:block}
 .misir-map-screen .mm-hit{touch-action:manipulation}
 .misir-map-screen .mm-img{position:absolute;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
