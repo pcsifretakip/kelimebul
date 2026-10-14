@@ -5891,7 +5891,7 @@ function buildMisirCard(jc, amazonDone){
   b.style.setProperty('--neon', jc.color); b.dataset.bn = jc.key;
   const setOpen = open => {
     b.className = 'journey-card has-bn ' + (open ? 'misir-open' : 'locked');
-    b.innerHTML = '<span class="journey-num">' + (open ? '🔺' : '🔒') + '</span><span class="journey-info"><span class="journey-name">' + jc.name + '</span></span><span class="journey-state">' + (open ? '<span class="play">YENİ</span>' : '<span class="lock-label2"><svg class="i"><use href="#i-lock"/></svg>KİLİTLİ</span>') + '</span>';
+    b.innerHTML = '<span class="journey-num">' + (open ? '2' : '🔒') + '</span><span class="journey-info"><span class="journey-name">' + jc.name + '</span></span><span class="journey-state">' + (open ? '<span class="play">YENİ</span>' : '<span class="lock-label2"><svg class="i"><use href="#i-lock"/></svg>KİLİTLİ</span>') + '</span>';
   };
   setOpen(!!amazonDone && !pending);            // animasyon bekliyorsa önce kilitli görünür
   /* banner açılır ama içine girilmez (Mısır oyunu henüz yok) */
@@ -7690,7 +7690,7 @@ let ambCur = '';
 function ambWantTrack(){
   if (!S.sound || document.hidden) return '';
   if (journeyMapEl && journeyMapEl.classList.contains('show')) return 'amazon.mp3?v=2';
-  if (misirMapEl && misirMapEl.classList.contains('show')) return 'misir.mp3?v=1';   /* Mısır haritası müziği */
+  if (misirMapEl && misirMapEl.classList.contains('show')) return 'piramitmusic.mp3?v=1';   /* Mısır haritası müziği */
   return '';
 }
 function ambSync(){
