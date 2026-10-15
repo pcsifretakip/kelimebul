@@ -3421,6 +3421,7 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
       <div id="live-selection" class="live-selection" aria-live="polite">
         <span id="live-selection-text"></span>
       </div>
+      <div class="gt-wrap" aria-hidden="true"><div class="gt" id="gt"><svg class="gt-ic" viewBox="0 0 24 24"><circle class="gt-face" cx="12" cy="13.5" r="8"/><rect class="gt-btn" x="9.5" y="1.6" width="5" height="2.6" rx="1"/><line class="gt-hand" x1="12" y1="13.5" x2="12" y2="8"/><circle class="gt-pin" cx="12" cy="13.5" r="1.3"/></svg><b id="gt-t">00:00</b></div></div>
 
       <div class="board-wrap">
         <div id="grid-container" class="grid">
@@ -3615,7 +3616,7 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
   <div class="help" id="lbbox">
     <div class="hcard lb-card">
       <button class="lb-close-btn" id="lb-close" type="button" aria-label="Kapat">✕</button>
-      <div class="lb-hero"><span class="lb-orbit">🏆</span><div class="lb-kicker">SÖZCÜK AVI ARENASI</div><h3>LİDERLİK</h3><p>En iyi oyuncular burada buluşuyor</p><div class="lb-live"><i></i> CANLI SIRALAMA</div></div>
+      <div class="lb-hero"><span class="lb-orbit">🏆</span><div class="lb-kicker">SÖZCÜK AVI ARENASI</div><h3>LİDERLİK</h3><p>Sıralama: toplam yıldız, eşitlikte ortalama süre</p><div class="lb-live"><i></i> CANLI SIRALAMA</div></div>
       <div class="lb-section"><div class="lb-section-title"><span>⭐</span> EN İYİ OYUNCULAR <small>İLK 10</small></div><div id="lb-full"></div></div>
     </div>
   </div>
@@ -4663,7 +4664,7 @@ function startLevel(index, def, seed){
   // tanıtım/açıklama ekranı kaldırıldı: oyun doğrudan başlar
   requestAnimationFrame(() => requestAnimationFrame(() => {
     if (tok !== S.token) return;
-    const go = () => { if (tok !== S.token) return; S.playing = true; startTimer(); measure(); };
+    const go = () => { if (tok !== S.token) return; S.playing = true; startTimer(); tmBegin(def ? null : index); measure(); };
     if (isMaskedLevel(S.level) && !store.get('kb_hid_tut')) showHiddenTutorial(go);
     else go();
   }));
@@ -5228,7 +5229,7 @@ const endSel = e => {
     cap.remove(); toast('Bu kelime zaten bankada.');
   }
   else if (path.length > 1){
-    S.streak = 0;
+    S.streak = 0; S.mistakes = (S.mistakes || 0) + 1; pmetaSave();
     cap.classList.remove('drag'); cap.classList.add('bad'); SND.wrong(); buzz(25);
     setTimeout(() => cap.classList.add('out'), 220);
     setTimeout(() => cap.remove(), 480);
@@ -5336,6 +5337,7 @@ $('btn-hint').addEventListener('click', () => {
   if (pool.length > 1 && S.lastHintWord) { const p2 = pool.filter(w => w !== S.lastHintWord); if (p2.length) pool = p2; }
   const w = pool[Math.floor(Math.random() * pool.length)];
   if (!shopTryUse('hint',HINT_COST)) return;
+  S.hintN = (S.hintN || 0) + 1; pmetaSave();
   taskRecord('hint'); SND.hint();
   S.lastHintWord = w;
   clearHintCell();
@@ -5447,6 +5449,7 @@ function useMagnet(){
   const left = L.words.filter(w => !S.found.has(w) && L.placements[w]);
   if (!left.length) return;
   if (!shopTryUse('magnet',MAGNET_COST)) return;
+  S.hintN = (S.hintN || 0) + 1; pmetaSave();
   try { if (S.sound){ const ma = new Audio('miknatis.mp3'); ma.volume = 1; const pr = ma.play(); if (pr && pr.catch) pr.catch(() => SND.hint()); } } catch(e){ SND.hint(); }
   const word = left[Math.floor(Math.random() * left.length)];
   const path = plCells(L.placements[word]).map(q => ({ r: q.r, c: q.c }));
@@ -5593,6 +5596,7 @@ function useBomb(){
   S.cells.forEach((el, i) => { if (!used.has(i) && !el.classList.contains('dim')) cand.push(i); });
   if (!cand.length){ toast('Patlayacak harf kalmadı'); return; }
   if (!shopTryUse('bomb',BOMB_COST)) return;
+  S.hintN = (S.hintN || 0) + 1; pmetaSave();
   S.magBusy = true;
   const tok = S.token;
   const gr = gridEl.getBoundingClientRect();
@@ -5687,11 +5691,47 @@ renderBank();
 /* =====================================================
    ZAMANLAYICI + ZAFER
    ===================================================== */
+/* ===== GERÇEK SÜRE (ekranda görünmez) + YILDIZ KURALI ===== */
+const STAR_MISTAKE_FREE = 3;   /* bölümde bu kadar yanlış kaydırmaya kadar "hatasız" sayılır */
+const TIME_CAP = 600;          /* bir bölüm için sayılan en fazla süre (sn) */
+let gtLast = -1;
+let PMETA = {}; try { PMETA = JSON.parse(store.get('cidahl_doga_pmeta') || '{}') || {}; } catch(e){ PMETA = {}; }
+const TM = { key: null, acc: 0, run: 0 };
+function tmElapsedMs(){ return TM.acc + (TM.run ? Date.now() - TM.run : 0); }
+function tmPause(){ if (TM.run){ TM.acc += Date.now() - TM.run; TM.run = 0; } }
+function tmResume(){ if (TM.key != null && !TM.run) TM.run = Date.now(); }
+function pmetaSave(){
+  if (TM.key == null) return;
+  PMETA[TM.key] = { t: Math.round(tmElapsedMs() / 1000), m: S.mistakes || 0, h: S.hintN || 0 };
+  try { store.set('cidahl_doga_pmeta', JSON.stringify(PMETA)); } catch(e){}
+}
+function tmBegin(key){
+  TM.key = key; TM.acc = 0; TM.run = 0; S.mistakes = 0; S.hintN = 0; gtLast = -1;
+  if (key != null){
+    const p = PMETA[key];
+    if (p){ TM.acc = (p.t || 0) * 1000; S.mistakes = p.m || 0; S.hintN = p.h || 0; }
+    TM.run = Date.now();
+  }
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden){ tmPause(); pmetaSave(); } else if (S.playing) tmResume(); });
+setInterval(() => {
+  const g = document.getElementById('gt'); if (!g) return;
+  const on = !!(S.playing && TM.key != null && !R);
+  g.classList.toggle('on', on);
+  if (!on) return;
+  const sec = Math.floor(tmElapsedMs() / 1000);
+  if (sec === gtLast) return; gtLast = sec;
+  document.getElementById('gt-t').textContent = fmt(sec);
+  g.classList.toggle('mid', sec >= 60 && sec < 120);
+  g.classList.toggle('late', sec >= 120);
+  if (sec > 0 && sec % 60 === 0){ g.classList.remove('minute'); void g.offsetWidth; g.classList.add('minute'); setTimeout(() => g.classList.remove('minute'), 750); }
+}, 250);
+window.addEventListener('pagehide', () => { tmPause(); pmetaSave(); });
 function startTimer(){
   stopTimer();
   S.seconds = 0;   /* süre kaldırıldı: sayaç çalışmaz */
 }
-function stopTimer(){ if (S.timer){ clearInterval(S.timer); S.timer = null; } }
+function stopTimer(){ if (S.timer){ clearInterval(S.timer); S.timer = null; } tmPause(); pmetaSave(); }
 document.addEventListener('visibilitychange', () => {
   if (document.hidden){ if (S.timer){ stopTimer(); S.resumeTimer = true; } }
   else if (S.resumeTimer && S.playing){
@@ -5722,9 +5762,12 @@ function victory(){
   if (!prev) taskRecordMany(['level','levels3']);   // bölüm bitirme ödülü (ilk bitirişte)
   const reward = prev ? 0 : bonus;   // kelime coinleri oynarken verildi; burada yalnız gösterim
   if (bonus){ S.coins += bonus; } updateCoins();
-  const elapsed = S.level.mode === 'time' ? (S.level.timeLimit - S.seconds) : S.seconds;
+  tmPause();
+  const elapsed = Math.max(1, Math.min(TIME_CAP, Math.round(tmElapsedMs() / 1000)));
   const per = elapsed / S.level.words.length;
-  const stars = 3;   /* süre kalktığı için bölüm bitince tam yıldız */
+  /* yıldız: hata (STAR_MISTAKE_FREE'den fazla yanlış kaydırma) ve ipucu/mıknatıs kullanımı birer yıldız düşürür, en az 1 */
+  const stars = Math.max(1, 3 - ((S.mistakes || 0) > STAR_MISTAKE_FREE ? 1 : 0) - ((S.hintN || 0) > 0 ? 1 : 0));
+  delete PMETA[idx]; TM.key = null; try { store.set('cidahl_doga_pmeta', JSON.stringify(PMETA)); } catch(e){}
   S.done[idx] = {
     stars: Math.max(stars, prev ? prev.stars : 0),
     time: prev && prev.time ? Math.min(prev.time, elapsed) : elapsed,
@@ -7114,6 +7157,13 @@ function progLabel(prog){
   const ch = Math.min(GROUPS.length - 1, Math.floor(prog / CHAPTER_SIZE)), lv = (prog % CHAPTER_SIZE) + 1;
   return GROUPS[ch][0] + ' · ' + lv + '/' + CHAPTER_SIZE;
 }
+function lbExtra(){
+  let st = 0, ts = 0, tn = 0;
+  Object.keys(S.done || {}).forEach(k => { const d = S.done[k]; if (!d) return; st += d.stars || 0; if (d.time > 0){ ts += d.time; tn++; } });
+  const avgT = tn ? Math.round(ts / tn) : 0;
+  const tb = avgT > 0 ? 99999 - Math.min(99998, avgT) : 0;      /* eşitlikte ortalaması düşük olan öne geçer */
+  return { stars: st, avgT: avgT, rk2: st * PROG_MUL + tb };
+}
 const levelPoints = () => Object.values(S.done).reduce((t, d) => t + (d ? LV_FIRST + LV_STAR * (d.stars || 0) : 0), 0);
 let lastRace = { size: 6, random: true }, myScore = null, lbUn = null, lbBusy = false, lbRows = [], lbErr = false, lbRetry = null;
 async function applyScore(r, won){
@@ -7129,7 +7179,7 @@ async function applyScore(r, won){
       const d = await tx.get(ref), o = d.exists ? d.data() : {};
       const cur = eloOf(o), next = Math.max(0, cur + change), lvl = Math.max(o.lvl || 0, levelPoints()), hunt = o.hunt || 0, prog = Math.max(o.prog || 0, progNow());
       delta = next - cur; myScore = next + lvl + hunt;
-      tx.set(ref, { name: USER.name, avatar: avatar || '', elo: next, lvl, hunt, prog, rank: rankKey(prog, next + lvl + hunt), score: next + lvl + hunt, wins: (o.wins || 0) + (won ? 1 : 0), games: (o.games || 0) + 1 });
+      tx.set(ref, Object.assign({ name: USER.name, avatar: avatar || '', elo: next, lvl, hunt, prog, rank: rankKey(prog, next + lvl + hunt), score: next + lvl + hunt, wins: (o.wins || 0) + (won ? 1 : 0), games: (o.games || 0) + 1 }, lbExtra()));
     });
     lbRender(); return delta;
   } catch(e){ return null; }
@@ -7144,9 +7194,10 @@ async function syncLevelPoints(){
       const d = await tx.get(ref), o = d.exists ? d.data() : null;
       if (!o && !total) return;
       const lvl = Math.max(o ? (o.lvl || 0) : 0, total), elo = eloOf(o), hunt = o ? (o.hunt || 0) : 0, prog = Math.max(o ? (o.prog || 0) : 0, progNow());
-      if (o && o.lvl === lvl && o.elo != null && o.prog === prog && o.rank != null) { myScore = o.score; return; }
+      const ex = lbExtra();
+      if (o && o.lvl === lvl && o.elo != null && o.prog === prog && o.rank != null && o.rk2 === ex.rk2 && o.avgT === ex.avgT) { myScore = o.score; return; }
       myScore = elo + lvl + hunt;
-      tx.set(ref, { name: USER.name, avatar: avatar || '', elo, lvl, hunt, prog, rank: rankKey(prog, elo + lvl + hunt), score: elo + lvl + hunt, wins: o ? (o.wins || 0) : 0, games: o ? (o.games || 0) : 0 });
+      tx.set(ref, Object.assign({ name: USER.name, avatar: avatar || '', elo, lvl, hunt, prog, rank: rankKey(prog, elo + lvl + hunt), score: elo + lvl + hunt, wins: o ? (o.wins || 0) : 0, games: o ? (o.games || 0) : 0 }, ex));
     });
     lbRender();
   } catch(e){}
@@ -7162,7 +7213,7 @@ async function lbOwn(){
 }
 function lbRowHTML(r, i){
   const me = USER && r.id === USER.id;
-  return '<div class="lb-row' + (me ? ' me' : '') + '" data-i="' + i + '" style="cursor:pointer"><span class="rk">' + (i < 3 ? ['🥇','🥈','🥉'][i] : (i + 1)) + '</span><span class="lav">' + esc(r.avatar || '') + '</span><span class="nm">' + esc(r.name || '-') + '</span><b>' + esc(progLabel(r.prog)) + '</b></div>';
+  return '<div class="lb-row' + (me ? ' me' : '') + '" data-i="' + i + '" style="cursor:pointer"><span class="rk">' + (i < 3 ? ['🥇','🥈','🥉'][i] : (i + 1)) + '</span><span class="lav">' + esc(r.avatar || '') + '</span><span class="nm">' + esc(r.name || '-') + '</span><b>⭐ ' + (r.stars || 0) + ' · ⏱ ' + (r.avgT > 0 ? fmt(r.avgT) : '--:--') + '</b></div>';
 }
 function lbRender(){
   const mine = USER && lbRows.find(r => r.id === USER.id), sc = mine ? mine.score : myScore;
@@ -7175,7 +7226,7 @@ async function lbStart(){
   const fail = () => { lbUn = null; lbErr = true; lbRender(); clearTimeout(lbRetry); lbRetry = setTimeout(lbStart, 15000); };
   try {
     const db = await getDb();
-    lbUn = db.collection('leaderboard').orderBy('rank', 'desc').limit(30).onSnapshot(async q => {
+    lbUn = db.collection('leaderboard').orderBy('rk2', 'desc').limit(30).onSnapshot(async q => {
       const all = []; q.forEach(d => all.push(Object.assign({ id: d.id }, d.data())));
       const tk = ++lbTok, rows = await lbAlive(all);       // silinen hesaplar listelenmez
       if (tk !== lbTok) return;
@@ -7199,7 +7250,7 @@ function lbShowPlayer(r){
     + '<div style="text-align:center;margin:4px 0 12px"><div style="font-size:46px;line-height:1.1">' + esc(r.avatar || '👤') + '</div>'
     + '<h3 style="margin:6px 0 0">' + esc(r.name || '-') + '</h3></div>'
     + '<div class="ph-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
-    + tile('📍', esc(progLabel(r.prog)), 'KONUM') + tile('🥇', w, 'KAZANILAN') + tile('🎮', g, 'TOPLAM OYUN') + tile('🎯', '%' + rate, 'KAZANMA ORANI')
+    + tile('⭐', r.stars || 0, 'YILDIZ') + tile('⏱', r.avgT > 0 ? fmt(r.avgT) : '--:--', 'ORT. SÜRE') + tile('📍', esc(progLabel(r.prog)), 'KONUM') + tile('🥇', w, 'KAZANILAN') + tile('🎮', g, 'TOPLAM OYUN') + tile('🎯', '%' + rate, 'KAZANMA ORANI')
     + '</div></div>';
   o.classList.add('show');
 }
@@ -9610,6 +9661,24 @@ $('bX').onclick=()=>{try{parent.postMessage('sudoku-exit','*')}catch(e){}};
 .mm-fx .mm-ray{position:absolute;left:var(--x);top:calc(var(--h) * -1);width:3px;height:var(--h);margin-left:-1.5px;border-radius:3px;background:linear-gradient(to top,#fff,var(--c) 45%,transparent);box-shadow:0 0 8px var(--c),0 0 18px var(--c);transform-origin:50% 100%;opacity:0;animation:mmRay 1.7s ease-out var(--dl) forwards}
 @keyframes mmRay{0%{opacity:0;transform:scaleY(.05)}22%{opacity:1;transform:scaleY(1)}100%{opacity:0;transform:scaleY(1.08) translateY(-18px)}}
 .misir-map-screen .mm-score{position:absolute;transform:translate(-50%,-50%);color:#fff;font-weight:900;font-variant-numeric:tabular-nums;text-shadow:0 2px 0 rgba(0,0,0,.6);pointer-events:none;z-index:3;line-height:1}
+
+/* ===== SÜRE ROZETİ: kelime paneli ile tahta arasındaki dikişte, sağda yüzer ===== */
+.gt-wrap{position:relative;z-index:7;height:0;margin:0;pointer-events:none}
+.gt{position:absolute;right:12px;top:0;transform:translateY(-50%) scale(.6);opacity:0;display:flex;align-items:center;gap:5px;height:26px;padding:0 10px 0 6px;border-radius:999px;color:#e8fbff;font-size:13px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:.04em;background:linear-gradient(180deg,rgba(18,36,66,.96),rgba(8,14,36,.96));border:1.5px solid rgba(94,234,212,.75);box-shadow:0 0 12px rgba(45,212,191,.45),inset 0 1px 0 rgba(255,255,255,.18);transition:opacity .35s ease,transform .45s cubic-bezier(.2,1.6,.35,1),border-color .5s,box-shadow .5s}
+.gt.on{opacity:1;transform:translateY(-50%) scale(1);animation:gtGlow 2.4s ease-in-out infinite}
+.gt-ic{width:18px;height:18px;flex:none}
+.gt-face{fill:rgba(255,255,255,.08);stroke:currentColor;stroke-width:1.8}
+.gt-btn{fill:currentColor}
+.gt-hand{stroke:#fde68a;stroke-width:2;stroke-linecap:round;transform-origin:12px 13.5px;animation:gtSpin 60s linear infinite}
+.gt-pin{fill:#fde68a}
+.gt.mid{border-color:rgba(251,191,36,.85);box-shadow:0 0 12px rgba(251,191,36,.5),inset 0 1px 0 rgba(255,255,255,.18);color:#fff3c4}
+.gt.late{border-color:rgba(248,113,113,.9);box-shadow:0 0 14px rgba(239,68,68,.55),inset 0 1px 0 rgba(255,255,255,.15);color:#ffd9d9}
+.gt.late.on{animation:gtBeat 1s ease-in-out infinite}
+.gt.minute{animation:gtMinute .7s cubic-bezier(.2,1.6,.35,1)}
+@keyframes gtSpin{to{transform:rotate(360deg)}}
+@keyframes gtGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.18)}}
+@keyframes gtBeat{0%,100%{transform:translateY(-50%) scale(1)}50%{transform:translateY(-50%) scale(1.09)}}
+@keyframes gtMinute{0%{transform:translateY(-50%) scale(1)}35%{transform:translateY(-50%) scale(1.35) rotate(-4deg)}70%{transform:translateY(-50%) scale(.95) rotate(2deg)}100%{transform:translateY(-50%) scale(1)}}
 </style>
 </body>
 </html>
