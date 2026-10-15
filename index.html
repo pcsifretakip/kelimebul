@@ -1682,22 +1682,6 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .jk.jk-bomb.dis .jk-lbl{filter:grayscale(.9) brightness(.7)}
 .bomb-fx{position:fixed;inset:0;z-index:9000;pointer-events:none;overflow:hidden}
 .bomb-fx .bx-bomb{position:absolute;width:130px;height:auto;margin:-65px 0 0 -65px;filter:drop-shadow(0 0 18px rgba(255,150,40,.95));animation:bombIn .55s cubic-bezier(.2,1.5,.4,1) both,bombShake .09s linear .55s 5}
-.bomb-fx .bx-flash{position:absolute;inset:0;background:radial-gradient(circle at var(--cx) var(--cy),#fff 0,#fff3b0 18%,rgba(255,150,40,.7) 45%,rgba(255,80,0,0) 75%);opacity:0}
-.bomb-fx .bx-big{position:absolute;width:150vmax;height:150vmax;margin:-75vmax 0 0 -75vmax;object-fit:contain;opacity:0;transform:scale(.03)}
-.bomb-fx .bx-ring{position:absolute;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:6px solid rgba(255,230,160,.9);box-shadow:0 0 30px rgba(255,160,50,.9),inset 0 0 20px rgba(255,200,90,.7);opacity:0;transform:scale(.2)}
-.bomb-fx .bx-spark{position:absolute;width:9px;height:9px;margin:-4px 0 0 -4px;border-radius:50%;background:#ffd24a;box-shadow:0 0 10px 3px rgba(255,150,30,.95)}
-.bomb-fx .bx-core{position:absolute;width:260px;height:260px;margin:-130px 0 0 -130px;border-radius:50%;background:radial-gradient(circle,#fff 0,#fff2a8 22%,rgba(255,170,40,.9) 48%,rgba(255,80,0,0) 74%);opacity:0;mix-blend-mode:screen}
-.bomb-fx .bx-ring2{border-color:rgba(255,140,40,.85);box-shadow:0 0 26px rgba(255,90,10,.9)}
-.bomb-fx .bx-fireball{position:absolute;border-radius:50%;opacity:0;mix-blend-mode:screen;filter:blur(2px)}
-.bomb-fx .bx-piece{filter:drop-shadow(0 0 6px rgba(255,140,40,.9))}
-.bomb-fx .bx-shard{position:absolute;margin:-3px 0 0 -4px;background:linear-gradient(135deg,#8b9098,#23262b);box-shadow:0 0 6px rgba(255,150,50,.8)}
-.bomb-fx .bx-smoke{position:absolute;border-radius:50%;opacity:0;background:radial-gradient(circle,rgba(46,40,36,.72) 0,rgba(46,40,36,.4) 45%,rgba(46,40,36,0) 72%);filter:blur(6px)}
-.bomb-fx .bx-tongue{position:absolute;opacity:0;transform-origin:50% 100%;background:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 100' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='o' x1='0' y1='1' x2='0' y2='0'%3E%3Cstop offset='0' stop-color='%23ffe9a0'/%3E%3Cstop offset='.35' stop-color='%23ff9a1a'/%3E%3Cstop offset='.75' stop-color='%23e8400a'/%3E%3Cstop offset='1' stop-color='%238a1a04' stop-opacity='0'/%3E%3C/linearGradient%3E%3ClinearGradient id='i' x1='0' y1='1' x2='0' y2='0'%3E%3Cstop offset='0' stop-color='%23fff'/%3E%3Cstop offset='.5' stop-color='%23ffe066'/%3E%3Cstop offset='1' stop-color='%23ffb21c' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23o)' d='M30 1C33 20 53 33 53 60C53 83 43 98 30 98C17 98 7 83 7 60C7 46 15 38 19 26C22 34 26 37 28 39C26 26 27 12 30 1Z'/%3E%3Cpath fill='url(%23i)' d='M30 34C32 48 42 56 42 71C42 85 37 96 30 96C23 96 18 85 18 71C18 62 23 56 25 48C27 52 28 54 29 55C28 48 28 41 30 34Z'/%3E%3C/svg%3E") center/100% 100% no-repeat;filter:drop-shadow(0 0 10px rgba(255,120,20,.85)) drop-shadow(0 0 22px rgba(255,80,0,.5))}
-.bomb-fx .bx-flame{position:absolute;opacity:0;border-radius:50% 50% 45% 45% / 70% 70% 30% 30%;background:radial-gradient(ellipse at 50% 75%,#fff2a0 0,#ffb21c 32%,#ff5a14 62%,rgba(190,30,0,0) 100%);mix-blend-mode:screen;filter:blur(3px);transform-origin:50% 100%}
-.bomb-fx .bx-ember{position:absolute;border-radius:50%;background:#ffb43a;box-shadow:0 0 8px 2px rgba(255,110,20,.95)}
-.bomb-fx .bx-glow{position:absolute;inset:0;opacity:0;background:radial-gradient(ellipse at var(--cx) var(--cy),rgba(255,120,20,0) 30%,rgba(255,70,0,.38) 75%,rgba(160,20,0,.55) 100%);mix-blend-mode:screen}
-.app.bomb-shake{animation:bombScreenShake .7s linear 1}
-@keyframes bombScreenShake{0%,100%{translate:0 0}10%{translate:-14px 8px}20%{translate:12px -10px}30%{translate:-10px -6px}40%{translate:9px 9px}50%{translate:-7px 4px}60%{translate:6px -5px}75%{translate:-3px 2px}90%{translate:2px -1px}}
 @keyframes bombIn{0%{transform:scale(0) rotate(-40deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
 @keyframes bombShake{0%,100%{translate:0 0}25%{translate:-6px 3px}75%{translate:6px -3px}}
 </style>
@@ -3454,7 +3438,6 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
           <button class="jk jk-img jk-bomb" id="jk-bomb" aria-label="Bomba"><img src="bomba.png" alt="Bomba" draggable="false"><span class="jk-lbl">BOMBA</span><span class="jk-price">150<svg class="i"><use href="#i-coin"/></svg></span></button>
         </div>
         <button class="jk jk-img" id="jk-bank" aria-label="Kelime Bankası"><img src="jk-kelime-bankasi.png" alt="Kelime Bankası" draggable="false"><span class="jk-badge" id="bank-badge"></span></button>
-        <button class="jk jk-img jk-skip" id="jk-skip" aria-label="Bölümü Geç"><span class="skip-ic">⏭</span><span class="jk-lbl">GEÇ</span></button>
       </div>
       <button class="btn-main review-next" id="btn-review-next">SONRAKİ MOD</button>
     </section>
@@ -4309,7 +4292,7 @@ const store = {
 };
 
 const TEST_UNLOCK_ALL = false;    // TEST: tüm bölümler açık — test bitince false yap
-const TEST_INF_COINS = true;      // TEST: sınırsız altın — test bitince false yap
+const TEST_INF_COINS = false;     // sınırsız altın kapalı (yeni hesap START_COINS = 100 ile başlar)
 const HINT_COST = 20;               // ipucu fiyatı
 const START_COINS = 100;   // yeni hesabın başlangıç altını
 const WORD_COIN = 2;       // kelime başı altın (sadece bölümün ilk oynanışında)
@@ -5450,8 +5433,6 @@ function shuffleBoard(){
   toast('Karıştırılamadı, tekrar dene');
 }
 $('jk-shuffle').addEventListener('click', shuffleBoard);
-/* TEST: bölümü direkt geçmiş say — test bitince #jk-skip butonunu ve bu satırı sil */
-$('jk-skip').addEventListener('click', () => { audio(); if (!S.playing || R) return; victory(); });
 
 function useMagnet(){
   audio();
@@ -5527,124 +5508,74 @@ function playBombSound(){
     if (pr && pr.catch) pr.catch(() => { try { SND.boom(); } catch(_){} });
   } catch(e){ try { SND.boom(); } catch(_){} }
 }
-function bombBoom(cx, cy, onBoom){
-  const fx = document.createElement('div'); fx.className = 'bomb-fx';
-  fx.style.setProperty('--cx', cx+'px'); fx.style.setProperty('--cy', cy+'px');
-  const at = (el) => { el.style.left = cx+'px'; el.style.top = cy+'px'; return el; };
-  const bomb = at(document.createElement('img')); bomb.className='bx-bomb'; bomb.src='bomba.png'; bomb.draggable=false;
-  const smoke = at(document.createElement('img')); smoke.className='bx-big'; smoke.src='duman.png'; smoke.draggable=false; let smokeFb=false; smoke.onerror=()=>{ if(smokeFb){smoke.style.display='none';return;} smokeFb=true; smoke.src='patlama.png'; };   // duman.png yoksa patlama.png ikinci dalga olarak kullanılır
-  const fire = at(document.createElement('img')); fire.className='bx-big'; fire.src='patlama.png'; fire.draggable=false; fire.onerror=()=>{fire.style.display='none';};
-  const ring = at(document.createElement('div')); ring.className='bx-ring';
-  const flash = document.createElement('div'); flash.className='bx-flash';
-  fx.append(bomb, smoke, fire, ring, flash);
-  document.body.appendChild(fx);
+/* Patlama: tek canvas + sprite parçacıklar (DOM/blur yok -> takılmaz). Her seferinde rastgele 1 of 3 tarz: alev / plazma / toz */
+const BOMB_STYLES = [
+  { fire:[[255,246,176],[255,170,40],[210,60,10]], smoke:[38,32,28],   spark:'255,210,110', ring:'255,200,120', shake:1,   debris:8  },   // alev
+  { fire:[[235,252,255],[90,200,255],[110,60,255]], smoke:[28,26,70],  spark:'160,230,255', ring:'140,200,255', shake:.8,  debris:4  },   // plazma
+  { fire:[[255,236,170],[240,150,50],[150,60,20]],  smoke:[112,94,76], spark:'255,205,120', ring:'255,225,170', shake:1.5, debris:18 }    // toz + taş
+];
+function blastFx(fx, cx, cy){
+  const V = BOMB_STYLES[(Math.random()*BOMB_STYLES.length)|0];
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5), W = innerWidth, H = innerHeight, vmax = Math.max(W, H);
+  const cv = document.createElement('canvas'); cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
+  cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%';
+  fx.appendChild(cv);
+  const g = cv.getContext('2d'); g.scale(dpr, dpr);
+  const rnd = (a, b) => a + Math.random()*(b - a), rgb = (c, a) => 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
+  const mk = (stops) => { const c = document.createElement('canvas'); c.width = c.height = 128; const k = c.getContext('2d'), gr = k.createRadialGradient(64,64,0,64,64,64); stops.forEach(q => gr.addColorStop(q[0], q[1])); k.fillStyle = gr; k.fillRect(0,0,128,128); return c; };
+  const fireS  = mk([[0,rgb(V.fire[0],1)],[.35,rgb(V.fire[1],.85)],[.7,rgb(V.fire[2],.35)],[1,rgb(V.fire[2],0)]]);
+  const smokeS = mk([[0,rgb(V.smoke,.6)],[.55,rgb(V.smoke,.28)],[1,rgb(V.smoke,0)]]);
+  const coreS  = mk([[0,'rgba(255,255,255,1)'],[.3,rgb(V.fire[0],.8)],[1,rgb(V.fire[1],0)]]);
+  const fg = g.createRadialGradient(cx,cy,0,cx,cy,vmax*.7); fg.addColorStop(0,'#fff'); fg.addColorStop(.3,rgb(V.fire[0],.6)); fg.addColorStop(1,rgb(V.fire[1],0));
+  const mkP = (n, f) => Array.from({length:n}, f);
+  const fireP = mkP(26, () => { const a = rnd(0,6.283), s = rnd(.05,1)*vmax*.5; return {x:cx+rnd(-20,20), y:cy+rnd(-20,20), vx:Math.cos(a)*s, vy:Math.sin(a)*s-30, life:rnd(.55,1.1), s0:rnd(50,90), s1:rnd(160,260), d:rnd(0,.08)}; });
+  const smokeP = mkP(16, () => { const a = rnd(0,6.283), s = rnd(20,200); return {x:cx+rnd(-60,60), y:cy+rnd(-40,40), vx:Math.cos(a)*s, vy:Math.sin(a)*s*.5-rnd(40,120), life:rnd(1.4,2.4), s0:rnd(90,140), s1:rnd(220,340), d:rnd(.08,.4)}; });
+  const sparkP = mkP(60, () => { const a = rnd(0,6.283), s = rnd(250,1100); return {x:cx, y:cy, px:cx, py:cy, vx:Math.cos(a)*s, vy:Math.sin(a)*s, life:rnd(.45,1.3)}; });
+  const debP = mkP(V.debris, () => { const a = rnd(0,6.283), s = rnd(200,800); return {x:cx, y:cy, vx:Math.cos(a)*s, vy:Math.sin(a)*s-200, r:rnd(0,6.28), vr:rnd(-12,12), w:rnd(5,13), h:rnd(3,8), life:rnd(1,1.7)}; });
   const appEl = document.querySelector('.app');
-  const T = 1000;   // fitil süresi: bomba belirir ve titrer, sonra patlar
-  setTimeout(() => {
-    bomb.style.display = 'none';
+  const t0 = performance.now(); let last = t0;
+  const blob = (img, x, y, sz, al) => { g.globalAlpha = al; g.drawImage(img, x - sz/2, y - sz/2, sz, sz); };
+  function frame(now){
+    const t = Math.max(0, (now - t0)/1000), dt = Math.min(.05, Math.max(0, (now - last)/1000)); last = now;
+    g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
+    if (appEl){ const a = t < .55 ? 12*V.shake*Math.pow(1 - t/.55, 2) : 0; appEl.style.translate = a ? ((Math.random()-.5)*2*a).toFixed(1) + 'px ' + ((Math.random()-.5)*2*a).toFixed(1) + 'px' : ''; }
+    g.globalCompositeOperation = 'source-over';
+    const dS = Math.pow(.5, dt);
+    for (const p of smokeP){ const k = (t - p.d)/p.life; if (k < 0 || k > 1) continue; p.x += p.vx*dt; p.y += p.vy*dt; p.vx *= dS;
+      blob(smokeS, p.x, p.y, p.s0 + (p.s1 - p.s0)*(1 - Math.pow(1-k, 2)), Math.min(1, k*6)*(1 - k)); }
+    g.globalCompositeOperation = 'lighter';
+    const dF = Math.pow(.1, dt);
+    for (const p of fireP){ const k = (t - p.d)/p.life; if (k < 0 || k > 1) continue; p.x += p.vx*dt; p.y += p.vy*dt; p.vx *= dF; p.vy *= dF;
+      blob(fireS, p.x, p.y, p.s0 + (p.s1 - p.s0)*(1 - Math.pow(1-k, 2)), Math.pow(1 - k, 1.2)); }
+    if (t < .4){ const k = t/.4; blob(coreS, cx, cy, 80 + 320*(1 - Math.pow(1-k, 3)), 1 - k); }
+    if (t < .25){ g.globalAlpha = (1 - t/.25)*.9; g.fillStyle = fg; g.fillRect(0,0,W,H); }
+    g.lineCap = 'round';
+    for (const p of sparkP){ const k = t/p.life; if (k > 1) continue; p.px = p.x; p.py = p.y; p.vy += 700*dt; p.vx *= Math.pow(.3, dt); p.vy *= Math.pow(.3, dt); p.x += p.vx*dt; p.y += p.vy*dt;
+      g.globalAlpha = 1 - k; g.strokeStyle = 'rgb(' + V.spark + ')'; g.lineWidth = 2.2*(1 - k) + .6; g.beginPath(); g.moveTo(p.px, p.py); g.lineTo(p.x, p.y); g.stroke(); }
+    for (const r0 of [0, .12]){ const k = (t - r0)/.75; if (k < 0 || k > 1) continue; const e = 1 - Math.pow(1-k, 3);
+      g.globalAlpha = (1 - k)*.8; g.strokeStyle = 'rgb(' + V.ring + ')'; g.lineWidth = 2 + (1 - k)*12; g.beginPath(); g.arc(cx, cy, e*vmax*.85, 0, 6.283); g.stroke(); }
+    g.globalCompositeOperation = 'source-over';
+    for (const p of debP){ const k = t/p.life; if (k > 1) continue; p.vy += 900*dt; p.x += p.vx*dt; p.y += p.vy*dt; p.r += p.vr*dt;
+      g.globalAlpha = 1 - k*k; g.fillStyle = '#2b2b30'; g.save(); g.translate(p.x, p.y); g.rotate(p.r); g.fillRect(-p.w/2, -p.h/2, p.w, p.h); g.restore(); }
+    g.globalAlpha = 1;
+    if (t < 2.8) requestAnimationFrame(frame);
+    else { if (appEl) appEl.style.translate = ''; fx.remove(); }
+  }
+  requestAnimationFrame(frame);
+}
+function bombBoom(cx, cy, onBoom){
+  if (!bombAud){ try { bombAud = new Audio('bomb.mp3'); bombAud.preload = 'auto'; bombAud.load(); } catch(_){} }   // ses fitil sırasında yüklensin, patlarken takılma olmasın
+  const fx = document.createElement('div'); fx.className = 'bomb-fx';
+  const bomb = document.createElement('img'); bomb.className = 'bx-bomb'; bomb.src = 'bomba.png'; bomb.draggable = false;
+  bomb.style.left = cx + 'px'; bomb.style.top = cy + 'px';
+  fx.appendChild(bomb); document.body.appendChild(fx);
+  setTimeout(() => {      // fitil süresi: bomba belirir, titrer, sonra patlar
+    bomb.remove();
     playBombSound();
-    try { buzz([80,40,120,60,160]); } catch(_){}
-    if (appEl){ appEl.classList.remove('bomb-shake'); void appEl.offsetWidth; appEl.classList.add('bomb-shake'); setTimeout(()=>appEl.classList.remove('bomb-shake'), 750); }
-    const ease = 'cubic-bezier(.12,.8,.25,1)';
-    flash.animate([{opacity:0},{opacity:1,offset:.12},{opacity:0}], {duration:500, easing:'ease-out', fill:'forwards'});
-    if (smokeFb){
-      smoke.style.filter = 'hue-rotate(-15deg) saturate(1.2) brightness(.9)';
-      smoke.animate([{opacity:0,transform:'scale(.05) rotate(35deg)'},{opacity:.7,transform:'scale(.5) rotate(50deg)',offset:.3},{opacity:0,transform:'scale(1.15) rotate(70deg)'}], {duration:1500, delay:120, easing:ease, fill:'forwards'});
-    } else {
-      smoke.animate([{opacity:0,transform:'scale(.03)'},{opacity:.95,transform:'scale(.45)',offset:.3},{opacity:0,transform:'scale(1)'}], {duration:1400, easing:ease, fill:'forwards'});
-    }
-    fire.animate([{opacity:1,transform:'scale(.03) rotate(-8deg)'},{opacity:1,transform:'scale(.5) rotate(0)',offset:.35},{opacity:0,transform:'scale(.9) rotate(6deg)'}], {duration:1000, easing:ease, fill:'forwards'});
-    ring.animate([{opacity:1,transform:'scale(.2)'},{opacity:0,transform:'scale(40)'}], {duration:900, easing:'ease-out', fill:'forwards'});
-    for (let i = 0; i < 70; i++){
-      const sp = at(document.createElement('div')); sp.className='bx-spark'; fx.appendChild(sp);
-      const ang = Math.random()*Math.PI*2, d = 120 + Math.random()*Math.max(innerWidth, innerHeight)*0.7;
-      const dx = Math.cos(ang)*d, dy = Math.sin(ang)*d + 60;
-      sp.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${dx}px,${dy}px) scale(.2)`,opacity:0}],
-        {duration:700 + Math.random()*700, easing:'cubic-bezier(.1,.7,.3,1)', fill:'forwards'});
-    }
-    /* EK EFEKTLER: ateş topları, yükselen alevler, ikinci/üçüncü şok dalgası, köz ve kor parçaları */
-    const vmax = Math.max(innerWidth, innerHeight);
-    const core = at(document.createElement('div')); core.className='bx-core'; fx.appendChild(core);
-    core.animate([{opacity:1,transform:'scale(.1)'},{opacity:1,transform:'scale(1.6)',offset:.25},{opacity:0,transform:'scale(2.6)'}], {duration:900, easing:ease, fill:'forwards'});
-    for (let k = 1; k <= 2; k++){
-      const rg = at(document.createElement('div')); rg.className='bx-ring bx-ring2'; fx.appendChild(rg);
-      rg.animate([{opacity:.9,transform:'scale(.2)'},{opacity:0,transform:'scale(' + (34 - k*6) + ')'}], {duration:1000 + k*180, delay:k*140, easing:'ease-out', fill:'forwards'});
-    }
-    const fcols = ['#fff6b0','#ffd24a','#ff9a1f','#ff5a14','#d92e0a'];
-    for (let i = 0; i < 16; i++){       // büyük ateş topları
-      const fb = at(document.createElement('div')); fb.className='bx-fireball'; fx.appendChild(fb);
-      const sz = 70 + Math.random()*120, c = fcols[(Math.random()*fcols.length)|0];
-      fb.style.width = fb.style.height = sz+'px'; fb.style.margin = (-sz/2)+'px 0 0 '+(-sz/2)+'px';
-      fb.style.background = 'radial-gradient(circle at 50% 50%, '+c+' 0%, rgba(255,120,20,.85) 40%, rgba(200,40,0,0) 72%)';
-      const ang = Math.random()*Math.PI*2, d = 40 + Math.random()*vmax*0.42;
-      const dx = Math.cos(ang)*d, dy = Math.sin(ang)*d;
-      fb.animate([{opacity:0,transform:'translate(0,0) scale(.2)'},{opacity:1,transform:'translate('+(dx*.55)+'px,'+(dy*.55)+'px) scale(1)',offset:.3},{opacity:0,transform:'translate('+dx+'px,'+(dy-80)+'px) scale(1.7)'}],
-        {duration:800 + Math.random()*700, delay:Math.random()*160, easing:'cubic-bezier(.15,.7,.3,1)', fill:'forwards'});
-    }
-    /* BOMBA PARÇALANIR: bomba görseli kama biçimli parçalara bölünüp savrulur + metal kıymıklar */
-    const NP = 9, a00 = Math.random()*Math.PI*2;
-    for (let k = 0; k < NP; k++){
-      const a0 = a00 + k*(Math.PI*2/NP), a1 = a00 + (k+1)*(Math.PI*2/NP), am = (a0+a1)/2;
-      const pt = (a, r) => Math.max(0, Math.min(100, 50 + Math.cos(a)*r)).toFixed(1) + '% ' + Math.max(0, Math.min(100, 50 + Math.sin(a)*r)).toFixed(1) + '%';
-      const pc = at(document.createElement('img')); pc.className = 'bx-bomb bx-piece'; pc.src = 'bomba.png'; pc.draggable = false;
-      pc.style.animation = 'none';
-      pc.style.clipPath = 'polygon(50% 50%, ' + pt(a0, 78) + ', ' + pt(am, 38 + Math.random()*40) + ', ' + pt(a1, 78) + ')';
-      fx.appendChild(pc);
-      const d = 90 + Math.random()*vmax*0.34, dx = Math.cos(am)*d, dy = Math.sin(am)*d;
-      pc.animate([{transform:'translate(0,0) rotate(0deg)',opacity:1},
-                  {transform:'translate(' + dx*.7 + 'px,' + (dy*.7 - 30) + 'px) rotate(' + ((Math.random()-.5)*360) + 'deg)',opacity:1,offset:.5},
-                  {transform:'translate(' + dx*.9 + 'px,' + (dy + 260 + Math.random()*180) + 'px) rotate(' + ((Math.random()-.5)*900) + 'deg)',opacity:0}],
-        {duration:900 + Math.random()*500, easing:'cubic-bezier(.1,.7,.35,1)', fill:'forwards'});
-    }
-    for (let i = 0; i < 18; i++){       // metal kıymıklar
-      const sh = at(document.createElement('div')); sh.className = 'bx-shard'; fx.appendChild(sh);
-      const w = 7 + Math.random()*13, h = 4 + Math.random()*8;
-      sh.style.width = w + 'px'; sh.style.height = h + 'px';
-      sh.style.clipPath = 'polygon(0 ' + (Math.random()*40|0) + '%, 100% ' + (Math.random()*60|0) + '%, ' + (30 + Math.random()*50|0) + '% 100%)';
-      const ang = Math.random()*Math.PI*2, d = 120 + Math.random()*vmax*0.6;
-      sh.animate([{transform:'translate(0,0) rotate(0deg)',opacity:1},
-                  {transform:'translate(' + Math.cos(ang)*d + 'px,' + (Math.sin(ang)*d + 200 + Math.random()*200) + 'px) rotate(' + ((Math.random()-.5)*1400) + 'deg)',opacity:0}],
-        {duration:800 + Math.random()*700, easing:'cubic-bezier(.1,.7,.35,1)', fill:'forwards'});
-    }
-    /* DUMAN: alevlerin altında yükselen koyu duman kümeleri */
-    for (let i = 0; i < 9; i++){
-      const sm = at(document.createElement('div')); sm.className = 'bx-smoke'; fx.appendChild(sm);
-      const sz = 120 + Math.random()*140; sm.style.width = sm.style.height = sz + 'px'; sm.style.margin = (-sz/2) + 'px 0 0 ' + (-sz/2) + 'px';
-      const ox = (Math.random()-.5)*Math.min(innerWidth*0.8, 460), oy = (Math.random()-.3)*Math.min(innerHeight*0.35, 260);
-      sm.animate([{opacity:0,transform:'translate(' + ox*.4 + 'px,' + oy + 'px) scale(.4)'},
-                  {opacity:.6,transform:'translate(' + ox + 'px,' + (oy - 90) + 'px) scale(1)',offset:.35},
-                  {opacity:0,transform:'translate(' + (ox + (Math.random()-.5)*80) + 'px,' + (oy - 300 - Math.random()*120) + 'px) scale(1.9)'}],
-        {duration:2200 + Math.random()*900, delay:150 + Math.random()*350, easing:'ease-out', fill:'forwards'});
-    }
-    /* GERÇEKÇİ ALEV: SVG alev dilleri (beyaz-sarı çekirdek, turuncu gövde, kırmızı uç), titreyerek yanar */
-    for (let i = 0; i < 24; i++){
-      const fl = at(document.createElement('div')); fl.className = 'bx-tongue'; fx.appendChild(fl);
-      const big = i < 6, w = big ? 90 + Math.random()*60 : 44 + Math.random()*46, h = w * (1.55 + Math.random()*.7);
-      fl.style.width = w + 'px'; fl.style.height = h + 'px'; fl.style.margin = (-h) + 'px 0 0 ' + (-w/2) + 'px';
-      const ox = (Math.random()-.5)*Math.min(innerWidth*0.86, 500), oy = (Math.random()-.25)*Math.min(innerHeight*0.38, 280);
-      const flip = Math.random() < .5 ? -1 : 1, tr = 'translate(' + ox + 'px,' + oy + 'px) ';
-      const life = 1500 + Math.random()*1100, fr = [{opacity:0,transform:tr + 'scale(' + (.1*flip) + ',.1)',offset:0},{opacity:1,transform:tr + 'scale(' + flip + ',1)',offset:.16}];
-      for (let q = 0; q < 6; q++){
-        fr.push({opacity:.95,transform:tr + 'translateY(' + (-q*6) + 'px) scale(' + ((.82 + Math.random()*.3)*flip) + ',' + (.88 + Math.random()*.38) + ') skewX(' + ((Math.random()-.5)*14) + 'deg)',offset:.16 + (q+1)*.11});
-      }
-      fr.push({opacity:0,transform:tr + 'translateY(-50px) scale(' + (.55*flip) + ',.25)',offset:1});
-      fl.animate(fr, {duration:life, delay:Math.random()*320, easing:'ease-in-out', fill:'forwards'});
-    }
-    for (let i = 0; i < 46; i++){       // köz ve kor parçaları (yerçekimiyle düşer)
-      const em = at(document.createElement('div')); em.className='bx-ember'; fx.appendChild(em);
-      const sz = 3 + Math.random()*6; em.style.width = em.style.height = sz+'px';
-      const ang = Math.random()*Math.PI*2, d = 80 + Math.random()*vmax*0.6;
-      const dx = Math.cos(ang)*d, dy = Math.sin(ang)*d;
-      em.animate([{transform:'translate(0,0) scale(1)',opacity:1},
-                  {transform:'translate('+dx+'px,'+(dy-40)+'px) scale(.9)',opacity:1,offset:.45},
-                  {transform:'translate('+(dx*1.1)+'px,'+(dy+180+Math.random()*220)+'px) scale(.2)',opacity:0}],
-        {duration:1100 + Math.random()*1100, easing:'cubic-bezier(.1,.6,.4,1)', fill:'forwards'});
-    }
-    const glow = document.createElement('div'); glow.className='bx-glow'; fx.appendChild(glow);   // ekran kenarlarında sıcak kızıl parıltı
-    glow.animate([{opacity:0},{opacity:1,offset:.15},{opacity:.55,offset:.5},{opacity:0}], {duration:1700, easing:'ease-out', fill:'forwards'});
+    try { buzz([60,30,90]); } catch(_){}
+    blastFx(fx, cx, cy);
     try { onBoom(); } catch(_){}
-  }, T);
-  setTimeout(() => fx.remove(), T + 3800);
+  }, 900);
 }
 function useBomb(){
   audio();
@@ -9620,14 +9551,6 @@ $('bX').onclick=()=>{try{parent.postMessage('sudoku-exit','*')}catch(e){}};
   };
 })();
 </script>
-<style>
-/* TEST: GEÇ butonu — 6 joker tek satır */
-.jokers,#view-game .jokers{grid-template-columns:repeat(6,1fr)!important}
-.jk.jk-img{width:min(15.4vw,66px)!important}
-.jk.jk-img#jk-bank{width:min(14vw,60px)!important}
-.jk.jk-skip{aspect-ratio:300/290;position:relative;border:0;cursor:pointer;background:transparent}
-.jk.jk-skip .skip-ic{display:flex;align-items:center;justify-content:center;width:78%;aspect-ratio:1;margin:0 auto 18%;border-radius:50%;font-size:clamp(18px,6vw,26px);color:#fff;background:radial-gradient(circle at 35% 28%,#8b6dff,#3b2aa8 60%,#1e1470);border:2px solid #f5b83a;box-shadow:0 0 8px rgba(245,184,58,.55),0 4px 6px rgba(0,0,0,.45)}
-</style>
 <style>
 /* Mısır haritası */
 .misir-map-screen{background:#1a1205}
