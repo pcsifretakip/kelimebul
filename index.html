@@ -3110,7 +3110,7 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
 #shop-ov.st .st-gold{background:linear-gradient(180deg,#fff7a8 0%,#ffd21f 48%,#f59300 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 0 rgba(90,30,0,.75)) drop-shadow(0 0 6px rgba(255,190,40,.35))}
 
 /* üst şerit */
-#shop-ov.st .st-top{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:6px;min-height:46px}
+#shop-ov.st .st-top{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px;min-height:46px}
 #shop-ov.st .st-wallet{position:relative;display:flex;align-items:center;gap:6px;height:34px;padding:0 5px 0 36px;border-radius:99px;background:linear-gradient(180deg,#4a14b5,#240a6e);border:2px solid #ffd84a;box-shadow:0 0 12px rgba(255,200,50,.4),inset 0 2px 5px rgba(255,255,255,.18)}
 #shop-ov.st .st-wallet>.st-c{position:absolute;left:-5px;top:50%;width:38px;height:38px;margin-top:-19px}
 #shop-ov.st .st-wallet b{font-size:14px;font-weight:1000;color:#fff;letter-spacing:.01em;text-shadow:0 2px 0 rgba(0,0,0,.45);min-width:1ch}
@@ -3155,6 +3155,9 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
 #shop-ov.st .st-ch-b{width:100%;padding:4px 2px;border-radius:99px;font-size:9.5px;white-space:nowrap}
 #shop-ov.st .st-gift{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;text-align:center;padding:6px 7px 9px;border-radius:20px;border:1.5px solid #2aa0ff;background:radial-gradient(75% 42% at 50% 24%,rgba(60,130,255,.75),transparent 72%),linear-gradient(180deg,#0a2cb4,#001a82 60%,#001572);box-shadow:inset 0 0 0 1px rgba(60,160,255,.3),0 0 14px rgba(40,140,255,.45),0 6px 14px rgba(0,0,0,.4)}
 #shop-ov.st .st-gift-art{width:100%;height:auto}
+#shop-ov.st .st-soon{justify-content:center;gap:2px;padding:10px 7px}
+#shop-ov.st .st-soon .st-soon-ic{width:56px;height:56px;margin-bottom:4px;filter:drop-shadow(0 2px 6px rgba(255,200,40,.5))}
+#shop-ov.st .st-soon p{margin:4px 0 0}
 #shop-ov.st .st-gift p{margin:3px 0 8px}
 #shop-ov.st .st-gbtn{display:flex;align-items:center;justify-content:center;gap:4px;width:100%;margin-top:auto;padding:7px 3px;border-radius:99px;font-size:11px;letter-spacing:.01em;white-space:nowrap}
 #shop-ov.st .st-gbtn svg{width:15px;height:15px;flex:none}
@@ -3539,7 +3542,7 @@ button:not(:disabled):active,[role="button"]:active,.hm-fx:active,.nav-item:acti
     <div class="hcard">
       <h3>KULLANICI ADINIZI OLUŞTURUN</h3>
       <p class="nm-sub">Hemen oynamaya başlayın.<br>Kullanıcı adınız sadece size özeldir.</p>
-      <input class="nm-input" id="nm-input" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" placeholder="kullanıcı adınızı girin">
+      <input class="nm-input" id="nm-input" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" placeholder="Kullanıcı adını oluşturun">
       <p class="nm-err" id="nm-err"></p>
       <button class="btn-main" id="nm-ok">BAŞLA</button>
       <button class="nm-cancel" id="nm-cancel">VAZGEÇ</button>
@@ -4113,7 +4116,7 @@ const chapterComplete = gi => {
   for (let i = st; i <= en; i++) if (!S.done[i]) return false;
   return true;
 };
-const OPEN_CHAPTERS = 9;   // 1-9. bölümler baştan açık; 10. bölüm 9. bitince açılır
+const OPEN_CHAPTERS = 1;   // yalnızca 1. bölüm baştan açık; sonraki bölüm, öncekini bitirince açılır
 const TEST_LOCK_CH10 = false;   // TEST: 10. bölüm kapalı — test bitince false yap
 const levelOpen = i => (TEST_LOCK_CH10 && i >= (CHAPTER_COUNT - 1) * CHAPTER_SIZE) ? false : (i < OPEN_CHAPTERS * CHAPTER_SIZE || i <= S.maxOpen);
 const chapterUnlocked = gi => (TEST_LOCK_CH10 && gi === CHAPTER_COUNT - 1) ? false : (gi < OPEN_CHAPTERS || chapterComplete(gi - 1));
@@ -8459,7 +8462,6 @@ function shopRender(bumpId){
    +'<header class="st-top">'
     +'<div class="st-wallet">'+coin+'<b id="st-coins">'+shopNum(S.coins)+'</b><button class="st-plus" type="button" data-act="chests" aria-label="Altın al">+</button></div>'
     +'<h2 class="st-title">'+art('cart','st-cart')+'<span class="st-gold">MAĞAZA</span></h2>'
-    +'<button class="st-home" type="button" data-act="close" aria-label="Kapat"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-home"/></svg></button>'
    +'</header>'
    +'<div class="st-sub">'+art('orn_l','st-orn')+'<p>Maceranda sana güç katacak jokerleri ve özel hediyeleri keşfet!</p>'+art('orn_r','st-orn')+'</div>'
    +'<section class="st-jokers">'+SHOP_ITEMS.map(jk).join('')+'</section>'
@@ -8468,14 +8470,11 @@ function shopRender(bumpId){
      +'<div class="st-ch-top">'+art('chestbig','st-ch-big')+'<h3 class="st-gold">ALTIN<br>SANDIKLARI</h3><p>Daha fazla altın,<br>daha fazla eğlence!</p></div>'
      +'<div class="st-chs">'+SHOP_CHESTS.map(ch).join('')+'</div>'
     +'</article>'
-    +'<article class="st-gift">'+art('gift','st-gift-art')
-     +'<h3 class="st-gold">GÜNLÜK<br>HEDİYE</h3><p>Her gün bir kez ücretsiz ödülünü al!</p>'
-     +'<div class="st-gbtn done st-gsoon">DAHA FAZLASI<br>YOLDA!</div>'
+    +'<article class="st-gift st-soon">'
+     +'<svg class="st-soon-ic" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="stSoonG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff7a8"/><stop offset=".5" stop-color="#ffd21f"/><stop offset="1" stop-color="#f59300"/></linearGradient></defs><path fill="url(#stSoonG)" d="M32 4l6.5 17.5L56 28l-17.5 6.5L32 52l-6.5-17.5L8 28l17.5-6.5z"/><path fill="url(#stSoonG)" opacity=".85" d="M51 40l2.6 7 7 2.6-7 2.6L51 59l-2.6-6.8-7-2.6 7-2.6z"/><path fill="url(#stSoonG)" opacity=".85" d="M13 6l1.8 4.7 4.7 1.8-4.7 1.8L13 19l-1.8-4.7L6.5 12.5l4.7-1.8z"/></svg>'
+     +'<h3 class="st-gold">DAHA FAZLASI<br>YOLDA!</h3><p>Yeni jokerler ve sürprizler çok yakında!</p>'
     +'</article>'
    +'</section>'
-   +'<button class="st-more" type="button" data-act="more">'+art('ban_l','st-m-l')
-    +'<span class="st-m-t"><b class="st-gold">Daha fazlası yolda!</b><small>Koleksiyon karakterler, özel kostümler ve süper güçler çok yakında!</small></span>'
-    +art('ban_r','st-m-r')+'</button>'
   +'</div>'
   +'<nav class="hm-nav st-nav" aria-label="Mağaza menüsü">'
    +'<button class="nav-item on" type="button" data-go="shop" aria-label="Mağaza"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg><span>Mağaza</span></button>'
@@ -9576,7 +9575,7 @@ $('bX').onclick=()=>{try{parent.postMessage('sudoku-exit','*')}catch(e){}};
 .mi-chips span{padding:7px 14px;border-radius:999px;font-weight:900;font-size:13px;letter-spacing:.06em;color:#ffe9a8;background:rgba(20,10,2,.62);border:1.5px solid rgba(255,214,110,.7);box-shadow:0 2px 8px rgba(0,0,0,.5)}
 .mi-skip{background:linear-gradient(180deg,#ffeeb4,#ecb44e 55%,#c4862a)!important;box-shadow:0 5px 0 #7a4b0c,0 8px 18px rgba(0,0,0,.5)!important;color:#3a2100!important}
 .mi-skip span{display:inline-flex;align-items:center;gap:8px}
-.mi-fact{position:absolute;left:50%;bottom:calc(158px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(92%,420px);box-sizing:border-box;padding:11px 16px 10px;border-radius:18px;text-align:center;color:#fff4d6;background:rgba(20,10,2,.72);border:1.5px solid rgba(255,214,110,.75);box-shadow:0 4px 16px rgba(0,0,0,.55),0 0 18px rgba(255,190,60,.18);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);cursor:pointer;animation:miRise .9s ease-out .5s both}
+.mi-fact{position:absolute;left:0;right:0;margin:0 auto;bottom:calc(158px + env(safe-area-inset-bottom,0px));width:min(92%,420px);box-sizing:border-box;padding:11px 16px 10px;border-radius:18px;text-align:center;color:#fff4d6;background:rgba(20,10,2,.72);border:1.5px solid rgba(255,214,110,.75);box-shadow:0 4px 16px rgba(0,0,0,.55),0 0 18px rgba(255,190,60,.18);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);cursor:pointer;animation:miRise .9s ease-out .5s both}
 .mi-fact b{display:block;font-size:12px;letter-spacing:.14em;font-weight:1000;color:#ffd45a}
 .mi-fact p{margin:6px 0 0;min-height:4.2em;font-size:clamp(13px,3.7vw,15.5px);font-weight:800;line-height:1.4;color:#fff}
 .mi-fact p.in{animation:miFactIn .55s ease-out both}
