@@ -5302,8 +5302,19 @@ const TEST_SKIP_BTN = true;   // test bitince false yap
   if (!TEST_SKIP_BTN){ sk.classList.add('off'); return; }
   sk.addEventListener('click', () => {
     if (!S.playing || !S.level) return;
-    try { (S.level.words || []).forEach(w => S.found.add(w)); } catch(_){}
-    victory();
+    /* hangi maceradaysan (Amazon: 0-99, Mısır: 100-199) o macerayı komple bitirir, sıradaki macerayı açar */
+    const idx = S.levelIndex, inAmazon = idx < AMAZON_LEVELS;
+    const st = inAmazon ? 0 : AMAZON_LEVELS;
+    const en = Math.min(LEVELS.length - 1, st + (inAmazon ? AMAZON_LEVELS : 100) - 1);
+    for (let k = st; k <= en; k++){
+      if (!S.done[k]) S.done[k] = { stars: 3, time: 1, gold: 0 };
+      delete S.partial[k];
+    }
+    S.maxOpen = Math.max(S.maxOpen, Math.min(en + 1, MAX_PLAY));
+    saveProgress(); try { syncLevelPoints(); } catch(_){}
+    if (inAmazon) store.set('kb_misir_anim', '1');   // Mısır kartı ışıkla açılsın
+    leaveGame();
+    showLevels();                                     // Maceraya Başla sayfası
   });
 })();
 
@@ -5865,7 +5876,15 @@ function buildMisirCard(jc, amazonDone){
   const b = document.createElement('button'); b.type = 'button';
   b.style.setProperty('--neon', jc.color); b.dataset.bn = jc.key;
   const setOpen = open => {
-    b.className = 'journey-card has-bn ' + (open ? 'misir-open' : 'locked');
+    const done = !!open && (typeof misirAllDone === 'function') && misirAllDone();   /* Mısır'ın 10 bölümü de bitti */
+    b.className = 'journey-card has-bn ' + (open ? 'misir-open' : 'locked') + (done ? ' done' : '');
+    if (done){
+      b.innerHTML = '<span class="journey-num">✓</span>' +
+        '<span class="journey-info"><span class="journey-name">' + jc.name + '</span>' +
+        '<div class="journey-stars"><svg class="i on"><use href="#i-star"/></svg><b class="js-n">10/10</b></div></span>' +
+        '<span class="journey-state"><span class="done-label">✓ TAMAMLANDI</span></span>';
+      return;
+    }
     b.innerHTML = '<span class="journey-num">' + (open ? '2' : '🔒') + '</span><span class="journey-info"><span class="journey-name">' + jc.name + '</span></span><span class="journey-state">' + (open ? '<span class="play">YENİ</span>' : '<span class="lock-label2"><svg class="i"><use href="#i-lock"/></svg>KİLİTLİ</span>') + '</span>';
   };
   setOpen(!!amazonDone && !pending);            // animasyon bekliyorsa önce kilitli görünür
