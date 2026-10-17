@@ -1900,6 +1900,8 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .jm-monkey .jm-bw{position:absolute;left:0;top:0;width:100%;height:100%;display:block;transform-origin:50% 100%;pointer-events:none}
 .jm-monkey .jm-bd,.jm-monkey .jm-bd2{position:absolute;left:0;top:0;width:100%;height:100%;display:block;background:center bottom/contain no-repeat;transform-origin:50% 100%}
 .jm-monkey .jm-bd2{opacity:0}
+.jm-monkey.mm-tiger{width:100px;height:101px}
+.jm-monkey.mm-tiger .jm-sh{width:62px;margin-left:-26px}
 .jm-monkey .jm-sh{position:absolute;left:50%;bottom:-4px;width:54px;height:13px;margin-left:-27px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(0,0,0,.55) 0,rgba(0,0,0,.3) 42%,rgba(0,0,0,0) 72%)}
 .jm-monkey.idle .jm-bd{animation:jmBreath 2.6s ease-in-out infinite}
 .jm-monkey.walk .jm-bd{animation:jmStep .22s ease-in-out infinite}
@@ -7830,7 +7832,7 @@ function misirMonkeyTo(i, animate){
   const mk = misirMapEl.querySelector('.mm-monkey'), p = misirNodePx(i), right = MISIR_MAP.nodes[i][0] < 500;
   mk.style.transition = animate ? 'left .9s ease-in-out,top .9s ease-in-out,margin .9s ease-in-out' : 'none';
   mk.style.left = p[0] + 'px'; mk.style.top = p[1] + 'px';
-  mk.style.margin = right ? '-74px 0 0 -112px' : '-74px 0 0 34px';   /* yazı sağdaysa maymun solda, yazı soldaysa sağda */
+  mk.style.margin = right ? '-72px 0 0 -136px' : '-72px 0 0 34px';   /* yazı sağdaysa kaplan solda, yazı soldaysa sağda */
 }
 function layoutMisirMap(){
   const el = misirMapEl; if (!el) return;
@@ -7902,7 +7904,7 @@ function showMisirMap(opts){
       MISIR_MAP.nodes.map(() => '<img class="mm-sp" alt="" hidden draggable="false">').join('') +
       MISIR_MAP.nodes.map((_, i) => '<div class="mm-lab lk"><b>' + (i + 1) + '</b>' + MISIR_MAP.names[i] + '</div>').join('') +
       '<div class="jm-loading hide mm-ld"><div class="jm-ld-rays"></div><div class="jm-ld-orbs">' + Array.from({length:18},(_,i)=>'<span style="--x:'+((i*53)%100)+'%;--s:'+(4+(i*7)%9)+'px;--d:'+(5+(i*3)%6)+'s;--dl:'+(-(i*0.7).toFixed(1))+'s;--h:'+[48,160,300,42,190,330][i%6]+'"></span>').join('') + '</div><div class="jm-ld-center"><div class="jm-ld-brand"><span aria-hidden="true">🔺</span><small>YENİ BÖLGEYE GİRİŞ</small></div><div class="jm-ld-ring"><div class="jm-ld-core"><svg class="i"><use href="#i-star"/></svg></div></div><div class="jm-ld-text">' + 'YÜKLENİYOR'.split('').map((c,i)=>'<span style="--i:'+i+'">'+c+'</span>').join('') + '</div><div class="jm-ld-sub">Macera hazırlanıyor<em>.</em><em>.</em><em>.</em></div><div class="jm-bar"><i></i></div></div></div>' +
-      '<div class="jm-monkey idle mm-monkey"><i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span></div>' +
+      '<div class="jm-monkey idle mm-monkey mm-tiger"><i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span></div>' +
       MISIR_MAP.nodes.map((_, i) => '<button type="button" class="mm-hit mm-node" data-i="' + i + '" aria-label="' + MISIR_MAP.names[i] + '"></button>').join('') +
       '<button type="button" class="mm-hit mm-gear" aria-label="Ayarlar"></button>' +
       '<button type="button" class="mm-hit mm-back" aria-label="Geri"></button>';
@@ -8821,8 +8823,8 @@ function ensureJourneyMap(){
 }
 const JM_MK_WALK=['walk1','walk3','walk2','walk3','walk4','walk3','walk6','walk3'];  /* sol-orta-sağ-orta adım döngüsü */
 const JM_MK_URL=n=>"url('monkey-"+n+".png?v=3')";
-(function(){ ['idle','wave','walk1','walk2','walk3','walk4','walk6'].forEach(function(n){ var i=new Image(); i.src='monkey-'+n+'.png?v=3'; }); })();
-function jmMkPose(m,n){ const b=m.querySelector('.jm-bd'); if(b) b.style.backgroundImage=JM_MK_URL(n); }
+(function(){ ['idle','wave','walk1','walk2','walk3','walk4','walk6'].forEach(function(n){ var i=new Image(); i.src='monkey-'+n+'.png?v=3'; var t=new Image(); t.src='tiger-'+n+'.png?v=1'; }); })();
+function jmMkPose(m,n){ const b=m.querySelector('.jm-bd'); if(!b) return; b.style.backgroundImage = m.classList.contains('mm-tiger') ? "url('tiger-"+n+".png?v=1')" : JM_MK_URL(n); }
 function jmMonkeyJump(m, from, to, done){
   const box=m.parentNode, W=box.clientWidth, H=box.clientHeight;
   const dx=(to[0]-from[0])/100*W, dy=(to[1]-from[1])/100*H;
