@@ -897,6 +897,22 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #modal-victory .btn-main{width:100%}
 
 
+/* ===== FİNAL: tüm bölümler bitti ===== */
+#finale{position:fixed;inset:0;z-index:100000;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;animation:finFade .8s ease both}
+@keyframes finFade{from{opacity:0}to{opacity:1}}
+#finale canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.fin-card{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:16px;padding:calc(env(safe-area-inset-top,0px) + 16px) 18px calc(env(safe-area-inset-bottom,0px) + 22px);text-align:center;animation:finPop 1s cubic-bezier(.2,1.3,.4,1) .35s both}
+@keyframes finPop{from{opacity:0;transform:scale(.6) translateY(30px)}to{opacity:1;transform:none}}
+.fin-img{display:block;width:min(88vw,430px);height:auto;max-height:46vh;object-fit:contain;filter:drop-shadow(0 0 22px rgba(255,200,60,.65));pointer-events:none;user-select:none}
+.fin-title{font-size:38px;font-weight:1000;letter-spacing:.06em;color:#ffd84a;text-shadow:0 3px 0 #b45309,0 0 22px rgba(255,200,60,.8)}
+.fin-txt{font-size:21px;font-weight:1000;letter-spacing:.05em;line-height:1.2;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.6),0 0 16px rgba(255,255,255,.35)}
+.fin-sub{font-size:13px;font-weight:800;letter-spacing:.06em;color:#fde68a;opacity:.92}
+.fin-btn{margin-top:6px;font-family:inherit;font-size:15px;font-weight:1000;letter-spacing:.1em;color:#3b1d00;background:linear-gradient(180deg,#fff3b0,#ffc83d 60%,#f59e0b);border:0;border-radius:999px;padding:13px 34px;box-shadow:0 5px 0 #b45309,0 9px 16px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.6);cursor:pointer}
+.fin-btn:active{transform:translateY(4px);box-shadow:0 1px 0 #b45309,0 3px 6px rgba(0,0,0,.5)}
+/* ana sayfa: tüm bölümler bitti */
+.hm-level.hm-all .hm-lv-bar{height:19px;position:relative;box-shadow:inset 0 2px 3px rgba(0,0,0,.5),0 0 10px rgba(251,191,36,.45)}
+.hm-level.hm-all .hm-lv-bar::after{content:"BÖLÜMLER TAMAMLANDI";position:absolute;inset:0;display:grid;place-items:center;font-size:9px;font-weight:1000;letter-spacing:.07em;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.85),0 0 4px rgba(0,0,0,.6);white-space:nowrap}
+.hm-level.hm-all .hm-lv-fill{background:linear-gradient(180deg,#fde68a,#f59e0b 55%,#b45309)!important;box-shadow:0 0 10px rgba(251,191,36,.7)!important}
 /* ===== YOLCULUK: 10 kutucuklu dünya seçimi (3D) ===== */
 .journey-list-view.worlds-view{
   background:
@@ -925,8 +941,10 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 .world-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(180deg,#bbf7d0,#22c55e 55%,#15803d);box-shadow:0 0 8px rgba(74,222,128,.7)}
 .world-go{font-size:11px;font-weight:1000;letter-spacing:.1em;color:#3b1d00;background:linear-gradient(180deg,#fff3b0,#ffc83d 60%,#f59e0b);border-radius:999px;padding:6px 15px;box-shadow:0 3px 0 #b45309,0 5px 8px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.6)}
 .world-tile.open .world-art{opacity:.42;font-size:96px}
-.world-tile.soon{cursor:default}
-.world-tile.soon .world-art{opacity:.5;filter:grayscale(.25) drop-shadow(0 4px 6px rgba(0,0,0,.35))}
+.world-go.ok{color:#04260f;background:linear-gradient(180deg,#d9fbe3,#4ade80 60%,#16a34a);box-shadow:0 3px 0 #0f6b30,0 5px 8px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.6)}
+.world-tile.soon{cursor:default;pointer-events:none;filter:grayscale(.92) brightness(.62);opacity:.85;box-shadow:0 5px 0 rgba(0,0,0,.55),0 8px 12px rgba(0,0,0,.4),inset 0 2px 0 rgba(255,255,255,.12),inset 0 -12px 18px rgba(0,0,0,.3)}
+.world-tile.soon::before{opacity:.35}
+.world-tile.soon .world-art{opacity:.28}
 .world-soon{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:1000;letter-spacing:.12em;color:#fff;background:rgba(5,15,25,.55);border:1.5px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 12px;box-shadow:0 3px 0 rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.25)}
 .world-soon .i{width:13px;height:13px;fill:currentColor}
 /* ===== YOLCULUK: neon bölüm listesi ===== */
@@ -6669,6 +6687,8 @@ function victory(){
   S.maxOpen = Math.max(S.maxOpen, Math.min(idx + 1, MAX_PLAY));
   S.justUnlocked = (S.maxOpen > oldMax) ? S.maxOpen : -1;
   saveProgress(); syncLevelPoints();
+  /* SON BÖLÜM (Fuji Dağı 10/10) bitti ve tüm bölümler tamam: siyah ekran + havai fişek + tebrikler */
+  if (idx >= LEVELS.length - 1 && allGameDone()){ leaveGame(); showFinale(); return; }
   /* J alt bölümü: bölümün (10 alt seviyenin) final tebrik ekranı */
   if (isChapterFinal && idx >= AMAZON_LEVELS){   /* Mısır / Sahra / Everest bölümü bitti */
     const adv = Math.floor(idx / 100), ci = Math.floor(idx / CHAPTER_SIZE) - adv * 10;
@@ -7466,7 +7486,7 @@ function renderWorlds(){
   first.innerHTML = '<span class="world-art">' + WORLD_ART[0] + '</span><span class="world-num">1</span><span class="world-name">Maceralar</span>' +
     '<span class="world-sub">' + done + ' / ' + total + ' BÖLÜM</span>' +
     '<span class="world-bar"><i style="width:' + Math.max(3, pct) + '%"></i></span>' +
-    '<span class="world-go">OYNA ▶</span>';
+    (done >= total ? '<span class="world-go ok">✓ TAMAMLANDI</span>' : '<span class="world-go">OYNA ▶</span>');
   first.addEventListener('click', () => { audio(); showLevels(); });
   grid.appendChild(first);
   for (let n = 2; n <= 10; n++){
@@ -9294,6 +9314,78 @@ function hmWordOfDay(){
 }
 function hmMask(w){ const a = Array.from(w || ''); return a.length ? a[0] + ' ' + a.slice(1).map(() => '_').join(' ') : '—'; }
 function hmSet(id, fn){ const el = $(id); if (el) fn(el); }
+function allGameDone(){
+  const n = Math.min(GROUPS.length, 100);
+  if (!n) return false;
+  for (let g = 0; g < n; g++) if (!chapterComplete(g)) return false;
+  return true;
+}
+function showFinale(){
+  const old = document.getElementById('finale'); if (old) old.remove();
+  const el = document.createElement('div'); el.id = 'finale';
+  el.innerHTML = '<canvas id="fin-cv"></canvas><div class="fin-card">' +
+    '<img class="fin-img" src="tebrikler.png?v=1" alt="Tebrikler" draggable="false">' +
+    '<div class="fin-txt">TÜM BÖLÜMLERİ BİTİRDİNİZ!</div>' +
+    '<div class="fin-sub">Fuji Dağı\'nın zirvesine ulaştınız 🗻</div>' +
+    '<button class="fin-btn" id="fin-home" type="button">ANA SAYFA</button></div>';
+  document.body.appendChild(el);
+  const img = el.querySelector('.fin-img');
+  img.addEventListener('error', () => { const h = document.createElement('div'); h.className = 'fin-title'; h.textContent = 'TEBRİKLER!'; img.replaceWith(h); });
+  const cv = el.querySelector('#fin-cv'), cx = cv.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let W = 0, H = 0;
+  const fit = () => { W = el.clientWidth; H = el.clientHeight; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cx.setTransform(dpr, 0, 0, dpr, 0, 0); cx.fillStyle = '#000'; cx.fillRect(0, 0, W, H); };
+  fit();
+  const cols = ['#ffd84a','#ff5d7a','#5eead4','#a78bfa','#4ade80','#fb923c','#60a5fa','#ffffff','#f472b6'];
+  let rockets = [], parts = [], raf = 0, alive = true, nextAt = 0;
+  const burst = (x, y) => {
+    const c1 = cols[Math.floor(Math.random() * cols.length)], c2 = cols[Math.floor(Math.random() * cols.length)];
+    const n = 70 + Math.floor(Math.random() * 40);
+    for (let i = 0; i < n; i++){
+      const a = Math.PI * 2 * i / n + Math.random() * .1, sp = 90 + Math.random() * 210 * (Math.random() < .35 ? .55 : 1);
+      parts.push({x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 1.1 + Math.random() * .9, t: 0, c: i % 3 === 0 ? c2 : c1, r: 1.6 + Math.random() * 1.6});
+    }
+    try { SND.boom(); } catch(_){}
+  };
+  const launch = () => {
+    const x = W * (.12 + Math.random() * .76), ty = H * (.12 + Math.random() * .38);
+    rockets.push({x, y: H + 10, ty, vy: -(560 + Math.random() * 160), c: '#fff6c8'});
+  };
+  let last = performance.now();
+  const tick = now => {
+    if (!alive) return;
+    const dt = Math.min((now - last) / 1000, .05); last = now;
+    cx.globalCompositeOperation = 'source-over'; cx.fillStyle = 'rgba(0,0,0,.2)'; cx.fillRect(0, 0, W, H);
+    cx.globalCompositeOperation = 'lighter';
+    if (now >= nextAt){ launch(); if (Math.random() < .45) launch(); nextAt = now + 420 + Math.random() * 520; }
+    rockets = rockets.filter(r => {
+      r.y += r.vy * dt;
+      cx.fillStyle = r.c; cx.globalAlpha = .9; cx.beginPath(); cx.arc(r.x, r.y, 2.2, 0, 6.3); cx.fill();
+      if (r.y <= r.ty){ burst(r.x, r.y); return false; }
+      return true;
+    });
+    parts = parts.filter(p => {
+      p.t += dt; if (p.t >= p.life) return false;
+      p.vy += 160 * dt; p.vx *= (1 - .9 * dt); p.vy *= (1 - .9 * dt);
+      p.x += p.vx * dt; p.y += p.vy * dt;
+      const k = 1 - p.t / p.life;
+      cx.globalAlpha = Math.max(0, k); cx.fillStyle = p.c; cx.beginPath(); cx.arc(p.x, p.y, p.r * (.5 + k * .6), 0, 6.3); cx.fill();
+      return true;
+    });
+    cx.globalAlpha = 1;
+    raf = requestAnimationFrame(tick);
+  };
+  raf = requestAnimationFrame(tick);
+  setTimeout(() => { if (alive){ burst(W * .25, H * .22); burst(W * .75, H * .26); burst(W * .5, H * .15); } }, 250);
+  try { SND.win(); } catch(_){}
+  buzz([60, 60, 60, 60, 160]);
+  const onResize = () => fit(); window.addEventListener('resize', onResize);
+  $('fin-home').addEventListener('click', () => {
+    alive = false; cancelAnimationFrame(raf); window.removeEventListener('resize', onResize);
+    try { audio(); } catch(_){}
+    el.remove(); showHome();
+  });
+}
 function hmActiveLevel(){
   /* En son oynadığın bölüm (hangi macerada olursan); kayıt yoksa/açık değilse en ilerideki açık bölüm */
   const li = parseInt(store.get('kb_last_lv'), 10);
@@ -9333,8 +9425,10 @@ function renderHomeHud(){
   }
   if (!noProg){ hmSet('hm-lv-num', e => { e.textContent = chapter; });
   hmSet('hm-lv-name', e => { e.textContent = advEmoji + ' ' + chapterName; }); }
-  hmSet('hm-lv-count', e => { e.textContent = done + ' / ' + total; });
-  hmSet('hm-lv-fill', e => { e.style.width = Math.max(4, Math.round(done / total * 100)) + '%'; });
+  const allDone = allGameDone();
+  if (levelStrip) levelStrip.classList.toggle('hm-all', allDone && !noProg);
+  hmSet('hm-lv-count', e => { e.textContent = (allDone && !noProg) ? '🏆' : done + ' / ' + total; });
+  hmSet('hm-lv-fill', e => { e.style.width = (allDone && !noProg) ? '100%' : Math.max(4, Math.round(done / total * 100)) + '%'; });
   /* Hiç oynamamış oyuncuda "Bölüm" rozeti gizli; oynamaya başlayınca görünür */
   hmSet('hm-play-tag', e => { e.textContent = 'Bölüm ' + chapter; e.style.display = noProg ? 'none' : ''; });
   hmSet('hm-lv-ch', e => { e.textContent = 'Bölüm ' + chapter; });
@@ -10780,6 +10874,7 @@ $('bX').onclick=()=>{try{parent.postMessage('sudoku-exit','*')}catch(e){}};
       if (dyn){ dyn.classList.remove('show'); return true; }
 
       /* 4) Ekranlar: oyun → yolculuk haritası → modlar → ana sayfa */
+      if (document.getElementById('finale')){ click('fin-home'); return true; }
       var jb = document.querySelector('.jm-backbtn');
       var jm = jb && jb.closest('section');
       if (shown(jm)){ jb.click(); return true; }
