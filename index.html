@@ -1914,6 +1914,10 @@ html:has(.app.on-journey),body:has(.app.on-journey),.app.on-journey,.jr-map,.jr-
 .jm-monkey.mm-fish .jm-sh{width:62px;margin-left:-27px}
 .jm-monkey.mm-balloon{width:82px;height:100px}
 .jm-monkey.mm-balloon .jm-sh{width:46px;margin-left:-20px}
+.jm-monkey.mm-catfish{width:94px;height:100px}
+.jm-monkey.mm-catfish .jm-sh{width:58px;margin-left:-26px}
+.jm-monkey.mm-ibex{width:86px;height:100px}
+.jm-monkey.mm-ibex .jm-sh{width:54px;margin-left:-24px}
 .jm-monkey .jm-sh{position:absolute;left:50%;bottom:-4px;width:54px;height:13px;margin-left:-27px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(0,0,0,.55) 0,rgba(0,0,0,.3) 42%,rgba(0,0,0,0) 72%)}
 .jm-monkey.idle .jm-bd{animation:jmBreath 2.6s ease-in-out infinite}
 .jm-monkey.walk .jm-bd{animation:jmStep .22s ease-in-out infinite}
@@ -8590,7 +8594,7 @@ function niagaraMonkeyTo(i, animate){
   const mk = niagaraMapEl.querySelector('.mm-monkey'), p = niagaraNodePx(i), right = NIAGARA_MAP.nodes[i][0] < 500;
   mk.style.transition = animate ? 'left .9s ease-in-out,top .9s ease-in-out,margin .9s ease-in-out' : 'none';
   mk.style.left = p[0] + 'px'; mk.style.top = p[1] + 'px';
-  mk.style.margin = right ? '-74px 0 0 -112px' : '-74px 0 0 34px';
+  mk.style.margin = right ? '-74px 0 0 -128px' : '-74px 0 0 34px';
 }
 function layoutNiagaraMap(){
   const el = niagaraMapEl; if (!el) return;
@@ -8632,7 +8636,7 @@ function showNiagaraMap(){
       '<b class="mm-score">0/10</b>' +
       NIAGARA_MAP.nodes.map(() => '<img class="mm-sp" alt="" hidden draggable="false">').join('') +
       NIAGARA_MAP.nodes.map((_, i) => '<div class="mm-lab lk"><b>' + (i + 1) + '</b>' + NIAGARA_MAP.names[i] + '</div>').join('') +
-      '<div class="jm-monkey idle mm-monkey"><i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span></div>' +
+      '<div class="jm-monkey idle mm-monkey mm-catfish"><i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span></div>' +
       NIAGARA_MAP.nodes.map((_, i) => '<button type="button" class="mm-hit mm-node" data-i="' + i + '" aria-label="' + NIAGARA_MAP.names[i] + '"></button>').join('') +
       '<button type="button" class="mm-hit mm-gear" aria-label="Ayarlar"></button>' +
       '<button type="button" class="mm-hit mm-back" aria-label="Geri"></button>';
@@ -8685,7 +8689,7 @@ function fujiMonkeyTo(i, animate){
   const mk = fujiMapEl.querySelector('.mm-monkey'), p = fujiNodePx(i), right = FUJI_MAP.nodes[i][0] < 500;
   mk.style.transition = animate ? 'left .9s ease-in-out,top .9s ease-in-out,margin .9s ease-in-out' : 'none';
   mk.style.left = p[0] + 'px'; mk.style.top = p[1] + 'px';
-  mk.style.margin = right ? '-74px 0 0 -112px' : '-74px 0 0 34px';
+  mk.style.margin = right ? '-74px 0 0 -120px' : '-74px 0 0 34px';
 }
 function layoutFujiMap(){
   const el = fujiMapEl; if (!el) return;
@@ -8727,7 +8731,7 @@ function showFujiMap(){
       '<b class="mm-score">0/10</b>' +
       FUJI_MAP.nodes.map(() => '<img class="mm-sp" alt="" hidden draggable="false">').join('') +
       FUJI_MAP.nodes.map((_, i) => '<div class="mm-lab lk"><b>' + (i + 1) + '</b>' + FUJI_MAP.names[i] + '</div>').join('') +
-      '<div class="jm-monkey idle mm-monkey"><i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span></div>' +
+      '<div class="jm-monkey idle mm-monkey mm-ibex"><i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span></div>' +
       FUJI_MAP.nodes.map((_, i) => '<button type="button" class="mm-hit mm-node" data-i="' + i + '" aria-label="' + FUJI_MAP.names[i] + '"></button>').join('') +
       '<button type="button" class="mm-hit mm-gear" aria-label="Ayarlar"></button>' +
       '<button type="button" class="mm-hit mm-back" aria-label="Geri"></button>';
@@ -8835,8 +8839,8 @@ function ensureJourneyMap(){
 }
 const JM_MK_WALK=['walk1','walk3','walk2','walk3','walk4','walk3','walk6','walk3'];  /* sol-orta-sağ-orta adım döngüsü */
 const JM_MK_URL=n=>"url('monkey-"+n+".png?v=3')";
-(function(){ ['idle','wave','walk1','walk2','walk3','walk4','walk6'].forEach(function(n){ var i=new Image(); i.src='monkey-'+n+'.png?v=3'; var t=new Image(); t.src='tiger-'+n+'.png?v=2'; var y=new Image(); y.src='snake-'+n+'.png?v=2'; var g=new Image(); g.src='goat-'+n+'.png?v=2'; var q=new Image(); q.src='penguin-'+n+'.png?v=1'; var l=new Image(); l.src='lion-'+n+'.png?v=1'; var f=new Image(); f.src='fish-'+n+'.png?v=1'; var b=new Image(); b.src='balloon-'+n+'.png?v=1'; }); })();
-function jmMkPose(m,n){ const b=m.querySelector('.jm-bd'); if(!b) return; b.style.backgroundImage = m.classList.contains('mm-tiger') ? "url('tiger-"+n+".png?v=2')" : m.classList.contains('mm-snake') ? "url('snake-"+n+".png?v=2')" : m.classList.contains('mm-goat') ? "url('goat-"+n+".png?v=2')" : m.classList.contains('mm-penguin') ? "url('penguin-"+n+".png?v=1')" : m.classList.contains('mm-lion') ? "url('lion-"+n+".png?v=1')" : m.classList.contains('mm-fish') ? "url('fish-"+n+".png?v=1')" : m.classList.contains('mm-balloon') ? "url('balloon-"+n+".png?v=1')" : JM_MK_URL(n); }
+(function(){ ['idle','wave','walk1','walk2','walk3','walk4','walk6'].forEach(function(n){ var i=new Image(); i.src='monkey-'+n+'.png?v=3'; var t=new Image(); t.src='tiger-'+n+'.png?v=2'; var y=new Image(); y.src='snake-'+n+'.png?v=2'; var g=new Image(); g.src='goat-'+n+'.png?v=2'; var q=new Image(); q.src='penguin-'+n+'.png?v=1'; var l=new Image(); l.src='lion-'+n+'.png?v=1'; var f=new Image(); f.src='fish-'+n+'.png?v=1'; var b=new Image(); b.src='balloon-'+n+'.png?v=1'; var c=new Image(); c.src='catfish-'+n+'.png?v=1'; var x=new Image(); x.src='ibex-'+n+'.png?v=1'; }); })();
+function jmMkPose(m,n){ const b=m.querySelector('.jm-bd'); if(!b) return; b.style.backgroundImage = m.classList.contains('mm-tiger') ? "url('tiger-"+n+".png?v=2')" : m.classList.contains('mm-snake') ? "url('snake-"+n+".png?v=2')" : m.classList.contains('mm-goat') ? "url('goat-"+n+".png?v=2')" : m.classList.contains('mm-penguin') ? "url('penguin-"+n+".png?v=1')" : m.classList.contains('mm-lion') ? "url('lion-"+n+".png?v=1')" : m.classList.contains('mm-fish') ? "url('fish-"+n+".png?v=1')" : m.classList.contains('mm-balloon') ? "url('balloon-"+n+".png?v=1')" : m.classList.contains('mm-catfish') ? "url('catfish-"+n+".png?v=1')" : m.classList.contains('mm-ibex') ? "url('ibex-"+n+".png?v=1')" : JM_MK_URL(n); }
 function jmMonkeyJump(m, from, to, done){
   const box=m.parentNode, W=box.clientWidth, H=box.clientHeight;
   const dx=(to[0]-from[0])/100*W, dy=(to[1]-from[1])/100*H;
