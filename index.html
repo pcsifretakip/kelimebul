@@ -897,25 +897,37 @@ button.srow:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,2
 #modal-victory .btn-main{width:100%}
 
 
-/* ===== YOLCULUK: 10 kutucuklu dünya seçimi ===== */
-.worlds-grid{position:relative;z-index:2;flex:1;min-height:0;overflow-y:auto;padding:8px 14px calc(26px + env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:min-content;gap:13px;scrollbar-width:none;align-content:start}
+/* ===== YOLCULUK: 10 kutucuklu dünya seçimi (3D) ===== */
+.journey-list-view.worlds-view{
+  background:
+    radial-gradient(circle at 12% 8%,rgba(255,200,70,.20),transparent 34%),
+    radial-gradient(circle at 92% 30%,rgba(34,211,238,.20),transparent 38%),
+    radial-gradient(circle at 8% 72%,rgba(34,197,94,.22),transparent 40%),
+    radial-gradient(circle at 95% 96%,rgba(59,130,246,.22),transparent 40%),
+    linear-gradient(180deg,#0a2a2f 0%,#0b2236 46%,#07141f 100%);
+}
+.worlds-view::before{opacity:.5;background-image:radial-gradient(rgba(255,255,255,.07) 1.5px,transparent 1.6px);background-size:26px 26px;mask-image:linear-gradient(to bottom,black,transparent 96%)}
+.worlds-grid{position:relative;z-index:2;flex:1;min-height:0;overflow-y:auto;padding:14px 14px calc(30px + env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:min-content;gap:18px 14px;scrollbar-width:none;align-content:start}
 .worlds-grid::-webkit-scrollbar{display:none}
-.world-tile{--neon:#8b5cf6;position:relative;box-sizing:border-box;aspect-ratio:1/1.04;border-radius:22px;padding:12px 11px 13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center;color:#fff;overflow:hidden;cursor:pointer;font-family:inherit;
-  background:linear-gradient(160deg,rgba(33,24,72,.96),rgba(14,10,36,.97));border:1.5px solid color-mix(in srgb,var(--neon) 70%,transparent);
-  box-shadow:0 0 12px color-mix(in srgb,var(--neon) 38%,transparent),inset 0 0 22px color-mix(in srgb,var(--neon) 12%,transparent)}
-.world-tile::after{content:"";position:absolute;top:-40%;left:-30%;width:34%;height:180%;transform:rotate(18deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);pointer-events:none}
-.world-tile:active:not(.soon){transform:scale(.96)}
-.world-num{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:20px;font-weight:1000;color:#fff;background:radial-gradient(circle at 35% 25%,color-mix(in srgb,var(--neon) 75%,white 10%),color-mix(in srgb,var(--neon) 55%,#111 45%));border:1px solid rgba(255,255,255,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 0 12px color-mix(in srgb,var(--neon) 55%,transparent)}
-.world-name{font-size:15px;font-weight:1000;line-height:1.12;letter-spacing:.02em;text-shadow:0 2px 6px rgba(0,0,0,.7)}
-.world-sub{font-size:10px;font-weight:800;letter-spacing:.06em;color:color-mix(in srgb,var(--neon) 65%,white 35%)}
-.world-bar{width:78%;height:7px;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden}
-.world-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(180deg,#86efac,#16a34a);box-shadow:0 0 8px rgba(74,222,128,.6)}
-.world-go{font-size:10px;font-weight:1000;letter-spacing:.08em;color:#3b1d00;background:linear-gradient(180deg,#fff1a8,#ffc83d);border-radius:999px;padding:5px 12px;box-shadow:0 2px 0 #b45309}
-.world-tile.open{--neon:#fbbf24;animation:journeyCurrent 1.9s ease-in-out infinite}
-.world-tile.soon{--neon:#64748b;cursor:default;filter:saturate(.55) brightness(.9)}
-.world-tile.soon::after{display:none}
-.world-tile.soon .world-num{background:linear-gradient(180deg,#59677c,#27354d)}
-.world-soon{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:1000;letter-spacing:.12em;color:#cbd5e1;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px 11px}
+.world-tile{--c:#8b5cf6;--edge:color-mix(in srgb,var(--c) 38%,#000);position:relative;box-sizing:border-box;aspect-ratio:1/.88;border-radius:24px;padding:10px 9px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;color:#fff;overflow:hidden;cursor:pointer;font-family:inherit;isolation:isolate;
+  background:linear-gradient(165deg,color-mix(in srgb,var(--c) 70%,#fff 6%) 0%,color-mix(in srgb,var(--c) 52%,#0a1c2a) 46%,color-mix(in srgb,var(--c) 30%,#06121c) 100%);
+  border:2.5px solid color-mix(in srgb,var(--c) 55%,#fff 45%);
+  box-shadow:0 8px 0 var(--edge),0 14px 20px rgba(0,0,0,.5),0 0 22px color-mix(in srgb,var(--c) 35%,transparent),inset 0 3px 0 rgba(255,255,255,.45),inset 0 -14px 22px rgba(0,0,0,.28);
+  transition:transform .12s ease,box-shadow .12s ease}
+.world-tile::before{content:"";position:absolute;z-index:-1;left:6%;right:6%;top:3%;height:38%;border-radius:50% 50% 40% 40%/80% 80% 25% 25%;background:linear-gradient(180deg,rgba(255,255,255,.36),rgba(255,255,255,0))}
+.world-tile::after{content:"";position:absolute;z-index:-1;inset:0;background:radial-gradient(circle at 78% 90%,color-mix(in srgb,var(--c) 70%,#fff) 0,transparent 55%);opacity:.35;pointer-events:none}
+.world-tile:active{transform:translateY(5px);box-shadow:0 3px 0 var(--edge),0 6px 10px rgba(0,0,0,.45),inset 0 3px 0 rgba(255,255,255,.4),inset 0 -14px 22px rgba(0,0,0,.28)}
+.world-art{position:absolute;z-index:-1;right:-6px;bottom:-10px;font-size:86px;line-height:1;opacity:.32;transform:rotate(-10deg);filter:drop-shadow(0 4px 6px rgba(0,0,0,.35));pointer-events:none}
+.world-num{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:21px;font-weight:1000;color:#fff;background:linear-gradient(180deg,color-mix(in srgb,var(--c) 60%,#fff 40%),color-mix(in srgb,var(--c) 80%,#000 20%));border:2px solid rgba(255,255,255,.7);box-shadow:0 4px 0 var(--edge),0 6px 10px rgba(0,0,0,.4),inset 0 2px 0 rgba(255,255,255,.6);text-shadow:0 2px 3px rgba(0,0,0,.45)}
+.world-name{font-size:17px;font-weight:1000;line-height:1.1;letter-spacing:.02em;text-shadow:0 2px 0 rgba(0,0,0,.45),0 3px 8px rgba(0,0,0,.6)}
+.world-sub{font-size:10.5px;font-weight:900;letter-spacing:.06em;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.7)}
+.world-bar{width:78%;height:9px;border-radius:99px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.25);overflow:hidden;box-shadow:inset 0 2px 3px rgba(0,0,0,.5)}
+.world-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(180deg,#bbf7d0,#22c55e 55%,#15803d);box-shadow:0 0 8px rgba(74,222,128,.7)}
+.world-go{font-size:11px;font-weight:1000;letter-spacing:.1em;color:#3b1d00;background:linear-gradient(180deg,#fff3b0,#ffc83d 60%,#f59e0b);border-radius:999px;padding:6px 15px;box-shadow:0 3px 0 #b45309,0 5px 8px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.6)}
+.world-tile.open .world-art{opacity:.42;font-size:96px}
+.world-tile.soon{cursor:default}
+.world-tile.soon .world-art{opacity:.5;filter:grayscale(.25) drop-shadow(0 4px 6px rgba(0,0,0,.35))}
+.world-soon{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:1000;letter-spacing:.12em;color:#fff;background:rgba(5,15,25,.55);border:1.5px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 12px;box-shadow:0 3px 0 rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.25)}
 .world-soon .i{width:13px;height:13px;fill:currentColor}
 /* ===== YOLCULUK: neon bölüm listesi ===== */
 .journey-list-view{
@@ -7441,6 +7453,8 @@ function showGame(i, def, seed){ setView('game'); startLevel(i, def, seed); }
 function showHome(){ leaveGame(); setView('home'); updateHome(); }
 function showLevels(){ leaveGame(); renderModes(); setView('modes'); updateHome(); }
 /* Yolculuğa Başla: 10 kutucuklu sayfa. 1. kutu = şu anki tüm maceralar/bölümler, 2-10 = yakında */
+const WORLD_COL = ['#f5a623','#14b8a6','#3b82f6','#a855f7','#22c55e','#f97316','#ec4899','#06b6d4','#6366f1','#ef4444'];
+const WORLD_ART = ['🌍','🏝️','🏔️','🌋','🏰','🚀','🌌','🐉','🔮','👑'];
 function renderWorlds(){
   const grid = $('worlds-grid'); if (!grid) return;
   let done = 0, total = 0;
@@ -7448,16 +7462,16 @@ function renderWorlds(){
   total = Math.max(total, 1);
   const pct = Math.round(done / total * 100);
   grid.innerHTML = '';
-  const first = document.createElement('button'); first.type = 'button'; first.className = 'world-tile open';
-  first.innerHTML = '<span class="world-num">1</span><span class="world-name">Maceralar</span>' +
+  const first = document.createElement('button'); first.type = 'button'; first.className = 'world-tile open'; first.style.setProperty('--c', WORLD_COL[0]);
+  first.innerHTML = '<span class="world-art">' + WORLD_ART[0] + '</span><span class="world-num">1</span><span class="world-name">Maceralar</span>' +
     '<span class="world-sub">' + done + ' / ' + total + ' BÖLÜM</span>' +
     '<span class="world-bar"><i style="width:' + Math.max(3, pct) + '%"></i></span>' +
     '<span class="world-go">OYNA ▶</span>';
   first.addEventListener('click', () => { audio(); showLevels(); });
   grid.appendChild(first);
   for (let n = 2; n <= 10; n++){
-    const b = document.createElement('div'); b.className = 'world-tile soon';
-    b.innerHTML = '<span class="world-num">' + n + '</span>' +
+    const b = document.createElement('div'); b.className = 'world-tile soon'; b.style.setProperty('--c', WORLD_COL[n - 1]);
+    b.innerHTML = '<span class="world-art">' + WORLD_ART[n - 1] + '</span><span class="world-num">' + n + '</span>' +
       '<span class="world-soon"><svg class="i"><use href="#i-lock"/></svg>YAKINDA</span>';
     b.addEventListener('click', () => { try{ buzz(20); }catch(_){} });
     grid.appendChild(b);
