@@ -7079,6 +7079,118 @@ function showMisirIntro(cb){
   t = setTimeout(() => o.classList.add('hint'), 3500);
 }
 
+/* ===== DİĞER MACERALAR: tanıtım (bilgilendirme) + yükleniyor ekranı — Amazon/Mısır ile aynı akış ===== */
+const ADV_INFO = {
+  sahra:{ emoji:'🏜️', fl:['☀️','🐪','🌵','🏜️','🦂'], sky:['#1b0f3a','#9a3b1c','#ffb347'],
+    kicker:'SONSUZ KUMLAR DİYARI', title:'SAHRA<br>ÇÖLÜ', tag:'Dünyanın en büyük sıcak çölünü kelimelerle keşfet!',
+    facts:[`Sahra, yaklaşık 9 milyon km² ile dünyanın en büyük sıcak çölüdür. Büyüklüğü neredeyse Amerika Birleşik Devletleri kadardır!`,
+           `Sahra'nın tamamı kum değildir. Büyük bölümü kayalık ve çakıllı düzlüklerden oluşur.`,
+           `Sahra'da gündüzleri çok sıcak olur, geceleri ise sıcaklık hızla düşer.`,
+           `Develer hörgüçlerinde su değil, yağ depolar. Bu sayede günlerce susuz yürüyebilirler.`,
+           `Binlerce yıl önce Sahra'nın büyük bölümü yeşil otlaklarla kaplıydı.`] },
+  everest:{ emoji:'🏔️', fl:['❄️','🧗','🏔️','⛰️','🚩'], sky:['#050d26','#1d4e89','#9fd8f5'],
+    kicker:'DÜNYANIN ÇATISI', title:'EVEREST<br>TEPESİ', tag:'Dünyanın zirvesine kelimelerle tırman!',
+    facts:[`Everest, 8.849 metre yüksekliğiyle deniz seviyesinden ölçüldüğünde dünyanın en yüksek dağıdır.`,
+           `Everest, Nepal ile Çin'in Tibet bölgesi arasındaki sınırda yer alır.`,
+           `Everest'e ilk kez 1953'te Edmund Hillary ve Tenzing Norgay çıktı.`,
+           `Zirvede nefes almak çok zordur, çünkü hava deniz seviyesindekine göre çok daha incedir.`,
+           `Everest'in Nepal'deki adı Sagarmatha, Tibet'teki adı Çomolungma'dır.`] },
+  antarktika:{ emoji:'🐧', fl:['❄️','🧊','🐧','🌨️','⛄'], sky:['#07142e','#1a5f9e','#c8ecff'],
+    kicker:'BUZULLAR KITASI', title:'ANTARKTİKA<br>KITASI', tag:'Buzlar ülkesinde kelime macerası!',
+    facts:[`Antarktika, dünyanın en soğuk, en rüzgârlı ve en kuru kıtasıdır.`,
+           `Kıtanın yaklaşık %98'i buzla kaplıdır.`,
+           `Dünyadaki tatlı suyun büyük bir bölümü Antarktika'nın buzullarında saklıdır.`,
+           `Antarktika'da kalıcı olarak yaşayan bir halk yoktur. Yalnızca bilim insanları araştırma istasyonlarında kalır.`,
+           `Penguenler Antarktika'da yaşar, ama kutup ayıları yaşamaz. Onlar Kuzey Kutbu'ndadır!`] },
+  harika7:{ emoji:'🌍', fl:['🏛️','🗿','🕌','🏯','✨'], sky:['#12062e','#5b2a9e','#f3a6e6'],
+    kicker:'İNSANLIĞIN HARİKALARI', title:'DÜNYANIN<br>7 HARİKASI', tag:'Yedi harika yapıyı kelimelerle gez!',
+    facts:[`Modern dünyanın yedi harikası, 2007'de milyonlarca kişinin oyuyla seçildi.`,
+           `Petra, Ürdün'de kayalara oyularak yapılmış, pembe renkli bir antik şehirdir.`,
+           `Machu Picchu, Peru'da And Dağları'nın yaklaşık 2.400 metre yüksekliğinde kurulmuştur.`,
+           `Tac Mahal, Hindistan'da beyaz mermerden yapılmış görkemli bir türbedir.`,
+           `Roma'daki Kolezyum, yaklaşık 50 bin seyirci alabiliyordu.`] },
+  mariana:{ emoji:'🐠', fl:['🫧','🐙','🐠','🦑','🐚'], sky:['#00040f','#04306b','#1ba3c6'],
+    kicker:'OKYANUSUN EN DERİNİ', title:'MARİANA<br>ÇUKURU', tag:'Karanlık derinliklere dal ve kelimeleri bul!',
+    facts:[`Mariana Çukuru, dünyanın en derin noktasıdır. Derinliği yaklaşık 11 bin metredir.`,
+           `Çukurun en derin yerine Challenger Deep denir.`,
+           `Everest Dağı'nı bu çukura koysak, tepesi yine de suyun yaklaşık 2 km altında kalırdı.`,
+           `Çukurun dibindeki basınç, deniz yüzeyindekinin 1000 katından fazladır.`,
+           `Bu karanlık derinliklerde bile yaşayan canlılar vardır.`] },
+  kapadokya:{ emoji:'🎈', fl:['🎈','🏺','☀️','🕊️','⛰️'], sky:['#2a0f3d','#d1503a','#ffcf70'],
+    kicker:'PERİ BACALARI DİYARI', title:'KAPADOKYA', tag:'Balonlarla gökyüzünde kelime avına çık!',
+    facts:[`Kapadokya, Türkiye'nin İç Anadolu Bölgesi'nde yer alır.`,
+           `Peri bacaları, volkanik kayaların yağmur ve rüzgârla yavaş yavaş aşınmasıyla oluştu.`,
+           `Kapadokya, UNESCO Dünya Mirası Listesi'nde yer alır.`,
+           `Bölgedeki yeraltı şehirlerinde binlerce kişi barınabiliyordu.`,
+           `Kapadokya, sabah gökyüzünü dolduran sıcak hava balonlarıyla ünlüdür.`] },
+  niagara:{ emoji:'💦', fl:['🌈','💧','🚤','🌊','🍁'], sky:['#031a2e','#0b6e99','#7fe3d6'],
+    kicker:'GÜR SULARIN DİYARI', title:'NİAGARA<br>ŞELALELERİ', tag:'Gürül gürül akan sularla kelimeleri yakala!',
+    facts:[`Niagara Şelaleleri, Amerika Birleşik Devletleri ile Kanada sınırında yer alır.`,
+           `Niagara, üç şelaleden oluşur: At Nalı, Amerikan ve Gelin Duvağı şelaleleri.`,
+           `Niagara'dan her saniye milyonlarca litre su akar.`,
+           `Şelaleler, yaklaşık 12 bin yıl önce son buzul çağının sonunda oluşmaya başladı.`,
+           `Güneşli günlerde şelalenin su sisinde gökkuşağı görülebilir.`] },
+  fuji:{ emoji:'🗻', fl:['🌸','🗻','⛩️','🎏','🌅'], sky:['#1a0b2e','#c2437a','#ffc2a8'],
+    kicker:'GÜNEŞİN DOĞDUĞU ÜLKENİN DAĞI', title:'FUJİ<br>DAĞI', tag:'Japonya\'nın kutsal dağında kelime yolculuğu!',
+    facts:[`Fuji Dağı, 3.776 metre yüksekliğiyle Japonya'nın en yüksek dağıdır.`,
+           `Fuji aslında bir yanardağdır. Son patlaması 1707 yılında oldu.`,
+           `Fuji, kusursuz koni şekli ve karlı zirvesiyle ünlüdür.`,
+           `Her yaz yüz binlerce kişi Fuji'nin zirvesine tırmanır.`,
+           `Fuji, 2013'te UNESCO Dünya Mirası Listesi'ne girdi.`] }
+};
+function showAdvIntro(key, cb){
+  const d = ADV_INFO[key];
+  if (!d){ cb(); return; }
+  if (document.querySelector('.am-intro')) return;
+  const o = document.createElement('div'); o.className = 'am-intro mi-intro adv-intro';
+  o.style.setProperty('--a1', d.sky[0]); o.style.setProperty('--a2', d.sky[1]); o.style.setProperty('--a3', d.sky[2]);
+  const fl = d.fl.map((e, k) => '<span class="adv-fl" style="left:' + (8 + (k * 19) % 84) + '%;top:' + (26 + (k * 13) % 30) + '%;font-size:' + (22 + (k % 3) * 8) + 'px;animation-delay:' + (-k * 1.1).toFixed(1) + 's">' + e + '</span>').join('');
+  o.innerHTML = '<div class="mi-art"><div class="adv-hero">' + d.emoji + '</div>' + fl + '</div>' +
+    '<div class="mi-txt"><small>' + d.kicker + '</small><h2>' + d.title + '</h2><p>' + d.tag + '</p></div>' +
+    '<div class="mi-fact" role="note"><b>' + d.emoji + ' BİLİYOR MUYDUN?</b><p></p><div class="mi-dots">' + d.facts.map(() => '<i></i>').join('') + '</div></div>' +
+    '<div class="mi-chips"><span>' + d.emoji + ' 10 BÖLÜM</span><span>✨ 100 SEVİYE</span></div>' +
+    '<button type="button" class="am-skip mi-skip"><i class="am-ring"></i><i class="am-ring"></i><i class="am-ring"></i><span>GEÇ</span></button>';
+  let t = 0, done = false, fi = 0, ft = 0;
+  const fp = o.querySelector('.mi-fact p'), fd = o.querySelectorAll('.mi-dots i');
+  const showFact = n => {
+    fi = (n + d.facts.length) % d.facts.length;
+    fp.classList.remove('in'); void fp.offsetWidth;
+    fp.textContent = d.facts[fi]; fp.classList.add('in');
+    fd.forEach((dot, k) => dot.classList.toggle('on', k === fi));
+  };
+  const startFacts = () => { clearInterval(ft); ft = setInterval(() => showFact(fi + 1), 6500); };
+  showFact(0); startFacts();
+  o.querySelector('.mi-fact').addEventListener('click', () => { showFact(fi + 1); startFacts(); });
+  /* Otomatik geçiş YOK: yalnızca GEÇ'e basınca kapanır */
+  const finish = () => {
+    if (done) return; done = true; clearTimeout(t); clearInterval(ft);
+    cb();
+    o.classList.remove('on'); setTimeout(() => o.remove(), 300);
+  };
+  o.querySelector('.am-skip').addEventListener('click', () => { try { audio(); } catch(e){} finish(); });
+  app.appendChild(o);
+  requestAnimationFrame(() => o.classList.add('on'));
+  t = setTimeout(() => o.classList.add('hint'), 3500);
+}
+/* harita içi "YÜKLENİYOR" katmanı (Mısır haritasındakiyle aynı) */
+function advLoadingHTML(emoji){
+  return '<div class="jm-loading hide mm-ld"><div class="jm-ld-rays"></div><div class="jm-ld-orbs">' + Array.from({length:18},(_,i)=>'<span style="--x:'+((i*53)%100)+'%;--s:'+(4+(i*7)%9)+'px;--d:'+(5+(i*3)%6)+'s;--dl:'+(-(i*0.7).toFixed(1))+'s;--h:'+[48,160,300,42,190,330][i%6]+'"></span>').join('') + '</div><div class="jm-ld-center"><div class="jm-ld-brand"><span aria-hidden="true">' + emoji + '</span><small>YENİ BÖLGEYE GİRİŞ</small></div><div class="jm-ld-ring"><div class="jm-ld-core"><svg class="i"><use href="#i-star"/></svg></div></div><div class="jm-ld-text">' + 'YÜKLENİYOR'.split('').map((c,i)=>'<span style="--i:'+i+'">'+c+'</span>').join('') + '</div><div class="jm-ld-sub">Macera hazırlanıyor<em>.</em><em>.</em><em>.</em></div><div class="jm-bar"><i></i></div></div></div>';
+}
+function advRunLoading(el, opts){
+  const ld = el && el.querySelector('.mm-ld'); if (!ld) return;
+  try { ld.getAnimations().forEach(a => a.cancel()); } catch(_){}
+  ld.style.transition = 'none';
+  if (!opts || !opts.loading){ ld.classList.add('hide'); return; }
+  ld.classList.remove('hide');
+  const img = el.querySelector('.mm-img');
+  let minDone = false, imgDone = !img || img.complete, closed = false;
+  const tryHide = () => { if (closed || !minDone || !imgDone) return; closed = true;
+    const fin = () => { ld.style.transition = 'none'; ld.classList.add('hide'); };
+    if (ld.animate){ const a = ld.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 900, easing: 'ease-in-out', fill: 'forwards' }); a.onfinish = fin; } else fin(); };
+  setTimeout(() => { minDone = true; tryHide(); }, 2000);
+  if (!imgDone){ const ok = () => { imgDone = true; tryHide(); }; ['load','error'].forEach(ev => img.addEventListener(ev, ok, { once: true })); setTimeout(ok, 7000); }
+}
+
 /* Banner resimleri: her biri ayrı dosya (banner-xxx.jpg) */
 const BANNER_FILES = {misir:'banner-misir.jpg', sahra:'banner-sahra.jpg', everest:'banner-everest.jpg', antarktika:'banner-antarktika.jpg', harika7:'banner-7harika.jpg', mariana:'banner-mariana.jpg', kapadokya:'banner-kapadokya.jpg', niagara:'banner-niagara.jpg', fuji:'banner-fuji.jpg'};
 function loadBanners(){
@@ -8050,14 +8162,17 @@ function buildAdvCard(jc, open, cfg){
     }
   };
   setOpen(!!open && !pending);
-  b.addEventListener('click', () => { if (!b.classList.contains('misir-open')) return; buzz(20); audio(); cfg.go(); });
+  b.addEventListener('click', () => { if (!b.classList.contains('misir-open')) return; buzz(20); audio();
+    const goMap = () => cfg.go({ loading:true });
+    if (ADV_INFO[jc.key] && !chapterComplete((Number(cfg.num) - 1) * 10)) showAdvIntro(jc.key, goMap); else goMap(); });
   const layer = document.createElement('div'); layer.className = 'orbit-layer';
   w.append(b, layer); w._setOpen = setOpen; w.dataset.animKey = cfg.flag;
   if (pending) w.dataset.pending = '1';
   return w;
 }
-function buildSahraCard(jc, open){ return buildAdvCard(jc, open, { num:'3', flag:'kb_sahra_anim', allDone:sahraAllDone, go:() => showSahraMap() }); }
-function showSahraMap(){
+function buildSahraCard(jc, open){ return buildAdvCard(jc, open, { num:'3', flag:'kb_sahra_anim', allDone:sahraAllDone, go:o => showSahraMap(o) }); }
+function showSahraMap(opts){
+  opts = opts || {};
   leaveGame();
   if (!sahraMapEl){
     sahraMapEl = document.createElement('section');
@@ -8066,6 +8181,7 @@ function showSahraMap(){
       '<b class="mm-score">0/10</b>' +
       SAHRA_MAP.nodes.map(() => '<img class="mm-sp" alt="" hidden draggable="false">').join('') +
       SAHRA_MAP.nodes.map((_, i) => '<div class="mm-lab lk"><b>' + (i + 1) + '</b>' + SAHRA_MAP.names[i] + '</div>').join('') +
+      advLoadingHTML('🏜️') +
       '<div class="jm-monkey idle mm-monkey mm-snake"><i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span></div>' +
       SAHRA_MAP.nodes.map((_, i) => '<button type="button" class="mm-hit mm-node" data-i="' + i + '" aria-label="' + SAHRA_MAP.names[i] + '"></button>').join('') +
       '<button type="button" class="mm-hit mm-gear" aria-label="Ayarlar"></button>' +
@@ -8092,6 +8208,7 @@ function showSahraMap(){
   app.classList.add('on-journey');
   sahraMapEl.classList.add('show');
   layoutSahraMap(); sahraRender(); sahraMonkeyTo(sahraCur());
+  advRunLoading(sahraMapEl, opts);
 }
 
 
@@ -8150,8 +8267,9 @@ function everestRender(){
   }
   el.querySelector('.mm-score').textContent = nd + '/10';
 }
-function buildEverestCard(jc, open){ return buildAdvCard(jc, open, { num:'4', flag:'kb_everest_anim', allDone:everestAllDone, go:() => showEverestMap() }); }
-function showEverestMap(){
+function buildEverestCard(jc, open){ return buildAdvCard(jc, open, { num:'4', flag:'kb_everest_anim', allDone:everestAllDone, go:o => showEverestMap(o) }); }
+function showEverestMap(opts){
+  opts = opts || {};
   leaveGame();
   if (!everestMapEl){
     everestMapEl = document.createElement('section');
@@ -8160,6 +8278,7 @@ function showEverestMap(){
       '<b class="mm-score">0/10</b>' +
       EVEREST_MAP.nodes.map(() => '<img class="mm-sp" alt="" hidden draggable="false">').join('') +
       EVEREST_MAP.nodes.map((_, i) => '<div class="mm-lab lk"><b>' + (i + 1) + '</b>' + EVEREST_MAP.names[i] + '</div>').join('') +
+      advLoadingHTML('🏔️') +
       '<div class="jm-monkey idle mm-monkey mm-goat"><i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span></div>' +
       EVEREST_MAP.nodes.map((_, i) => '<button type="button" class="mm-hit mm-node" data-i="' + i + '" aria-label="' + EVEREST_MAP.names[i] + '"></button>').join('') +
       '<button type="button" class="mm-hit mm-gear" aria-label="Ayarlar"></button>' +
@@ -8186,6 +8305,7 @@ function showEverestMap(){
   app.classList.add('on-journey');
   everestMapEl.classList.add('show');
   layoutEverestMap(); everestRender(); everestMonkeyTo(everestCur());
+  advRunLoading(everestMapEl, opts);
 }
 
 function everestAllDone(){ for (let k = 0; k < 10; k++) if (!GROUPS[30 + k] || !chapterComplete(30 + k)) return false; return true; }
@@ -8246,8 +8366,9 @@ function antarktikaRender(){
   }
   el.querySelector('.mm-score').textContent = nd + '/10';
 }
-function buildAntarktikaCard(jc, open){ return buildAdvCard(jc, open, { num:'5', flag:'kb_antarktika_anim', allDone:antarktikaAllDone, go:() => showAntarktikaMap() }); }
-function showAntarktikaMap(){
+function buildAntarktikaCard(jc, open){ return buildAdvCard(jc, open, { num:'5', flag:'kb_antarktika_anim', allDone:antarktikaAllDone, go:o => showAntarktikaMap(o) }); }
+function showAntarktikaMap(opts){
+  opts = opts || {};
   leaveGame();
   if (!antarktikaMapEl){
     antarktikaMapEl = document.createElement('section');
@@ -8256,6 +8377,7 @@ function showAntarktikaMap(){
       '<b class="mm-score">0/10</b>' +
       ANTARKTIKA_MAP.nodes.map(() => '<img class="mm-sp" alt="" hidden draggable="false">').join('') +
       ANTARKTIKA_MAP.nodes.map((_, i) => '<div class="mm-lab lk"><b>' + (i + 1) + '</b>' + ANTARKTIKA_MAP.names[i] + '</div>').join('') +
+      advLoadingHTML('🧊') +
       '<div class="jm-monkey idle mm-monkey mm-penguin"><i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span></div>' +
       ANTARKTIKA_MAP.nodes.map((_, i) => '<button type="button" class="mm-hit mm-node" data-i="' + i + '" aria-label="' + ANTARKTIKA_MAP.names[i] + '"></button>').join('') +
       '<button type="button" class="mm-hit mm-gear" aria-label="Ayarlar"></button>' +
@@ -8282,6 +8404,7 @@ function showAntarktikaMap(){
   app.classList.add('on-journey');
   antarktikaMapEl.classList.add('show');
   layoutAntarktikaMap(); antarktikaRender(); antarktikaMonkeyTo(antarktikaCur());
+  advRunLoading(antarktikaMapEl, opts);
 }
 function antarktikaAllDone(){ for (let k = 0; k < 10; k++) if (!GROUPS[40 + k] || !chapterComplete(40 + k)) return false; return true; }
 
@@ -8341,8 +8464,9 @@ function harika7Render(){
   }
   el.querySelector('.mm-score').textContent = nd + '/10';
 }
-function buildHarika7Card(jc, open){ return buildAdvCard(jc, open, { num:'6', flag:'kb_harika7_anim', allDone:harika7AllDone, go:() => showHarika7Map() }); }
-function showHarika7Map(){
+function buildHarika7Card(jc, open){ return buildAdvCard(jc, open, { num:'6', flag:'kb_harika7_anim', allDone:harika7AllDone, go:o => showHarika7Map(o) }); }
+function showHarika7Map(opts){
+  opts = opts || {};
   leaveGame();
   if (!harika7MapEl){
     harika7MapEl = document.createElement('section');
@@ -8351,6 +8475,7 @@ function showHarika7Map(){
       '<b class="mm-score">0/10</b>' +
       HARIKA7_MAP.nodes.map(() => '<img class="mm-sp" alt="" hidden draggable="false">').join('') +
       HARIKA7_MAP.nodes.map((_, i) => '<div class="mm-lab lk"><b>' + (i + 1) + '</b>' + HARIKA7_MAP.names[i] + '</div>').join('') +
+      advLoadingHTML('🌍') +
       '<div class="jm-monkey idle mm-monkey mm-lion"><i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span></div>' +
       HARIKA7_MAP.nodes.map((_, i) => '<button type="button" class="mm-hit mm-node" data-i="' + i + '" aria-label="' + HARIKA7_MAP.names[i] + '"></button>').join('') +
       '<button type="button" class="mm-hit mm-gear" aria-label="Ayarlar"></button>' +
@@ -8377,6 +8502,7 @@ function showHarika7Map(){
   app.classList.add('on-journey');
   harika7MapEl.classList.add('show');
   layoutHarika7Map(); harika7Render(); harika7MonkeyTo(harika7Cur());
+  advRunLoading(harika7MapEl, opts);
 }
 function harika7AllDone(){ for (let k = 0; k < 10; k++) if (!GROUPS[50 + k] || !chapterComplete(50 + k)) return false; return true; }
 
@@ -8436,8 +8562,9 @@ function marianaRender(){
   }
   el.querySelector('.mm-score').textContent = nd + '/10';
 }
-function buildMarianaCard(jc, open){ return buildAdvCard(jc, open, { num:'7', flag:'kb_mariana_anim', allDone:marianaAllDone, go:() => showMarianaMap() }); }
-function showMarianaMap(){
+function buildMarianaCard(jc, open){ return buildAdvCard(jc, open, { num:'7', flag:'kb_mariana_anim', allDone:marianaAllDone, go:o => showMarianaMap(o) }); }
+function showMarianaMap(opts){
+  opts = opts || {};
   leaveGame();
   if (!marianaMapEl){
     marianaMapEl = document.createElement('section');
@@ -8446,6 +8573,7 @@ function showMarianaMap(){
       '<b class="mm-score">0/10</b>' +
       MARIANA_MAP.nodes.map(() => '<img class="mm-sp" alt="" hidden draggable="false">').join('') +
       MARIANA_MAP.nodes.map((_, i) => '<div class="mm-lab lk"><b>' + (i + 1) + '</b>' + MARIANA_MAP.names[i] + '</div>').join('') +
+      advLoadingHTML('🌊') +
       '<div class="jm-monkey idle mm-monkey mm-fish"><i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span></div>' +
       MARIANA_MAP.nodes.map((_, i) => '<button type="button" class="mm-hit mm-node" data-i="' + i + '" aria-label="' + MARIANA_MAP.names[i] + '"></button>').join('') +
       '<button type="button" class="mm-hit mm-gear" aria-label="Ayarlar"></button>' +
@@ -8472,6 +8600,7 @@ function showMarianaMap(){
   app.classList.add('on-journey');
   marianaMapEl.classList.add('show');
   layoutMarianaMap(); marianaRender(); marianaMonkeyTo(marianaCur());
+  advRunLoading(marianaMapEl, opts);
 }
 function marianaAllDone(){ for (let k = 0; k < 10; k++) if (!GROUPS[60 + k] || !chapterComplete(60 + k)) return false; return true; }
 
@@ -8531,8 +8660,9 @@ function kapadokyaRender(){
   }
   el.querySelector('.mm-score').textContent = nd + '/10';
 }
-function buildKapadokyaCard(jc, open){ return buildAdvCard(jc, open, { num:'8', flag:'kb_kapadokya_anim', allDone:kapadokyaAllDone, go:() => showKapadokyaMap() }); }
-function showKapadokyaMap(){
+function buildKapadokyaCard(jc, open){ return buildAdvCard(jc, open, { num:'8', flag:'kb_kapadokya_anim', allDone:kapadokyaAllDone, go:o => showKapadokyaMap(o) }); }
+function showKapadokyaMap(opts){
+  opts = opts || {};
   leaveGame();
   if (!kapadokyaMapEl){
     kapadokyaMapEl = document.createElement('section');
@@ -8541,6 +8671,7 @@ function showKapadokyaMap(){
       '<b class="mm-score">0/10</b>' +
       KAPADOKYA_MAP.nodes.map(() => '<img class="mm-sp" alt="" hidden draggable="false">').join('') +
       KAPADOKYA_MAP.nodes.map((_, i) => '<div class="mm-lab lk"><b>' + (i + 1) + '</b>' + KAPADOKYA_MAP.names[i] + '</div>').join('') +
+      advLoadingHTML('🎈') +
       '<div class="jm-monkey idle mm-monkey mm-balloon"><i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span></div>' +
       KAPADOKYA_MAP.nodes.map((_, i) => '<button type="button" class="mm-hit mm-node" data-i="' + i + '" aria-label="' + KAPADOKYA_MAP.names[i] + '"></button>').join('') +
       '<button type="button" class="mm-hit mm-gear" aria-label="Ayarlar"></button>' +
@@ -8567,6 +8698,7 @@ function showKapadokyaMap(){
   app.classList.add('on-journey');
   kapadokyaMapEl.classList.add('show');
   layoutKapadokyaMap(); kapadokyaRender(); kapadokyaMonkeyTo(kapadokyaCur());
+  advRunLoading(kapadokyaMapEl, opts);
 }
 function kapadokyaAllDone(){ for (let k = 0; k < 10; k++) if (!GROUPS[70 + k] || !chapterComplete(70 + k)) return false; return true; }
 
@@ -8626,8 +8758,9 @@ function niagaraRender(){
   }
   el.querySelector('.mm-score').textContent = nd + '/10';
 }
-function buildNiagaraCard(jc, open){ return buildAdvCard(jc, open, { num:'9', flag:'kb_niagara_anim', allDone:niagaraAllDone, go:() => showNiagaraMap() }); }
-function showNiagaraMap(){
+function buildNiagaraCard(jc, open){ return buildAdvCard(jc, open, { num:'9', flag:'kb_niagara_anim', allDone:niagaraAllDone, go:o => showNiagaraMap(o) }); }
+function showNiagaraMap(opts){
+  opts = opts || {};
   leaveGame();
   if (!niagaraMapEl){
     niagaraMapEl = document.createElement('section');
@@ -8636,6 +8769,7 @@ function showNiagaraMap(){
       '<b class="mm-score">0/10</b>' +
       NIAGARA_MAP.nodes.map(() => '<img class="mm-sp" alt="" hidden draggable="false">').join('') +
       NIAGARA_MAP.nodes.map((_, i) => '<div class="mm-lab lk"><b>' + (i + 1) + '</b>' + NIAGARA_MAP.names[i] + '</div>').join('') +
+      advLoadingHTML('💦') +
       '<div class="jm-monkey idle mm-monkey mm-catfish"><i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span></div>' +
       NIAGARA_MAP.nodes.map((_, i) => '<button type="button" class="mm-hit mm-node" data-i="' + i + '" aria-label="' + NIAGARA_MAP.names[i] + '"></button>').join('') +
       '<button type="button" class="mm-hit mm-gear" aria-label="Ayarlar"></button>' +
@@ -8662,6 +8796,7 @@ function showNiagaraMap(){
   app.classList.add('on-journey');
   niagaraMapEl.classList.add('show');
   layoutNiagaraMap(); niagaraRender(); niagaraMonkeyTo(niagaraCur());
+  advRunLoading(niagaraMapEl, opts);
 }
 function niagaraAllDone(){ for (let k = 0; k < 10; k++) if (!GROUPS[80 + k] || !chapterComplete(80 + k)) return false; return true; }
 
@@ -8721,8 +8856,9 @@ function fujiRender(){
   }
   el.querySelector('.mm-score').textContent = nd + '/10';
 }
-function buildFujiCard(jc, open){ return buildAdvCard(jc, open, { num:'10', flag:'kb_fuji_anim', allDone:fujiAllDone, go:() => showFujiMap() }); }
-function showFujiMap(){
+function buildFujiCard(jc, open){ return buildAdvCard(jc, open, { num:'10', flag:'kb_fuji_anim', allDone:fujiAllDone, go:o => showFujiMap(o) }); }
+function showFujiMap(opts){
+  opts = opts || {};
   leaveGame();
   if (!fujiMapEl){
     fujiMapEl = document.createElement('section');
@@ -8731,6 +8867,7 @@ function showFujiMap(){
       '<b class="mm-score">0/10</b>' +
       FUJI_MAP.nodes.map(() => '<img class="mm-sp" alt="" hidden draggable="false">').join('') +
       FUJI_MAP.nodes.map((_, i) => '<div class="mm-lab lk"><b>' + (i + 1) + '</b>' + FUJI_MAP.names[i] + '</div>').join('') +
+      advLoadingHTML('🗻') +
       '<div class="jm-monkey idle mm-monkey mm-ibex"><i class="jm-sh"></i><span class="jm-bw"><b class="jm-bd"></b><b class="jm-bd2"></b></span></div>' +
       FUJI_MAP.nodes.map((_, i) => '<button type="button" class="mm-hit mm-node" data-i="' + i + '" aria-label="' + FUJI_MAP.names[i] + '"></button>').join('') +
       '<button type="button" class="mm-hit mm-gear" aria-label="Ayarlar"></button>' +
@@ -8757,6 +8894,7 @@ function showFujiMap(){
   app.classList.add('on-journey');
   fujiMapEl.classList.add('show');
   layoutFujiMap(); fujiRender(); fujiMonkeyTo(fujiCur());
+  advRunLoading(fujiMapEl, opts);
 }
 function fujiAllDone(){ for (let k = 0; k < 10; k++) if (!GROUPS[90 + k] || !chapterComplete(90 + k)) return false; return true; }
 function sahraAllDone(){ for (let k = 0; k < 10; k++) if (!GROUPS[20 + k] || !chapterComplete(20 + k)) return false; return true; }
@@ -10616,6 +10754,13 @@ $('bX').onclick=()=>{try{parent.postMessage('sudoku-exit','*')}catch(e){}};
 .mi-dots{display:flex;justify-content:center;gap:5px;margin-top:7px}
 .mi-dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,226,122,.3);transition:background .3s,transform .3s}
 .mi-dots i.on{background:#ffd45a;transform:scale(1.35)}
+.adv-intro{background:#070a26}
+.adv-intro .mi-art{background:radial-gradient(ellipse at 50% 46%,rgba(255,255,255,.22),transparent 55%),linear-gradient(180deg,var(--a1) 0%,var(--a2) 58%,var(--a3) 100%)}
+.adv-hero{position:absolute;left:0;right:0;top:33%;text-align:center;font-size:clamp(90px,24vh,180px);line-height:1;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45)) drop-shadow(0 0 26px rgba(255,255,255,.35));animation:advHero 3.6s ease-in-out infinite}
+.adv-fl{position:absolute;opacity:.85;filter:drop-shadow(0 3px 6px rgba(0,0,0,.4));animation:advFl 6s ease-in-out infinite}
+@keyframes advHero{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-12px) scale(1.04)}}
+@keyframes advFl{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-16px) rotate(6deg)}}
+@media(prefers-reduced-motion:reduce){.adv-hero,.adv-fl{animation:none}}
 .mi-nile path{animation:miNile 3s linear infinite}
 @keyframes miNile{to{stroke-dashoffset:-80}}
 .mi-cam{animation:miCam 46s linear infinite}
